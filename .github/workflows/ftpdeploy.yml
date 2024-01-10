@@ -1,16 +1,16 @@
 # Deploying to local staging server
-name: Deploy ProjectSigma_HRMS-API to FTP SERVER
+name: Deploy ProjectSigma_Accounting-API to FTP SERVER
 
 on:
   workflow_run:
-    workflows: ProjectSigma_HRMS-API Build and Push to CI-Pipeline Branch
+    workflows: ProjectSigma_Accounting-API Build and Push to CI-Pipeline Branch
     types:
       - completed
 env:
-  APP_NAME: "ProjectSigma_HRMS-API"
+  APP_NAME: "ProjectSigma_Accounting-API"
 
 concurrency:
-  group: "deployftp ProjectSigma_HRMS-API"
+  group: "deployftp ProjectSigma_Accounting-API"
   cancel-in-progress: true
 
 jobs:
