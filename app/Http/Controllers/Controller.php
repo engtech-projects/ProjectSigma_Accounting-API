@@ -12,7 +12,7 @@ class Controller extends BaseController
     use AuthorizesRequests, ValidatesRequests;
 
     public function sendSuccessResponse($data, $message): JsonResponse {
-        return response()->json(['success' => true, 'data' => $data,'message'=> $message],200);
+        return response()->json($data,200);
     }
     public function sendFailedResponse($message,$code): JsonResponse {
         return response()->json(['success' => false,'error'=> $message],$code);
