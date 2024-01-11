@@ -22,6 +22,7 @@ class LoginController extends Controller
         $credentials = $request->validated();
         if(Auth::attempt($credentials)){
             $user = Auth::user();
+            $request->session()->regenerate();
             $hashToken = $user->createToken('access_token')->plainTextToken;
             return $this->sendSuccessResponse(['user' => $user,'token'=> $hashToken],'User successfully logged in.');
         }
