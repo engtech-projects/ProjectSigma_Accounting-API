@@ -16,15 +16,15 @@ class LoginController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(LoginRequest $request): JsonResponse
+    public function __invoke(LoginRequest $request)
     {
 
         $credentials = $request->validated();
         if(Auth::attempt($credentials)){
             $user = Auth::user();
-            $request->session()->regenerate();
+
             $hashToken = $user->createToken('access_token')->plainTextToken;
-            return $this->sendSuccessResponse(['user' => $user,'token'=> $hashToken],'User successfully logged in.');
+            return $hashToken;
         }
         return $this->sendFailedResponse('Credentials not found',401);
 
