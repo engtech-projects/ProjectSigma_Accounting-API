@@ -21,6 +21,11 @@ return [
         Sanctum::currentApplicationUrlWithPort()
     ))),
 
+    /* 'stateful' => [
+        'provider' => 'hrms',
+        'model' => \App\Models\User::class,
+    ], */
+
     /*
     |--------------------------------------------------------------------------
     | Sanctum Guards
