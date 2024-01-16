@@ -14,7 +14,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        return response()->json(['data' => User::all()]);
+        return response()->json(['data' => User::all(),'message' => 'Get all users from ams api']);
     }
 
     /**
@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return response()->json(['data' => auth()->user(), 'message' => 'Get user from request in ams api.']);
     }
 
     /**

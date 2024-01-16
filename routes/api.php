@@ -16,11 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/users',[UserController::class, 'index']);
-Route::post('/auth/login',LoginController::class);
-Route::middleware('verify.access.token')->group(function() {
+/* Route::get('/users',[UserController::class, 'index']);
+Route::post('/auth/login',LoginController::class); */
+
+
+Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/user/{id}',[UserController::class, 'show']);
     Route::get('/users',[UserController::class, 'index']);
 });
-Route::middleware('auth:sanctum')->get('/auth/user', function (Request $request) {
+/* Route::middleware('auth:sanctum')->get('/auth/user', function (Request $request) {
     return $request->user();
 });
+ */

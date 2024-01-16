@@ -21,7 +21,7 @@ class VerifyAccessToken
     }
     public function handle(Request $request, Closure $next): Response
     {
-        $token = $request->bearerToken();
+        /* $token = $request->bearerToken();
         if (empty($token)) {
             return response()->json(['error' => Response::HTTP_UNAUTHORIZED]);
         }
@@ -30,7 +30,7 @@ class VerifyAccessToken
         if(!$response->successful()) {
             return response()->json(['error' => Response::HTTP_UNAUTHORIZED]);
 
-        }
+        } */
         return $next($request);
 
     }
