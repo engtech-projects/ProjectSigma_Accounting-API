@@ -20,11 +20,11 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/login',LoginController::class); */
 
 
-Route::middleware('auth:sanctum')->group(function() {
+Route::middleware('auth:api')->group(function() {
     Route::get('/user/{id}',[UserController::class, 'show']);
     Route::get('/users',[UserController::class, 'index']);
 });
-/* Route::middleware('auth:sanctum')->get('/auth/user', function (Request $request) {
-    return $request->user();
-});
- */
+/* Route::middleware('auth:sanctum')->get('/user/{id}', function (Request $request) {
+    return response()->json(['ams' => $request->user()]);
+}); */
+
