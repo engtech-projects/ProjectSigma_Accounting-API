@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'hrms-auth',
         'passwords' => 'users',
     ],
 
@@ -40,10 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-/*         'api' => [
-            'driver' => 'session',
-            'provider' => 'hrms',
-        ] */
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'custom',
+        ],
+        'hrms-auth' => [
+            'driver' => 'hrms-auth',
+            'provider' => 'hrms_users'
+        ]
     ],
 
     /*
@@ -66,12 +70,12 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-        'hrms' => [
-            'driver' => 'eloquent',
             'model' => \App\Models\User::class
-        ]
+        ],
+        'hrms_users' => [
+            'driver' => 'eloquent',
+            'model' => \App\Models\HrmsUser::class
+        ],
 
         // 'users' => [
         //     'driver' => 'database',

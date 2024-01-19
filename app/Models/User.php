@@ -12,6 +12,7 @@ class User extends Authenticatable
 {
     use HasApiTokens,HasFactory, Notifiable;
 
+/*     protected $connection = 'hrms_db'; */
     /**
      * The attributes that are mass assignable.
      *

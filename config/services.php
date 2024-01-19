@@ -29,6 +29,10 @@ return [
         'HRSM_URL' => env('HRSM_API')
     ],
 
+    'key' =>[
+        'app_key' => env('APP_KEY')
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
