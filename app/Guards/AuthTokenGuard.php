@@ -27,12 +27,12 @@ class AuthTokenGuard implements Guard
             return $this->user;
         }
         $token = $this->request->bearerToken();
-        $response = Http::acceptJson()->withToken($token)->get('http://localhost:8000/api/me'/* 'http://larave-sanctum-api-hrms.test/api/me' */);
+        $response = Http::withToken($token)->get('http://localhost:8000/api/me');
         if (!$response->successful()) {
             return null;
         }
 
-        if($response->json()['data']) {
+        if($response->json()) {
             $this->user = new HrmsUser();
             $this->user->id = $response->json()['data']['id'];
             $this->user->email = $response->json()['data']['email'];

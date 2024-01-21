@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'hrms-auth',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
@@ -41,8 +41,8 @@ return [
             'provider' => 'users',
         ],
         'api' => [
-            'driver' => 'sanctum',
-            'provider' => 'custom',
+            'driver' => 'hrms-auth',
+            'provider' => 'hrms_users',
         ],
         'hrms-auth' => [
             'driver' => 'hrms-auth',
