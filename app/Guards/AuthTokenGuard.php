@@ -38,10 +38,11 @@ class AuthTokenGuard implements Guard
 
         if($response->json()) {
             $this->user = new HrmsUser();
-            $this->user->id = $response->json()['id'];
-            $this->user->email = $response->json()['email'];
-            $this->user->type = $response->json()['type'];
-            $this->user->name = $response->json()['name'];
+            $this->user->id = $response->json()['user_data']['id'];
+            $this->user->name = $response->json()['user_data']['name'];
+            $this->user->email = $response->json()['user_data']['email'];
+            $this->user->type = $response->json()['user_data']['type'];
+
         }
         return $this->user;
     }
