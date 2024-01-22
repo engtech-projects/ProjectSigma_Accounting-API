@@ -29,7 +29,9 @@ return [
         'HRSM_URL' => env('HRSM_API')
     ],
     'url' => [
-        'frontend_url' => env('SPA_URL')
+        'hrms_app_url' => env('HRMS_APP_URL'),
+        'hrms_api_url' => env('HRMS_API_URL')
+
     ],
 
     'key' =>[

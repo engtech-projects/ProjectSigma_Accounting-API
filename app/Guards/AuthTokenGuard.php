@@ -15,6 +15,7 @@ class AuthTokenGuard implements Guard
     use GuardHelpers;
 
     protected $request;
+    protected $hrmsApiUrl;
 
     public function __construct(Request $request)
     {
@@ -29,12 +30,11 @@ class AuthTokenGuard implements Guard
         $token = $this->request->bearerToken();
         $response = Http::withHeaders([
             'Access-Control-Allow-Origin' => true,
-            'origin' => config('services.url.frontend_url'),
+            'origin' => config('services.url.hrms_app_url'),
 
         ])->withToken($token)
         ->acceptJson()
-        ->get('http://localhost:8000/api/me');
-
+        ->get($this->hrmsApiUrl.'api/session');
         if (!$response->successful()) {
             return null;
         }
