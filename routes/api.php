@@ -16,20 +16,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/* Route::get('/users',[UserController::class, 'index']); */
-/* Route::post('/auth/login',LoginController::class); */
-
-
-/* Route::middleware('auth:api')->group(function() {
-    Route::get('/user/{id}',[UserController::class, 'show']);
-    Route::get('/users',[UserController::class, 'index']);
-}); */
-
 Route::middleware('auth:api')->group(function() {
     Route::get('/user/{id}',[UserController::class, 'show']);
     Route::get('/userss',[UserController::class, 'index']);
 });
-/* Route::middleware('auth:sanctum')->get('/user/{id}', function (Request $request) {
-    return response()->json(['ams' => $request->user()]);
-}); */
+
 

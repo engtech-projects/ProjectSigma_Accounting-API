@@ -27,7 +27,14 @@ class AuthTokenGuard implements Guard
             return $this->user;
         }
         $token = $this->request->bearerToken();
-        $response = Http::withToken($token)->get('http://localhost:8000/api/me');
+        $response = Http::withHeaders([
+            'Access-Control-Allow-Origin' => true,
+            'origin' => config('services.url.frontend_url'),
+
+        ])->withToken($token)
+        ->acceptJson()
+        ->get('http://localhost:8000/api/me');
+
         if (!$response->successful()) {
             return null;
         }

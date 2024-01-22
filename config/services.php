@@ -28,6 +28,9 @@ return [
     'api' => [
         'HRSM_URL' => env('HRSM_API')
     ],
+    'url' => [
+        'frontend_url' => env('SPA_URL')
+    ],
 
     'key' =>[
         'app_key' => env('APP_KEY')

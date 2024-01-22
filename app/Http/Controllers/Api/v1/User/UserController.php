@@ -13,9 +13,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
-
-        return response()->json(['data' => User::all(),'message' => 'Get all users from ams api','user' => auth()->user()]);
+        return response()->json([
+            'data' => User::all(),
+            'message' => 'Get all users from ams api',
+            'user' => auth()->user()
+        ]);
     }
 
     /**
