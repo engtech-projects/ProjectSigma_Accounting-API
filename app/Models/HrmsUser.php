@@ -15,7 +15,8 @@ class HrmsUser extends Model implements AuthenticatableContract
         return [
             'user_id' => 'id',
             'email' => 'email',
-            'name' => 'name'
+            'name' => 'name',
+            'type' => 'user'
         ];
     }
     public function getAuthIdentifier()
