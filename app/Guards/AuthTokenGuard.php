@@ -2,7 +2,7 @@
 
 namespace App\Guards;
 
-use App\Models\HrmsUser;
+use App\Models\User;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Client\Response;
@@ -37,7 +37,7 @@ class AuthTokenGuard implements Guard
         }
 
         if($response->json()) {
-            $this->user = new HrmsUser();
+            $this->user = new User();
             $this->user->id = $response->json()['id'];
             $this->user->name = $response->json()['name'];
             $this->user->email = $response->json()['email'];

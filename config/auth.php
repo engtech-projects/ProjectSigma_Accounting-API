@@ -42,7 +42,7 @@ return [
         ],
         'api' => [
             'driver' => 'hrms-auth',
-            'provider' => 'hrms_users',
+            'provider' => 'users',
         ],
         'hrms-auth' => [
             'driver' => 'hrms-auth',
@@ -74,7 +74,7 @@ return [
         ],
         'hrms_users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\HrmsUser::class
+            'model' => \App\Models\User::class
         ],
 
         // 'users' => [
