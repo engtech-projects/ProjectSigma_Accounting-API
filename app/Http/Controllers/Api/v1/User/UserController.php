@@ -8,16 +8,13 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        return response()->json([
-            'data' => User::all(),
-            'message' => 'Get all users from ams api',
-            'user' => auth()->user()
-        ]);
+
     }
 
     /**

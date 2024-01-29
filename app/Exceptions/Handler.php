@@ -2,8 +2,12 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +27,23 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (Exception $e, Request $request) {
+            if ($request->wantsJson()) {
+                return $this->handleApiExceptions($request, $e);
+            }
+            return abort(500, $e->getMessage());
         });
+    }
+
+    public function handleApiExceptions(Request $request,Exception $e)
+    {
+        $response = null;
+        if ($e instanceof AuthorizationException) {
+            $response = new JsonResponse(['message' => $e->getMessage()], 403);
+        }
+        if ($e instanceof HttpException) {
+            $response = new JsonResponse(['message' => $e->getMessage()], 403);
+        }
+        return $response;
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Auth\AuthController;
 use App\Http\Controllers\Api\v1\Auth\LoginController;
+use App\Http\Controllers\Api\v1\DashboardController;
 use App\Http\Controllers\Api\v1\User\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,9 +18,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->group(function() {
-    Route::get('/user/{id}',[UserController::class, 'show']);
-    Route::get('/userss',[UserController::class, 'index']);
-});
 
+Route::middleware('auth:api')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::get('/user', [AuthController::class, 'show'])->name('auth.user');
+    });
+    Route::prefix('dashboard')->group(function () {
+        Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
+    });
+});
 

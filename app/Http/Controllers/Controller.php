@@ -11,9 +11,9 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    /* public function __construct() {
+    public function __construct() {
         $this->middleware('auth');
-    } */
+    }
     public function sendSuccessResponse($data, $message): JsonResponse {
         return response()->json($data,200);
     }
