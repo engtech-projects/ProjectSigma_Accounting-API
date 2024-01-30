@@ -1,10 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\Auth\AuthController;
-use App\Http\Controllers\Api\v1\Auth\LoginController;
 use App\Http\Controllers\Api\v1\DashboardController;
-use App\Http\Controllers\Api\v1\User\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,5 +24,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
     });
+
+    Route::resource('accounts', AccountController::class);
 });
 

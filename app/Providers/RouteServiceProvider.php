@@ -2,11 +2,15 @@
 
 namespace App\Providers;
 
+use App\Exceptions\ResourceNotFound;
+use App\Models\Account;
+use Exception;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -28,9 +32,14 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        Route::bind('account',function($value) {
+            $account = Account::find($value) ?? throw new ResourceNotFound('Account not found.',404);
+            return $account;
+        });
+
         $this->routes(function () {
             Route::middleware('api')
-                ->prefix('api')
+                ->prefix('api/v1/')
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')

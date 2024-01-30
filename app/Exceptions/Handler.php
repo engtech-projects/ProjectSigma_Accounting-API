@@ -41,6 +41,9 @@ class Handler extends ExceptionHandler
         if ($e instanceof AuthorizationException) {
             $response = new JsonResponse(['message' => $e->getMessage()], 403);
         }
+        if($e instanceof ResourceNotFound) {
+            $response = new JsonResponse(['message'=> $e->getMessage()],$e->getStatusCode());
+        }
         if ($e instanceof HttpException) {
             $response = new JsonResponse(['message' => $e->getMessage()], 403);
         }
