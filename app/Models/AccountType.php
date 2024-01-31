@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountType extends Model
@@ -18,8 +19,19 @@ class AccountType extends Model
         'account_category_id',
     ];
 
+    protected $hidden = [
+        'deleted_at',
+        'created_at',
+        'updated_at'
+    ];
+
 
     ## MODEL RELATIONS ##
+
+    public function account(): HasMany
+    {
+        return $this->hasMany(Account::class);
+    }
 
     public function account_category(): BelongsTo
     {

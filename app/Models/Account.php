@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends Model
@@ -22,12 +23,21 @@ class Account extends Model
         'type',
         'account_type_id',
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     ## MODEL RELATIONS ##
 
     public function account_type(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
+    }
+    public function sub_account(): HasMany
+    {
+        return $this->hasMany(Account::class, 'parent_account', 'id');
     }
 
 
@@ -39,8 +49,13 @@ class Account extends Model
         return $query->with($relation);
     }
 
-    public function scopeWithPaginate($query,$perPage = 10)
+    public function scopeParentAccount($query)
     {
-        return $query->paginate($perPage);
+        return $query->whereNull('parent_account');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status','active');
     }
 }

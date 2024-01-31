@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\collections\AccountTypeCollection;
+use App\Http\Resources\resources\AccountTypeResource;
 use App\Models\AccountType;
 use App\Http\Requests\Api\v1\Store\StoreAccountTypeRequest;
 use App\Http\Requests\Api\v1\Update\UpdateAccountTypeRequest;
@@ -23,7 +25,7 @@ class AccountTypeController extends Controller
     public function index()
     {
         $accountType = $this->accountTypeService->getAccountTypes();
-        return new JsonResponse(['account_types' => $accountType]);
+        return new AccountTypeCollection($accountType);
 
     }
 
@@ -43,7 +45,7 @@ class AccountTypeController extends Controller
     public function show(AccountType $accountType)
     {
         $accountType = $this->accountTypeService->getAccountTypeById($accountType);
-        return new JsonResponse(['account_type' => $accountType]);
+        return new AccountTypeResource($accountType);
     }
 
     /**

@@ -24,7 +24,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        return new AccountCollections($this->accountService->getAccounts());
+        return new AccountCollections($this->accountService->getAccountWithSubAccount(true));
     }
 
     /**

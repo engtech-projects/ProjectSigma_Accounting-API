@@ -16,22 +16,25 @@ class AccountTypeService
     public function getAccountTypes(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
         $query = $this->accountType->query();
-        if (!empty($relation)) {
-            $query->withRelation($relation);
+        if ($relation) {
+            $query->with($relation);
         }
-        if (!empty($columns)) {
+        if ($columns) {
             $query->select($columns);
         }
         return $paginate ? $query->paginate() : $query->get();
     }
 
-    public function getAccountTypeById(AccountType $accountType, ?array $relation = [])
+    public function getAccountTypeById($accountType, ?array $relation = [],?array $columns = [])
     {
-        $query = $accountType->query();
-        if (!empty($relation)) {
+        $query = $this->accountType->query();
+        if($relation) {
             $query->with($relation);
         }
-        return $query->find($accountType)->first();
+        if($columns) {
+            $query->select($columns);
+        }
+        return $query->find($accountType)->firstOrFail();
     }
 
     public function createAccountType(array $attribute)

@@ -17,16 +17,17 @@ return new class extends Migration {
             $table->string('account_number');
             $table->string('account_name');
             $table->string('account_description');
-            $table->bigInteger('parent_account')->nullable();
-            $table->enum('status', ['active','inactive'])
+            $table->unsignedBigInteger('parent_account')->nullable();
+            $table->enum('status', ['active', 'inactive'])
                 ->index()
                 ->default(AccountStatus::ACTIVE);
-            $table->enum('bank_reconciliation', ['yes','no']);
+            $table->enum('bank_reconciliation', ['yes', 'no']);
             $table->string('statement')->nullable();
             $table->unsignedBigInteger('account_type_id');
             $table->foreign('account_type_id')
                 ->references('id')
                 ->on('account_types');
+            $table->foreign('parent_account')->references('id')->on('accounts');
             $table->softDeletes();
             $table->timestamps();
         });
