@@ -8,7 +8,7 @@ use App\Http\Resources\resources\AccountTypeResource;
 use App\Models\AccountType;
 use App\Http\Requests\Api\v1\Store\StoreAccountTypeRequest;
 use App\Http\Requests\Api\v1\Update\UpdateAccountTypeRequest;
-use App\Services\Api\V1\AccountTypeService;
+use App\Services\Api\v1\AccountTypeService;
 use Illuminate\Http\JsonResponse;
 
 class AccountTypeController extends Controller
