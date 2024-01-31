@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AccountTypeController;
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\Auth\AuthController;
 use App\Http\Controllers\Api\v1\DashboardController;
@@ -26,5 +27,6 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::resource('accounts', AccountController::class);
+    Route::resource('account-type', AccountTypeController::class);
 });
 

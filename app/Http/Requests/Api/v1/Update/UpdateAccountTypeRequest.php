@@ -11,7 +11,7 @@ class UpdateAccountTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class UpdateAccountTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "account_type_number" => 'required|string',
+            "account_type" => 'required|string',
+            "has_opening_balance" => 'boolean',
+            "account_category_id" => 'required|integer'
         ];
     }
 }

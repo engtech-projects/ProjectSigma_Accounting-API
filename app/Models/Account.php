@@ -33,4 +33,14 @@ class Account extends Model
 
 
     ## MODEL SCOPE BINDINGS ##
+
+    public function scopeWithRelation($query, $relation = [])
+    {
+        return $query->with($relation);
+    }
+
+    public function scopeWithPaginate($query,$perPage = 10)
+    {
+        return $query->paginate($perPage);
+    }
 }

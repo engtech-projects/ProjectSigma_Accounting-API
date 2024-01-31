@@ -12,11 +12,19 @@ class AccountCollections extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
+    public static $wrap = 'accounts';
     public function toArray(Request $request): array
     {
-        return [
-            "data" => $this->collection
-        ];
-        //return parent::toArray($request);
+        /* return [
+            'data' => $this->collection
+        ]; */
+        return parent::toArray($request);
+    }
+
+    public function paginationInformation($request, $paginated, $default)
+    {
+        $default['links']['custom'] = 'https://example.com';
+
+        return $default;
     }
 }

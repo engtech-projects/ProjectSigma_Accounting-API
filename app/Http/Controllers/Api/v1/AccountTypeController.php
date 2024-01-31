@@ -1,19 +1,30 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
 use App\Models\AccountType;
-use App\Http\Requests\StoreAccountTypeRequest;
-use App\Http\Requests\UpdateAccountTypeRequest;
+use App\Http\Requests\Api\v1\Store\StoreAccountTypeRequest;
+use App\Http\Requests\Api\v1\Update\UpdateAccountTypeRequest;
+use App\Services\Api\V1\AccountTypeService;
+use Illuminate\Http\JsonResponse;
 
 class AccountTypeController extends Controller
 {
+
+    protected $accountTypeService;
+    public function __construct(AccountTypeService $accountTypeService)
+    {
+        $this->accountTypeService = $accountTypeService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $accountType = $this->accountTypeService->getAccountTypes();
+        return new JsonResponse(['account_types' => $accountType]);
+
     }
 
     /**
@@ -21,7 +32,9 @@ class AccountTypeController extends Controller
      */
     public function store(StoreAccountTypeRequest $request)
     {
-        //
+        $data = $request->validated();
+        $this->accountTypeService->createAccountType($data);
+        return new JsonResponse(['success' => true, 'message' => "Account type successfully created."], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -29,7 +42,8 @@ class AccountTypeController extends Controller
      */
     public function show(AccountType $accountType)
     {
-        //
+        $accountType = $this->accountTypeService->getAccountTypeById($accountType);
+        return new JsonResponse(['account_type' => $accountType]);
     }
 
     /**
@@ -37,7 +51,9 @@ class AccountTypeController extends Controller
      */
     public function update(UpdateAccountTypeRequest $request, AccountType $accountType)
     {
-        //
+        $data = $request->validated();
+        $accountType = $this->accountTypeService->updateAccountType($data, $accountType);
+        return new JsonResponse(['success' => true, 'message' => "Account type successfully updated."]);
     }
 
     /**
@@ -45,6 +61,7 @@ class AccountTypeController extends Controller
      */
     public function destroy(AccountType $accountType)
     {
-        //
+        $this->accountTypeService->deleteAccountType($accountType);
+        return new JsonResponse(['success' => true, 'message' => "Account type successfully deleted."]);
     }
 }

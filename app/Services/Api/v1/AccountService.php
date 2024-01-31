@@ -13,19 +13,30 @@ class AccountService
     {
         $this->account = $account;
     }
-    public function getAccounts()
+    public function getAccounts(?array $relation = [], ?bool $paginate = true, ?array $columns = [])
     {
-        return $this->account->with(['account_type.account_category'])->get();
+        $query = $this->account->query();
+        if (!empty($relation)) {
+            $query->withRelation($relation);
+        }
+        if (!empty($columns)) {
+            $query->select($columns);
+        }
+        return $paginate ? $query->paginate() : $query->get();
     }
-    public function getAccountById($account)
+    public function getAccountById($account, ?array $relation = [])
     {
-        return $this->account->find($account);
+        $query = $this->account->query();
+        if ($relation) {
+            $query->with($relation);
+        }
+        return $query->find($account)->first();
     }
-    public function createAccount(array $data)
+    public function createAccount(array $attribute)
     {
         try {
-            $account = DB::transaction(function () use ($data) {
-                return $this->account->create($data);
+            $account = DB::transaction(function () use ($attribute) {
+                return $this->account->create($attribute);
             });
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -51,7 +62,7 @@ class AccountService
     {
         try {
             $account = DB::transaction(function () use ($account) {
-               return $account->delete($account);
+                return $account->delete($account);
             });
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

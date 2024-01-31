@@ -15,7 +15,7 @@ class AccountType extends Model
         'account_type',
         'account_type_number',
         'has_opening_balance',
-        'account_type_id',
+        'account_category_id',
     ];
 
 
