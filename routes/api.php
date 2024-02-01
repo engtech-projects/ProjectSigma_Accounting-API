@@ -22,10 +22,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::get('/user', [AuthController::class, 'show'])->name('auth.user');
+        Route::get('/user', [AuthController::class, 'show']);
     });
     Route::prefix('dashboard')->group(function () {
-        Route::get('', [DashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('', [DashboardController::class, 'index']);
     });
 
     Route::resource('accounts', AccountController::class);
