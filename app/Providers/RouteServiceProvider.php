@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Exceptions\ResourceNotFound;
 use App\Models\Account;
+use App\Models\AccountCategory;
+use App\Models\AccountType;
 use Exception;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -35,6 +37,16 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('account',function($value) {
             $account = Account::find($value) ?? throw new ResourceNotFound('Account not found.',404);
             return $account;
+        });
+
+        Route::bind('account-category',function($value) {
+            $accountCategory = AccountCategory::find($value) ?? throw new ResourceNotFound('Category not found.',404);
+            return $accountCategory;
+        });
+
+        Route::bind('account-type',function($value) {
+            $accountType = AccountType::find($value) ?? throw new ResourceNotFound('Category not found.',404);
+            return $accountType;
         });
 
         $this->routes(function () {

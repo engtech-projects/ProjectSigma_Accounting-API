@@ -12,7 +12,7 @@ class AccountCategory extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'category',
+        'account_category',
         'to_increase'
     ];
     protected $hidden = [

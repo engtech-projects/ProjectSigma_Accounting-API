@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Api\v1\Store;
 
+use App\Enums\ToIncrease;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreAccountCategoryRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreAccountCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,8 @@ class StoreAccountCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "account_category" => "required|string",
+            "to_increase" => [new Enum(ToIncrease::class)],
         ];
     }
 }
