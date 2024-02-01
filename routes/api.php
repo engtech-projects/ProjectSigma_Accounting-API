@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AccountCategoryController;
 use App\Http\Controllers\Api\v1\AccountTypeController;
 use App\Http\Controllers\Api\v1\AccountController;
 use App\Http\Controllers\Api\v1\Auth\AuthController;
+use App\Http\Controllers\Api\v1\ChartOfAccountController;
 use App\Http\Controllers\Api\v1\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +29,8 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::resource('accounts', AccountController::class);
+    Route::get('chart-of-account',ChartOfAccountController::class);
     Route::resource('account-type', AccountTypeController::class);
+    Route::resource('account-category', AccountCategoryController::class);
 });
 
