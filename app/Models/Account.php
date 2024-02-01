@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -40,6 +41,12 @@ class Account extends Model
         return $this->hasMany(Account::class, 'parent_account', 'id');
     }
 
+    public function journal_book() : BelongsToMany
+    {
+        return $this->belongsToMany(JournalBook::class,'account_book','account_id','book_id');
+
+    }
+
 
 
     ## MODEL SCOPE BINDINGS ##
@@ -56,6 +63,6 @@ class Account extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('status','active');
+        return $query->where('status', 'active');
     }
 }

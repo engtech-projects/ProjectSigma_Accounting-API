@@ -35,9 +35,9 @@ class AccountService
         ]);
         return $paginate ? $query->paginate(10) : $query->get();
     }
-    public function getAccountById($account, ?array $relation = [])
+    public function getAccountById(Account $account, ?array $relation = [])
     {
-        $query = $this->account->query();
+        $query = $account->query();
         if ($relation) {
             $query->with($relation);
         }
@@ -45,13 +45,13 @@ class AccountService
     }
     public function createAccount(array $attribute)
     {
-        try {
-            $account = DB::transaction(function () use ($attribute) {
-                return $this->account->create($attribute);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+
+        $account = DB::transaction(function () use ($attribute) {
+            $account = $this->account->create($attribute);
+            $account->journal_book()->attach([1,1]);
+            return $account;
+        });
+
         return $account;
 
     }
