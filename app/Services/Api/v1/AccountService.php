@@ -47,15 +47,8 @@ class AccountService
     {
 
         $account = DB::transaction(function () use ($attribute) {
-            $bookId = 1;
-            $account = $this->account->create($attribute);
-            $account->journal_book()->attach($bookId);
-            return $account;
+            return $this->account->create($attribute);
         });
-
-
-
-
         return $account;
 
     }
