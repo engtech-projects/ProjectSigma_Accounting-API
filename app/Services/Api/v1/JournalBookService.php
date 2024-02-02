@@ -12,7 +12,7 @@ class JournalBookService
     }
     public static function getJournalBook(JournalBook $journal)
     {
-        return JournalBook::with('account')->find($journal)->first();
+        return JournalBook::find($journal)->first();
     }
     public static function createJournalBook(array $attribute)
     {
