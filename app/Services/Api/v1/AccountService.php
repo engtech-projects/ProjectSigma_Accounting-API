@@ -47,16 +47,9 @@ class AccountService
     public function createAccount(array $attribute)
     {
 
-<<<<<<< Updated upstream
-        $account = DB::transaction(function () use ($attribute) {
-            return $this->account->create($attribute);
-        });
-        return $account;
-=======
         return DB::transaction(function () use ($attribute) {
             $this->account->create($attribute);
         });
->>>>>>> Stashed changes
 
     }
     public function updateAccount($account, array $data)
