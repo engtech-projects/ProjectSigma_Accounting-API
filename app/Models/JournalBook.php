@@ -23,9 +23,9 @@ class JournalBook extends Model
 
     ## MODEL RELATION ##
 
-    public function account() : BelongsToMany
+    public function book_has_accounts() : BelongsToMany
     {
-        return $this->belongsToMany(Account::class,'account_book','account_id','book_id');
+        return $this->belongsToMany(Account::class,'account_book','book_id','account_id')->withTimestamps();
 
     }
 
