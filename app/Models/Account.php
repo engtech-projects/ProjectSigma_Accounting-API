@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 
 class Account extends Model
 {
@@ -31,15 +30,6 @@ class Account extends Model
         'deleted_at'
     ];
 
-
-/*     public static boot()
-    {
-        if($request->path() != 'api/v1/chart-of-accounts') {
-            $this->with[] = null;
-        }
-    } */
-
-
     ## MODEL RELATIONS ##
 
     public function account_type(): BelongsTo
@@ -48,12 +38,12 @@ class Account extends Model
     }
     public function sub_account(): HasMany
     {
-        return $this->hasMany(Account::class, 'parent_account', 'id')->with('sub_account');
+        return $this->hasMany(Account::class, 'parent_account', 'id');
     }
 
-    public function account_has_books(): BelongsToMany
+    public function journal_book() : BelongsToMany
     {
-        return $this->belongsToMany(JournalBook::class, 'account_book', 'account_id', 'book_id');
+        return $this->belongsToMany(JournalBook::class,'account_book','account_id','book_id');
 
     }
 

@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Services\Api\V1;
-
 use App\Models\JournalBook;
 use Illuminate\Support\Facades\DB;
 
@@ -18,8 +17,7 @@ class JournalBookService
     public static function createJournalBook(array $attribute)
     {
         return DB::transaction(function () use ($attribute) {
-            $JournalBook = JournalBook::create($attribute);
-            $JournalBook->book_has_accounts()->attach($attribute['account_id']);
+            JournalBook::create($attribute);
         });
     }
     public static function updateJournalBook(JournalBook $journalBook, array $attribute)

@@ -31,8 +31,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('dashboard',DashboardController::class);
 
-    Route::get('chart-of-accounts',ChartOfAccountController::class);
     Route::resource('accounts', AccountController::class);
+    Route::get('chart-of-accounts',ChartOfAccountController::class);
+
     Route::prefix('account')->group(function () {
         Route::resource('type', AccountTypeController::class);
         Route::resource('category', AccountCategoryController::class);

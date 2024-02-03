@@ -27,8 +27,7 @@ class StoreJournalBookRequest extends FormRequest
             "book_src" => "nullable|string",
             "book_ref" => "nullable|string",
             "book_flag" => "nullable|string",
-            "book_head" => "nullable|string",
-            "account_id" => "required|integer"
+            "book_head" => "nullable|string"
         ];
     }
 }
