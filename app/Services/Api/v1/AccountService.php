@@ -27,6 +27,7 @@ class AccountService
     }
     public function getAccountWithSubAccount(bool $paginate = true)
     {
+
         $query = AccountCategory::query()->with([
             'account_type:id,account_type_number,account_type,account_category_id',
             'account_type.account' => function ($query) {
@@ -46,37 +47,22 @@ class AccountService
     public function createAccount(array $attribute)
     {
 
-        $account = DB::transaction(function () use ($attribute) {
-            return $this->account->create($attribute);
+        return DB::transaction(function () use ($attribute) {
+            $this->account->create($attribute);
         });
-        return $account;
 
     }
     public function updateAccount($account, array $data)
     {
-        try {
-            $this->account = $account;
-            $account = DB::transaction(function () use ($data) {
-                return $this->account->update($data);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-
-        return $account;
+        return DB::transaction(function () use ($data) {
+            $this->account->update($data);
+        });
 
     }
     public function deleteAccount($account)
     {
-        try {
-            $account = DB::transaction(function () use ($account) {
-                return $account->delete($account);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-        return $account;
-
-
+        return DB::transaction(function () use ($account) {
+            return $account->delete($account);
+        });
     }
 }
