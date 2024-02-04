@@ -11,18 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccountType extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $primaryKey = "type_id";
 
     protected $fillable = [
-        'account_type',
-        'account_type_number',
+        'type_name',
+        'type_number',
         'has_opening_balance',
-        'account_category_id',
-    ];
-
-    protected $hidden = [
-        'deleted_at',
-        'created_at',
-        'updated_at'
+        'category_id',
     ];
 
 
@@ -30,12 +25,12 @@ class AccountType extends Model
 
     public function account(): HasMany
     {
-        return $this->hasMany(Account::class);
+        return $this->hasMany(Account::class,'account_id');
     }
 
     public function account_category(): BelongsTo
     {
-        return $this->belongsTo(AccountCategory::class);
+        return $this->belongsTo(AccountCategory::class,'category_id');
     }
 
 

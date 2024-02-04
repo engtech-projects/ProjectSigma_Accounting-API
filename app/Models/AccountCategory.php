@@ -11,22 +11,17 @@ class AccountCategory extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $primaryKey = "category_id";
     protected $fillable = [
-        'account_category',
+        'category_name',
         'to_increase'
     ];
-    protected $hidden = [
-        'deleted_at',
-        'created_at',
-        'updated_at'
-    ];
-
 
     ## MODEL RELATIONS##
 
     public function account_type(): HasMany
     {
-        return $this->hasMany(AccountType::class);
+        return $this->hasMany(AccountType::class,'type_id');
     }
     ## MODEL SCOPES BINDING ##
 }

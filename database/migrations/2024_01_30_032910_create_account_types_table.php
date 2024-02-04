@@ -11,15 +11,17 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('account_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('account_type_number');
-            $table->string('account_type');
+            $table->id('type_id');
+            $table->string('type_number');
+            $table->string('type_name');
             $table->boolean('has_opening_balance')
-            ->default(false);
-            $table->unsignedBigInteger('account_category_id');
-            $table->foreign('account_category_id')
-                ->references('id')
+                ->default(false);
+            $table->unsignedBigInteger('category_id');
+
+            $table->foreign('category_id')
+                ->references('category_id')
                 ->on('account_categories');
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -31,7 +31,7 @@ class UpdateAccountRequest extends FormRequest
             'parent_account' => 'integer|nullable',
             'status' => [new Enum(AccountStatus::class)],
             'bank_reconciliation' => [new Enum(BankReconciliation::class)],
-            'account_type_id' => 'required|integer'
+            'type_id' => 'required|integer'
         ];
     }
 }

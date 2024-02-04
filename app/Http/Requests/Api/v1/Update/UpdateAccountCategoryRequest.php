@@ -24,7 +24,7 @@ class UpdateAccountCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "account_category" => "required|string",
+            "category_name" => "required|string",
             "to_increase" => [new Enum(ToIncrease::class)],
         ];
     }

@@ -20,7 +20,7 @@ class AccountResource extends JsonResource
         //return parent::toArray($request);
 
         return [
-            'id' => $this->id,
+            'account_id' => $this->account_id,
             'account_number' => $this->account_number,
             'account_name' => $this->account_name,
             'account_description' => $this->account_description,
@@ -28,7 +28,7 @@ class AccountResource extends JsonResource
             'status' => $this->status,
             'bank_reconciliation' => $this->bank_reconciliation,
             'statement' => $this->statement,
-            'account_type_id' => $this->account_type_id,
+            'type_id' => $this->type_id,
             'account_type' => new AccountTypeResource($this->whenLoaded('type'))
 
         ];

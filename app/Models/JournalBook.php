@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pivot\BookAccount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class JournalBook extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $primaryKey = "book_id";
 
     protected $fillable = [
         "book_code",
@@ -23,9 +26,9 @@ class JournalBook extends Model
 
     ## MODEL RELATION ##
 
-    public function book_has_accounts() : BelongsToMany
+    public function book_accounts() : BelongsToMany
     {
-        return $this->belongsToMany(Account::class,'account_book','book_id','account_id')->withTimestamps();
+        return $this->belongsToMany(Account::class,'account_book','book_id','account_id')->using(BookAccount::class)->withPivot(['book_id','account_id'])->withTimestamps();
 
     }
 

@@ -10,23 +10,23 @@ class AccountCategorySeeder extends Seeder
 {
     protected $categoriesSeeds = [
         [
-            'account_category' => 'assets',
+            'category_name' => 'assets',
             'to_increase' => 'debit',
         ],
         [
-            'account_category' => 'liabilites',
+            'category_name' => 'liabilites',
             'to_increase' => 'credit',
         ],
         [
-            'account_category' => 'equity',
+            'category_name' => 'equity',
             'to_increase' => 'credit',
         ],
         [
-            'account_category' => 'income',
+            'category_name' => 'income',
             'to_increase' => 'credit',
         ],
         [
-            'account_category' => 'expense',
+            'category_name' => 'expense',
             'to_increase' => 'debit',
         ],
 
@@ -35,7 +35,7 @@ class AccountCategorySeeder extends Seeder
     {
         foreach ($this->categoriesSeeds as $value) {
             AccountCategory::create([
-                'account_category' => $value['account_category'],
+                'category_name' => $value['category_name'],
                 'to_increase' => $value['to_increase'],
             ]);
         }

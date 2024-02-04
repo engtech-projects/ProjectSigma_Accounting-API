@@ -10,29 +10,29 @@ class AccountTypeSeeder extends Seeder
 {
     protected $typeSeeds = [
         [
-            'account_type' => 'CURRENT ASSETS',
-            'account_type_number' => '1000',
-            'account_category_id' => 1,
+            'type_name' => 'CURRENT ASSETS',
+            'type_number' => '1000',
+            'category_id' => 1,
         ],
         [
-            'account_type' => "STOCKHOLDER'S EQUITY",
-            'account_type_number' => '3000',
-            'account_category_id' => 3,
+            'type_name' => "STOCKHOLDER'S EQUITY",
+            'type_number' => '3000',
+            'category_id' => 3,
         ],
         [
-            'account_type' => 'OPERATING EXPENSES',
-            'account_type_number' => '5000',
-            'account_category_id' => 5,
+            'type_name' => 'OPERATING EXPENSES',
+            'type_number' => '5000',
+            'category_id' => 5,
         ],
         [
-            'account_type' => 'OTHER INCOME',
-            'account_type_number' => '4000',
-            'account_category_id' => 4,
+            'type_name' => 'OTHER INCOME',
+            'type_number' => '4000',
+            'category_id' => 4,
         ],
         [
-            'account_type' => 'CURRENT LIABILITIES',
-            'account_type_number' => '2000',
-            'account_category_id' => 2,
+            'type_name' => 'CURRENT LIABILITIES',
+            'type_number' => '2000',
+            'category_id' => 2,
         ],
     ];
 
@@ -40,9 +40,9 @@ class AccountTypeSeeder extends Seeder
     {
         foreach ($this->typeSeeds as $value) {
             AccountType::create([
-                'account_type' => $value['account_type'],
-                'account_type_number' => $value['account_type_number'],
-                'account_category_id' => $value['account_category_id'],
+                'type_name' => $value['type_name'],
+                'type_number' => $value['type_number'],
+                'category_id' => $value['category_id'],
             ]);
         }
     }

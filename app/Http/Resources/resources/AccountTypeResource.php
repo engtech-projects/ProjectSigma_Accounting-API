@@ -12,11 +12,11 @@ class AccountTypeResource extends JsonResource
         //return parent::toArray($request);
 
         return [
-            'id'=> $this->id,
-            'account_type_number' => $this->account_type_number,
-            'type' => $this->account_type,
-            'has_opening_balance' => $this->account_type_name,
-            'account_category_id' => $this->account_category_id,
+            'type_id'=> $this->type_id,
+            'type_number' => $this->account_type_number,
+            'type_name' => $this->account_type,
+            'has_opening_balance' => $this->has_opening_balance,
+            'category_id' => $this->category_id,
             'account_category' => $this->whenLoaded('account_category')
         ];
     }

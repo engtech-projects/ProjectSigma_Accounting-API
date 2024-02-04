@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account_book', function (Blueprint $table) {
+        Schema::create('account_books', function (Blueprint $table) {
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('book_id');
 
-            $table->foreign('book_id')->references('id')->on('journal_books');
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreign('book_id')->references('book_id')->on('journal_books');
+            $table->foreign('account_id')->references('account_id')->on('accounts');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

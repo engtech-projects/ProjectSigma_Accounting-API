@@ -13,21 +13,25 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('accounts', function (Blueprint $table) {
-            $table->id();
+            $table->id('account_id');
             $table->string('account_number');
             $table->string('account_name');
-            $table->string('account_description');
+            $table->string('account_description')->nullable();
             $table->unsignedBigInteger('parent_account')->nullable();
             $table->enum('status', ['active', 'inactive'])
                 ->index()
                 ->default(AccountStatus::ACTIVE);
+
+            $table->enum('type', ['H', 'L','S'])
+                ->index()
+                ->default('H');
             $table->enum('bank_reconciliation', ['yes', 'no']);
             $table->string('statement')->nullable();
-            $table->unsignedBigInteger('account_type_id');
-            $table->foreign('account_type_id')
-                ->references('id')
+            $table->unsignedBigInteger('type_id');
+            $table->foreign('type_id')
+                ->references('type_id')
                 ->on('account_types');
-            $table->foreign('parent_account')->references('id')->on('accounts');
+            $table->foreign('parent_account')->references('account_id')->on('accounts');
             $table->softDeletes();
             $table->timestamps();
         });

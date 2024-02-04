@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Pivot\BookAccount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,6 +15,7 @@ class Account extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $primaryKey = "account_id";
     protected $fillable = [
         'account_name',
         'account_number',
@@ -23,21 +25,8 @@ class Account extends Model
         'bank_reconciliation',
         'statement',
         'type',
-        'account_type_id',
+        'type_id',
     ];
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
-
-
-/*     public static boot()
-    {
-        if($request->path() != 'api/v1/chart-of-accounts') {
-            $this->with[] = null;
-        }
-    } */
 
 
     ## MODEL RELATIONS ##
@@ -48,23 +37,20 @@ class Account extends Model
     }
     public function sub_account(): HasMany
     {
-        return $this->hasMany(Account::class, 'parent_account', 'id')->with('sub_account');
+        return $this->hasMany(Account::class, 'parent_account', 'account_id')->with('sub_account');
     }
 
     public function account_has_books(): BelongsToMany
     {
-        return $this->belongsToMany(JournalBook::class, 'account_book', 'account_id', 'book_id');
+        return $this->belongsToMany(JournalBook::class, 'account_book')
+            ->using(BookAccount::class)
+            ->withPivot(['account_id', 'book_id']);
 
     }
 
 
 
     ## MODEL SCOPE BINDINGS ##
-
-    public function scopeWithRelation($query, $relation = [])
-    {
-        return $query->with($relation);
-    }
 
     public function scopeParentAccount($query)
     {

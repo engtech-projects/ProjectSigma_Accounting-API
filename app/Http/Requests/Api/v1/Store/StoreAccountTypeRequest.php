@@ -22,10 +22,10 @@ class StoreAccountTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "account_type_number" => 'required|string',
-            "account_type" => 'required|string',
+            "type_number" => 'required|string',
+            "type_name" => 'required|string',
             "has_opening_balance" => 'boolean',
-            "account_category_id" => 'required|integer'
+            "category_id" => 'required|integer'
         ];
     }
 }

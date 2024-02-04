@@ -4,7 +4,6 @@ namespace App\Services\Api\v1;
 
 use App\Models\Account;
 use App\Models\AccountCategory;
-use Exception;
 use Illuminate\Support\Facades\DB;
 
 class AccountService
@@ -14,7 +13,7 @@ class AccountService
     {
         $this->account = $account;
     }
-    public function getAccounts(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAccountList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
         $query = $this->account->query()->active();
         if ($relation) {
@@ -29,10 +28,8 @@ class AccountService
     {
 
         $query = AccountCategory::query()->with([
-            'account_type:id,account_type_number,account_type,account_category_id',
-            'account_type.account' => function ($query) {
-                $query->parentAccount()->with('sub_account');
-            },
+            'account_type:type_id,type_number,type_name,category_id',
+            'account_type.account'
         ]);
         return $paginate ? $query->paginate(10) : $query->get();
     }
