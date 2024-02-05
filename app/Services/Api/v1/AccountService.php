@@ -3,7 +3,6 @@
 namespace App\Services\Api\v1;
 
 use App\Models\Account;
-use App\Models\AccountCategory;
 use Illuminate\Support\Facades\DB;
 
 class AccountService
@@ -15,7 +14,7 @@ class AccountService
     }
     public function getAccountList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
-        $query = $this->account->query()->active();
+        $query = $this->account->query()->activeAccount();
         if ($relation) {
             $query->with($relation);
         }
@@ -27,10 +26,7 @@ class AccountService
     public function getAccountWithSubAccount(bool $paginate = true)
     {
 
-        $query = AccountCategory::query()->with([
-            'account_type:type_id,type_number,type_name,category_id',
-            'account_type.account'
-        ]);
+        $query = Account::query();
         return $paginate ? $query->paginate(10) : $query->get();
     }
     public function getAccountById(Account $account, ?array $relation = [])
@@ -45,14 +41,25 @@ class AccountService
     {
 
         return DB::transaction(function () use ($attribute) {
-            $this->account->create($attribute);
+            return $this->account->create($attribute)
+                ->account_balance()->create([
+                        'period_id' => 1,
+                        'opening_balance' => $attribute['opening_balance'],
+                        'remaining_balance' => $attribute['opening_balance'],
+                    ]);
         });
 
     }
-    public function updateAccount($account, array $data)
+    public function updateAccount($account, array $attribute)
     {
-        return DB::transaction(function () use ($data) {
-            $this->account->update($data);
+        return DB::transaction(function () use ($attribute, $account) {
+            $account->update($attribute);
+            $account->account_balance()->update([
+                'period_id' => 1,
+                'opening_balance' => $attribute['opening_balance'],
+                'remaining_balance' => $attribute['opening_balance'],
+            ]);
+            return $account;
         });
 
     }

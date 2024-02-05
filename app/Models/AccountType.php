@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\AccountCategory;
+use App\Enums\BalanceType;
+use App\Enums\Notation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,10 +16,17 @@ class AccountType extends Model
     protected $primaryKey = "type_id";
 
     protected $fillable = [
-        'type_name',
-        'type_number',
-        'has_opening_balance',
-        'category_id',
+        'account_type',
+        'account_category',
+        'balance_type',
+        'notation',
+    ];
+
+    protected $casts = [
+        'acccount_type' => 'string',
+        'account_category' => AccountCategory::class,
+        'balance_type' => BalanceType::class,
+        'notation' => Notation::class,
     ];
 
 
@@ -25,13 +34,10 @@ class AccountType extends Model
 
     public function account(): HasMany
     {
-        return $this->hasMany(Account::class,'account_id');
+        return $this->hasMany(Account::class, 'account_id');
     }
 
-    public function account_category(): BelongsTo
-    {
-        return $this->belongsTo(AccountCategory::class,'category_id');
-    }
+
 
 
 

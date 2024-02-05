@@ -4,10 +4,8 @@ namespace App\Providers;
 
 use App\Exceptions\ResourceNotFound;
 use App\Models\Account;
-use App\Models\AccountCategory;
 use App\Models\AccountType;
 use App\Models\JournalBook;
-use Exception;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -40,20 +38,12 @@ class RouteServiceProvider extends ServiceProvider
             return $account;
         });
 
-        Route::bind('category',function($value) {
-            $accountCategory = AccountCategory::find($value) ?? throw new ResourceNotFound('Category not found.',404);
-            return $accountCategory;
-        });
 
         Route::bind('type',function($value) {
             $accountType = AccountType::find($value) ?? throw new ResourceNotFound('Category not found.',404);
             return $accountType;
         });
 
-        Route::bind('book',function($value) {
-            $journalBook = JournalBook::find($value) ?? throw new ResourceNotFound('Journal Book not found.',404);
-            return $journalBook;
-        });
 
         $this->routes(function () {
             Route::middleware('api')

@@ -12,16 +12,10 @@ return new class extends Migration {
     {
         Schema::create('account_types', function (Blueprint $table) {
             $table->id('type_id');
-            $table->string('type_number');
-            $table->string('type_name');
-            $table->boolean('has_opening_balance')
-                ->default(false);
-            $table->unsignedBigInteger('category_id');
-
-            $table->foreign('category_id')
-                ->references('category_id')
-                ->on('account_categories');
-
+            $table->string('account_type');
+            $table->enum('account_category',['asset','equity','expense','income','liability']);
+            $table->enum('balance_type',['debit','credit']);
+            $table->enum('notation',['+','-']);
             $table->softDeletes();
             $table->timestamps();
         });

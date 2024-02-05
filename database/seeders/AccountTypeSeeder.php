@@ -10,29 +10,34 @@ class AccountTypeSeeder extends Seeder
 {
     protected $typeSeeds = [
         [
-            'type_name' => 'CURRENT ASSETS',
-            'type_number' => '1000',
-            'category_id' => 1,
+            'account_type' => 'Account Receivable',
+            'account_category' => 'asset',
+            'balance_type' =>  'debit',
+            'notation' => '+'
         ],
         [
-            'type_name' => "STOCKHOLDER'S EQUITY",
-            'type_number' => '3000',
-            'category_id' => 3,
+            'account_type' => 'Equity',
+            'account_category' => 'equity',
+            'balance_type' =>  'credit',
+            'notation' => '-'
         ],
         [
-            'type_name' => 'OPERATING EXPENSES',
-            'type_number' => '5000',
-            'category_id' => 5,
+            'account_type' => 'Other Expense',
+            'account_category' => 'expense',
+            'balance_type' =>  'debit',
+            'notation' => '+'
         ],
         [
-            'type_name' => 'OTHER INCOME',
-            'type_number' => '4000',
-            'category_id' => 4,
+            'account_type' => 'Income',
+            'account_category' => 'income',
+            'balance_type' =>  'credit',
+            'notation' => '-'
         ],
         [
-            'type_name' => 'CURRENT LIABILITIES',
-            'type_number' => '2000',
-            'category_id' => 2,
+            'account_type' => 'Other Current Liabilty',
+            'account_category' => 'liability',
+            'balance_type' =>  'credit',
+            'notation' => '-'
         ],
     ];
 
@@ -40,9 +45,10 @@ class AccountTypeSeeder extends Seeder
     {
         foreach ($this->typeSeeds as $value) {
             AccountType::create([
-                'type_name' => $value['type_name'],
-                'type_number' => $value['type_number'],
-                'category_id' => $value['category_id'],
+                'account_type' => $value['account_type'],
+                'account_category' => $value['account_category'],
+                'balance_type' => $value['balance_type'],
+                'notation' => $value['notation']
             ]);
         }
     }

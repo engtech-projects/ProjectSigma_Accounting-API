@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\Store;
+namespace App\Http\Requests\Api\v1\Update;
 
-use App\Enums\AccountCategory;
-use App\Enums\Notation;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
-class StoreAccountTypeRequest extends FormRequest
+class UpdateBookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +22,12 @@ class StoreAccountTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "account_type" => 'required|string',
-            "account_category" => [new Enum(AccountCategory::class)],
-            "balance_type" => 'required|string',
-            'notation' => [new Enum(Notation::class)],
+            "book_code" => 'required|string',
+            "book_name" => "required|string",
+            "book_src" => "nullable|string",
+            "book_ref" => "nullable|string",
+            "book_flag" => "nullable|string",
+            "book_head" => "nullable|string"
         ];
     }
 }

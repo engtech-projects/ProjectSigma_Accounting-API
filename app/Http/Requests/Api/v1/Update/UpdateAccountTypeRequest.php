@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Api\v1\Update;
 
+use App\Enums\AccountCategory;
+use App\Enums\Notation;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class UpdateAccountTypeRequest extends FormRequest
 {
@@ -22,10 +25,10 @@ class UpdateAccountTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "type_number" => 'required|string',
-            "type_name" => 'required|string',
-            "has_opening_balance" => 'boolean',
-            "category_id" => 'required|integer'
+            "account_type" => 'required|string',
+            "account_category" => [new Enum(AccountCategory::class)],
+            "balance_type" => 'required|string',
+            'notation' => [new Enum(Notation::class)],
         ];
     }
 }

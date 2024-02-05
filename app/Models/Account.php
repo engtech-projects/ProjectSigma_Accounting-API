@@ -2,18 +2,21 @@
 
 namespace App\Models;
 
+use App\Enums\AccountStatus;
 use App\Models\Pivot\BookAccount;
+use App\Traits\ModelGlobalScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class Account extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ModelGlobalScope;
 
     protected $primaryKey = "account_id";
     protected $fillable = [
@@ -21,11 +24,15 @@ class Account extends Model
         'account_number',
         'account_description',
         'status',
-        'parent_account',
-        'bank_reconciliation',
-        'statement',
-        'type',
         'type_id',
+    ];
+
+    protected $casts = [
+        'account_name' => 'string',
+        'account_number' => 'string',
+        'account_description' => 'string',
+        'status' => AccountStatus::class,
+        'type_id' => 'integer'
     ];
 
 
@@ -35,30 +42,26 @@ class Account extends Model
     {
         return $this->belongsTo(AccountType::class);
     }
-    public function sub_account(): HasMany
-    {
-        return $this->hasMany(Account::class, 'parent_account', 'account_id')->with('sub_account');
-    }
 
-    public function account_has_books(): BelongsToMany
+    public function book_accounts(): BelongsToMany
     {
-        return $this->belongsToMany(JournalBook::class, 'account_book')
+        return $this->belongsToMany(Book::class, 'book_accounts')
             ->using(BookAccount::class)
             ->withPivot(['account_id', 'book_id']);
 
     }
 
+    public function account_balance(): HasOne
+    {
+        return $this->hasOne(OpeningBalance::class,'account_id');
+    }
+
 
 
     ## MODEL SCOPE BINDINGS ##
-
-    public function scopeParentAccount($query)
+    public function scopeActiveAccount($query)
     {
-        return $query->whereNull('parent_account');
+        return $query->where('status', AccountStatus::ACTIVE);
     }
 
-    public function scopeActive($query)
-    {
-        return $query->where('status', 'active');
-    }
 }

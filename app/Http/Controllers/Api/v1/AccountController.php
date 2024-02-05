@@ -8,8 +8,6 @@ use App\Http\Requests\Api\v1\Update\UpdateAccountRequest;
 use App\Http\Resources\collections\AccountCollections;
 use App\Http\Resources\resources\AccountResource;
 use App\Models\Account;
-use App\Models\AccountCategory;
-use App\Models\JournalBook;
 use App\Services\Api\v1\AccountService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
