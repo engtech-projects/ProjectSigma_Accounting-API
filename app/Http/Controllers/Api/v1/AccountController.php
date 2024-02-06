@@ -26,6 +26,7 @@ class AccountController extends Controller
     {
 
         $accounts = AccountResource::collection($this->accountService->getAccountList());
+
         return new AccountCollections($accounts);
     }
 
