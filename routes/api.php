@@ -33,10 +33,8 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('type', AccountTypeController::class);
     });
     Route::resource('book', BookController::class);
+    Route::resource('posting-period', PostingPeriodController::class);
 
-    Route::prefix('system-setup')->group(function () {
-        Route::resource('posting-period', PostingPeriodController::class);
-    });
 
 
 });
