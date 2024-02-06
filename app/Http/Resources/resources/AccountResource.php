@@ -15,6 +15,7 @@ class AccountResource extends JsonResource
      */
 
 
+    public static $wrap = "accounts";
     public function toArray(Request $request): array
     {
         //return parent::toArray($request);
