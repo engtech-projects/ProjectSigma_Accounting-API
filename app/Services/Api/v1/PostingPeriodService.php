@@ -3,6 +3,7 @@
 namespace App\Services\Api\V1;
 
 use App\Models\PostingPeriod;
+use Illuminate\Support\Facades\DB;
 
 class PostingPeriodService
 {
@@ -16,10 +17,10 @@ class PostingPeriodService
     public function getPostingPeriodList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
         $query = $this->postingPeriod->query();
-        if($relation) {
+        if ($relation) {
             $query->with($relation);
         }
-        if($columns) {
+        if ($columns) {
             $query->select($columns);
         }
 
@@ -29,21 +30,29 @@ class PostingPeriodService
 
     public function getPostingPeriod($postingPeriod)
     {
-
+        return $postingPeriod;
     }
 
     public function createPostingPeriod(array $attribute)
     {
-
+        return DB::transaction(function () use ($attribute) {
+            return $this->postingPeriod->create($attribute);
+        });
     }
 
-    public function updatePostingPeriod(array $attribute)
+    public function updatePostingPeriod($postingPeriod, array $attribute)
     {
+        return DB::transaction(function () use ($postingPeriod, $attribute) {
+            return $postingPeriod->update($attribute);
+        });
 
     }
 
     public function deletePostingPeriod($postingPeriod)
     {
+        return DB::transaction(function () use ($postingPeriod) {
+            return $postingPeriod->delete();
+        });
 
     }
 

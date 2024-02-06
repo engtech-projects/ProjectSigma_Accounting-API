@@ -6,6 +6,7 @@ use App\Exceptions\ResourceNotFound;
 use App\Models\Account;
 use App\Models\AccountType;
 use App\Models\JournalBook;
+use App\Models\PostingPeriod;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -33,15 +34,20 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        Route::bind('accounts',function($value) {
-            $account = Account::find($value) ?? throw new ResourceNotFound('Account not found.',404);
+        Route::bind('accounts', function ($value) {
+            $account = Account::find($value) ?? throw new ResourceNotFound('Account not found.', 404);
             return $account;
         });
 
 
-        Route::bind('type',function($value) {
-            $accountType = AccountType::find($value) ?? throw new ResourceNotFound('Category not found.',404);
+        Route::bind('type', function ($value) {
+            $accountType = AccountType::find($value) ?? throw new ResourceNotFound('Category not found.', 404);
             return $accountType;
+        });
+
+        Route::bind('posting-period', function ($value) {
+            $postingPeriod = PostingPeriod::find($value) ?? throw new ResourceNotFound('Posting period not found.', 404);
+            return $postingPeriod;
         });
 
 

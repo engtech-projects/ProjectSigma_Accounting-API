@@ -45,7 +45,7 @@ class AccountController extends Controller
     }
 
     /**
-     * Display the specified resource.
+ * Display the specified resource.
      */
     public function show(Account $account)
     {

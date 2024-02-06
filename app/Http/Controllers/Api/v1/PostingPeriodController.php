@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\collections\PostingPeriodCollection;
+use App\Http\Resources\resources\PostingPeriodResource;
 use App\Models\PostingPeriod;
 use App\Http\Requests\Api\v1\Store\StorePostingPeriodRequest;
 use App\Http\Requests\Api\v1\Update\UpdatePostingPeriodRequest;
 use App\Services\Api\V1\PostingPeriodService;
+use Illuminate\Http\JsonResponse;
 
 class PostingPeriodController extends Controller
 {
@@ -32,7 +34,12 @@ class PostingPeriodController extends Controller
      */
     public function store(StorePostingPeriodRequest $request)
     {
-        //
+        $data = $request->validated();
+        $this->postingPeriodService->createPostingPeriod($data);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Posting period successfully created.'
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -40,7 +47,8 @@ class PostingPeriodController extends Controller
      */
     public function show(PostingPeriod $postingPeriod)
     {
-        //
+        $postingPeriod = $this->postingPeriodService->getPostingPeriod($postingPeriod);
+        return new PostingPeriodResource($postingPeriod);
     }
 
     /**
@@ -48,7 +56,13 @@ class PostingPeriodController extends Controller
      */
     public function update(UpdatePostingPeriodRequest $request, PostingPeriod $postingPeriod)
     {
-        //
+        $data = $request->validated();
+        $this->postingPeriodService->updatePostingPeriod($postingPeriod, $data);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Posting period successfully updated.'
+        ]);
     }
 
     /**
@@ -56,6 +70,10 @@ class PostingPeriodController extends Controller
      */
     public function destroy(PostingPeriod $postingPeriod)
     {
-        //
+        $this->postingPeriodService->deletePostingPeriod($postingPeriod);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Posting period successfully deleted.'
+        ]);
     }
 }
