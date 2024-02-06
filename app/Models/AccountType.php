@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\AccountCategory;
 use App\Enums\BalanceType;
 use App\Enums\Notation;
+use App\Traits\ModelGlobalScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountType extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, ModelGlobalScope;
     protected $primaryKey = "type_id";
 
     protected $fillable = [
@@ -32,9 +33,9 @@ class AccountType extends Model
 
     ## MODEL RELATIONS ##
 
-    public function account(): HasMany
+    public function accounts(): HasMany
     {
-        return $this->hasMany(Account::class, 'account_id');
+        return $this->hasMany(Account::class, 'type_id');
     }
 
 

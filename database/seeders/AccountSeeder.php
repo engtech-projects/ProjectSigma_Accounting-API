@@ -25,7 +25,7 @@ class AccountSeeder extends Seeder
             'account_number' => "1005",
             'account_name' => "CASH AND CASH EQUIVALENTS	CASH AND CASH EQUIVALENTS",
             'status' => "active",
-            'type_id' => 2,
+            'type_id' => 5,
         ],
 
         [
@@ -40,21 +40,21 @@ class AccountSeeder extends Seeder
             'account_number' => "1015",
             'account_name' => "Check and Other Cash Items (COCI)	Check and Other Cash Items (COCI)",
             'status' => "active",
-            'type_id' => 2,
+            'type_id' => 1,
             'type' => "L",
         ],
         [
             'account_number' => "1020",
             'account_name' => "Petty Cash Fund	Petty Cash Fund",
             'status' => "active",
-            'type_id' => 2,
+            'type_id' => 3,
             'type' => "L"
         ],
         [
             'account_number' => "1025",
             'account_name' => "Cash in Bank (EWB)	Cash in Bank (EWB)",
             'status' => "active",
-            'type_id' => 2,
+            'type_id' => 4,
             'type' => "L"
         ],
     ];

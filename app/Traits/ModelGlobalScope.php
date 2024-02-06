@@ -5,9 +5,9 @@ namespace App\Traits;
 trait ModelGlobalScope
 {
 
-    public function scopeExcludeColumn($query, $columns)
+    public function scopeColumns($query, $columns= [])
     {
-        $query->select(array_diff($this->columns, (array) $columns));
+        $query->select($columns);
     }
 }
 

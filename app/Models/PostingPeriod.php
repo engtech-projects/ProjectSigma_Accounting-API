@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PostingPeriodStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,4 +22,14 @@ class PostingPeriod extends Model
         "period_end" => 'date:Y-m-d',
         'status' => PostingPeriodStatus::class,
     ];
+
+
+
+    ## MODEL RELATION ##
+
+
+
+
+    ## MODEL SCOPE BINDING ##
+
 }

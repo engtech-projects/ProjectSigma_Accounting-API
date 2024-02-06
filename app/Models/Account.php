@@ -40,7 +40,7 @@ class Account extends Model
 
     public function account_type(): BelongsTo
     {
-        return $this->belongsTo(AccountType::class);
+        return $this->belongsTo(AccountType::class,'type_id');
     }
 
     public function book_accounts(): BelongsToMany
@@ -53,7 +53,7 @@ class Account extends Model
 
     public function account_balance(): HasOne
     {
-        return $this->hasOne(OpeningBalance::class,'account_id');
+        return $this->hasOne(OpeningBalance::class, 'account_id');
     }
 
 
@@ -62,6 +62,11 @@ class Account extends Model
     public function scopeActiveAccount($query)
     {
         return $query->where('status', AccountStatus::ACTIVE);
+    }
+
+    public function scopeRelations($query, array $relations = [])
+    {
+        return $query->with($relations);
     }
 
 }

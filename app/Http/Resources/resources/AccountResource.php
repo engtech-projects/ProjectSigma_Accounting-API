@@ -29,7 +29,7 @@ class AccountResource extends JsonResource
             'bank_reconciliation' => $this->bank_reconciliation,
             'statement' => $this->statement,
             'type_id' => $this->type_id,
-            'account_type' => new AccountTypeResource($this->whenLoaded('type'))
+            'account_type' => new AccountTypeResource($this->whenLoaded('account_type'))
 
         ];
     }

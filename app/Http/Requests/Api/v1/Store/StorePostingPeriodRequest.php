@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\v1\Store;
 
+use App\Enums\PostingPeriodStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
-class UpdatePostingPeriodRequest extends FormRequest
+class StorePostingPeriodRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,9 @@ class UpdatePostingPeriodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "period_start" => "required|date|date_format:Y-m-d",
+            "period_end" => "required|date|date_format:Y-m-d",
+            "status" => [new Enum(PostingPeriodStatus::class)]
         ];
     }
 }

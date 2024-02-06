@@ -2,23 +2,24 @@
 
 namespace App\Http\Resources\collections;
 
-use App\Http\Resources\resources\AccountTypeResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AccountTypeCollection extends ResourceCollection
+class PostingPeriodCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>
      */
-    public static $wrap = "account_type";
 
+    public static $wrap = "posting_periods";
     public function toArray(Request $request): array
     {
-        return [
-            'data' => AccountTypeResource::collection($this->collection),
-        ];
+        /* return [
+            "data" => $this->collection
+        ]; */
+
+        return parent::toArray($request);
     }
 }

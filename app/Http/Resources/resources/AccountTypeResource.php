@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\resources;
 
+use App\Http\Resources\collections\AccountCollections;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,6 +18,7 @@ class AccountTypeResource extends JsonResource
             'account_category' => $this->account_category,
             'balance_type' => $this->balance_type,
             'notation' => $this->notation,
+            'accounts' => new AccountCollections($this->whenLoaded('accounts'))
         ];
     }
 }

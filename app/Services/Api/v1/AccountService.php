@@ -3,6 +3,7 @@
 namespace App\Services\Api\v1;
 
 use App\Models\Account;
+use App\Models\AccountType;
 use Illuminate\Support\Facades\DB;
 
 class AccountService
@@ -12,22 +13,22 @@ class AccountService
     {
         $this->account = $account;
     }
-    public function getAccountList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAccountList(?array $relation = [], ?array $columns = [])
     {
         $query = $this->account->query()->activeAccount();
         if ($relation) {
             $query->with($relation);
         }
-        if (!empty($columns)) {
+        if ($columns) {
             $query->select($columns);
         }
-        return $paginate ? $query->paginate() : $query->get();
+        return $query->get();
     }
-    public function getAccountWithSubAccount(bool $paginate = true)
-    {
 
-        $query = Account::query();
-        return $paginate ? $query->paginate(10) : $query->get();
+    public function chartOfAccounts()
+    {
+        return Account::with('account_type')->get();
+
     }
     public function getAccountById(Account $account, ?array $relation = [])
     {

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\v1\Auth\AuthController;
 use App\Http\Controllers\Api\v1\BookController;
 use App\Http\Controllers\Api\v1\ChartOfAccountController;
 use App\Http\Controllers\Api\v1\DashboardController;
+use App\Http\Controllers\Api\v1\PostingPeriodController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,14 +25,18 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('auth')->group(function () {
         Route::get('/user', [AuthController::class, 'show']);
     });
-    Route::get('dashboard',DashboardController::class);
+    Route::get('dashboard', DashboardController::class);
 
-    Route::get('chart-of-accounts',ChartOfAccountController::class);
+    Route::get('chart-of-accounts', ChartOfAccountController::class);
     Route::resource('accounts', AccountController::class);
     Route::prefix('account')->group(function () {
         Route::resource('type', AccountTypeController::class);
     });
-    Route::resource('book',BookController::class);
+    Route::resource('book', BookController::class);
+
+    Route::prefix('system-setup')->group(function () {
+        Route::resource('posting-period', PostingPeriodController::class);
+    });
 
 
 });

@@ -25,7 +25,7 @@ class AccountController extends Controller
     public function index()
     {
 
-        return new AccountCollections($this->accountService->getAccountList());
+        return AccountResource::collection($this->accountService->getAccountList());
     }
 
     /**
