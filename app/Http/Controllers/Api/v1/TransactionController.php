@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OpeningBalance;
-use App\Http\Requests\StoreOpeningBalanceRequest;
-use App\Http\Requests\UpdateOpeningBalanceRequest;
+use App\Models\Transaction;
+use App\Http\Requests\StoreTransactionRequest;
+use App\Http\Requests\UpdateTransactionRequest;
 
-class OpeningBalanceController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class OpeningBalanceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreOpeningBalanceRequest $request)
+    public function store(StoreTransactionRequest $request)
     {
         //
     }
@@ -27,7 +27,7 @@ class OpeningBalanceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(OpeningBalance $openingBalance)
+    public function show(Transaction $transaction)
     {
         //
     }
@@ -35,7 +35,7 @@ class OpeningBalanceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateOpeningBalanceRequest $request, OpeningBalance $openingBalance)
+    public function update(UpdateTransactionRequest $request, Transaction $transaction)
     {
         //
     }
@@ -43,7 +43,7 @@ class OpeningBalanceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(OpeningBalance $openingBalance)
+    public function destroy(Transaction $transaction)
     {
         //
     }
