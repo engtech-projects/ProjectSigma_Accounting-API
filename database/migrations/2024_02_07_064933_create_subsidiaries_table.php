@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('subsidiaries', function (Blueprint $table) {
             $table->id('subsidiary_id');
             $table->string('subsidiary_name');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

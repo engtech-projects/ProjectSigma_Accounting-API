@@ -7,6 +7,7 @@ use App\Models\Account;
 use App\Models\AccountType;
 use App\Models\JournalBook;
 use App\Models\PostingPeriod;
+use App\Models\TransactionType;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,19 +36,20 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('accounts', function ($value) {
-            $account = Account::find($value) ?? throw new ResourceNotFound('Account not found.', 404);
-            return $account;
+            return Account::find($value) ?? throw new ResourceNotFound('Account not found.', 404);
         });
 
 
         Route::bind('type', function ($value) {
-            $accountType = AccountType::find($value) ?? throw new ResourceNotFound('Category not found.', 404);
-            return $accountType;
+            return AccountType::find($value) ?? throw new ResourceNotFound('Category not found.', 404);
         });
 
         Route::bind('posting-period', function ($value) {
-            $postingPeriod = PostingPeriod::find($value) ?? throw new ResourceNotFound('Posting period not found.', 404);
-            return $postingPeriod;
+            return PostingPeriod::find($value) ?? throw new ResourceNotFound('Posting period not found.', 404);
+        });
+
+        Route::bind('transaction-type', function ($value) {
+            return TransactionType::find($value) ?? throw new ResourceNotFound('Transaction type not found.', 404);
         });
 
 

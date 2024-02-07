@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('leger_id');
             $table->unsignedBigInteger('transaction_id');
             $table->foreign('transaction_id')->references('transaction_id')->on('transactions');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

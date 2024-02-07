@@ -21,6 +21,7 @@ return new class extends Migration {
 
             $table->foreign('transaction_type_id')->references('transaction_type_id')->on('transaction_types');
             $table->foreign('period_id')->references('period_id')->on('posting_periods');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

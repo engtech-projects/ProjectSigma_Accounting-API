@@ -1,19 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
+use App\Http\Resources\collections\TransactionTypeCollection;
+use App\Http\Resources\resources\TransactionTypeResource;
 use App\Models\TransactionType;
-use App\Http\Requests\StoreTransactionTypeRequest;
-use App\Http\Requests\UpdateTransactionTypeRequest;
+use App\Http\Requests\Api\v1\Store\StoreTransactionTypeRequest;
+use App\Http\Requests\Api\v1\Update\UpdateTransactionTypeRequest;
+use App\Services\Api\V1\TransactionTypeService;
+use Illuminate\Http\JsonResponse;
 
 class TransactionTypeController extends Controller
 {
+
+    protected $transactionTypeService;
+    public function __construct(TransactionTypeService $transactionTypeService)
+    {
+        $this->transactionTypeService = $transactionTypeService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $transactionTypes = $this->transactionTypeService->getTransactionTypeList();
+
+        return new TransactionTypeCollection($transactionTypes);
     }
 
     /**
@@ -21,7 +35,13 @@ class TransactionTypeController extends Controller
      */
     public function store(StoreTransactionTypeRequest $request)
     {
-        //
+        $data = $request->validated();
+        $this->transactionTypeService->createTransactionType($data);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Transaction type successfully created."
+        ]);
     }
 
     /**
@@ -29,7 +49,9 @@ class TransactionTypeController extends Controller
      */
     public function show(TransactionType $transactionType)
     {
-        //
+        $transactionType = $this->transactionTypeService->getTransactionTypeById($transactionType);
+
+        return new TransactionTypeResource($transactionType);
     }
 
     /**
@@ -37,7 +59,14 @@ class TransactionTypeController extends Controller
      */
     public function update(UpdateTransactionTypeRequest $request, TransactionType $transactionType)
     {
-        //
+        $data = $request->validated();
+        $this->transactionTypeService->updateTransactionType($transactionType, $data);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Transaction type successfully updated."
+        ]);
+
     }
 
     /**
@@ -45,6 +74,10 @@ class TransactionTypeController extends Controller
      */
     public function destroy(TransactionType $transactionType)
     {
-        //
+        $this->transactionTypeService->deleteTransactionType($transactionType);
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Transaction type successfully deleted."
+        ]);
     }
 }

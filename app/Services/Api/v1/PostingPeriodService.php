@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api\V1;
+namespace App\Services\Api\v1;
 
 use App\Models\PostingPeriod;
 use Illuminate\Support\Facades\DB;

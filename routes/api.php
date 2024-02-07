@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\v1\BookController;
 use App\Http\Controllers\Api\v1\ChartOfAccountController;
 use App\Http\Controllers\Api\v1\DashboardController;
 use App\Http\Controllers\Api\v1\PostingPeriodController;
+use App\Http\Controllers\Api\v1\TransactionTypeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,6 +35,8 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::resource('book', BookController::class);
     Route::resource('posting-period', PostingPeriodController::class);
+
+    Route::resource('transaction-type', TransactionTypeController::class);
 
 
 

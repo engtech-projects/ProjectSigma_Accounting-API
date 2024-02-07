@@ -2,18 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\collections\DocumentSeriesCollection;
 use App\Models\DocumentSeries;
-use App\Http\Requests\StoreDocumentSeriesRequest;
-use App\Http\Requests\UpdateDocumentSeriesRequest;
+use App\Http\Requests\Api\v1\Store\StoreDocumentSeriesRequest;
+use App\Http\Requests\Api\v1\Update\UpdateDocumentSeriesRequest;
+use App\Services\Api\v1\DocumentSeriesService;
 
 class DocumentSeriesController extends Controller
 {
+    protected $documentSeriesService;
+    public function __construct(DocumentSeriesService $documentSeriesService)
+    {
+        $this->documentSeriesService = $documentSeriesService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $documentSeries = $this->documentSeriesService->getDocumentSeriesList();
+
+        return new DocumentSeriesCollection($documentSeries);
     }
 
     /**
@@ -21,7 +30,9 @@ class DocumentSeriesController extends Controller
      */
     public function store(StoreDocumentSeriesRequest $request)
     {
-        //
+        $documentSeries = $this->documentSeriesService->createDocumentSeries($request->validated());
+
+        return response()->json($documentSeries, 201);
     }
 
     /**
