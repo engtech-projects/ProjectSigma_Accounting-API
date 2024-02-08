@@ -24,7 +24,6 @@ class UpdateTransactionTypeRequest extends FormRequest
         return [
             "transaction_type_name" => "required|string",
             "book_id" => "required|integer",
-            "account_id" => "required|integer",
         ];
     }
 }

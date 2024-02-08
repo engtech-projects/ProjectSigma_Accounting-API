@@ -15,9 +15,7 @@ return new class extends Migration
             $table->id('transaction_type_id');
             $table->string('transaction_type_name');
             $table->unsignedBigInteger('book_id');
-            $table->unsignedBigInteger('account_id');
             $table->foreign('book_id')->references('book_id')->on('books');
-            $table->foreign('account_id')->references('account_id')->on('accounts');
             $table->softDeletes();
             $table->timestamps();
         });

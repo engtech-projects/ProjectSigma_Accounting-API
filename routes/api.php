@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\ChartOfAccountController;
 use App\Http\Controllers\Api\v1\DashboardController;
 use App\Http\Controllers\Api\v1\PostingPeriodController;
 use App\Http\Controllers\Api\v1\TransactionTypeController;
+use App\Http\Controllers\Api\v1\DocumentSeriesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,7 +38,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('posting-period', PostingPeriodController::class);
 
     Route::resource('transaction-type', TransactionTypeController::class);
-
+    Route::resource('document-series', DocumentSeriesController::class);
 
 
 });

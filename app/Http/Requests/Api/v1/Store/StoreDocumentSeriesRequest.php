@@ -22,7 +22,10 @@ class StoreDocumentSeriesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'series_scheme' => 'required|string',
+            'series_description' => 'required|string',
+            'next_number' => 'required|integer',
+            'transaction_type_id' => 'required|integer'
         ];
     }
 }

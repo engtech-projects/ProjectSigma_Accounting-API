@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\collections\DocumentSeriesCollection;
 use App\Models\DocumentSeries;
 use App\Http\Requests\Api\v1\Store\StoreDocumentSeriesRequest;
 use App\Http\Requests\Api\v1\Update\UpdateDocumentSeriesRequest;
 use App\Services\Api\v1\DocumentSeriesService;
+use Illuminate\Http\JsonResponse;
 
 class DocumentSeriesController extends Controller
 {
@@ -30,9 +32,12 @@ class DocumentSeriesController extends Controller
      */
     public function store(StoreDocumentSeriesRequest $request)
     {
-        $documentSeries = $this->documentSeriesService->createDocumentSeries($request->validated());
+        $this->documentSeriesService->createDocumentSeries($request->validated());
 
-        return response()->json($documentSeries, 201);
+        return new JsonResponse(
+            ['success' => true, 'message' => 'Document series successfully created.'],
+            JsonResponse::HTTP_CREATED
+        );
     }
 
     /**
@@ -40,7 +45,7 @@ class DocumentSeriesController extends Controller
      */
     public function show(DocumentSeries $documentSeries)
     {
-        //
+        return $this->documentSeriesService->getDocumentSeriesById($documentSeries);
     }
 
     /**
@@ -48,7 +53,9 @@ class DocumentSeriesController extends Controller
      */
     public function update(UpdateDocumentSeriesRequest $request, DocumentSeries $documentSeries)
     {
-        //
+        $this->documentSeriesService->updateDocumentSeries($documentSeries, $request->validated());
+
+        return new JsonResponse(['success' => true, 'message' => 'Document series successfully updated.']);
     }
 
     /**
@@ -56,6 +63,8 @@ class DocumentSeriesController extends Controller
      */
     public function destroy(DocumentSeries $documentSeries)
     {
-        //
+        $this->documentSeriesService->deleteDocumentSeries($documentSeries);
+
+        return new JsonResponse(['success' => true, 'message' => 'Document series successfully deleted.']);
     }
 }

@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
             AccountTypeSeeder::class,
             AccountSeeder::class,
             PostingPeriodSeeder::class,
+            OpeningBalanceSeeder::class,
             BookSeeder::class,
+            TransactionTypeSeeder::class,
+            DocumentSeriesSeeder::class,
         ]);
 
     }

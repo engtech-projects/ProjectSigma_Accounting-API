@@ -36,14 +36,16 @@ class BookSeeder extends Seeder
 
 
         foreach ($bookSeed as $book) {
-            Book::create([
+            $book = Book::create([
                 'book_code' => $book['book_code'],
                 'book_name' => $book['book_name'],
                 'book_src' => $book['book_src'],
                 'book_ref' => $book['book_ref'],
                 'book_flag' => $book['book_flag'],
                 'book_head' => $book['book_head'],
-            ]);
+            ])->book_accounts()
+                ->attach([1]);
+
         }
     }
 }

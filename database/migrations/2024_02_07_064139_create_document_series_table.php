@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,12 +12,12 @@ return new class extends Migration
     {
         Schema::create('document_series', function (Blueprint $table) {
             $table->id('series_id');
-            $table->enum('document_type',['journal','bill','invoice']);
-            $table->string('scheme');
-            $table->string('description');
+            $table->string('series_scheme');
+            $table->string('series_description');
             $table->integer('next_number');
-            $table->enum('status',['active','inactive']);
-
+            $table->enum('status', ['active', 'inactive']);
+            $table->unsignedBigInteger('transaction_type_id');
+            $table->foreign('transaction_type_id')->references('transaction_type_id')->on('transaction_types');
             $table->softDeletes();
             $table->timestamps();
         });

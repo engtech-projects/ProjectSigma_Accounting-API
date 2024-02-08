@@ -12,14 +12,14 @@ class DocumentSeries extends Model
 
     protected $table = "document_series";
 
-    protected $primaryKey = "document_series_id";
+    protected $primaryKey = "series_id";
 
     protected $fillable = [
-        "document_type",
-        "scheme",
-        "description",
+        "series_scheme",
+        "series_description",
         "next_number",
-        "status"
+        "status",
+        "transaction_type_id"
     ];
 
     ### MODEL SCOPE BINDINGS ###
