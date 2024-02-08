@@ -12,6 +12,10 @@ class TransactionTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $transTypeSeed = [
+            'transaction_type_name',
+            'book_id',
+            'account_id',
+        ];
     }
 }

@@ -7,6 +7,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostingPeriod extends Model
 {
@@ -39,11 +40,16 @@ class PostingPeriod extends Model
 
 
 
-    ## MODEL SCOPE BINDING ##
+    ### MODEL SCOPE BINDINGS ###
 
-    public function scopeStatusOpen($query)
+    /** LOCAL SCOPES */
+    public function scopeStatusOpen(Builder $query): void
     {
-        return $query->where('status', PostingPeriodStatus::STATUS_OPEN);
+        $query->where('status', PostingPeriodStatus::STATUS_OPEN);
     }
+
+    /** DYNAMIC SCOPES */
+
+
 
 }

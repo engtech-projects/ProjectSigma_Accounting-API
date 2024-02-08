@@ -21,4 +21,10 @@ class DocumentSeries extends Model
         "next_number",
         "status"
     ];
+
+    ### MODEL SCOPE BINDINGS ###
+
+    /** LOCAL SCOPES */
+
+    /** DYNAMIC SCOPES */
 }

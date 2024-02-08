@@ -33,5 +33,9 @@ class Book extends Model
     }
 
 
-    ## MODEL SCOPE BINDINGS ##
+    ### MODEL SCOPE BINDINGS ###
+
+    /** LOCAL SCOPES */
+
+    /** DYNAMIC SCOPES */
 }

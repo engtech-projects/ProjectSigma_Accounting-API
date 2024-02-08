@@ -19,4 +19,11 @@ class TransactionType extends Model
         "book_id",
         "account_id",
     ];
+
+
+    ### MODEL SCOPE BINDINGS ###
+
+    /** LOCAL SCOPES */
+
+    /** DYNAMIC SCOPES */
 }

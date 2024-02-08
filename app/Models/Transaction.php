@@ -13,5 +13,12 @@ class Transaction extends Model
 
     protected $table = 'transactions';
     protected $primaryKey = 'transaction_id';
+
+
+    ### MODEL SCOPE BINDINGS ###
+
+    /** LOCAL SCOPES */
+
+    /** DYNAMIC SCOPES */
 }
 
