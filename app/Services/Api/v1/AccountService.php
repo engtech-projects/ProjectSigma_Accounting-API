@@ -27,7 +27,10 @@ class AccountService
 
     public function chartOfAccounts()
     {
-        return Account::with('account_type')->get();
+        return Account::with([
+            'account_type',
+            'opening_balance'
+        ])->get();
 
     }
     public function getAccountById(Account $account, ?array $relation = [])

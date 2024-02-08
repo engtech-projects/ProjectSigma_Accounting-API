@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Store\StoreBookRequest;
 use App\Http\Requests\Api\v1\Update\UpdateBookRequest;
-use App\Http\Resources\BookResource;
+use App\Http\Resources\resources\BookResource;
 use App\Models\Book;
 
-use App\Services\Api\V1\BookService;
+use App\Services\Api\v1\BookService;
 use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller

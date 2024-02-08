@@ -41,7 +41,7 @@ class PostingPeriod extends Model
 
     ## MODEL SCOPE BINDING ##
 
-    public function scopePostingPeriodOpen($query)
+    public function scopeStatusOpen($query)
     {
         return $query->where('status', PostingPeriodStatus::STATUS_OPEN);
     }

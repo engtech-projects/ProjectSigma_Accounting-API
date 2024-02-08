@@ -8,7 +8,7 @@ use App\Http\Resources\resources\TransactionTypeResource;
 use App\Models\TransactionType;
 use App\Http\Requests\Api\v1\Store\StoreTransactionTypeRequest;
 use App\Http\Requests\Api\v1\Update\UpdateTransactionTypeRequest;
-use App\Services\Api\V1\TransactionTypeService;
+use App\Services\Api\v1\TransactionTypeService;
 use Illuminate\Http\JsonResponse;
 
 class TransactionTypeController extends Controller

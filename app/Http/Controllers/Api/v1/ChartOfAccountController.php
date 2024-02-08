@@ -29,8 +29,10 @@ class ChartOfAccountController extends Controller
                 "status" => $account->status,
                 "category" => $account->account_type->account_category,
                 "account_type" => $account->account_type->account_type,
+                "opening_balance" => $account->opening_balance->first(),
             ];
-        })->groupBy("account_type");
+        })
+        ->groupBy("account_type");
 
 
         return new JsonResource(PaginateCollection::paginate($accounts, 10));

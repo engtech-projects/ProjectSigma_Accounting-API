@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\AccountStatus;
+use App\Enums\PostingPeriodStatus;
 use App\Models\Pivot\BookAccount;
 use App\Traits\ModelGlobalScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -40,7 +41,7 @@ class Account extends Model
 
     public function account_type(): BelongsTo
     {
-        return $this->belongsTo(AccountType::class,'type_id');
+        return $this->belongsTo(AccountType::class, 'type_id')->withDefault();
     }
 
     public function book_accounts(): BelongsToMany
@@ -51,9 +52,10 @@ class Account extends Model
 
     }
 
-    public function account_balance(): HasOne
+    public function opening_balance(): HasMany
     {
-        return $this->hasOne(OpeningBalance::class, 'account_id');
+        return $this->hasMany(OpeningBalance::class, 'account_id')
+            ->whereRelation('posting_period', 'status', PostingPeriodStatus::STATUS_OPEN);
     }
 
 
