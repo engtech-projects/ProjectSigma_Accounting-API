@@ -19,7 +19,7 @@ class BookService
     {
         return DB::transaction(function () use ($attribute) {
             $book = Book::create($attribute);
-            $book->book_has_accounts()->attach($attribute['account_id']);
+            $book->book_accounts()->attach($attribute['account_id']);
         });
     }
     public static function updateBook(Book $book, array $attribute)

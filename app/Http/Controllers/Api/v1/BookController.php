@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Store\StoreBookRequest;
 use App\Http\Requests\Api\v1\Update\UpdateBookRequest;
+use App\Http\Resources\collections\BookCollection;
 use App\Http\Resources\resources\BookResource;
 use App\Models\Book;
 
@@ -21,8 +22,8 @@ class BookController extends Controller
     }
     public function index()
     {
-        $book = $this->bookService->getBookList();
-        return new BookResource($book);
+        $books = $this->bookService->getBookList();
+        return new BookCollection($books);
     }
 
     /**
