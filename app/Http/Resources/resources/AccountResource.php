@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\resources;
 
+use App\Http\Resources\collections\OpeningBalanceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\resources\AccountTypeResource;
@@ -29,7 +30,8 @@ class AccountResource extends JsonResource
             'bank_reconciliation' => $this->bank_reconciliation,
             'statement' => $this->statement,
             'type_id' => $this->type_id,
-            'account_type' => new AccountTypeResource($this->whenLoaded('account_type'))
+            'account_type' => new AccountTypeResource($this->whenLoaded('account_type')),
+            'opening_balance' => OpeningBalanceResource::collection($this->whenLoaded('opening_balance'))->first()
 
         ];
     }

@@ -25,7 +25,13 @@ class AccountController extends Controller
     public function index()
     {
 
-        $accounts = AccountResource::collection($this->accountService->getAccountList());
+/*         return response($this->accountService->getAccountList([
+            'opening_balance'
+        ])); */
+
+        $accounts = AccountResource::collection($this->accountService->getAccountList([
+            'opening_balance'
+        ]));
 
         return new AccountCollections($accounts);
     }
