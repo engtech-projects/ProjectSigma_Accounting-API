@@ -70,7 +70,7 @@ class AccountService
     public function deleteAccount($account)
     {
         return DB::transaction(function () use ($account) {
-            return $account->delete($account);
+            return $account->delete();
         });
     }
 }

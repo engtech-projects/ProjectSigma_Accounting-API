@@ -3,11 +3,15 @@
 namespace App\Providers;
 
 use App\Exceptions\ResourceNotFound;
-use App\Models\Account;
-use App\Models\AccountType;
-use App\Models\JournalBook;
-use App\Models\PostingPeriod;
-use App\Models\TransactionType;
+use App\Models\{
+    Account,
+    AccountType,
+    PostingPeriod,
+    Subsidiary,
+    TransactionType,
+    DocumentSeries,
+    Book
+};
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -39,6 +43,10 @@ class RouteServiceProvider extends ServiceProvider
             return Account::find($value) ?? throw new ResourceNotFound('Account not found.', 404);
         });
 
+        Route::bind('book', function ($value) {
+            return Book::find($value) ?? throw new ResourceNotFound('Book not found.', 404);
+        });
+
 
         Route::bind('type', function ($value) {
             return AccountType::find($value) ?? throw new ResourceNotFound('Category not found.', 404);
@@ -50,6 +58,15 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('transaction-type', function ($value) {
             return TransactionType::find($value) ?? throw new ResourceNotFound('Transaction type not found.', 404);
+        });
+
+        Route::bind('subsidiary', function ($value) {
+            return Subsidiary::find($value) ?? throw new ResourceNotFound('Subsidiary not found.', 404);
+        });
+
+
+        Route::bind('document-series', function ($value) {
+            return DocumentSeries::find($value) ?? throw new ResourceNotFound('Document series not found.', 404);
         });
 
 
