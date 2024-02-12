@@ -17,6 +17,7 @@ class TransactionType extends Model
     protected $fillable = [
         "transaction_type_name",
         "book_id",
+        "account_id"
     ];
 
 

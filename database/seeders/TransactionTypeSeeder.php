@@ -17,10 +17,12 @@ class TransactionTypeSeeder extends Seeder
             [
                 'transaction_type_name' => 'Inventroy Purchase',
                 'book_id' => 1,
+                'account_id' => 1,
             ],
             [
                 'transaction_type_name' => 'IPR',
                 'book_id' => 2,
+                'account_id' => 1
             ],
         ];
 
@@ -28,7 +30,8 @@ class TransactionTypeSeeder extends Seeder
         foreach ($transTypeSeed as $value) {
             TransactionType::create([
                 'transaction_type_name' => $value['transaction_type_name'],
-                'book_id' => $value['book_id']
+                'book_id' => $value['book_id'],
+                'account_id' => $value['account_id']
             ]);
         }
 
