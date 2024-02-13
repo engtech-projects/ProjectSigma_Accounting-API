@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\SubsidiaryObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Subsidiary extends Model
 {
@@ -16,6 +17,13 @@ class Subsidiary extends Model
     protected $fillable = [
         "subsidiary_name"
     ];
+
+
+    /* public static function boot()
+    {
+        parent::boot();
+        Subsidiary::observe(SubsidiaryObserver::class);
+    } */
 
     ### MODEL SCOPE BINDINGS ###
 
