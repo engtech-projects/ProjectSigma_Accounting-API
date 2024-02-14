@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\TestEvent;
 use App\Http\Controllers\Api\v1\{
     AccountTypeController,
     AccountController,
@@ -13,6 +14,7 @@ use App\Http\Controllers\Api\v1\{
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
+use App\Notifications\UserNotificationTest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +46,16 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('transaction-type', TransactionTypeController::class);
     Route::resource('document-series', DocumentSeriesController::class);
     Route::resource('subsidiary', SubsidiaryController::class);
+
+    Route::post('/test-event', function () {
+        try {
+            Notification::send(auth()->user(), new UserNotificationTest("Hello, this is notification."));
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return "test event";
+    });
 
 
 });

@@ -8,12 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model implements AuthenticatableContract
 {
 
-    use HasFactory, Authorizable;
+    use HasFactory, Authorizable, Notifiable;
     //protected $table = 'auth_users';
 
     public function getAuthIdentifierName()
@@ -58,6 +57,11 @@ class User extends Model implements AuthenticatableContract
         }
         return $accessibilities;
 
+    }
+
+    public function receiveBroadcastNotification()
+    {
+        return 'users.' . $this->id;
     }
 
 }

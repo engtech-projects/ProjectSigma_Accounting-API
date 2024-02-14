@@ -7,12 +7,13 @@ use App\Models\Activity;
 use App\Models\Subsidiary;
 use Illuminate\Bus\Queueable;
 use App\Events\ModelObserverEvent;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\SerializesModels;
 
-class SubsidiaryObserver implements ShouldHandleEventsAfterCommit
+class SubsidiaryObserver implements ShouldHandleEventsAfterCommit,ShouldDispatchAfterCommit
 {
     use InteractsWithQueue, Queueable, SerializesModels;
     /**
@@ -61,7 +62,7 @@ class SubsidiaryObserver implements ShouldHandleEventsAfterCommit
         //
     }
 
-    private function saveActivityLog($action, $model): void
+/*     private function saveActivityLog($action, $model): void
     {
         if (auth()->check()) {
             Activity::createActivity([
@@ -72,5 +73,5 @@ class SubsidiaryObserver implements ShouldHandleEventsAfterCommit
                 "activity_date" => Carbon::now(),
             ]);
         }
-    }
+    } */
 }

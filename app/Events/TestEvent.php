@@ -4,40 +4,33 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ModelObserverEvent implements ShouldBroadcast
+class TestEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $model;
-    public $action;
-    public $activityType;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($model, $action, $activityType)
+    public function __construct()
     {
-        $this->model = $model;
-        $this->action = $action;
-        $this->activityType = $activityType;
+        //
     }
-    public function broadcastWith()
-    {
-        return [
-            "action" => $this->action,
-            "activity_type" => $this->activityType,
-            "model" => $this->model
 
+    public function broadcastWith() {
+        return [
+            "message" => "Test Event Notfication."
         ];
     }
 
-    public function broadcastAs()
-    {
-        return 'observer.events';
+    public function broadcastAs() {
+        return "test.event";
     }
 
     /**
@@ -48,7 +41,7 @@ class ModelObserverEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('model-observer-channel'),
+            new Channel('test-channel'),
         ];
     }
 }
