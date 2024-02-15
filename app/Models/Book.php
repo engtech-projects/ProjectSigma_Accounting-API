@@ -21,6 +21,7 @@ class Book extends Model
         "bok_ref",
         "book_head",
         "book_flag",
+        "symbol"
     ];
 
 

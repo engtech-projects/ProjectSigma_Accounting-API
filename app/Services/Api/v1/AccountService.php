@@ -45,8 +45,8 @@ class AccountService
     {
 
         return DB::transaction(function () use ($attribute) {
-            return $this->account->create($attribute)
-                ->account_balance()->create([
+            $this->account->create($attribute)
+                ->opening_balance()->create([
                         'period_id' => 1,
                         'opening_balance' => $attribute['opening_balance'],
                         'remaining_balance' => $attribute['opening_balance'],
@@ -58,19 +58,18 @@ class AccountService
     {
         return DB::transaction(function () use ($attribute, $account) {
             $account->update($attribute);
-            $account->account_balance()->update([
+            $account->opening_balance()->update([
                 'period_id' => 1,
                 'opening_balance' => $attribute['opening_balance'],
                 'remaining_balance' => $attribute['opening_balance'],
             ]);
-            return $account;
         });
 
     }
     public function deleteAccount($account)
     {
         return DB::transaction(function () use ($account) {
-            return $account->delete();
+            $account->delete();
         });
     }
 }

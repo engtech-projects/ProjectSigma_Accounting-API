@@ -36,14 +36,14 @@ class PostingPeriodService
     public function createPostingPeriod(array $attribute)
     {
         return DB::transaction(function () use ($attribute) {
-            return $this->postingPeriod->create($attribute);
+            $this->postingPeriod->create($attribute);
         });
     }
 
     public function updatePostingPeriod($postingPeriod, array $attribute)
     {
         return DB::transaction(function () use ($postingPeriod, $attribute) {
-            return $postingPeriod->update($attribute);
+            $postingPeriod->update($attribute);
         });
 
     }
@@ -51,7 +51,7 @@ class PostingPeriodService
     public function deletePostingPeriod($postingPeriod)
     {
         return DB::transaction(function () use ($postingPeriod) {
-            return $postingPeriod->delete();
+            $postingPeriod->delete();
         });
 
     }

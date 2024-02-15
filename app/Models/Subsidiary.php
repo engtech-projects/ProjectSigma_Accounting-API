@@ -19,12 +19,6 @@ class Subsidiary extends Model
     ];
 
 
-    /* public static function boot()
-    {
-        parent::boot();
-        Subsidiary::observe(SubsidiaryObserver::class);
-    } */
-
     ### MODEL SCOPE BINDINGS ###
 
     /** LOCAL SCOPES */

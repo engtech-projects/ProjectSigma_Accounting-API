@@ -28,7 +28,8 @@ class StoreBookRequest extends FormRequest
             "book_ref" => "nullable|string",
             "book_flag" => "nullable|string",
             "book_head" => "nullable|string",
-            "account_id" => "required|integer"
+            "account_id" => "required|integer",
+            "symbol" => "required|string|max:3"
         ];
     }
 }

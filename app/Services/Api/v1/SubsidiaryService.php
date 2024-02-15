@@ -28,14 +28,14 @@ class SubsidiaryService
     public function createSubsidiary(array $attributes)
     {
         return DB::transaction(function () use ($attributes) {
-            return $this->subsidiary->create($attributes);
+            $this->subsidiary->create($attributes);
         });
     }
 
     public function updateSubsidiary(Subsidiary $subsidiary, array $attributes)
     {
         return DB::transaction(function () use ($subsidiary, $attributes) {
-            return $subsidiary->update($attributes);
+            $subsidiary->update($attributes);
         });
 
     }
@@ -43,7 +43,7 @@ class SubsidiaryService
     public function deleteSubsidiary(Subsidiary $subsidiary)
     {
         return DB::transaction(function () use ($subsidiary) {
-            return $subsidiary->delete();
+            $subsidiary->delete();
         });
 
     }

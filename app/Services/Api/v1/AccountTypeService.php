@@ -25,13 +25,13 @@ class AccountTypeService
         return $paginate ? $query->paginate() : $query->get();
     }
 
-    public function getAccountTypeById($accountType, ?array $relation = [],?array $columns = [])
+    public function getAccountTypeById($accountType, ?array $relation = [], ?array $columns = [])
     {
         $query = $this->accountType->query();
-        if($relation) {
+        if ($relation) {
             $query->with($relation);
         }
-        if($columns) {
+        if ($columns) {
             $query->select($columns);
         }
         return $query->find($accountType)->firstOrFail();
@@ -39,40 +39,29 @@ class AccountTypeService
 
     public function createAccountType(array $attribute)
     {
-        try {
-            $accountType = DB::transaction(function () use ($attribute) {
-                return $this->accountType->create($attribute);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-        return $accountType;
+        return DB::transaction(function () use ($attribute) {
+            $this->accountType->create($attribute);
+        });
+
 
     }
 
     public function updateAccountType($attribute, AccountType $accountType)
     {
-        try {
-            $accountType = DB::transaction(function () use ($attribute, $accountType) {
-                return $accountType->update($attribute);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
 
-        return $accountType;
+        return DB::transaction(function () use ($attribute, $accountType) {
+            $accountType->update($attribute);
+        });
+
+
     }
 
     public function deleteAccountType($accountType)
     {
-        try {
-            $accountType = DB::transaction(function () use ($accountType) {
-                return $accountType->delete($accountType);
-            });
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-        return $accountType;
+        return DB::transaction(function () use ($accountType) {
+            return $accountType->delete($accountType);
+        });
+
 
     }
 }

@@ -37,7 +37,7 @@ class DocumentSeriesService
     public function createDocumentSeries(array $attribute)
     {
         return DB::transaction(function () use ($attribute) {
-            return $this->documentSeries->create($attribute);
+            $this->documentSeries->create($attribute);
         });
 
     }
@@ -45,17 +45,15 @@ class DocumentSeriesService
     public function updateDocumentSeries($documentSeries, array $attribute)
     {
         return DB::transaction(function () use ($documentSeries, $attribute) {
-
-            return $documentSeries->update($attribute);
+            $documentSeries->update($attribute);
         });
     }
 
 
     public function deleteDocumentSeries($documentSeries)
     {
-
         return DB::transaction(function () use ($documentSeries) {
-            return $documentSeries->delete();
+            $documentSeries->delete();
         });
     }
 

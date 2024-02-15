@@ -27,7 +27,8 @@ class UpdateBookRequest extends FormRequest
             "book_src" => "nullable|string",
             "book_ref" => "nullable|string",
             "book_flag" => "nullable|string",
-            "book_head" => "nullable|string"
+            "book_head" => "nullable|string",
+            "symbol" => "required|string|max:3",
         ];
     }
 }

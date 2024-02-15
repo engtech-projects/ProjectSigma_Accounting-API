@@ -43,7 +43,7 @@ class TransactionTypeService
     public function createTransactionType(array $attribute)
     {
         return DB::transaction(function () use ($attribute) {
-            return $this->transactionType->create($attribute);
+            $this->transactionType->create($attribute);
         });
 
     }
@@ -51,8 +51,7 @@ class TransactionTypeService
     public function updateTransactionType($transactionType, array $attribute)
     {
         return DB::transaction(function () use ($transactionType, $attribute) {
-
-            return $transactionType->update($attribute);
+            $transactionType->update($attribute);
         });
 
     }
@@ -60,7 +59,7 @@ class TransactionTypeService
     public function deleteTransactionType($transactionType)
     {
         return DB::transaction(function () use ($transactionType) {
-            return $transactionType->delete();
+            $transactionType->delete();
         });
 
     }
