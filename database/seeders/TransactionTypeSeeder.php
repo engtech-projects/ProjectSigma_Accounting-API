@@ -18,11 +18,13 @@ class TransactionTypeSeeder extends Seeder
                 'transaction_type_name' => 'Inventroy Purchase',
                 'book_id' => 1,
                 'account_id' => 1,
+                'symbol' => 'IVP'
             ],
             [
-                'transaction_type_name' => 'IPR',
+                'transaction_type_name' => 'Test Transaction Type Name',
                 'book_id' => 2,
-                'account_id' => 1
+                'account_id' => 1,
+                'symbol' => 'TTN'
             ],
         ];
 
@@ -31,7 +33,8 @@ class TransactionTypeSeeder extends Seeder
             TransactionType::create([
                 'transaction_type_name' => $value['transaction_type_name'],
                 'book_id' => $value['book_id'],
-                'account_id' => $value['account_id']
+                'account_id' => $value['account_id'],
+                'symbol' => $value['symbol']
             ]);
         }
 

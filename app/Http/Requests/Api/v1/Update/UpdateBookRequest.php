@@ -22,13 +22,9 @@ class UpdateBookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "book_code" => 'required|string',
             "book_name" => "required|string",
-            "book_src" => "nullable|string",
-            "book_ref" => "nullable|string",
-            "book_flag" => "nullable|string",
-            "book_head" => "nullable|string",
             "symbol" => "required|string|max:3",
+            "account_id" => "required|integer",
         ];
     }
 }

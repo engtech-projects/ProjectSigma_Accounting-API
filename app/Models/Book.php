@@ -17,10 +17,6 @@ class Book extends Model
     protected $fillable = [
         "book_code",
         "book_name",
-        "book_src",
-        "bok_ref",
-        "book_head",
-        "book_flag",
         "symbol"
     ];
 
