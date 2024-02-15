@@ -50,7 +50,6 @@ class TransactionTypeController extends Controller
     public function show(TransactionType $transactionType)
     {
         $transactionType = $this->transactionTypeService->getTransactionTypeById($transactionType);
-
         return new TransactionTypeResource($transactionType);
     }
 
