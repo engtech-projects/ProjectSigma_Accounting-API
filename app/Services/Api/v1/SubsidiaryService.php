@@ -2,7 +2,9 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\Subsidiary;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class SubsidiaryService
@@ -27,24 +29,29 @@ class SubsidiaryService
 
     public function createSubsidiary(array $attributes)
     {
-        return DB::transaction(function () use ($attributes) {
+        try {
             $this->subsidiary->create($attributes);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction Failed", 500, $e);
+        }
     }
 
     public function updateSubsidiary(Subsidiary $subsidiary, array $attributes)
     {
-        return DB::transaction(function () use ($subsidiary, $attributes) {
+        try {
             $subsidiary->update($attributes);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
 
     }
 
     public function deleteSubsidiary(Subsidiary $subsidiary)
     {
-        return DB::transaction(function () use ($subsidiary) {
+        try {
             $subsidiary->delete();
-        });
-
+        } catch (Exception $e) {
+            throw new DBTransactionException("Delete transaction failed.", 500, $e);
+        }
     }
 }

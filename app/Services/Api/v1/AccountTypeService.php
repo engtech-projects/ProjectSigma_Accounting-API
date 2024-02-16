@@ -2,6 +2,7 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\AccountType;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -39,29 +40,28 @@ class AccountTypeService
 
     public function createAccountType(array $attribute)
     {
-        return DB::transaction(function () use ($attribute) {
+        try {
             $this->accountType->create($attribute);
-        });
-
-
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed", 500, $e);
+        }
     }
 
     public function updateAccountType($attribute, AccountType $accountType)
     {
-
-        return DB::transaction(function () use ($attribute, $accountType) {
+        try {
             $accountType->update($attribute);
-        });
-
-
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed", 500, $e);
+        }
     }
 
     public function deleteAccountType($accountType)
     {
-        return DB::transaction(function () use ($accountType) {
-            return $accountType->delete($accountType);
-        });
-
-
+        try {
+            return $accountType->delete();
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed", 500, $e);
+        }
     }
 }

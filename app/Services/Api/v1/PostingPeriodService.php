@@ -2,7 +2,9 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\PostingPeriod;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class PostingPeriodService
@@ -35,24 +37,31 @@ class PostingPeriodService
 
     public function createPostingPeriod(array $attribute)
     {
-        return DB::transaction(function () use ($attribute) {
+        try {
             $this->postingPeriod->create($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        }
+
     }
 
     public function updatePostingPeriod($postingPeriod, array $attribute)
     {
-        return DB::transaction(function () use ($postingPeriod, $attribute) {
+        try {
             $postingPeriod->update($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
 
     }
 
     public function deletePostingPeriod($postingPeriod)
     {
-        return DB::transaction(function () use ($postingPeriod) {
+        try {
             $postingPeriod->delete();
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Delete transaction failed.", 500, $e);
+        }
 
     }
 

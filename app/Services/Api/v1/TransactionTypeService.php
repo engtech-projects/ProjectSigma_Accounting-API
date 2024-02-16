@@ -2,7 +2,9 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\TransactionType;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class TransactionTypeService
@@ -42,25 +44,28 @@ class TransactionTypeService
 
     public function createTransactionType(array $attribute)
     {
-        return DB::transaction(function () use ($attribute) {
+        try {
             $this->transactionType->create($attribute);
-        });
-
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        }
     }
 
     public function updateTransactionType($transactionType, array $attribute)
     {
-        return DB::transaction(function () use ($transactionType, $attribute) {
+        try {
             $transactionType->update($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
 
     }
-
     public function deleteTransactionType($transactionType)
     {
-        return DB::transaction(function () use ($transactionType) {
+        try {
             $transactionType->delete();
-        });
-
+        } catch (Exception $e) {
+            throw new DBTransactionException("Delete transaction failed.", 500, $e);
+        }
     }
 }

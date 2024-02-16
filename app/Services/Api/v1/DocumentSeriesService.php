@@ -2,7 +2,9 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\DocumentSeries;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class DocumentSeriesService
@@ -36,25 +38,32 @@ class DocumentSeriesService
 
     public function createDocumentSeries(array $attribute)
     {
-        return DB::transaction(function () use ($attribute) {
+        try {
             $this->documentSeries->create($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        }
 
     }
 
     public function updateDocumentSeries($documentSeries, array $attribute)
     {
-        return DB::transaction(function () use ($documentSeries, $attribute) {
+        try {
             $documentSeries->update($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
     }
 
 
     public function deleteDocumentSeries($documentSeries)
     {
-        return DB::transaction(function () use ($documentSeries) {
+        try {
             $documentSeries->delete();
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Delete transaction failed.", 500, $e);
+        }
+
     }
 
 }

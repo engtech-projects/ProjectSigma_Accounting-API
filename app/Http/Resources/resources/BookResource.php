@@ -20,9 +20,9 @@ class BookResource extends JsonResource
             "book_id" => $this->book_id,
             "book_name" => $this->book_name,
             "symbol" => $this->symbol,
-            "account" => $this->whenLoaded('book_accounts', function () {
+            "account" => new AccountResource($this->whenLoaded('book_accounts', function () {
                 return $this->book_accounts->first();
-            })
+            }))
         ];
         //return parent::toArray($request);
     }
