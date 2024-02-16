@@ -35,17 +35,20 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function handleApiExceptions(Request $request,Exception $e)
+    public function handleApiExceptions(Request $request, Exception $e)
     {
         $response = null;
         if ($e instanceof AuthorizationException) {
             $response = new JsonResponse(['message' => $e->getMessage()], 403);
         }
-        if($e instanceof ResourceNotFound) {
-            $response = new JsonResponse(['message'=> $e->getMessage()],$e->getStatusCode());
+        if ($e instanceof ResourceNotFound) {
+            $response = new JsonResponse(['message' => $e->getMessage()], $e->getStatusCode());
         }
         if ($e instanceof HttpException) {
             $response = new JsonResponse(['message' => $e->getMessage()], 403);
+        }
+        if ($e instanceof DBTransactionException) {
+            $response = new JsonResponse(['message' => $e->getMessage()], $e->getStatusCode());
         }
         return $response;
     }

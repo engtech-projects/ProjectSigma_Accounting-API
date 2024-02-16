@@ -2,38 +2,56 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\Book;
-use Illuminate\Support\Facades\DB;
+use Exception;
+
+
+
+
 
 class BookService
 {
-    public static function getBookList()
+    protected $book;
+
+    public function __construct(Book $book)
     {
-        return Book::all();
+        $this->book = $book;
     }
-    public static function getBookById(Book $book)
+    public function getBookList()
     {
-        return Book::find($book)->first();
+        return $this->book->all();
     }
-    public static function createBook(array $attribute)
+    public function getBookById(Book $book)
     {
-        return DB::transaction(function () use ($attribute) {
+        return $book->with(['book_accounts'])->first();
+    }
+    public function createBook(array $attribute)
+    {
+        try {
             $book = Book::create($attribute);
             $book->book_accounts()->attach($attribute['account_id']);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        }
     }
-    public static function updateBook(Book $book, array $attribute)
+    public function updateBook(Book $book, array $attribute)
     {
-        return DB::transaction(function () use ($book, $attribute) {
+        try {
             $book->update($attribute);
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
+
 
     }
-    public static function deleteBook(Book $book)
+    public function deleteBook(Book $book)
     {
-        return DB::transaction(function () use ($book) {
+        try {
             $book->delete();
-        });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 500, $e);
+        }
     }
 
 

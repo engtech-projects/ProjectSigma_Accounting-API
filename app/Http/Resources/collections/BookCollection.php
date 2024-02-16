@@ -15,7 +15,7 @@ class BookCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "data" => $this->collection
+            "books" => $this->collection
         ];
 
         //return parent::toArray($request);
