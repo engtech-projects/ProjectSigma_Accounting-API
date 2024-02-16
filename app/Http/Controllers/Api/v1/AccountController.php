@@ -25,9 +25,9 @@ class AccountController extends Controller
     public function index()
     {
 
-        $accounts = AccountResource::collection($this->accountService->getAccountList([
+        $accounts = $this->accountService->getAccountList([
             'opening_balance'
-        ]));
+        ]);
 
         return new AccountCollections($accounts);
     }
@@ -51,7 +51,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $account = $this->accountService->getAccountById($account);
+        $account = $this->accountService->getAccountById($account,['opening_balance']);
         return new AccountResource($account);
     }
 

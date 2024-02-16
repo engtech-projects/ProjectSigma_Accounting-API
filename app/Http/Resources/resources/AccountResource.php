@@ -32,7 +32,7 @@ class AccountResource extends JsonResource
             'type_id' => $this->type_id,
             'account_type' => new AccountTypeResource($this->whenLoaded('account_type')),
             "opening_balance" => new OpeningBalanceResource($this->whenLoaded('opening_balance', function () {
-                return $this->book_accounts->first();
+                return $this->opening_balance->first();
             }))
 
         ];
