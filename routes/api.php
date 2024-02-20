@@ -1,6 +1,5 @@
 <?php
 
-use App\Events\TestEvent;
 use App\Http\Controllers\Api\v1\{
     AccountTypeController,
     AccountController,
@@ -11,6 +10,7 @@ use App\Http\Controllers\Api\v1\{
     PostingPeriodController,
     TransactionTypeController,
     DocumentSeriesController,
+    AccountGroupController
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
@@ -46,6 +46,8 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('transaction-type', TransactionTypeController::class);
     Route::resource('document-series', DocumentSeriesController::class);
     Route::resource('subsidiary', SubsidiaryController::class);
+
+    Route::resource('account-group', AccountGroupController::class);
 
     Route::post('/test-event', function () {
         try {

@@ -51,7 +51,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $account = $this->accountService->getAccountById($account,['opening_balance']);
+        $account = $this->accountService->getAccountById($account, ['opening_balance']);
         return new AccountResource($account);
     }
 

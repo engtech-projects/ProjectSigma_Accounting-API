@@ -26,14 +26,12 @@ class Account extends Model
         'account_description',
         'status',
         'type_id',
+        'account_group_id'
     ];
 
     protected $casts = [
-        'account_name' => 'string',
-        'account_number' => 'string',
-        'account_description' => 'string',
         'status' => AccountStatus::class,
-        'type_id' => 'integer'
+
     ];
 
 
