@@ -37,8 +37,8 @@ class AccountController extends Controller
      */
     public function store(StoreAccountRequest $request)
     {
-        $data = $request->validated();
-        $this->accountService->createAccount($data);
+
+        $this->accountService->createAccount($request->validated());
 
         return new JsonResponse([
             "success" => true,

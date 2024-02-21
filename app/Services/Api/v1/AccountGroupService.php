@@ -8,17 +8,17 @@ use Exception;
 
 class AccountGroupService
 {
-    public function getAccountGroupList()
+    public function getAll()
     {
         return AccountGroup::all();
     }
 
-    public function getAccountGroup($accountGroup)
+    public function getById($accountGroup)
     {
         return $accountGroup;
     }
 
-    public function createAccountGroup(array $attributes)
+    public static function create(array $attributes)
     {
         try {
             AccountGroup::create($attributes);

@@ -36,7 +36,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('/user', [AuthController::class, 'show']);
     });
     Route::get('dashboard', DashboardController::class);
-
     Route::get('chart-of-accounts', ChartOfAccountController::class);
     Route::resource('accounts', AccountController::class);
     Route::prefix('account')->group(function () {
@@ -44,16 +43,12 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::resource('book', BookController::class);
     Route::resource('posting-period', PostingPeriodController::class);
-
     Route::resource('transaction-type', TransactionTypeController::class);
     Route::resource('document-series', DocumentSeriesController::class);
     Route::resource('subsidiary', SubsidiaryController::class);
-
     Route::resource('account-group', AccountGroupController::class);
-
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
     Route::resource('stakeholder-type', StakeHolderTypeController::class);
-
     Route::post('/test-event', function () {
         try {
             Notification::send(auth()->user(), new UserNotificationTest("Hello, this is notification."));

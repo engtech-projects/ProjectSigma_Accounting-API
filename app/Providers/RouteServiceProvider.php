@@ -12,6 +12,7 @@ use App\Models\{
     DocumentSeries,
     Book
 };
+use App\Models\AccountGroup;
 use App\Models\StakeHolder;
 use App\Models\StakeHolderGroup;
 use App\Models\StakeHolderType;
@@ -70,6 +71,10 @@ class RouteServiceProvider extends ServiceProvider
 
         Route::bind('document-series', function ($value) {
             return DocumentSeries::find($value) ?? throw new ResourceNotFound('Document series not found.', 404);
+        });
+
+        Route::bind('account-group', function ($value) {
+            return AccountGroup::find($value) ?? throw new ResourceNotFound('Account Group not found.', 404);
         });
 
         Route::bind('stakeholder-group', function ($value) {
