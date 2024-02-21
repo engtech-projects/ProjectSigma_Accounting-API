@@ -22,7 +22,8 @@ class UpdateStakeHolderGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stakeholder_group_name' => 'required|string'
+            'stakeholder_group_name' => 'required|string',
+            'stakeholder_type_id' => 'required|string'
         ];
     }
 }

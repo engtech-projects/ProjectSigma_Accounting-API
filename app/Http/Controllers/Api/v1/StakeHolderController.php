@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\StakeHolder;
-use App\Http\Requests\StoreStakeHolderRequest;
+use App\Http\Requests\Api\v1\Store\StoreStakeHolderRequest;
 use App\Http\Requests\UpdateStakeHolderRequest;
+use App\Models\StakeHolder;
 
 class StakeHolderController extends Controller
 {
@@ -14,7 +14,7 @@ class StakeHolderController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**

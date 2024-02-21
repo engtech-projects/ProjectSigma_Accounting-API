@@ -14,6 +14,7 @@ use App\Models\{
 };
 use App\Models\StakeHolder;
 use App\Models\StakeHolderGroup;
+use App\Models\StakeHolderType;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -74,6 +75,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('stakeholder-group', function ($value) {
             return StakeHolderGroup::find($value) ?? throw new ResourceNotFound('Stakeholder Group not found.', 404);
         });
+
+        Route::bind('stakeholder-type', function ($value) {
+            return StakeHolderType::find($value) ?? throw new ResourceNotFound('Stakeholder Group not found.', 404);
+        });
+
 
 
         $this->routes(function () {

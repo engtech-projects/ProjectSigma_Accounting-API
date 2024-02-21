@@ -11,7 +11,7 @@ class UpdateStakeHolderTypeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,7 @@ class UpdateStakeHolderTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'stakeholder_type_name' => 'required|string'
         ];
     }
 }

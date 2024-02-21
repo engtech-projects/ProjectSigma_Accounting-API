@@ -2,9 +2,10 @@
 
 namespace App\Services\Api\v1;
 
-use App\Exceptions\DBTransactionException;
-use App\Models\StakeHolderGroup;
 use Exception;
+use App\Models\StakeHolderGroup;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\DBTransactionException;
 
 class StakeHolderGroupService
 {
@@ -29,7 +30,10 @@ class StakeHolderGroupService
     public function create(array $attributes)
     {
         try {
-            return $this->stakeHolderGroup->create($attributes);
+            DB::transaction(function () use ($attributes) {
+                return $this->stakeHolderGroup->create($attributes)->type_groups()->attach($attributes["stakeholder_type_id"]);
+            });
+
         } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", 500, $e);
         }
@@ -37,10 +41,13 @@ class StakeHolderGroupService
     }
 
 
-    public function update($stakeHolderGroup, array $attributes): bool
+    public function update($stakeHolderGroup, array $attributes)
     {
         try {
-            $stakeHolderGroup = $stakeHolderGroup->fill($attributes)->update();
+            DB::transaction(function () use ($attributes, $stakeHolderGroup) {
+                $stakeHolderGroup->fill($attributes)->update();
+                $stakeHolderGroup->type_groups()->sync($attributes["stakeholder_type_id"]);
+            });
         } catch (Exception $e) {
             throw new DBTransactionException("Update transaction failed.", 500, $e);
         }

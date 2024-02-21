@@ -10,11 +10,12 @@ use App\Http\Controllers\Api\v1\{
     PostingPeriodController,
     TransactionTypeController,
     DocumentSeriesController,
-    AccountGroupController
+    AccountGroupController,
+    StakeHolderGroupController,
+    StakeHolderTypeController
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
-use App\Http\Controllers\Api\v1\StakeHolderGroupController;
 use App\Notifications\UserNotificationTest;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('account-group', AccountGroupController::class);
 
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
+    Route::resource('stakeholder-type', StakeHolderTypeController::class);
 
     Route::post('/test-event', function () {
         try {

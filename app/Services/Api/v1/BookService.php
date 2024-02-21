@@ -2,9 +2,10 @@
 
 namespace App\Services\Api\v1;
 
-use App\Exceptions\DBTransactionException;
-use App\Models\Book;
 use Exception;
+use App\Models\Book;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\DBTransactionException;
 
 
 
@@ -29,16 +30,21 @@ class BookService
     public function createBook(array $attribute)
     {
         try {
-            $book = Book::create($attribute);
-            $book->book_accounts()->attach($attribute['account_id']);
+            DB::transaction(function () use ($attribute) {
+                return Book::create($attribute)->book_accounts()->attach($attribute['account_id']);
+            });
+
         } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", 500, $e);
         }
     }
-    public function updateBook(Book $book, array $attribute)
+    public function updateBook($book, array $attributes)
     {
         try {
-            $book->update($attribute);
+            DB::transaction(function () use ($attributes, $book) {
+                $book->fill($attributes)->update();
+                $book->book_accounts()->sync($attributes["account_id"]);
+            });
         } catch (Exception $e) {
             throw new DBTransactionException("Update transaction failed.", 500, $e);
         }
