@@ -8,7 +8,7 @@ use App\Http\Resources\resources\AccountGroupResource;
 use App\Models\AccountGroup;
 use App\Http\Requests\Api\v1\Store\StoreAccountGroupRequest;
 use App\Http\Requests\Api\v1\Update\UpdateAccountGroupRequest;
-use App\Services\Api\V1\AccountGroupService;
+use App\Services\Api\v1\AccountGroupService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AccountGroupController extends Controller
