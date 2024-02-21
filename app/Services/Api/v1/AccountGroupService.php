@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Api\V1;
+namespace App\Services\Api\v1;
 
 use App\Exceptions\DBTransactionException;
 use App\Models\AccountGroup;
