@@ -12,7 +12,8 @@ use App\Http\Controllers\Api\v1\{
     DocumentSeriesController,
     AccountGroupController,
     StakeHolderGroupController,
-    StakeHolderTypeController
+    StakeHolderTypeController,
+    StakeHolderController
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
@@ -49,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('account-group', AccountGroupController::class);
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
     Route::resource('stakeholder-type', StakeHolderTypeController::class);
+    Route::resource('stakeholder', StakeholderController::class);
     Route::post('/test-event', function () {
         try {
             Notification::send(auth()->user(), new UserNotificationTest("Hello, this is notification."));

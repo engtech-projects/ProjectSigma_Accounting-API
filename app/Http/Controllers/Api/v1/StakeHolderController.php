@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\v1\Store\StoreStakeHolderRequest;
-use App\Http\Requests\UpdateStakeHolderRequest;
 use App\Models\StakeHolder;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Services\Api\v1\StakeholderService;
+use App\Http\Requests\Api\v1\Store\StoreStakeHolderRequest;
+use App\Http\Requests\Api\v1\Update\UpdateStakeHolderRequest;
 
 class StakeHolderController extends Controller
 {
+    protected $stakeholderService;
+
+    public function __construct(StakeholderService $stakeholderService)
+    {
+        $this->stakeholderService = $stakeholderService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,33 +27,19 @@ class StakeHolderController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreStakeHolderRequest $request)
     {
-        //
+        $this->stakeholderService->create($request->validated());
+
+        return new JsonResponse(['message' => "Stakeholder successfully created."], JsonResponse::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
     public function show(StakeHolder $stakeHolder)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(StakeHolder $stakeHolder)
     {
         //
     }

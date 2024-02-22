@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('middlename');
             $table->string('lastname');
             $table->string('suffix')->nullable();
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('company')->nullable();
             $table->string('display_name');
             $table->string('street')->nullable();

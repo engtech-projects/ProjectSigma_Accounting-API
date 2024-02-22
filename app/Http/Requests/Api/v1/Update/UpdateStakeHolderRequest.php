@@ -21,8 +21,24 @@ class UpdateStakeHolderRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
-            'stakeholder_group_name' => 'required|string'
+            'title' => 'string',
+            'firstname' => 'required|string',
+            'middlename' => 'required|string',
+            'lastname' => 'required|string',
+            'suffix' => 'required|string',
+            'email' => "required|email|unique:stakeholders,email,'.$this->stakeholder_id.'",
+            'company' => 'string',
+            'display_name' => 'required|string',
+            'street' => 'string',
+            'city' => 'string',
+            'state' => 'string',
+            'country' => 'string',
+            'phone_number' => 'string',
+            'mobile_number' => 'string',
+            'stakeholder_type_id' => 'required',
+
         ];
     }
 }
