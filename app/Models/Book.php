@@ -32,6 +32,14 @@ class Book extends Model
 
     }
 
+    public function account_group_books(): BelongsToMany
+    {
+        return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
+            ->using(AccountGroupBook::class)
+            ->withPivot(['book_id', 'account_group_id'])
+            ->withTimestamps();
+    }
+
 
     ### MODEL SCOPE BINDINGS ###
 

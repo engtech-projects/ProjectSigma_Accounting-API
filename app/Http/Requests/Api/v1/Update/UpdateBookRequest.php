@@ -25,6 +25,7 @@ class UpdateBookRequest extends FormRequest
             "book_name" => "required|string",
             "symbol" => "required|string|max:3",
             "account_id" => "required|integer",
+            "account_group_id" => "required|integer"
         ];
     }
 }

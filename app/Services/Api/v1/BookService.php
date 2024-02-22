@@ -31,7 +31,9 @@ class BookService
     {
         try {
             DB::transaction(function () use ($attribute) {
-                return Book::create($attribute)->book_accounts()->attach($attribute['account_id']);
+                $book = Book::create($attribute);
+                $book->book_accounts()->attach($attribute['account_id']);
+                $book->account_group_books()->attach($attribute['account_group_id']);
             });
 
         } catch (Exception $e) {
@@ -42,8 +44,12 @@ class BookService
     {
         try {
             DB::transaction(function () use ($attributes, $book) {
-                $book->fill($attributes)->update();
-                $book->book_accounts()->sync($attributes["account_id"]);
+                $book->fill($attributes);
+                $book->update();
+                $book->book_accounts()
+                    ->sync($attributes["account_id"]);
+                $book->account_group_books()
+                    ->sync($attributes['account_group_id']);
             });
         } catch (Exception $e) {
             throw new DBTransactionException("Update transaction failed.", 500, $e);
