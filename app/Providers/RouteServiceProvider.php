@@ -85,6 +85,10 @@ class RouteServiceProvider extends ServiceProvider
             return StakeHolderType::find($value) ?? throw new ResourceNotFound('Stakeholder Group not found.', 404);
         });
 
+        Route::bind('stakeholder', function ($value) {
+            return StakeHolder::find($value) ?? throw new ResourceNotFound('Stakeholder not found.', 404);
+        });
+
 
 
         $this->routes(function () {

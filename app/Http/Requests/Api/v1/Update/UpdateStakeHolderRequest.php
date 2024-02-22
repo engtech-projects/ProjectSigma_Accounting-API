@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\v1\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateStakeHolderRequest extends FormRequest
 {
@@ -28,8 +29,7 @@ class UpdateStakeHolderRequest extends FormRequest
             'middlename' => 'required|string',
             'lastname' => 'required|string',
             'suffix' => 'required|string',
-            'email' => "required|email|unique:stakeholders,email,'.$this->stakeholder_id.'",
-            'company' => 'string',
+            'email' => "required|email|unique:stakeholders,email,{$this->stakeholder->stakeholder_id},stakeholder_id",
             'display_name' => 'required|string',
             'street' => 'string',
             'city' => 'string',
