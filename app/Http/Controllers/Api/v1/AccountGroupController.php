@@ -45,7 +45,6 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-        $accountGroup = $this->accountGroupService->getById($accountGroup);
         return new AccountGroupResource($accountGroup);
     }
 
@@ -54,7 +53,7 @@ class AccountGroupController extends Controller
      */
     public function update(UpdateAccountGroupRequest $request, AccountGroup $accountGroup)
     {
-        $this->accountGroupService->updateAccountGroup($accountGroup, $request->validated());
+        $accountGroup->fill($request->validated())->update();
 
         return new JsonResponse(['succes' => true, 'message' => 'Account group successfully updated.']);
     }
@@ -64,8 +63,7 @@ class AccountGroupController extends Controller
      */
     public function destroy(AccountGroup $accountGroup)
     {
-        $this->accountGroupService->deleteAccountGroup($accountGroup);
-
+        $accountGroup->delete();
         return new JsonResponse(['succes' => true, 'message' => 'Account group successfully deleted.']);
     }
 }

@@ -15,7 +15,7 @@ class AccountService
     {
         $this->account = $account;
     }
-    public function getAccountList(?array $relation = [], ?array $columns = [])
+    public function getAll(?array $relation = [], ?array $columns = [])
     {
         $query = $this->account->query()->activeAccount();
         if ($relation) {
@@ -35,7 +35,7 @@ class AccountService
         ])->get();
 
     }
-    public function getAccountById(Account $account, ?array $relation = [])
+    public function getById(Account $account, ?array $relation = [])
     {
         $query = $account->query();
         if ($relation) {
@@ -43,43 +43,28 @@ class AccountService
         }
         return $query->find($account)->first();
     }
-    public function createAccount(array $attribute)
+    public function create(array $attribute)
     {
-        try {
-            DB::transaction(function () use ($attribute) {
-                $this->account->create($attribute)
-                    ->opening_balance()->create([
-                            'period_id' => 1,
-                            'opening_balance' => $attribute['opening_balance'],
-                            'remaining_balance' => $attribute['opening_balance'],
-                        ]);
-            });
-        } catch (Exception $e) {
-            throw new DBTransactionException('Create transaction failed.', 500, $e);
-        }
+
+        DB::transaction(function () use ($attribute) {
+            $this->account->create($attribute)
+                ->opening_balance()->create([
+                        'period_id' => 1,
+                        'opening_balance' => $attribute['opening_balance'],
+                        'remaining_balance' => $attribute['opening_balance'],
+                    ]);
+        });
     }
     public function updateAccount($account, array $attribute)
     {
-        try {
-            DB::transaction(function () use ($attribute, $account) {
-                $account->update($attribute);
-                $account->opening_balance()->update([
-                    'period_id' => 1,
-                    'opening_balance' => $attribute['opening_balance'],
-                    'remaining_balance' => $attribute['opening_balance'],
-                ]);
-            });
-        } catch (Exception $e) {
-            throw new DBTransactionException('Update transaction failed.', 500, $e);
-        }
 
-    }
-    public function deleteAccount($account)
-    {
-        try {
-            $account->delete();
-        } catch (Exception $e) {
-            throw new DBTransactionException('Create transaction failed.', 500, $e);
-        }
+        DB::transaction(function () use ($attribute, $account) {
+            $account->update($attribute);
+            $account->opening_balance()->update([
+                'period_id' => 1,
+                'opening_balance' => $attribute['opening_balance'],
+                'remaining_balance' => $attribute['opening_balance'],
+            ]);
+        });
     }
 }

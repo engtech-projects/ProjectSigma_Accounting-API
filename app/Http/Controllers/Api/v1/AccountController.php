@@ -25,7 +25,7 @@ class AccountController extends Controller
     public function index()
     {
 
-        $accounts = $this->accountService->getAccountList([
+        $accounts = $this->accountService->getAll([
             'opening_balance'
         ]);
 
@@ -38,7 +38,7 @@ class AccountController extends Controller
     public function store(StoreAccountRequest $request)
     {
 
-        $this->accountService->createAccount($request->validated());
+        $this->accountService->create($request->validated());
 
         return new JsonResponse([
             "success" => true,
@@ -51,7 +51,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $account = $this->accountService->getAccountById($account, ['opening_balance']);
+        $account = $this->accountService->getById($account, ['opening_balance']);
         return new AccountResource($account);
     }
 
@@ -66,7 +66,7 @@ class AccountController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Account successfully updated."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -74,10 +74,10 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
-        $this->accountService->deleteAccount($account);
+        $account->delete();
         return new JsonResponse([
             'success' => true,
             'message' => "Account successfully deleted."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 }

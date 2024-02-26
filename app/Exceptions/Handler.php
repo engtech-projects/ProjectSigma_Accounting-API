@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -39,16 +40,15 @@ class Handler extends ExceptionHandler
     {
         $response = null;
         if ($e instanceof AuthorizationException) {
-            $response = new JsonResponse(['message' => $e->getMessage()], 403);
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_FORBIDDEN);
         }
-        if ($e instanceof ResourceNotFound) {
-            $response = new JsonResponse(['message' => $e->getMessage()], $e->getStatusCode());
+        if ($e instanceof QueryException) {
+            $response = new JsonResponse(['success' => false, 'message' => "Server Error. Transaction failed."], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
         }
         if ($e instanceof HttpException) {
-            $response = new JsonResponse(['message' => $e->getMessage()], 403);
-        }
-        if ($e instanceof DBTransactionException) {
-            $response = new JsonResponse(['message' => $e->getMessage()], $e->getStatusCode());
+            if ($request->is('api/v1/*')) { // <- Add your condition here
+                $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_FORBIDDEN);
+            }
         }
         return $response;
     }

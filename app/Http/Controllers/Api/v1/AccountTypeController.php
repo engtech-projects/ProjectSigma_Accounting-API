@@ -24,7 +24,7 @@ class AccountTypeController extends Controller
      */
     public function index()
     {
-        $accountType = $this->accountTypeService->getAccountTypes();
+        $accountType = $this->accountTypeService->getAll();
         return new AccountTypeCollection($accountType);
 
     }
@@ -34,8 +34,7 @@ class AccountTypeController extends Controller
      */
     public function store(StoreAccountTypeRequest $request)
     {
-        $data = $request->validated();
-        $this->accountTypeService->createAccountType($data);
+        AccountType::create($request->validated());
         return new JsonResponse(['success' => true, 'message' => "Account type successfully created."], JsonResponse::HTTP_CREATED);
     }
 
@@ -44,7 +43,6 @@ class AccountTypeController extends Controller
      */
     public function show(AccountType $accountType)
     {
-        $accountType = $this->accountTypeService->getAccountTypeById($accountType);
         return new AccountTypeResource($accountType);
     }
 
@@ -53,8 +51,7 @@ class AccountTypeController extends Controller
      */
     public function update(UpdateAccountTypeRequest $request, AccountType $accountType)
     {
-        $data = $request->validated();
-        $accountType = $this->accountTypeService->updateAccountType($data, $accountType);
+        $accountType = $accountType->update($request->validated());
         return new JsonResponse(['success' => true, 'message' => "Account type successfully updated."]);
     }
 
@@ -63,7 +60,7 @@ class AccountTypeController extends Controller
      */
     public function destroy(AccountType $accountType)
     {
-        $this->accountTypeService->deleteAccountType($accountType);
+        $accountType->delete();
         return new JsonResponse(['success' => true, 'message' => "Account type successfully deleted."]);
     }
 }

@@ -18,9 +18,12 @@ use App\Models\StakeHolderGroup;
 use App\Models\StakeHolderType;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Response;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -43,50 +46,8 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        Route::bind('accounts', function ($value) {
-            return Account::find($value) ?? throw new ResourceNotFound('Account not found.', 404);
-        });
-
-        Route::bind('book', function ($value) {
-            return Book::find($value) ?? throw new ResourceNotFound('Book not found.', 404);
-        });
-
-
         Route::bind('type', function ($value) {
-            return AccountType::find($value) ?? throw new ResourceNotFound('Category not found.', 404);
-        });
-
-        Route::bind('posting-period', function ($value) {
-            return PostingPeriod::find($value) ?? throw new ResourceNotFound('Posting period not found.', 404);
-        });
-
-        Route::bind('transaction-type', function ($value) {
-            return TransactionType::find($value) ?? throw new ResourceNotFound('Transaction type not found.', 404);
-        });
-
-        Route::bind('subsidiary', function ($value) {
-            return Subsidiary::find($value) ?? throw new ResourceNotFound('Subsidiary not found.', 404);
-        });
-
-
-        Route::bind('document-series', function ($value) {
-            return DocumentSeries::find($value) ?? throw new ResourceNotFound('Document series not found.', 404);
-        });
-
-        Route::bind('account-group', function ($value) {
-            return AccountGroup::find($value) ?? throw new ResourceNotFound('Account Group not found.', 404);
-        });
-
-        Route::bind('stakeholder-group', function ($value) {
-            return StakeHolderGroup::find($value) ?? throw new ResourceNotFound('Stakeholder Group not found.', 404);
-        });
-
-        Route::bind('stakeholder-type', function ($value) {
-            return StakeHolderType::find($value) ?? throw new ResourceNotFound('Stakeholder Group not found.', 404);
-        });
-
-        Route::bind('stakeholder', function ($value) {
-            return StakeHolder::find($value) ?? throw new ResourceNotFound('Stakeholder not found.', 404);
+            return AccountType::find($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
         });
 
 
