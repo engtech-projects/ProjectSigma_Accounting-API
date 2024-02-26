@@ -43,28 +43,30 @@ class AccountService
         }
         return $query->find($account)->first();
     }
-    public function create(array $attribute)
+    public function create(array $attributes)
     {
 
-        DB::transaction(function () use ($attribute) {
-            $this->account->create($attribute)
-                ->opening_balance()->create([
-                        'period_id' => 1,
-                        'opening_balance' => $attribute['opening_balance'],
-                        'remaining_balance' => $attribute['opening_balance'],
-                    ]);
+        DB::transaction(function () use ($attributes) {
+            $account = $this->account->create($attributes);
+            $account->opening_balance()->create([
+                'period_id' => 1,
+                'opening_balance' => $attributes['opening_balance'],
+                'remaining_balance' => $attributes['opening_balance'],
+            ]);
+            $account->account_has_group()->attach($attributes['account_group_id']);
         });
     }
-    public function updateAccount($account, array $attribute)
+    public function updateAccount($account, array $attributes)
     {
 
-        DB::transaction(function () use ($attribute, $account) {
-            $account->update($attribute);
+        DB::transaction(function () use ($attributes, $account) {
+            $account->update($attributes);
             $account->opening_balance()->update([
                 'period_id' => 1,
-                'opening_balance' => $attribute['opening_balance'],
-                'remaining_balance' => $attribute['opening_balance'],
+                'opening_balance' => $attributes['opening_balance'],
+                'remaining_balance' => $attributes['opening_balance'],
             ]);
+            $account->account_has_group()->sync($attributes['account_group_id']);
         });
     }
 }

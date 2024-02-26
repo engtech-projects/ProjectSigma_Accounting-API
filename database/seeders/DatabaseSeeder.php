@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AccountTypeSeeder::class,
             AccountSeeder::class,
+            AccountGroupSeeder::class,
             PostingPeriodSeeder::class,
             OpeningBalanceSeeder::class,
             BookSeeder::class,

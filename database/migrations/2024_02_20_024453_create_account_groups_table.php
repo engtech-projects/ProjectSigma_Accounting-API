@@ -13,8 +13,6 @@ return new class extends Migration {
         Schema::create('account_groups', function (Blueprint $table) {
             $table->id('account_group_id');
             $table->string('account_group_name');
-            $table->unsignedBigInteger('type_id');
-            $table->foreign('type_id')->references('type_id')->on('account_types');
             $table->softDeletes();
             $table->timestamps();
         });

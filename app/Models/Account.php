@@ -26,7 +26,6 @@ class Account extends Model
         'account_description',
         'status',
         'type_id',
-        'account_group_id'
     ];
 
     protected $casts = [
@@ -54,6 +53,14 @@ class Account extends Model
     {
         return $this->hasMany(OpeningBalance::class, 'account_id')
             ->whereRelation('posting_period', 'status', PostingPeriodStatus::STATUS_OPEN);
+    }
+
+    public function account_has_group(): BelongsToMany
+    {
+        return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
+            ->using(AccountHasGroup::class)
+            ->withPivot(['account_id', 'account_group_id'])
+            ->withTimestamps();
     }
 
 

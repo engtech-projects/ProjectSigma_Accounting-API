@@ -4,26 +4,17 @@ namespace App\Providers;
 
 use App\Exceptions\ResourceNotFound;
 use App\Models\{
-    Account,
     AccountType,
-    PostingPeriod,
-    Subsidiary,
-    TransactionType,
-    DocumentSeries,
-    Book
+    StakeHolderType,
+    StakeHolderGroup
 };
-use App\Models\AccountGroup;
-use App\Models\StakeHolder;
-use App\Models\StakeHolderGroup;
-use App\Models\StakeHolderType;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -47,15 +38,15 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('type', function ($value) {
-            return AccountType::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+            return AccountType::findOrFail($value);
         });
 
         Route::bind('stakeholder-group', function ($value) {
-            return StakeHolderGroup::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+            return StakeHolderGroup::findOrFail($value);
         });
 
         Route::bind('stakeholder-type', function ($value) {
-            return StakeHolderType::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+            return StakeHolderType::findOrFail($value);
         });
 
 

@@ -48,9 +48,11 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('document-series', DocumentSeriesController::class);
     Route::resource('subsidiary', SubsidiaryController::class);
     Route::resource('account-group', AccountGroupController::class);
+
+    Route::resource('stakeholder', StakeholderController::class);
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
     Route::resource('stakeholder-type', StakeHolderTypeController::class);
-    Route::resource('stakeholder', StakeholderController::class);
+
 
     /* Route::post('/test-event', function () {
         try {
