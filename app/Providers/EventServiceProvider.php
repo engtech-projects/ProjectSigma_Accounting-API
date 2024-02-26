@@ -22,14 +22,14 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ModelObserverEvent::class => [
+        /* ModelObserverEvent::class => [
             ModelObserverEventNotification::class,
-        ]
+        ] */
     ];
 
 
     protected $observers = [
-        Subsidiary::class => [SubsidiaryObserver::class],
+        //Subsidiary::class => [SubsidiaryObserver::class],
     ];
 
     /**

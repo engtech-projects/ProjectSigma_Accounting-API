@@ -15,7 +15,7 @@ class DocumentSeriesCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'data' => $this->collection
+            'document_series' => $this->collection
         ];
 
         //return parent::toArray($request);

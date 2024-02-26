@@ -20,7 +20,7 @@ class StakeHolderTypeService
         return $this->stakeHolderType->all();
     }
 
-    public function getById($stakeHolderType)
+    public function getById(StakeHolderType $stakeHolderType)
     {
         return $stakeHolderType;
     }

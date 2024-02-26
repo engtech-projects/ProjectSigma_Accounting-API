@@ -16,7 +16,7 @@ class PostingPeriodService
         $this->postingPeriod = $postingPeriod;
     }
 
-    public function getPostingPeriodList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAll(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
         $query = $this->postingPeriod->query();
         if ($relation) {
@@ -30,7 +30,7 @@ class PostingPeriodService
 
     }
 
-    public function getPostingPeriod($postingPeriod)
+    public function getById($postingPeriod)
     {
         return $postingPeriod;
     }

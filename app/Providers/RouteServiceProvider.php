@@ -47,8 +47,17 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         Route::bind('type', function ($value) {
-            return AccountType::find($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+            return AccountType::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
         });
+
+        Route::bind('stakeholder-group', function ($value) {
+            return StakeHolderGroup::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+        });
+
+        Route::bind('stakeholder-type', function ($value) {
+            return StakeHolderType::findOrFail($value) ?? throw new HttpException(JsonResponse::HTTP_NOT_FOUND, 'Resource not found.');
+        });
+
 
 
 

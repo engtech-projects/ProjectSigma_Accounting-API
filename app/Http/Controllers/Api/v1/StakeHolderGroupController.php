@@ -65,7 +65,7 @@ class StakeHolderGroupController extends Controller
      */
     public function destroy(StakeHolderGroup $stakeHolderGroup)
     {
-        StakeHolderGroupService::delete($stakeHolderGroup);
+        $stakeHolderGroup->delete();
 
         return new JsonResponse(['message' => 'Stakeholder Group successfully deleted.']);
     }

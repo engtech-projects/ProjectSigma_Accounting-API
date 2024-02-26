@@ -17,7 +17,7 @@ class DocumentSeriesService
     }
 
 
-    public function getDocumentSeriesList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAll(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
     {
         $query = $this->documentSeries::query();
         if ($relation) {
@@ -30,7 +30,7 @@ class DocumentSeriesService
 
     }
 
-    public function getDocumentSeriesById($documentSeries)
+    public function getById($documentSeries)
     {
         return $this->documentSeries->find($documentSeries)->firstOrFail();
 

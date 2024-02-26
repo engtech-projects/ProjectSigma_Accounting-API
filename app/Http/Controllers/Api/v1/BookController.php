@@ -22,7 +22,8 @@ class BookController extends Controller
     }
     public function index()
     {
-        $books = $this->bookService->getBookList();
+        $books = $this->bookService->getAll();
+
         return new BookCollection($books);
     }
 
@@ -31,8 +32,8 @@ class BookController extends Controller
      */
     public function store(StoreBookRequest $request)
     {
-        $data = $request->validated();
-        $this->bookService->createBook($data);
+        $this->bookService->createBook($request->validated());
+
         return new JsonResponse([
             'success' => true,
             'message' => "Book successfully created."
@@ -44,7 +45,8 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book = $this->bookService->getBookById($book);
+        $book = $this->bookService->getById($book);
+
         return new BookResource($book);
     }
 
@@ -53,8 +55,7 @@ class BookController extends Controller
      */
     public function update(UpdateBookRequest $request, Book $book)
     {
-        $data = $request->validated();
-        $this->bookService->updateBook($book, $data);
+        $this->bookService->updateBook($book, $request->validated());
 
         return new JsonResponse([
             'success' => true,
@@ -68,7 +69,8 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
-        $this->bookService->deleteBook($book);
+        $book->delete();
+
         return new JsonResponse([
             'success' => true,
             'message' => "Book successfully deleted."

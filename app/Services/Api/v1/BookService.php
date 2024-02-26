@@ -19,53 +19,36 @@ class BookService
     {
         $this->book = $book;
     }
-    public function getBookList()
+    public function getAll()
     {
         return $this->book->all();
     }
-    public function getBookById(Book $book)
+    public function getById(Book $book)
     {
         return $book->with(['book_accounts'])->first();
     }
     public function createBook(array $attribute)
     {
-        try {
-            DB::transaction(function () use ($attribute) {
-                $book = Book::create($attribute);
-                $book->book_accounts()->attach($attribute['account_id']);
-                $book->account_group_books()->attach($attribute['account_group_id']);
-            });
 
-        } catch (Exception $e) {
-            throw new DBTransactionException("Create transaction failed.", 500, $e);
-        }
+        DB::transaction(function () use ($attribute) {
+            $book = Book::create($attribute);
+            $book->book_accounts()->attach($attribute['account_id']);
+            $book->account_group_books()->attach($attribute['account_group_id']);
+        });
+
     }
     public function updateBook($book, array $attributes)
     {
-        try {
-            DB::transaction(function () use ($attributes, $book) {
-                $book->fill($attributes);
-                $book->update();
-                $book->book_accounts()
-                    ->sync($attributes["account_id"]);
-                $book->account_group_books()
-                    ->sync($attributes['account_group_id']);
-            });
-        } catch (Exception $e) {
-            throw new DBTransactionException("Update transaction failed.", 500, $e);
-        }
-
+        DB::transaction(function () use ($attributes, $book) {
+            $book->fill($attributes);
+            $book->update();
+            $book->book_accounts()
+                ->sync($attributes["account_id"]);
+            $book->account_group_books()
+                ->sync($attributes['account_group_id']);
+        });
 
     }
-    public function deleteBook(Book $book)
-    {
-        try {
-            $book->delete();
-        } catch (Exception $e) {
-            throw new DBTransactionException("Update transaction failed.", 500, $e);
-        }
-    }
-
 
 
 }

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('stakeholder_groups', function (Blueprint $table) {
             $table->id('stakeholder_group_id');
             $table->string('stakeholder_group_name');
+
             $table->softDeletes();
             $table->timestamps();
         });

@@ -29,41 +29,21 @@ class StakeHolderGroupService
 
     public function create(array $attributes)
     {
-        try {
-            DB::transaction(function () use ($attributes) {
-                return $this->stakeHolderGroup->create($attributes)->type_groups()->attach($attributes["stakeholder_type_id"]);
-            });
 
-        } catch (Exception $e) {
-            throw new DBTransactionException("Create transaction failed.", 500, $e);
-        }
+        DB::transaction(function () use ($attributes) {
+            return $this->stakeHolderGroup->create($attributes)->type_groups()->attach($attributes["stakeholder_type_id"]);
+        });
 
     }
 
 
     public function update($stakeHolderGroup, array $attributes)
     {
-        try {
-            DB::transaction(function () use ($attributes, $stakeHolderGroup) {
-                $stakeHolderGroup->fill($attributes)->update();
-                $stakeHolderGroup->type_groups()->sync($attributes["stakeholder_type_id"]);
-            });
-        } catch (Exception $e) {
-            throw new DBTransactionException("Update transaction failed.", 500, $e);
-        }
-
-        return $stakeHolderGroup;
+        DB::transaction(function () use ($attributes, $stakeHolderGroup) {
+            $stakeHolderGroup->fill($attributes)->update();
+            $stakeHolderGroup->type_groups()
+                ->sync($attributes["stakeholder_type_id"]);
+        });
     }
 
-    public static function delete($stakeHolderGroup): bool
-    {
-        try {
-            $stakeHolderGroup = $stakeHolderGroup->delete();
-        } catch (Exception $e) {
-            throw new DBTransactionException("Delete transaction failed.", 500, $e);
-        }
-
-        return $stakeHolderGroup;
-
-    }
 }

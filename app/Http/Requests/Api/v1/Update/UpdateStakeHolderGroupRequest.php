@@ -23,7 +23,7 @@ class UpdateStakeHolderGroupRequest extends FormRequest
     {
         return [
             'stakeholder_group_name' => 'required|string',
-            'stakeholder_type_id' => 'required|string'
+            'stakeholder_type_id' => 'nullable|integer'
         ];
     }
 }

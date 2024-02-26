@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\collections\DocumentSeriesCollection;
 use App\Models\DocumentSeries;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Services\Api\v1\DocumentSeriesService;
+use App\Http\Resources\resources\DocumentSeriesResource;
+use App\Http\Resources\collections\DocumentSeriesCollection;
 use App\Http\Requests\Api\v1\Store\StoreDocumentSeriesRequest;
 use App\Http\Requests\Api\v1\Update\UpdateDocumentSeriesRequest;
-use App\Services\Api\v1\DocumentSeriesService;
-use Illuminate\Http\JsonResponse;
 
 class DocumentSeriesController extends Controller
 {
@@ -22,7 +23,7 @@ class DocumentSeriesController extends Controller
      */
     public function index()
     {
-        $documentSeries = $this->documentSeriesService->getDocumentSeriesList();
+        $documentSeries = $this->documentSeriesService->getAll();
 
         return new DocumentSeriesCollection($documentSeries);
     }
@@ -32,7 +33,7 @@ class DocumentSeriesController extends Controller
      */
     public function store(StoreDocumentSeriesRequest $request)
     {
-        $this->documentSeriesService->createDocumentSeries($request->validated());
+        DocumentSeries::create($request->validated());
 
         return new JsonResponse(
             ['success' => true, 'message' => 'Document series successfully created.'],
@@ -45,7 +46,9 @@ class DocumentSeriesController extends Controller
      */
     public function show(DocumentSeries $documentSeries)
     {
-        return $this->documentSeriesService->getDocumentSeriesById($documentSeries);
+        $documentSeries = $this->documentSeriesService->getById($documentSeries);
+
+        return new DocumentSeriesResource($documentSeries);
     }
 
     /**
@@ -53,9 +56,9 @@ class DocumentSeriesController extends Controller
      */
     public function update(UpdateDocumentSeriesRequest $request, DocumentSeries $documentSeries)
     {
-        $this->documentSeriesService->updateDocumentSeries($documentSeries, $request->validated());
+        $documentSeries->fill($request->validated())->update();
 
-        return new JsonResponse(['success' => true, 'message' => 'Document series successfully updated.']);
+        return new JsonResponse(['success' => true, 'message' => 'Document series successfully updated.'], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -63,8 +66,8 @@ class DocumentSeriesController extends Controller
      */
     public function destroy(DocumentSeries $documentSeries)
     {
-        $this->documentSeriesService->deleteDocumentSeries($documentSeries);
+        $documentSeries->delete();
 
-        return new JsonResponse(['success' => true, 'message' => 'Document series successfully deleted.']);
+        return new JsonResponse(['success' => true, 'message' => 'Document series successfully deleted.'], JsonResponse::HTTP_OK);
     }
 }

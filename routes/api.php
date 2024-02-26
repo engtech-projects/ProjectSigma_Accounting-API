@@ -51,7 +51,8 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
     Route::resource('stakeholder-type', StakeHolderTypeController::class);
     Route::resource('stakeholder', StakeholderController::class);
-    Route::post('/test-event', function () {
+
+    /* Route::post('/test-event', function () {
         try {
             Notification::send(auth()->user(), new UserNotificationTest("Hello, this is notification."));
         } catch (Exception $e) {
@@ -59,7 +60,7 @@ Route::middleware('auth:api')->group(function () {
         }
 
         return "test event";
-    });
+    }); */
 
 
 });

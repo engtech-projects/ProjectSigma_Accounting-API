@@ -15,13 +15,13 @@ class SubsidiaryService
         $this->subsidiary = $subsidiary;
     }
 
-    public function getSubsidiaryList()
+    public function getAll()
     {
         return Subsidiary::all();
 
     }
 
-    public function getSubsidiaryById(Subsidiary $subsidiary)
+    public function getById(Subsidiary $subsidiary)
     {
         return $subsidiary;
 

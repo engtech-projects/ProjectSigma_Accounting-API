@@ -36,7 +36,7 @@ class StakeHolderController extends Controller
      */
     public function store(StoreStakeHolderRequest $request)
     {
-        $this->stakeholderService->create($request->validated());
+        StakeHolder::create($request->validated());
 
         return new JsonResponse(['message' => "Stakeholder successfully created."], JsonResponse::HTTP_CREATED);
     }
@@ -56,7 +56,7 @@ class StakeHolderController extends Controller
      */
     public function update(UpdateStakeHolderRequest $request, StakeHolder $stakeholder)
     {
-        $this->stakeholderService->update($stakeholder, $request->validated());
+        $stakeholder->fill($request->validated())->update();
 
         return new JsonResponse(['message' => "Stakeholder successfully updated."], JsonResponse::HTTP_OK);
     }
@@ -66,7 +66,7 @@ class StakeHolderController extends Controller
      */
     public function destroy(StakeHolder $stakeHolder)
     {
-        $this->stakeholderService->delete($stakeHolder);
+        $stakeHolder->delete();
 
         return new JsonResponse(['message' => "Stakeholder successfully deleted."], JsonResponse::HTTP_OK);
     }

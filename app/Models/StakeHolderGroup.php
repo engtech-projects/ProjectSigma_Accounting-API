@@ -15,7 +15,7 @@ class StakeHolderGroup extends Model
     protected $primaryKey = 'stakeholder_group_id';
 
     protected $fillable = [
-        'stakeholder_group_name'
+        'stakeholder_group_name',
     ];
 
     public function type_groups(): BelongsToMany

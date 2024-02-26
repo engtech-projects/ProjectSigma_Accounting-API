@@ -24,7 +24,7 @@ class SubsidiaryController extends Controller
      */
     public function index()
     {
-        $subsidiary = $this->subsidiaryService->getSubsidiaryList();
+        $subsidiary = $this->subsidiaryService->getAll();
 
         return new SubsidiaryCollection($subsidiary);
     }
@@ -34,12 +34,12 @@ class SubsidiaryController extends Controller
      */
     public function store(StoreSubsidiaryRequest $request)
     {
-        $this->subsidiaryService->createSubsidiary($request->validated());
+        Subsidiary::create($request->validated());
 
         return new JsonResponse([
             'success' => true,
             'message' => "Subsidiary successfully created."
-        ]);
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -47,7 +47,7 @@ class SubsidiaryController extends Controller
      */
     public function show(Subsidiary $subsidiary)
     {
-        return new SubsidiaryResource($this->subsidiaryService->getSubsidiaryById($subsidiary));
+        return new SubsidiaryResource($this->subsidiaryService->getById($subsidiary));
     }
 
     /**
@@ -55,12 +55,12 @@ class SubsidiaryController extends Controller
      */
     public function update(UpdateSubsidiaryRequest $request, Subsidiary $subsidiary)
     {
-        $this->subsidiaryService->updateSubsidiary($subsidiary, $request->validated());
+        $subsidiary->fill($request->validated())->update();
 
         return new JsonResponse([
             'success' => true,
             'message' => "Subsidiary successfully updated."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -68,11 +68,11 @@ class SubsidiaryController extends Controller
      */
     public function destroy(Subsidiary $subsidiary)
     {
-        $this->subsidiaryService->deleteSubsidiary($subsidiary);
+        $subsidiary->delete();
 
         return new JsonResponse([
             'success' => true,
             'message' => "Subsidiary successfully deleted."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 }
