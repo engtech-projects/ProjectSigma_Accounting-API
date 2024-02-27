@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\AccountStatus;
 use App\Enums\PostingPeriodStatus;
+use App\Models\Pivot\AccountHasGroup;
 use App\Models\Pivot\BookAccount;
+use App\Traits\HasGroup;
 use App\Traits\ModelGlobalScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Account extends Model
 {
     use HasFactory, SoftDeletes, ModelGlobalScope;
+    use HasGroup;
 
     protected $primaryKey = "account_id";
     protected $fillable = [
@@ -55,7 +58,7 @@ class Account extends Model
             ->whereRelation('posting_period', 'status', PostingPeriodStatus::STATUS_OPEN);
     }
 
-    public function account_has_group(): BelongsToMany
+    public function account_groups(): BelongsToMany
     {
         return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
             ->using(AccountHasGroup::class)

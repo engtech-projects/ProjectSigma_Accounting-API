@@ -2,25 +2,22 @@
 
 namespace App\Traits;
 
-use App\Models\Account;
 use App\Models\AccountGroup;
 use App\Models\Pivot\AccountHasGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait HasAccount
+trait HasGroup
 {
-
-    public function account(): BelongsTo
+    public function account_group(): BelongsTo
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(AccountGroup::class);
     }
-    public function account_group(): BelongsToMany
+    /* public function account_has_group(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'account_has_group', 'account_group_id', 'account_id')
+        return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
             ->using(AccountHasGroup::class)
             ->withPivot(['account_id', 'account_group_id'])
             ->withTimestamps();
-    }
+    } */
 }
