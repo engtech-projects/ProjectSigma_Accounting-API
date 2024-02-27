@@ -23,7 +23,6 @@ class StoreAccountGroupRequest extends FormRequest
     {
         return [
             "account_group_name" => "required|string",
-            "type_id" => "required|integer",
         ];
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Pivot;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class AccountGroupBook extends Pivot
+class AccountHasGroup extends Pivot
 {
     //
 }
