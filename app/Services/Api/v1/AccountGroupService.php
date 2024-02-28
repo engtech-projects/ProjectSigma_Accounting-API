@@ -13,13 +13,9 @@ class AccountGroupService
         return AccountGroup::all();
     }
 
-    public function getById(AccountGroup $accountGroup, ?array $relation = [])
+    public function getById($accountGroup, ?array $relation = [])
     {
-        $query = $accountGroup->query();
-        if ($relation) {
-            $query->with($relation);
-        }
-        return $query->find($accountGroup)->first();
+        return $accountGroup->with($relation)->first();
     }
 
     public static function create(array $attributes)
