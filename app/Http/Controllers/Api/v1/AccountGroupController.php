@@ -36,7 +36,7 @@ class AccountGroupController extends Controller
     public function store(StoreAccountGroupRequest $request)
     {
         AccountGroupService::create($request->validated());
-
+        $a = "as";
         return new JsonResponse(['succes' => true, 'message' => 'Account group successfully created.'], JsonResponse::HTTP_CREATED);
     }
 
@@ -45,8 +45,8 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-        $accountGroup = $this->accountGroupService->getById($accountGroup,['account_group']);
-/*         return $accountGroup; */
+        $accountGroup = $this->accountGroupService->getById($accountGroup, ['account_group']);
+        /*         return $accountGroup; */
         return new AccountGroupResource($accountGroup);
     }
 
