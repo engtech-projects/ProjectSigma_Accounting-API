@@ -52,7 +52,7 @@ class AccountService
                 'opening_balance' => $attributes['opening_balance'],
                 'remaining_balance' => $attributes['opening_balance'],
             ]);
-            $account->account_has_group()->attach($attributes['account_group_id']);
+            $account->account_group()->attach($attributes['account_group_id']);
         });
     }
     public function updateAccount($account, array $attributes)
@@ -65,7 +65,7 @@ class AccountService
                 'opening_balance' => $attributes['opening_balance'],
                 'remaining_balance' => $attributes['opening_balance'],
             ]);
-            $account->account_has_group()->sync($attributes['account_group_id']);
+            $account->account_group()->sync($attributes['account_group_id']);
         });
     }
 }

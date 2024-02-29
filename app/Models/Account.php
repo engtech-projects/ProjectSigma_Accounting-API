@@ -59,15 +59,6 @@ class Account extends Model
             ->whereRelation('posting_period', 'status', PostingPeriodStatus::STATUS_OPEN);
     }
 
-    public function account_groups(): BelongsToMany
-    {
-        return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
-            ->using(AccountHasGroup::class)
-            ->withPivot(['account_id', 'account_group_id'])
-            ->withTimestamps();
-    }
-
-
 
     ## MODEL SCOPE BINDINGS ##
 
