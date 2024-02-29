@@ -8,6 +8,7 @@ use App\Models\{
     StakeHolderType,
     StakeHolderGroup
 };
+use App\Models\AccountGroup;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -48,7 +49,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('stakeholder-type', function ($value) {
             return StakeHolderType::findOrFail($value);
         });
-
 
 
 
