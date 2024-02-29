@@ -35,7 +35,7 @@ class AccountService
         ])->get();
 
     }
-    public function getById(Account $account, ?array $relation = [])
+    public function getById($account, ?array $relation = [])
     {
         $query = $account->query();
         if ($relation) {

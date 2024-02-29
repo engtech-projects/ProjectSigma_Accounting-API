@@ -22,6 +22,7 @@ class Account extends Model
     use HasFactory, SoftDeletes, ModelGlobalScope;
     use HasGroup;
 
+    protected $table = "accounts";
     protected $primaryKey = "account_id";
     protected $fillable = [
         'account_name',
