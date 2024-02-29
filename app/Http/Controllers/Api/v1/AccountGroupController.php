@@ -27,6 +27,7 @@ class AccountGroupController extends Controller
     {
         $accountGroup = $this->accountGroupService->getAll();
 
+
         return new AccountGroupCollection($accountGroup);
     }
 
@@ -36,7 +37,6 @@ class AccountGroupController extends Controller
     public function store(StoreAccountGroupRequest $request)
     {
         AccountGroupService::create($request->validated());
-        $a = "as";
         return new JsonResponse(['succes' => true, 'message' => 'Account group successfully created.'], JsonResponse::HTTP_CREATED);
     }
 
