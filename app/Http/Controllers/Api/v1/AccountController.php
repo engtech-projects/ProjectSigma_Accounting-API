@@ -51,6 +51,7 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
+        $account = $this->accountService->getById($account);
         return new AccountResource($account);
     }
 

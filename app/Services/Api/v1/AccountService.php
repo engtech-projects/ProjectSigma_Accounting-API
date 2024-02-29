@@ -37,11 +37,10 @@ class AccountService
     }
     public function getById($account, ?array $relation = [])
     {
-        $query = $account->query();
         if ($relation) {
-            $query->with($relation);
+            $account->with($relation);
         }
-        return $query->find($account)->first();
+        return $account;
     }
     public function create(array $attributes)
     {
