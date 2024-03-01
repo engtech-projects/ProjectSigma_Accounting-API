@@ -53,20 +53,20 @@ class AccountService
                 'opening_balance' => $attributes['opening_balance'],
                 'remaining_balance' => $attributes['opening_balance'],
             ]);
-            $account->account_group()->attach($attributes['account_group_id']);
+            /*  $account->account_group()->attach($attributes['account_group_id']); */
         });
     }
     public function updateAccount($account, array $attributes)
     {
 
         DB::transaction(function () use ($attributes, $account) {
-            $account->update($attributes);
+            $account->fill($attributes);
             $account->opening_balance()->update([
                 'period_id' => 1,
                 'opening_balance' => $attributes['opening_balance'],
                 'remaining_balance' => $attributes['opening_balance'],
             ]);
-            $account->account_group()->sync($attributes['account_group_id']);
+            /* $account->account_group()->sync($attributes['account_group_id']); */
         });
     }
 }

@@ -33,7 +33,7 @@ class UpdateAccountRequest extends FormRequest
             'bank_reconciliation' => [new Enum(BankReconciliation::class)],
             'type_id' => 'required|integer',
             'opening_balance' => 'required',
-            'account_group_id' => 'required|integer'
+            /* 'account_group_id' => 'required|integer' */
         ];
     }
 }
