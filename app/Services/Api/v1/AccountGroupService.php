@@ -8,9 +8,13 @@ use Exception;
 
 class AccountGroupService
 {
-    public function getAll()
+    public function getAll(?bool $paginate = false, ?array $relation = [])
     {
-        return AccountGroup::all();
+        $query = AccountGroup::query();
+        if ($relation) {
+            $query->with($relation);
+        }
+        return $paginate ? $query->paginate(10) : $query->get();
     }
 
     public function getById(AccountGroup $accountGroup, ?array $relation = [])

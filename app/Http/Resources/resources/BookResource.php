@@ -20,8 +20,8 @@ class BookResource extends JsonResource
             "book_id" => $this->book_id,
             "book_name" => $this->book_name,
             "symbol" => $this->symbol,
-            "account" => AccountResource::collection($this->whenLoaded('account')),
-            "account_group" => AccountGroupResource::collection($this->whenLoaded('book_group')),
+            "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
+            "account_groups" => AccountGroupResource::collection($this->whenLoaded('account_groups')),
         ];
         //return parent::toArray($request);
     }

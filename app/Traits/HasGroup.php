@@ -12,17 +12,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait HasGroup
 {
-    public function account_group(): BelongsToMany
+    public function account_group(): BelongsTo
     {
-        return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
-            ->using(AccountHasGroup::class)
-            ->withPivot(['account_id', 'account_group_id']);
+        return $this->belongsTo(AccountGroup::class);
     }
 
-    public function account_book_group(): BelongsToMany
-    {
-        return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
-            ->using(AccountGroupBook::class)
-            ->withTimestamps();
-    }
 }

@@ -25,14 +25,14 @@ class Book extends Model
 
     ## MODEL RELATION ##
 
-    public function account(): BelongsToMany
+    public function accounts(): BelongsToMany
     {
         return $this->belongsToMany(Account::class, 'book_accounts', 'book_id', 'account_id')
             ->using(BookAccount::class)
             ->withPivot(['book_id', 'account_id']);
 
     }
-    public function book_group(): BelongsToMany
+    public function account_groups(): BelongsToMany
     {
         return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
             ->using(AccountGroupBook::class)

@@ -25,7 +25,7 @@ class AccountGroupController extends Controller
      */
     public function index()
     {
-        $accountGroup = $this->accountGroupService->getAll();
+        $accountGroup = $this->accountGroupService->getAll(null, ['accounts']);
 
         return new AccountGroupCollection($accountGroup);
     }
@@ -44,8 +44,7 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-        $accountGroup = $this->accountGroupService->getById($accountGroup, ['account', 'book']);
-
+        $accountGroup = $this->accountGroupService->getById($accountGroup, ['accounts', 'books']);
         return new AccountGroupResource($accountGroup);
     }
 

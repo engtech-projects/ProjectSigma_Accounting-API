@@ -16,9 +16,11 @@ class AccountGroupCollection extends ResourceCollection
     public static $wrap = 'account_group';
     public function toArray(Request $request): array
     {
-        return $this->collection->transform(function ($accountGroup) {
+        $this->collection->transform(function ($accountGroup) {
             return new AccountGroupResource($accountGroup);
-        })->toArray();
+        });
+
+        return parent::toArray($request);
 
     }
 }

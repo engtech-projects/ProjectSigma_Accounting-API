@@ -24,16 +24,16 @@ class AccountGroup extends Model
     ];
 
 
-    public function account(): BelongsToMany
+    public function accounts(): BelongsToMany
     {
         return $this->belongsToMany(Account::class, 'account_has_group', 'account_group_id', 'account_id')
             ->using(AccountHasGroup::class)
             ->withPivot(['account_id', 'account_group_id'])
             ->withTimestamps();
     }
-    public function book(): BelongsToMany
+    public function books(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'account_group_books', 'book_id', 'account_group_id')
+        return $this->belongsToMany(Book::class, 'account_group_books', 'account_group_id', 'book_id')
             ->using(AccountGroupBook::class)
             ->withPivot(['account_group_id', 'book_id'])
             ->withTimestamps();

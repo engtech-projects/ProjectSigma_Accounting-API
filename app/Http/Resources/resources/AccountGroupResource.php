@@ -19,8 +19,8 @@ class AccountGroupResource extends JsonResource
         return [
             'account_group_id' => $this->account_group_id,
             'account_group_name' => $this->account_group_name,
-            'account' => new AccountCollections($this->whenLoaded('account')),
-            'book' => new BookCollection($this->whenLoaded('book')),
+            'accounts' => new AccountCollections($this->whenLoaded('accounts')),
+            'books' => new BookCollection($this->whenLoaded('books')),
         ];
 
         //return parent::toArray($request);
