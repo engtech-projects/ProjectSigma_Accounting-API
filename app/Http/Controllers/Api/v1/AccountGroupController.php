@@ -44,8 +44,9 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-        $accountGroup = $this->accountGroupService->getById($accountGroup, ['accounts', 'books']);
-        return new AccountGroupResource($accountGroup);
+        $data = $this->accountGroupService->getById($accountGroup, ['accounts', 'books']);
+
+        return new AccountGroupResource($data);
     }
 
     /**

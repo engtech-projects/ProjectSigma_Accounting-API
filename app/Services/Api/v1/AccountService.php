@@ -35,12 +35,13 @@ class AccountService
         ])->get();
 
     }
-    public function getById($account, ?array $relation = [])
+    public function getById(Account $account, ?array $relation = [])
     {
+        $query = $account::query();
         if ($relation) {
-            $account->with($relation);
+            $query->with($relation);
         }
-        return $account;
+        return $query->find($account)->first();
     }
     public function create(array $attributes)
     {

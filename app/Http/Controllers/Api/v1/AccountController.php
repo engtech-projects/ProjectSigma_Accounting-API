@@ -49,9 +49,14 @@ class AccountController extends Controller
      */
     public function show(Account $account)
     {
-        $account = $this->accountService->getById($account);
+        $account = $this->accountService->getById($account, [
+            'account_type',
+            'opening_balance',
+            'account_group',
+            'account_book'
+        ]);
 
-        return new AccountResource($account->load('account_type', 'opening_balance', 'account_group', 'account_book'));
+        return new AccountResource($account);
     }
 
     /**
@@ -59,8 +64,7 @@ class AccountController extends Controller
      */
     public function update(UpdateAccountRequest $request, Account $account)
     {
-        $data = $request->validated();
-        $this->accountService->updateAccount($account, $data);
+        $this->accountService->updateAccount($account, $request->validated());
 
         return new JsonResponse([
             'success' => true,

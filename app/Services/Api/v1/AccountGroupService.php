@@ -19,11 +19,10 @@ class AccountGroupService
 
     public function getById(AccountGroup $accountGroup, ?array $relation = [])
     {
-        $query = $accountGroup->query();
         if ($relation) {
-            $query->with($relation);
+            $accountGroup->load($relation);
         }
-        return $query->find($accountGroup)->first();
+        return $accountGroup;
     }
 
     public static function create(array $attributes)

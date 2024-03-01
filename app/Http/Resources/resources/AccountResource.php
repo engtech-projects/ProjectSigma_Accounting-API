@@ -31,12 +31,12 @@ class AccountResource extends JsonResource
             'statement' => $this->statement,
             'type_id' => $this->type_id,
             'account_type' => new AccountTypeResource($this->whenLoaded('account_type')),
-            'account_group' => AccountGroupResource::collection($this->whenLoaded('account_group')),
-            'account_book' => new BookCollection($this->whenLoaded('account_book')),
-            /* 'opening_balance' => new OpeningBalanceResource($this->opening_balance->first()), */
             'opening_balance' => new OpeningBalanceResource($this->whenLoaded('opening_balance', function () {
                 return $this->opening_balance->first();
-            }))
+            })),
+            'account_group' => AccountGroupResource::collection($this->whenLoaded('account_group')),
+            'account_book' => new BookCollection($this->whenLoaded('account_book')),
+
 
         ];
     }
