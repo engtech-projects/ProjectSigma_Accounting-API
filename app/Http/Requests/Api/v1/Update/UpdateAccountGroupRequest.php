@@ -23,6 +23,7 @@ class UpdateAccountGroupRequest extends FormRequest
     {
         return [
             "account_group_name" => "required|string",
+            "account_id" => "array|nullable"
         ];
     }
 }

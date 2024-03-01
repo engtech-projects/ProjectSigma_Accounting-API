@@ -54,7 +54,7 @@ class AccountGroupController extends Controller
      */
     public function update(UpdateAccountGroupRequest $request, AccountGroup $accountGroup)
     {
-        $accountGroup->fill($request->validated())->update();
+        $this->accountGroupService->update($accountGroup,$request->validated());
 
         return new JsonResponse(['succes' => true, 'message' => 'Account group successfully updated.'], JsonResponse::HTTP_OK);
     }

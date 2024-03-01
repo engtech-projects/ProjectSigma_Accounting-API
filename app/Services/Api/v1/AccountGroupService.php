@@ -5,6 +5,7 @@ namespace App\Services\Api\v1;
 use App\Exceptions\DBTransactionException;
 use App\Models\AccountGroup;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AccountGroupService
 {
@@ -35,13 +36,16 @@ class AccountGroupService
 
     }
 
-    public function updateAccountGroup($accountGroup, array $attributes)
+    public function update($accountGroup, array $attributes)
     {
-        try {
-            $accountGroup->fill($attributes)->update();
-        } catch (Exception $e) {
-            throw new DBTransactionException("Update transaction failed.", $e);
-        }
+        DB::transaction(function () use ($accountGroup, $attributes) {
+            $accountGroup = $accountGroup->fill($attributes);
+            if (array_key_exists("account_id", $attributes)) {
+                $accountGroup->accounts()->syncWithoutDetaching($attributes['account_id']);
+            }
+            $accountGroup->update();
+
+        });
     }
 
     public function deleteAccountGroup($accountGroup)
