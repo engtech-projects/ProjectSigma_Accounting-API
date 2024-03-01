@@ -25,7 +25,7 @@ class AccountTypeController extends Controller
     public function index()
     {
         $accountType = $this->accountTypeService->getAll();
-        return new AccountTypeCollection($accountType);
+        return new AccountTypeCollection($accountType->load('account_group_book'));
 
     }
 

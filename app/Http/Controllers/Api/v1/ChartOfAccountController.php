@@ -18,8 +18,8 @@ class ChartOfAccountController extends Controller
      */
     public function __invoke(Request $request, AccountService $accountService)
     {
-
-        $accounts = collect($accountService->chartOfAccounts())->map(function ($account) {
+        $accounts = $accountService->getAll(true, ['account_type', 'opening_balance']);
+        $collection = $accounts->map(function ($account) {
             return [
                 "account_id" => $account->account_id,
                 "account_name" => $account->account_name,
@@ -29,13 +29,29 @@ class ChartOfAccountController extends Controller
                 "status" => $account->status,
                 "category" => $account->account_type->account_category,
                 "account_type" => $account->account_type->account_type,
-                "opening_balance" => $account->opening_balance->first(),
+                "opening_balance" => $account->opening_balance->first()?->opening_balance
             ];
-        })
-        ->groupBy("account_type");
+        })->groupBy('account_type');
+
+        return new JsonResource(PaginateCollection::paginate($collection, 10));
+
+        /*         $accounts = collect($accountService->chartOfAccounts())->map(function ($account) {
+                    return [
+                        "account_id" => $account->account_id,
+                        "account_name" => $account->account_name,
+                        "account_number" => $account->account_number,
+                        "account_description" => $account->account_description,
+                        "bank_reconciliation" => $account->bank_reconciliation,
+                        "status" => $account->status,
+                        "category" => $account->account_type->account_category,
+                        "account_type" => $account->account_type->account_type,
+                        "opening_balance" => $account->opening_balance->first()?->opening_balance,
+                    ];
+                })
+                    ->groupBy("account_type");
 
 
-        return new JsonResource(PaginateCollection::paginate($accounts, 10));
+                return new JsonResource(PaginateCollection::paginate($accounts, 10)); */
 
     }
 }

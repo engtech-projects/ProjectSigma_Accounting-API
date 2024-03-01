@@ -19,21 +19,37 @@ class BookService
     {
         $this->book = $book;
     }
-    public function getAll()
+    public function getAll(?bool $paginate = false, ?array $relation = [])
     {
-        return $this->book->all();
+        $query = $this->book->query();
+        /*  if ($relation) {
+             $query->with($relation);
+         } */
+        $query->account_book_group;
+        return $paginate ? $query->paginate(10) : $query->get();
     }
-    public function getById(Book $book)
+
+
+    public function getById(Book $book, ?array $relation = [])
     {
-        return $book->with(['book_accounts'])->first();
+
+        $query = $book->query();
+        if ($relation) {
+            $query->with($relation);
+        }
+        return $query->find($book)->first();
     }
+
+
     public function createBook(array $attribute)
     {
 
         DB::transaction(function () use ($attribute) {
             $book = Book::create($attribute);
-            $book->book_accounts()->attach($attribute['account_id']);
-            $book->account_group_books()->attach($attribute['account_group_id']);
+            $book->account()->attach($attribute['account_id']);
+            $book->book_group()->attach([
+                $attribute['account_group_id']
+            ]);
         });
 
     }
@@ -42,9 +58,9 @@ class BookService
         DB::transaction(function () use ($attributes, $book) {
             $book->fill($attributes);
             $book->update();
-            $book->book_accounts()
+            $book->account()
                 ->sync($attributes["account_id"]);
-            $book->account_group_books()
+            $book->book_group()
                 ->sync($attributes['account_group_id']);
         });
 

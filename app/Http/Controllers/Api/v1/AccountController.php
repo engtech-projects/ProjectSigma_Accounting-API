@@ -25,9 +25,7 @@ class AccountController extends Controller
     public function index()
     {
 
-        $accounts = $this->accountService->getAll([
-            'opening_balance'
-        ]);
+        $accounts = $this->accountService->getAll(null, ['account_type', 'account_group', 'opening_balance']);
 
         return new AccountCollections($accounts);
     }
@@ -52,7 +50,8 @@ class AccountController extends Controller
     public function show(Account $account)
     {
         $account = $this->accountService->getById($account);
-        return new AccountResource($account->load(['account_type', 'opening_balance']));
+
+        return new AccountResource($account->load('account_type', 'opening_balance', 'account_group', 'account_book'));
     }
 
     /**

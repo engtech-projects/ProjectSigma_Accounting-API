@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\collections;
 
+use App\Http\Resources\resources\AccountGroupResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -12,11 +13,12 @@ class AccountGroupCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
+    public static $wrap = 'account_group';
     public function toArray(Request $request): array
     {
-        return [
-            'account_group' => $this->collection
-        ];
-        //return parent::toArray($request);
+        return $this->collection->transform(function ($accountGroup) {
+            return new AccountGroupResource($accountGroup);
+        })->toArray();
+
     }
 }

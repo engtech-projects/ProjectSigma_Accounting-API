@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Account extends Model
 {
     use HasFactory, SoftDeletes, ModelGlobalScope;
-    use HasGroup;
 
     protected $table = "accounts";
     protected $primaryKey = "account_id";
@@ -45,11 +44,20 @@ class Account extends Model
         return $this->belongsTo(AccountType::class, 'type_id')->withDefault();
     }
 
-    public function book_accounts(): BelongsToMany
+    public function account_group(): BelongsToMany
     {
-        return $this->belongsToMany(Book::class, 'book_accounts')
+        return $this->belongsToMany(AccountGroup::class, 'account_has_group', 'account_id', 'account_group_id')
+            ->using(AccountHasGroup::class)
+            ->withPivot(['account_id', 'account_group_id'])
+            ->withTimestamps();
+    }
+
+
+    public function account_book(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'book_accounts', 'book_id', 'account_id')
             ->using(BookAccount::class)
-            ->withPivot(['account_id', 'book_id']);
+            ->withPivot(['book_id', 'account_id']);
 
     }
 

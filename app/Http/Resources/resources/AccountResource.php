@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\resources;
 
+use App\Http\Resources\collections\BookCollection;
 use App\Http\Resources\collections\OpeningBalanceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,6 +31,8 @@ class AccountResource extends JsonResource
             'statement' => $this->statement,
             'type_id' => $this->type_id,
             'account_type' => new AccountTypeResource($this->whenLoaded('account_type')),
+            'account_group' => AccountGroupResource::collection($this->whenLoaded('account_group')),
+            'account_book' => new BookCollection($this->whenLoaded('account_book')),
             /* 'opening_balance' => new OpeningBalanceResource($this->opening_balance->first()), */
             'opening_balance' => new OpeningBalanceResource($this->whenLoaded('opening_balance', function () {
                 return $this->opening_balance->first();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\collections;
 
+use App\Http\Resources\resources\BookResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -12,11 +13,13 @@ class BookCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
+
+    public static $wrap = "books";
     public function toArray(Request $request): array
     {
-        return [
-            "books" => $this->collection
-        ];
+        return $this->collection->transform(function ($accountGroup) {
+            return new BookResource($accountGroup);
+        })->toArray();
 
         //return parent::toArray($request);
     }

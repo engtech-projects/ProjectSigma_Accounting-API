@@ -13,6 +13,7 @@ class Book extends Model
 {
     use HasFactory, SoftDeletes;
 
+
     protected $primaryKey = "book_id";
 
     protected $fillable = [
@@ -24,16 +25,14 @@ class Book extends Model
 
     ## MODEL RELATION ##
 
-    public function book_accounts(): BelongsToMany
+    public function account(): BelongsToMany
     {
         return $this->belongsToMany(Account::class, 'book_accounts', 'book_id', 'account_id')
             ->using(BookAccount::class)
-            ->withPivot(['book_id', 'account_id'])
-            ->withTimestamps();
+            ->withPivot(['book_id', 'account_id']);
 
     }
-
-    public function account_group_books(): BelongsToMany
+    public function book_group(): BelongsToMany
     {
         return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
             ->using(AccountGroupBook::class)

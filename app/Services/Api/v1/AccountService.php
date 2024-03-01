@@ -15,7 +15,7 @@ class AccountService
     {
         $this->account = $account;
     }
-    public function getAll(?array $relation = [], ?array $columns = [])
+    public function getAll(?bool $paginate = false, ?array $relation = [], ?array $columns = [])
     {
         $query = $this->account->query()->activeAccount();
         if ($relation) {
@@ -24,7 +24,7 @@ class AccountService
         if ($columns) {
             $query->select($columns);
         }
-        return $query->get();
+        return $paginate ? $query->paginate() : $query->get();
     }
 
     public function chartOfAccounts()

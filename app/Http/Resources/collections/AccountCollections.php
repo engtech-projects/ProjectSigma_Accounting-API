@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\collections;
 
-use App\Http\Resources\resources\AccountTypeResource;
+use App\Http\Resources\resources\AccountResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -13,15 +13,14 @@ class AccountCollections extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    public static $request = "accounts";
+    public static $wrap = 'accounts';
+
     public function toArray(Request $request): array
     {
-        return [
-            "accounts" => $this->collection
-        ];
-        //return parent::toArray($request);
-
-
+        $this->collection->transform(function ($account) {
+            return new AccountResource($account);
+        });
+        return parent::toArray($request);
     }
 
 

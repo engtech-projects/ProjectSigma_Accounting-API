@@ -22,8 +22,7 @@ class BookController extends Controller
     }
     public function index()
     {
-        $books = $this->bookService->getAll();
-
+        $books = $this->bookService->getAll(null, ['account_book', 'book_group']);
         return new BookCollection($books);
     }
 
@@ -45,8 +44,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book = $this->bookService->getById($book);
-
+        $book = $this->bookService->getById($book, ['account', 'book_group']);
         return new BookResource($book);
     }
 
