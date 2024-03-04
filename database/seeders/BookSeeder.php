@@ -31,8 +31,9 @@ class BookSeeder extends Seeder
             $book = Book::create([
                 'book_name' => $book['book_name'],
                 'symbol' => $book['symbol'],
-            ])->book_accounts()
-                ->attach([1]);
+            ]);
+
+            $book->accounts()->attach([1]);
 
         }
     }
