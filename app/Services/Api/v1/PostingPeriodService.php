@@ -16,23 +16,19 @@ class PostingPeriodService
         $this->postingPeriod = $postingPeriod;
     }
 
-    public function getAll(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAll(bool $paginate = false, ?array $relation = [], )
     {
         $query = $this->postingPeriod->query();
         if ($relation) {
             $query->with($relation);
         }
-        if ($columns) {
-            $query->select($columns);
-        }
-
         return $paginate ? $query->paginate(10) : $query->get();
 
     }
 
-    public function getById($postingPeriod)
+    public function getById(PostingPeriod $postingPeriod)
     {
-        return $postingPeriod;
+        return $postingPeriod->with('opening_balance')->first();
     }
 
     public function createPostingPeriod(array $attribute)

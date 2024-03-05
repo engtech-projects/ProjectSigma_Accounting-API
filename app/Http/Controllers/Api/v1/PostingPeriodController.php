@@ -25,8 +25,10 @@ class PostingPeriodController extends Controller
      */
     public function index()
     {
-        $postingPeriods = $this->postingPeriodService->getAll();
-        return new PostingPeriodCollection($postingPeriods);
+        $postingPeriods = $this->postingPeriodService->getAll(false, ['opening_balance.account']);
+        /* return new PostingPeriodCollection($postingPeriods); */
+
+        return PostingPeriodResource::collection($postingPeriods);
     }
 
     /**
@@ -48,7 +50,6 @@ class PostingPeriodController extends Controller
     public function show(PostingPeriod $postingPeriod)
     {
         $postingPeriod = $this->postingPeriodService->getById($postingPeriod);
-
         return new PostingPeriodResource($postingPeriod);
     }
 

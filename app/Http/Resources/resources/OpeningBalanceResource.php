@@ -20,7 +20,7 @@ class OpeningBalanceResource extends JsonResource
             "opening_balance" => $this->opening_balance,
             "remaining_balance" => $this->remaining_balance,
             "posting_period" => new PostingPeriodResource($this->whenLoaded('posting_period')),
-            "accounts" => new AccountCollections($this->whenLoaded("accounts")),
+            "account" => AccountResource::collection($this->whenLoaded("account")),
         ];
         //return parent::toArray($request);
     }

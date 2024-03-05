@@ -12,8 +12,13 @@ class OpeningBalanceCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
+
+     public static $wrap = "opening_balance";
     public function toArray(Request $request): array
     {
+        /* return [
+            "opening_balance" => $this->collection
+        ]; */
         return parent::toArray($request);
     }
 }

@@ -36,7 +36,10 @@ class PostingPeriod extends Model
 
 
     ## MODEL RELATION ##
-
+    public function opening_balance()
+    {
+        return $this->hasMany(OpeningBalance::class, 'period_id');
+    }
 
 
 
@@ -46,6 +49,11 @@ class PostingPeriod extends Model
     public function scopeStatusOpen(Builder $query): void
     {
         $query->where('status', PostingPeriodStatus::STATUS_OPEN);
+    }
+
+    public function scopeStatus(Builder $query, string $status): void
+    {
+        $query->where('status', $status);
     }
 
     /** DYNAMIC SCOPES */

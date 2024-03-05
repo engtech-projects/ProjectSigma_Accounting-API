@@ -13,13 +13,17 @@ class AccountCollections extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-    public static $wrap = 'accounts';
+    public static $wrap = 'account';
 
     public function toArray(Request $request): array
     {
         $this->collection->transform(function ($account) {
             return new AccountResource($account);
         });
+
+        /*         return [
+                    "account" => $this->collection
+                ]; */
         return parent::toArray($request);
     }
 
