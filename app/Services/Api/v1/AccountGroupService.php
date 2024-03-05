@@ -41,7 +41,7 @@ class AccountGroupService
         DB::transaction(function () use ($accountGroup, $attributes) {
             $accountGroup = $accountGroup->fill($attributes);
             if (array_key_exists("account_id", $attributes)) {
-                $accountGroup->accounts()->syncWithoutDetaching($attributes['account_id']);
+                $accountGroup->accounts()->sync($attributes['account_id']);
             }
             $accountGroup->update();
 
