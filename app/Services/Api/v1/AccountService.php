@@ -33,7 +33,6 @@ class AccountService
             'account_type',
             'opening_balance'
         ])->get();
-
     }
     public function getById(Account $account, ?array $relation = [])
     {
