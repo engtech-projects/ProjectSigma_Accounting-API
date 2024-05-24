@@ -30,13 +30,13 @@ class AuthTokenGuard implements Guard
         }
         $token = $this->request->bearerToken();
         $response = Http::withToken($token)
-        ->acceptJson()
-        ->get($this->hrmsApiUrl.'api/session');
+            ->acceptJson()
+            ->get($this->hrmsApiUrl . '/api/session');
         if (!$response->successful()) {
             return null;
         }
 
-        if($response->json()) {
+        if ($response->json()) {
             $this->user = new User();
             $this->user->id = $response->json()['id'];
             $this->user->name = $response->json()['name'];
@@ -48,12 +48,10 @@ class AuthTokenGuard implements Guard
                 'accounting:announcement',
                 'accounting:dashboard',
             ];
-
         }
         return $this->user;
     }
     public function validate(array $credentials = [])
     {
-
     }
 }
