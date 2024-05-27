@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Account extends Model
 {
-    use HasFactory, SoftDeletes, ModelGlobalScope;
+    use HasFactory, SoftDeletes;
 
     protected $table = "accounts";
     protected $primaryKey = "account_id";

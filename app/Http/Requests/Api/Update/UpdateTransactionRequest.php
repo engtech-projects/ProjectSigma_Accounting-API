@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Api\v1\Store;
+namespace App\Http\Requests\Api\Update;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTransactionTypeRequest extends FormRequest
+class UpdateTransactionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,10 +22,7 @@ class StoreTransactionTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "transaction_type_name" => "required|string",
-            "book_id" => "required|integer",
-            "stakeholder_group_id" => "required|integer",
-            "symbol" => "required|string|max:3",
+            //
         ];
     }
 }

@@ -6,7 +6,8 @@ use App\Exceptions\ResourceNotFound;
 use App\Models\{
     AccountType,
     StakeHolderType,
-    StakeHolderGroup
+    StakeHolderGroup,
+    Transaction
 };
 use App\Models\Account;
 use App\Models\AccountGroup;
@@ -50,7 +51,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('stakeholder-type', function ($value) {
             return StakeHolderType::findOrFail($value);
         });
-
 
 
         $this->routes(function () {

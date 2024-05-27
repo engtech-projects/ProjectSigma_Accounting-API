@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountType extends Model
 {
-    use HasFactory, SoftDeletes, ModelGlobalScope;
+    use HasFactory, SoftDeletes;
     protected $primaryKey = "type_id";
 
     protected $fillable = [

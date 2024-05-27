@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api\v1\Store;
 
+use App\Enums\TransactionStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreTransactionRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class StoreTransactionRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,19 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'transaction_no' => 'required|string',
+            'transaction_date' => 'required|date',
+            'status' => [
+                'required',
+                new Enum(TransactionStatus::class)
+            ],
+            'reference_no' => 'required|string',
+            'transaction_type_id' => 'required|integer',
+            'period_id' => 'required|integer',
+            'stakeholder_id' => 'required|integer',
+            'description' => 'nullable|string',
+            'note' => 'nullable|string',
+            'amount' => 'required|numeric'
         ];
     }
 }

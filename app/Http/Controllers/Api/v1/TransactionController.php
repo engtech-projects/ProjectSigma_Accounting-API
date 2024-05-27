@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\v1;
 
+use App\Exceptions\DBTransactionException;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\v1\Store\StoreTransactionRequest;
+use App\Http\Requests\Api\v1\Update\UpdateTransactionRequest;
 use App\Models\Transaction;
-use App\Http\Requests\StoreTransactionRequest;
-use App\Http\Requests\UpdateTransactionRequest;
+use Exception;
+use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
 {
@@ -13,7 +17,12 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        $transactions = Transaction::all();
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Successfully Fetched.',
+            'data' => $transactions
+        ]);
     }
 
     /**
@@ -21,7 +30,17 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        //
+        $attributes = $request->validated();
+        try {
+            Transaction::create($attributes);
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 404, $e);
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Transaction successfully created.",
+        ]);
     }
 
     /**
@@ -29,15 +48,29 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Successfully fetched.",
+            'data' => $transaction
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTransactionRequest $request, Transaction $transaction)
+    public function update(Transaction $transaction, UpdateTransactionRequest $request)
     {
-        //
+        $attributes = $request->validated();
+        try {
+            $transaction->update($attributes);
+        } catch (Exception $e) {
+            throw new DBTransactionException("Update transaction failed.", 404, $e);
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Transaction successfully updated.",
+        ]);
     }
 
     /**
@@ -45,6 +78,15 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
-        //
+        try {
+            $transaction->delete();
+        } catch (\Exception $e) {
+            throw new DBTransactionException("Delete transaction failed.", 400, $e);
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Successfully deleted.',
+        ]);
     }
 }

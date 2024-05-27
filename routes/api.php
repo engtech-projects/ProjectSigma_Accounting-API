@@ -13,11 +13,11 @@ use App\Http\Controllers\Api\v1\{
     AccountGroupController,
     StakeHolderGroupController,
     StakeHolderTypeController,
-    StakeHolderController
+    StakeHolderController,
+    TransactionController
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
-use App\Notifications\UserNotificationTest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +44,12 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::resource('book', BookController::class);
     Route::resource('posting-period', PostingPeriodController::class);
+
+    /* Route::prefix('transaction')->group(function () {
+        Route::resource('resource', TransactionController::class);
+    }); */
+
+    Route::resource('transactions', TransactionController::class);
     Route::resource('transaction-type', TransactionTypeController::class);
     Route::resource('document-series', DocumentSeriesController::class);
     Route::resource('subsidiary', SubsidiaryController::class);
@@ -63,7 +69,4 @@ Route::middleware('auth:api')->group(function () {
 
         return "test event";
     }); */
-
-
 });
-

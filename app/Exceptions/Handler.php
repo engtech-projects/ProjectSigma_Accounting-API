@@ -40,14 +40,14 @@ class Handler extends ExceptionHandler
     {
         $response = null;
         if ($e instanceof AuthorizationException) {
-            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_FORBIDDEN);
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
         }
-        /* if ($e instanceof QueryException) {
-            $response = new JsonResponse(['success' => false, 'message' => "Server Error. Transaction failed."], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
-        } */
+        if ($e instanceof DBTransactionException) {
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
+        }
         if ($e instanceof HttpException) {
-            if ($request->is('api/v1/*')) { // <- Add your condition here
-                $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_FORBIDDEN);
+            if ($request->is('api/v1/*')) {
+                $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_NOT_FOUND);
             }
         }
         return $response;
