@@ -21,7 +21,6 @@ class StakeHolderGroup extends Model
     public function type_groups(): BelongsToMany
     {
         return $this->belongsToMany(StakeHolderType::class, 'stakeholder_type_groups', 'stakeholder_group_id', 'stakeholder_type_id')
-            ->using(StakeHolderTypeGroup::class)
             ->withPivot(['stakeholder_group_id', 'stakeholder_type_id'])
             ->withTimestamps();
 

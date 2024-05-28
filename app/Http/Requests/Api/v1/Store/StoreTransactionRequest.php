@@ -16,6 +16,15 @@ class StoreTransactionRequest extends FormRequest
         return true;
     }
 
+
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'details' => json_decode($this->details, true)
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -36,7 +45,8 @@ class StoreTransactionRequest extends FormRequest
             'stakeholder_id' => 'required|integer',
             'description' => 'nullable|string',
             'note' => 'nullable|string',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric',
+            'details' => 'required|array'
         ];
     }
 }

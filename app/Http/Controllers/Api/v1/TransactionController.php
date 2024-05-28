@@ -32,7 +32,8 @@ class TransactionController extends Controller
     {
         $attributes = $request->validated();
         try {
-            Transaction::create($attributes);
+            $transaction = Transaction::create($attributes);
+            $transaction->transaction_details()->createMany($attributes["details"]);
         } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", 404, $e);
         }
@@ -48,10 +49,11 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
+        $data = $transaction->with('transaction_details')->first();
         return new JsonResponse([
             'success' => true,
             'message' => "Successfully fetched.",
-            'data' => $transaction
+            'data' => $data
         ]);
     }
 

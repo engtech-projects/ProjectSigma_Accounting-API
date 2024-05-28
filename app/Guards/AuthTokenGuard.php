@@ -31,7 +31,7 @@ class AuthTokenGuard implements Guard
         $token = $this->request->bearerToken();
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get($this->hrmsApiUrl . 'api/session');
+            ->get($this->hrmsApiUrl . '/api/session');
         if (!$response->successful()) {
             return null;
         }

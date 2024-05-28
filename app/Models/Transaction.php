@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Pivot\TransactionDetail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
@@ -26,7 +28,20 @@ class Transaction extends Model
     protected $primaryKey = "transaction_id";
     protected $table = "transactions";
 
+    public static function boot()
+    {
+        parent::boot();
+        static::deleted(function ($model) {
+            $attachment = explode("/", $model->job_description_attachment);
+            Storage::deleteDirectory("public/" . $attachment[0] . "/" . $attachment[1]);
+        });
+    }
 
+
+    public function transaction_details(): HasMany
+    {
+        return $this->hasMany(TransactionDetail::class, "transaction_id", "transaction_id");
+    }
     ### MODEL SCOPE BINDINGS ###
 
     /** LOCAL SCOPES */
