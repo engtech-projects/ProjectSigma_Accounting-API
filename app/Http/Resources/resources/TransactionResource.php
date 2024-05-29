@@ -21,11 +21,14 @@ class TransactionResource extends JsonResource
             "status" => $this->status,
             "reference_no" => $this->reference_no,
             "transaction_type_id" => $this->transaction_type_id,
-            "stakeholder_id" => $this->stakeholder_id,
+            "stakeholder" => $this->whenLoaded('stakeholder'),
             "description" => $this->description,
             "note" => $this->note,
             "amount" => $this->amount,
-            "transaction_details" => $this->whenLoaded('transaction_details')
+            /* "transaction_details" => $this->whenLoaded('transaction_details'), */
+            "transaction_details" => $this->whenLoaded('transaction_details', function ($details) {
+                return TransactionDetailResource::collection($details);
+            }),
 
         ];
     }

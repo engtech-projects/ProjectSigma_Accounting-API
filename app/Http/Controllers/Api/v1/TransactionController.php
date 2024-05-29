@@ -6,6 +6,7 @@ use App\Exceptions\DBTransactionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Store\StoreTransactionRequest;
 use App\Http\Requests\Api\v1\Update\UpdateTransactionRequest;
+use App\Http\Resources\collections\TransactionCollection;
 use App\Http\Resources\resources\TransactionResource;
 use App\Models\Pivot\TransactionDetail;
 use App\Models\Transaction;
@@ -21,11 +22,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transactions = Transaction::all();
+        $transactions = Transaction::with('transaction_details', 'stakeholder')->get();
         return new JsonResponse([
             'success' => true,
             'message' => 'Successfully Fetched.',
-            'data' => $transactions
+            'data' => new TransactionCollection($transactions),
         ]);
     }
 

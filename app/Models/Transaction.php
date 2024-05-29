@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Pivot\TransactionDetail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -28,16 +29,11 @@ class Transaction extends Model
     protected $primaryKey = "transaction_id";
     protected $table = "transactions";
 
-    public static function boot()
+
+    public function stakeholder(): BelongsTo
     {
-        parent::boot();
-        static::deleted(function ($model) {
-            $attachment = explode("/", $model->job_description_attachment);
-            Storage::deleteDirectory("public/" . $attachment[0] . "/" . $attachment[1]);
-        });
+        return $this->belongsTo(StakeHolder::class, 'stakeholder_id', 'stakeholder_id');
     }
-
-
     public function transaction_details(): HasMany
     {
         return $this->hasMany(TransactionDetail::class, "transaction_id", "transaction_id");
