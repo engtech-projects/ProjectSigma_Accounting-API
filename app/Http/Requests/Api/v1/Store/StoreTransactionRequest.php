@@ -15,9 +15,6 @@ class StoreTransactionRequest extends FormRequest
     {
         return true;
     }
-
-
-
     public function prepareForValidation()
     {
         $this->merge([

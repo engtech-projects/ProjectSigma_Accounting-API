@@ -6,9 +6,13 @@ use App\Exceptions\DBTransactionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Store\StoreTransactionRequest;
 use App\Http\Requests\Api\v1\Update\UpdateTransactionRequest;
+use App\Http\Resources\resources\TransactionResource;
+use App\Models\Pivot\TransactionDetail;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
@@ -32,10 +36,12 @@ class TransactionController extends Controller
     {
         $attributes = $request->validated();
         try {
-            $transaction = Transaction::create($attributes);
-            $transaction->transaction_details()->createMany($attributes["details"]);
+            DB::transaction(function () use ($attributes) {
+                $transaction = Transaction::create($attributes);
+                $transaction->transaction_details()->createMany($attributes["details"]);
+            });
         } catch (Exception $e) {
-            throw new DBTransactionException("Create transaction failed.", 404, $e);
+            throw new DBTransactionException("Create transaction failed.", 400, $e);
         }
 
         return new JsonResponse([
@@ -53,7 +59,7 @@ class TransactionController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Successfully fetched.",
-            'data' => $data
+            'data' => new TransactionResource($data),
         ]);
     }
 
@@ -64,9 +70,25 @@ class TransactionController extends Controller
     {
         $attributes = $request->validated();
         try {
-            $transaction->update($attributes);
+            DB::transaction(function () use ($attributes, $transaction) {
+                $transaction = $transaction->fill($attributes);
+                foreach ($attributes["details"] as $attrib) {
+                    $detail = TransactionDetail::find($attrib["transaction_detail_id"]);
+                    if ($detail) {
+                        $detail->update($attrib);
+                    } else {
+                        $detail->save([
+                            "transaction_id" => $attrib["transaction_id"],
+                            "stakeholder_group_id" => $attrib["stakeholder_group_id"],
+                            "debit" => $attrib["debit"],
+                            "credit" => $attrib["credit"]
+                        ]);
+                    }
+                }
+                $transaction->save();
+            });
         } catch (Exception $e) {
-            throw new DBTransactionException("Update transaction failed.", 404, $e);
+            throw new DBTransactionException("Update transaction failed.", 400, $e);
         }
 
         return new JsonResponse([
