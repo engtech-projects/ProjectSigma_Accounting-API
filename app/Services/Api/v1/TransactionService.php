@@ -2,37 +2,42 @@
 
 namespace App\Services\Api\v1;
 
+use App\Models\Transaction;
+use App\Models\TransactionType;
+
 class TransactionService
 {
 
-    public function __construct()
+    protected $transaction;
+    public function __construct(Transaction $transaction)
     {
-
+        $this->transaction = $transaction;
     }
 
-    public function getTransactionList(?array $relation = [], ?bool $paginate = false, ?array $columns = [])
+    public function getAll(?array $relation = [], $filters = [])
     {
-
+        $query = Transaction::query();
+        if ($filters['transaction_type']) {
+            $transactionType = TransactionType::where('transaction_type_name', $filters['transaction_type'])->first();
+            $query = $query->where('transaction_type_id', $transactionType->transaction_type_id);
+        }
+        return $query->with($relation)->get();
     }
 
 
     public function getTransactionById($transactionType)
     {
-
     }
 
     public function createTransaction(array $attribute)
     {
-
     }
 
     public function updateTransaction($transactionType, array $attribute)
     {
-
     }
 
     public function deleteTransaction($transactionType)
     {
-
     }
 }

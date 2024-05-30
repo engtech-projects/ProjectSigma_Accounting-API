@@ -10,22 +10,32 @@ use App\Http\Resources\collections\TransactionCollection;
 use App\Http\Resources\resources\TransactionResource;
 use App\Models\Pivot\TransactionDetail;
 use App\Models\Transaction;
+use App\Services\Api\v1\TransactionService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
 {
+    protected $transactionService;
+    public function __construct(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Transaction::with('transaction_details', 'stakeholder')->get();
+        $transactions = $this->transactionService->getAll(
+            ['stakeholder', 'transaction_details'],
+            ['transaction_type' => $request['transaction_type']]
+        );
         return new JsonResponse([
             'success' => true,
             'message' => 'Successfully Fetched.',
-            'data' => new TransactionCollection($transactions),
+            'data' => TransactionResource::collection($transactions)
         ]);
     }
 
@@ -35,11 +45,11 @@ class TransactionController extends Controller
     public function store(StoreTransactionRequest $request)
     {
         $attributes = $request->validated();
-/*         try { */
-            DB::transaction(function () use ($attributes) {
-                $transaction = Transaction::create($attributes);
-                $transaction->transaction_details()->createMany($attributes["details"]);
-            });
+        /*         try { */
+        DB::transaction(function () use ($attributes) {
+            $transaction = Transaction::create($attributes);
+            $transaction->transaction_details()->createMany($attributes["details"]);
+        });
         /* } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", 400, $e);
         } */
