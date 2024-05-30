@@ -13,6 +13,8 @@ class Transaction extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $primaryKey = "transaction_id";
+    protected $table = "transactions";
     protected $fillable = [
         'transaction_no',
         'transaction_date',
@@ -23,12 +25,21 @@ class Transaction extends Model
         'stakeholder_id',
         'description',
         'note',
-        'amount'
+        'amount',
+        'created_by',
     ];
 
-    protected $primaryKey = "transaction_id";
-    protected $table = "transactions";
 
+
+
+/*     public static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->created_by = auth()->id();
+            dd($model->created_by);
+        });
+    } */
 
     public function stakeholder(): BelongsTo
     {

@@ -18,7 +18,8 @@ class StoreTransactionRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            'details' => json_decode($this->details, true)
+            'details' => json_decode($this->details, true),
+            'created_by' => auth()->user()->id,
         ]);
     }
 
@@ -43,7 +44,8 @@ class StoreTransactionRequest extends FormRequest
             'description' => 'nullable|string',
             'note' => 'nullable|string',
             'amount' => 'required|numeric',
-            'details' => 'required|array'
+            'details' => 'required|array',
+            'created_by' => 'nullable|integer',
         ];
     }
 }
