@@ -12,7 +12,6 @@ use App\Models\Pivot\TransactionDetail;
 use App\Models\Transaction;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
