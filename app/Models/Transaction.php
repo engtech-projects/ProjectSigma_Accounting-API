@@ -32,7 +32,7 @@ class Transaction extends Model
 
 
 
-/*     public static function boot()
+    /*     public static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
@@ -48,6 +48,10 @@ class Transaction extends Model
     public function transaction_details(): HasMany
     {
         return $this->hasMany(TransactionDetail::class, "transaction_id", "transaction_id");
+    }
+    public function generateTransactionNumber()
+    {
+
     }
     ### MODEL SCOPE BINDINGS ###
 
