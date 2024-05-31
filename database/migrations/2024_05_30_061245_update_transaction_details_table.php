@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('stakeholder_group_id')->after('transaction_id');
             $table->foreign('stakeholder_group_id')->references('stakeholder_group_id')->on('stakeholder_groups');
         });
+
     }
 
     /**
