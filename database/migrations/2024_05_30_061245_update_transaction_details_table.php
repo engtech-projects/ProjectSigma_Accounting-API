@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('transaction_details', function (Blueprint $table) {
             if (Schema::hasColumn('transaction_details', 'stakeholder_group_id')) {
                 $table->dropConstrainedForeignId('stakeholder_group_id');
+                $table->dropColumn('stakeholder_group_id');
             }
             $table->unsignedBigInteger('stakeholder_id')->nullable()->after('transaction_id');
             $table->foreign('stakeholder_id')->references('stakeholder_id')->on('stakeholders');
