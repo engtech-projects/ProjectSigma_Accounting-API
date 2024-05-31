@@ -29,7 +29,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $transactions = $this->transactionService->getAll(
-            ['stakeholder', 'transaction_details'],
+            ['stakeholder', 'transaction_details.account', 'transaction_details.stakeholder'],
             ['transaction_type' => $request['transaction_type']]
         );
         return new JsonResponse([
@@ -65,7 +65,10 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        $data = $transaction->with('transaction_details')->first();
+        $data = $this->transactionService->getTransactionById(
+            $transaction,
+            ['stakeholder', 'transaction_details.account', 'transaction_details.stakeholder']
+        );
         return new JsonResponse([
             'success' => true,
             'message' => "Successfully fetched.",

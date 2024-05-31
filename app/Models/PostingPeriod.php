@@ -40,7 +40,10 @@ class PostingPeriod extends Model
     {
         return $this->hasMany(OpeningBalance::class, 'period_id');
     }
-
+    public static function open_status()
+    {
+        return self::where('status', PostingPeriodStatus::STATUS_OPEN)->first();
+    }
 
 
     ### MODEL SCOPE BINDINGS ###
@@ -57,7 +60,4 @@ class PostingPeriod extends Model
     }
 
     /** DYNAMIC SCOPES */
-
-
-
 }

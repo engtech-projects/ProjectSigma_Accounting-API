@@ -18,6 +18,8 @@ return new class extends Migration
             }
             $table->unsignedBigInteger('stakeholder_id')->nullable()->after('transaction_id');
             $table->foreign('stakeholder_id')->references('stakeholder_id')->on('stakeholders');
+            $table->unsignedBigInteger('account_id')->nullable()->after('stakeholder_id');
+            $table->foreign('account_id')->references('account_id')->on('accounts');
         });
     }
 
@@ -30,7 +32,10 @@ return new class extends Migration
             if (Schema::hasColumn('transaction_details', 'stakeholder_id')) {
                 $table->dropConstrainedForeignId('stakeholder_id');
                 $table->dropColumn('stakeholder_id');
-
+            }
+            if (Schema::hasColumn('transaction_details', 'account_id')) {
+                $table->dropConstrainedForeignId('account_id');
+                $table->dropColumn('account_id');
             }
         });
     }

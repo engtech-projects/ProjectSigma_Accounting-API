@@ -36,7 +36,7 @@ class Transaction extends Model
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber();
             $model->reference_no = $model->generateReferenceNumber();
-            $model->period_id = 1;
+            $model->period_id = PostingPeriod::open_status()->period_id;
         });
     }
 

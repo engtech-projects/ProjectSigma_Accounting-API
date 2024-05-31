@@ -15,17 +15,20 @@ class TransactionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "transaction_id" => $this->transaction_date,
+            "transaction_id" => $this->transaction_id,
             "transaction_no" => $this->transaction_no,
             "transaction_date" => $this->transaction_date,
             "status" => $this->status,
             "reference_no" => $this->reference_no,
             "transaction_type_id" => $this->transaction_type_id,
-            "stakeholder" => $this->whenLoaded('stakeholder'),
+            "payee" => $this->whenLoaded('stakeholder', function () {
+                return [
+                    "full_name" => $this->stakeholder->fullname_last,
+                ];
+            }),
             "description" => $this->description,
             "note" => $this->note,
             "amount" => $this->amount,
-            /* "transaction_details" => $this->whenLoaded('transaction_details'), */
             "transaction_details" => $this->whenLoaded('transaction_details', function ($details) {
                 return TransactionDetailResource::collection($details);
             }),

@@ -25,8 +25,12 @@ class TransactionService
     }
 
 
-    public function getTransactionById($transactionType)
+    public function getTransactionById(Transaction $transaction, array $relation = [])
     {
+        if ($relation) {
+            $transaction = $transaction->load($relation);
+        }
+        return $transaction;
     }
 
     public function createTransaction(array $attribute)

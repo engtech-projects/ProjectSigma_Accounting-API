@@ -20,7 +20,13 @@ class TransactionDetailResource extends JsonResource
             'transaction_id' => $this->transaction_id,
             'stakeholder_group' => $this->whenLoaded('stakeholder_group'),
             'debit' => $this->debit,
-            'credit' => $this->credit
+            'credit' => $this->credit,
+            'payee' => $this->whenLoaded('stakeholder', function () {
+                return $this->stakeholder->fullname_last;
+            }),
+            'account' => $this->whenLoaded('account', function () {
+                return new AccountResource($this->account);
+            }),
         ];
     }
 }
