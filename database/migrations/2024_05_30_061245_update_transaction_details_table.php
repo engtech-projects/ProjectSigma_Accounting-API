@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('transaction_details', function (Blueprint $table) {
             $table->unsignedBigInteger('stakeholder_group_id')->after('transaction_id');
-            $table->foreign('stakeholder_group_id')->references('stakeholder_group')->on('stakeholders');
+            $table->foreign('stakeholder_group_id')->references('stakeholder_group_id')->on('stakeholder_groups');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('transaction_details', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('stakeholder_id');
-            $table->dropColumn('stakeholder_id');
+            $table->dropConstrainedForeignId('stakeholder_group_id');
+            $table->dropColumn('stakeholder_group_id');
         });
     }
 };
