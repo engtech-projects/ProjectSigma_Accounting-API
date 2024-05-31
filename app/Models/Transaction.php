@@ -16,30 +16,29 @@ class Transaction extends Model
     protected $primaryKey = "transaction_id";
     protected $table = "transactions";
     protected $fillable = [
-        'transaction_no',
         'transaction_date',
         'status',
         'reference_no',
         'transaction_type_id',
-        'period_id',
         'stakeholder_id',
         'description',
         'note',
         'amount',
-        'created_by',
     ];
 
 
 
 
-    /*     public static function boot()
+    public static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->created_by = auth()->id();
-            dd($model->created_by);
+            $model->created_by = auth()->user()->id;
+            $model->transaction_no = $model->generateTransactionNumber();
+            $model->reference_no = $model->generateReferenceNumber();
+            $model->period_id = 1;
         });
-    } */
+    }
 
     public function stakeholder(): BelongsTo
     {
@@ -51,7 +50,11 @@ class Transaction extends Model
     }
     public function generateTransactionNumber()
     {
-
+        return rand(5, 100);
+    }
+    public function generateReferenceNumber()
+    {
+        return rand(5, 100);
     }
     ### MODEL SCOPE BINDINGS ###
 

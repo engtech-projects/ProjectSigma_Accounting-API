@@ -19,10 +19,6 @@ class StoreTransactionRequest extends FormRequest
     {
         $this->merge([
             'details' => json_decode($this->details, true),
-            'transaction_no' => rand(10, 100),
-            'reference_no' => rand(10, 100),
-            'created_by' => auth()->user()->id,
-            'period_id' => 1,
         ]);
     }
 
@@ -34,21 +30,17 @@ class StoreTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'transaction_no' => 'required',
             'transaction_date' => 'required|date',
             'status' => [
                 'required',
                 new Enum(TransactionStatus::class)
             ],
-            'reference_no' => 'required',
-            'period_id' => 'required',
             'transaction_type_id' => 'required|integer',
             'stakeholder_id' => 'required|integer',
             'description' => 'nullable|string',
             'note' => 'nullable|string',
             'amount' => 'required|numeric',
-            'details' => 'required|array',
-            'created_by' => 'nullable|integer',
+            'details' => 'required|array'
         ];
     }
 }
