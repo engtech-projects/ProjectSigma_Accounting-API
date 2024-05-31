@@ -19,7 +19,10 @@ class StoreTransactionRequest extends FormRequest
     {
         $this->merge([
             'details' => json_decode($this->details, true),
+            'transaction_no' => rand(5),
+            'reference_no' => rand(5),
             'created_by' => auth()->user()->id,
+            'period_id' => 1,
         ]);
     }
 
@@ -37,9 +40,7 @@ class StoreTransactionRequest extends FormRequest
                 'required',
                 new Enum(TransactionStatus::class)
             ],
-            'reference_no' => 'required|string',
             'transaction_type_id' => 'required|integer',
-            'period_id' => 'required|integer',
             'stakeholder_id' => 'required|integer',
             'description' => 'nullable|string',
             'note' => 'nullable|string',

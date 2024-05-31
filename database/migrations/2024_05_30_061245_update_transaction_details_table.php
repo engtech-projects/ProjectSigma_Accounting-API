@@ -12,11 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('transaction_details', function (Blueprint $table) {
-            if (Schema::hasColumn('transaction_details', 'stakeholder_group_id')) {
-                $table->dropConstrainedForeignId('stakeholder_group_id');
-            }
-            $table->unsignedBigInteger('stakeholder_id')->after('transaction_id');
-            $table->foreign('stakeholder_id')->references('stakeholder_id')->on('stakeholders');
+            $table->unsignedBigInteger('stakeholder_group_id')->after('transaction_id');
+            $table->foreign('stakeholder_group_id')->references('stakeholder_group')->on('stakeholders');
         });
     }
 
