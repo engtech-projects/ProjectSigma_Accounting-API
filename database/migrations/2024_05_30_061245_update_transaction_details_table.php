@@ -30,6 +30,7 @@ return new class extends Migration
             if (Schema::hasColumn('transaction_details', 'stakeholder_id')) {
                 $table->dropConstrainedForeignId('stakeholder_id');
                 $table->dropColumn('stakeholder_id');
+
             }
         });
     }
