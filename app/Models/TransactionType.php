@@ -6,6 +6,7 @@ use App\Models\Pivot\BookAccount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionType extends Model
@@ -28,12 +29,15 @@ class TransactionType extends Model
         return $this->belongsToMany(Book::class, 'book_accounts')
             ->using(BookAccount::class)
             ->withPivot(['book_id', 'book_id']);
-
     }
 
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_id');
+    }
+    public function document_series(): HasOne
+    {
+        return $this->hasOne(DocumentSeries::class, 'transaction_type_id', 'transaction_type_id');
     }
 
     ## MODEL RELATIONS ##

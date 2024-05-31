@@ -48,9 +48,17 @@ class Transaction extends Model
     {
         return $this->hasMany(TransactionDetail::class, "transaction_id", "transaction_id");
     }
+    public function transaction_type(): BelongsTo
+    {
+        return $this->belongsTo(TransactionType::class, 'transaction_type_id', 'transaction_type_id');
+    }
     public function generateTransactionNumber()
     {
-        return rand(5, 100);
+        $series = $this->transaction_type->document_series()->activeSeries()->first();
+        $transactionNo = $series->series_scheme . $series->next_number;
+        $series->next_number = $series->next_number + 1;
+        $series->save();
+        return $transactionNo;
     }
     public function generateReferenceNumber()
     {

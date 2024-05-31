@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\DocumentSeriesStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -25,6 +27,11 @@ class DocumentSeries extends Model
     ### MODEL SCOPE BINDINGS ###
 
     /** LOCAL SCOPES */
+
+    public function scopeActiveSeries(Builder $query): Builder
+    {
+        return $query->where('status', DocumentSeriesStatus::ACTIVE);
+    }
 
     /** DYNAMIC SCOPES */
 }
