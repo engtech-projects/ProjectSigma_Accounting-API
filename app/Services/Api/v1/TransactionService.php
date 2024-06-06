@@ -19,7 +19,9 @@ class TransactionService
         $query = Transaction::query();
         if ($filters['transaction_type']) {
             $transactionType = TransactionType::where('transaction_type_name', $filters['transaction_type'])->first();
-            $query = $query->where('transaction_type_id', $transactionType->transaction_type_id);
+            if ($transactionType) {
+                $query = $query->where('transaction_type_id', $transactionType->transaction_type_id);
+            }
         }
         return $query->with($relation)->get();
     }

@@ -24,6 +24,7 @@ class TransactionDetailResource extends JsonResource
             'payee' => $this->whenLoaded('stakeholder', function () {
                 return $this->stakeholder->fullname_last;
             }),
+
             'account' => $this->whenLoaded('account', function () {
                 return new AccountResource($this->account);
             }),
