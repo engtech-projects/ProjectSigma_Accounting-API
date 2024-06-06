@@ -29,7 +29,7 @@ class ChartOfAccountController extends Controller
                 "account_description" => $account->account_description,
                 "bank_reconciliation" => $account->bank_reconciliation,
                 "status" => $account->status,
-                "account_category" => $account->account_type->account_category,
+                "category" => $account->account_type->account_category,
                 "account_type" => $account->account_type->account_type,
                 "opening_balance" => $account->opening_balance->first()?->opening_balance
             ];
