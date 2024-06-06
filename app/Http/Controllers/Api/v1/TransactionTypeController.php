@@ -25,7 +25,10 @@ class TransactionTypeController extends Controller
      */
     public function index()
     {
-        $transactionTypes = $this->transactionTypeService->getTransactionTypeList();
+        $transactionTypes = $this->transactionTypeService->getTransactionTypeList([
+            'book.accounts',
+            'stakeholder_group.type_groups.stakeholders'
+        ]);
 
         return new TransactionTypeCollection($transactionTypes);
     }
@@ -49,7 +52,11 @@ class TransactionTypeController extends Controller
      */
     public function show(TransactionType $transactionType)
     {
-        $transactionType = $this->transactionTypeService->getTransactionTypeById($transactionType);
+        $transactionType = $this->transactionTypeService->getTransactionTypeById($transactionType, [
+            'book.accounts',
+            'stakeholder_group.type_groups.stakeholders'
+        ]);
+        /*         return $transactionType; */
         return new TransactionTypeResource($transactionType);
     }
 
@@ -65,7 +72,6 @@ class TransactionTypeController extends Controller
             'success' => true,
             'message' => "Transaction type successfully updated."
         ]);
-
     }
 
     /**

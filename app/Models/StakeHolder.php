@@ -36,6 +36,7 @@ class StakeHolder extends Model
         "fullname_last"
     ];
 
+
     protected function fullnameLast(): Attribute
     {
         return Attribute::make(

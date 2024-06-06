@@ -31,15 +31,10 @@ class TransactionTypeService
 
     public function getTransactionTypeById($transactionType, ?array $relation = [], ?array $columns = [])
     {
-        $query = $transactionType::query();
         if ($relation) {
-            $query->with($relation);
+            $transactionType->load($relation);
         }
-        if ($columns) {
-            $query->select($columns);
-        }
-        return $query->find($transactionType)->firstOrFail();
-
+        return $transactionType;
     }
 
     public function createTransactionType(array $attribute)
@@ -58,7 +53,6 @@ class TransactionTypeService
         } catch (Exception $e) {
             throw new DBTransactionException("Update transaction failed.", 500, $e);
         }
-
     }
     public function deleteTransactionType($transactionType)
     {

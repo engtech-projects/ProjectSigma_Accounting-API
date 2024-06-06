@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Pivot\BookAccount;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,9 +32,14 @@ class TransactionType extends Model
             ->withPivot(['book_id', 'book_id']);
     }
 
+
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_id');
+    }
+    public function stakeholder_group(): BelongsTo
+    {
+        return $this->belongsTo(StakeHolderGroup::class, 'stakeholder_group_id', 'stakeholder_group_id');
     }
     public function document_series(): HasOne
     {
