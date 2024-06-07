@@ -21,8 +21,9 @@ class TransactionResource extends JsonResource
             "status" => $this->status,
             "reference_no" => $this->reference_no,
             "transaction_type_id" => $this->transaction_type_id,
-            "payee" => $this->whenLoaded('stakeholder', function () {
+            "stakeholder" => $this->whenLoaded('stakeholder', function () {
                 return [
+                    "stakeholder_id" => $this->stakeholder->stakeholder_id,
                     "full_name" => $this->stakeholder->fullname_last,
                 ];
             }),
