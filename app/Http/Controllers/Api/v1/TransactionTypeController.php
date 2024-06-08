@@ -30,7 +30,11 @@ class TransactionTypeController extends Controller
             'stakeholder_group.type_groups.stakeholders'
         ]);
 
-        return new TransactionTypeCollection($transactionTypes);
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Successfully fetched.",
+            'data' => new TransactionTypeCollection($transactionTypes),
+        ]);
     }
 
     /**
@@ -56,8 +60,11 @@ class TransactionTypeController extends Controller
             'book.accounts',
             'stakeholder_group.type_groups.stakeholders'
         ]);
-        /*         return $transactionType; */
-        return new TransactionTypeResource($transactionType);
+        return new JsonResponse([
+            'success' => true,
+            'message' => "Successfully fetched.",
+            'data' => new TransactionTypeResource($transactionType),
+        ]);
     }
 
     /**

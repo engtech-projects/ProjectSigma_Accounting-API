@@ -4,6 +4,7 @@ namespace App\Http\Resources\resources;
 
 use App\Http\Resources\collections\AccountCollections;
 use App\Http\Resources\collections\BookCollection;
+use App\Models\StakeHolderType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,13 +25,11 @@ class TransactionTypeResource extends JsonResource
             'book' => new BookResource($this->whenLoaded('book')),
             'account' => new AccountResource($this->whenLoaded('accounts')),
             'stakeholder_group' => $this->whenLoaded('stakeholder_group', function () {
-                /*                 return $value; */
-                /*               dd($this->stakeholder_group); */
                 return [
                     "stakeholder_group_id" => $this->stakeholder_group_id,
-                    "stakeholder_group_name" => $this->stakeholder_group_name,
-                    "stakeholder_type" => $this->whenLoaded('stakeholder_group', function () {
-                        return $this->stakeholder_group->type_groups;
+                    "stakeholder_group_name" => $this->stakeholder_group->stakeholder_group_name,
+                    "stakeholder_type" => $this->whenLoaded('stakeholder_group', function ($stakeholderGroup) {
+                        return StakeHolderTypeResource::collection($stakeholderGroup->type_groups);
                     }),
                 ];
             }),

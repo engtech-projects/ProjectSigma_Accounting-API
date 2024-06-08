@@ -16,9 +16,13 @@ class StakeholderResource extends JsonResource
     {
         return [
             "stakeholder_id" => $this->stakeholder_id,
-            "stakeholder_name" => $this->stakeholder_name,
-            "stakeholder_type" => $this->stakeholder_type,
-            "stakeholder_group" => $this->stakeholder_group,
+            "fullname_first" => $this->fullname_first,
+            "fullname_last" => $this->fullname_last,
+            "firstname" => $this->firstname,
+            "middlename" => $this->middlename,
+            "lastname" => $this->lastname,
+            "stakeholder_type" => $this->whenLoaded('stakeholder_type'),
+            "stakeholder_group" => $this->whenLoaded('stakeholder_group'),
             "email" => $this->email,
             "company" => $this->company,
             "display_name" => $this->display_name,
