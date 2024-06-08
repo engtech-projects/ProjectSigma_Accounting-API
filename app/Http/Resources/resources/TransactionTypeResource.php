@@ -22,8 +22,9 @@ class TransactionTypeResource extends JsonResource
             'transaction_type_id' => $this->transaction_type_id,
             'transaction_type_name' => $this->transaction_type_name,
             'symbol' => $this->symbol,
-            'book' => new BookResource($this->whenLoaded('book')),
-            'account' => new AccountResource($this->whenLoaded('accounts')),
+            'book' => $this->whenLoaded('book', function () {
+                return new BookResource($this->book);
+            }),
             'stakeholder_group' => $this->whenLoaded('stakeholder_group', function () {
                 return [
                     "stakeholder_group_id" => $this->stakeholder_group_id,
@@ -34,6 +35,5 @@ class TransactionTypeResource extends JsonResource
                 ];
             }),
         ];
-        //return parent::toArray($request);
     }
 }

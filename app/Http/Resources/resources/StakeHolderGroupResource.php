@@ -21,6 +21,5 @@ class StakeHolderGroupResource extends JsonResource
                 return StakeHolderTypeResource::collection($type);
             }),
         ];
-        //return parent::toArray($request);
     }
 }
