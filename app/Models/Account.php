@@ -9,6 +9,7 @@ use App\Models\Pivot\BookAccount;
 use App\Traits\HasGroup;
 use App\Traits\ModelGlobalScope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +36,13 @@ class Account extends Model
         'status' => AccountStatus::class,
 
     ];
+
+    protected function accountAlias(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->account_number. '-'.$this->account_name
+        );
+    }
 
 
     ## MODEL RELATIONS ##

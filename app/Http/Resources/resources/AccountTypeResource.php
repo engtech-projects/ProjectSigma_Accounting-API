@@ -13,8 +13,8 @@ class AccountTypeResource extends JsonResource
         //return parent::toArray($request);
 
         return [
-            'type_id'=> $this->type_id,
-            'account_type' => $this->account_type,
+            'type_id' => $this->type_id,
+            'account_type_name' => $this->account_type,
             'account_category' => $this->account_category,
             'balance_type' => $this->balance_type,
             'notation' => $this->notation,
