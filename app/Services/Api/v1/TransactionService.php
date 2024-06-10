@@ -23,6 +23,9 @@ class TransactionService
                 $query = $query->where('transaction_type_id', $transactionType->transaction_type_id);
             }
         }
+        if ($filters['status']) {
+            $query->where('status', $filters['status']);
+        }
         return $query->with($relation)->get();
     }
 

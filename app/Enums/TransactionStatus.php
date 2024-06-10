@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum TransactionStatus: string
 {
-    case POSTED = "posted";
+    case OPEN = "open";
     case UNPOSTED = "unposted";
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Enums\TransactionStatus;
 use App\Exceptions\DBTransactionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\Store\StoreTransactionRequest;
@@ -30,7 +31,7 @@ class TransactionController extends Controller
     {
         $transactions = $this->transactionService->getAll(
             ['stakeholder', 'transaction_details.account', 'transaction_details.stakeholder'],
-            ['transaction_type' => $request['transaction_type']]
+            ['transaction_type' => $request['transaction_type'], 'status' => TransactionStatus::OPEN->value]
         );
         return new JsonResponse([
             'success' => true,
