@@ -30,7 +30,7 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         $transactions = $this->transactionService->getAll(
-            ['stakeholder', 'transaction_details.account', 'transaction_details.stakeholder'],
+            ['stakeholder', 'transaction_type', 'transaction_details.account', 'transaction_details.stakeholder'],
             ['transaction_type' => $request['transaction_type'], 'status' => TransactionStatus::OPEN->value]
         );
         return new JsonResponse([
