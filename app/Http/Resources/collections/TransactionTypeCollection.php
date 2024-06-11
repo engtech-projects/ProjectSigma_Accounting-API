@@ -18,7 +18,7 @@ class TransactionTypeCollection extends ResourceCollection
     {
         return $this->collection->map(function ($value) {
             return [
-                'transaction_type' => $value->transaction_type_id,
+                'transaction_type_id' => $value->transaction_type_id,
                 'transaction_type_name' => $value->transaction_type_name,
                 'book' => new BookResource($value->book),
                 'stakeholder_group' => new StakeHolderGroupResource($value->stakeholder_group),
