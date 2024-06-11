@@ -68,7 +68,7 @@ class TransactionController extends Controller
     {
         $data = $this->transactionService->getTransactionById(
             $transaction,
-            ['stakeholder', 'transaction_details.account', 'transaction_details.stakeholder']
+            ['stakeholder','transaction_type', 'transaction_details.account', 'transaction_details.stakeholder']
         );
         return new JsonResponse([
             'success' => true,
