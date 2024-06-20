@@ -20,6 +20,7 @@ class TransactionTypeCollection extends ResourceCollection
             return [
                 'transaction_type_id' => $value->transaction_type_id,
                 'transaction_type_name' => $value->transaction_type_name,
+                'symbol' => $value->symbol,
                 'book' => new BookResource($value->book),
                 'stakeholder_group' => new StakeHolderGroupResource($value->stakeholder_group),
             ];
