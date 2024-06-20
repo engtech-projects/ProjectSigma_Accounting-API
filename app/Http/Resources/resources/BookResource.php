@@ -21,7 +21,7 @@ class BookResource extends JsonResource
             "book_name" => $this->book_name,
             "symbol" => $this->symbol,
             "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
-            "account_groups" => AccountGroupResource::collection($this->whenLoaded('account_groups')),
+            "account_groups" => AccountGroupResource::collection($this->whenLoaded('account_group_books')),
         ];
         //return parent::toArray($request);
     }

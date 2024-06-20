@@ -32,7 +32,7 @@ class Book extends Model
             ->withPivot(['book_id', 'account_id'])
             ->withTimestamps();
     }
-    public function account_groups(): BelongsToMany
+    public function account_group_books(): BelongsToMany
     {
         return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
             ->using(AccountGroupBook::class)
