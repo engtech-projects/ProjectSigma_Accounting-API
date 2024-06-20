@@ -29,11 +29,13 @@ class AccountGroupService
     public static function create(array $attributes)
     {
         try {
-            AccountGroup::create($attributes);
+            DB::transaction(function () use ($attributes) {
+                $accountGroup = AccountGroup::create($attributes);
+                $accountGroup->accounts()->attach($attributes["account_ids"]);
+            });
         } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", $e);
         }
-
     }
 
     public function update($accountGroup, array $attributes)
@@ -44,7 +46,6 @@ class AccountGroupService
                 $accountGroup->accounts()->sync($attributes['account_id']);
             }
             $accountGroup->update();
-
         });
     }
 

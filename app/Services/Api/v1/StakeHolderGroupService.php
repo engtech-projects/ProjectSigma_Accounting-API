@@ -31,9 +31,10 @@ class StakeHolderGroupService
     {
 
         DB::transaction(function () use ($attributes) {
-            return $this->stakeHolderGroup->create($attributes)->type_groups()->attach($attributes["stakeholder_type_id"]);
+            $stakeholderGroup = $this->stakeHolderGroup->create($attributes);
+            $stakeholderGroup->type_groups()->attach($attributes["stakeholder_type_id"]);
+            $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]);
         });
-
     }
 
 
@@ -45,5 +46,4 @@ class StakeHolderGroupService
                 ->sync($attributes["stakeholder_type_id"]);
         });
     }
-
 }

@@ -28,6 +28,7 @@ class StakeHolderGroup extends Model
     }
 
 
+
     public function type_groups_stakeholders(): BelongsToMany
     {
         return $this->belongsToMany(StakeHolder::class, 'stakeholder_type_groups', 'stakeholder_group_id', 'stakeholder_type_id')

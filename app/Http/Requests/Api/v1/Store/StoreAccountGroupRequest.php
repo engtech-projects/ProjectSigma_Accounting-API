@@ -14,6 +14,13 @@ class StoreAccountGroupRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'account_ids' => json_decode($this->account_ids, true)
+        ]);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,6 +30,7 @@ class StoreAccountGroupRequest extends FormRequest
     {
         return [
             "account_group_name" => "required|string",
+            "account_ids" => "required|array"
         ];
     }
 }
