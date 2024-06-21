@@ -22,7 +22,7 @@ class BookController extends Controller
     }
     public function index()
     {
-        $books = $this->bookService->getAll(null, ['accounts', 'account_groups']);
+        $books = $this->bookService->getAll(null, ['accounts', 'account_group_books']);
         return new BookCollection($books);
     }
 

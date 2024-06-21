@@ -45,7 +45,7 @@ class BookService
 
         DB::transaction(function () use ($attribute) {
             $book = Book::create($attribute);
-            $book->account_groups()->attach([
+            $book->account_group_books()->attach([
                 $attribute['account_group_id']
             ]);
         });
@@ -58,7 +58,7 @@ class BookService
             $book->update();
             $book->accounts()
                 ->sync($attributes["account_id"]);
-            $book->account_groups()
+            $book->account_group_books()
                 ->sync($attributes['account_group_id']);
         });
 
