@@ -18,7 +18,7 @@ class StakeHolderTypeResource extends JsonResource
             'stakeholder_type_id' => $this->stakeholder_type_id,
             'stakeholder_type_name' => $this->stakeholder_type_name,
             'stakeholders' => $this->whenLoaded('stakeholders', function ($stakeholders) {
-                return StakeHolderResource::collection($stakeholders);
+                return StakeholderResource::collection($stakeholders);
             })
         ];
         //return parent::toArray($request);
