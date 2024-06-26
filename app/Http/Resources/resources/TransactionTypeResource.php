@@ -30,7 +30,7 @@ class TransactionTypeResource extends JsonResource
                     "stakeholder_group_id" => $this->stakeholder_group_id,
                     "stakeholder_group_name" => $this->stakeholder_group->stakeholder_group_name,
                     "stakeholder_type" => $this->whenLoaded('stakeholder_group', function ($stakeholderGroup) {
-                        return StakeHolderTypeResource::collection($stakeholderGroup->type_groups);
+                        return StakeholderResource::collection($stakeholderGroup->type_groups);
                     }),
                 ];
             }),
