@@ -41,7 +41,7 @@ class ChartOfAccountController extends Controller
         return new JsonResponse([
             "success" => true,
             "message" => "Sucessfully fetched.",
-            "data" => PaginateResourceCollection::paginate($collection, 5)
+            "data" => $collection
         ]);
     }
 }
