@@ -13,6 +13,12 @@ class StoreBookRequest extends FormRequest
     {
         return true;
     }
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'account_ids' => json_decode($this->account_ids, true)
+        ]);
+    }
 
 
     /**
@@ -25,6 +31,7 @@ class StoreBookRequest extends FormRequest
         return [
             "book_name" => "required|string",
             "symbol" => "required|string|max:3",
+            "account_ids" => "required|array",
             "account_group_id" => "required|integer"
         ];
     }

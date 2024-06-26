@@ -22,9 +22,9 @@ class BookService
     public function getAll(?bool $paginate = false, ?array $relation = [])
     {
         $query = $this->book->query();
-         if ($relation) {
-             $query->with($relation);
-         }
+        if ($relation) {
+            $query->with($relation);
+        }
         return $paginate ? $query->paginate(10) : $query->get();
     }
 
@@ -45,11 +45,11 @@ class BookService
 
         DB::transaction(function () use ($attribute) {
             $book = Book::create($attribute);
+            $book->accounts()->attach($attribute['account_ids']);
             $book->account_group_books()->attach([
                 $attribute['account_group_id']
             ]);
         });
-
     }
     public function updateBook($book, array $attributes)
     {
@@ -61,8 +61,5 @@ class BookService
             $book->account_group_books()
                 ->sync($attributes['account_group_id']);
         });
-
     }
-
-
 }

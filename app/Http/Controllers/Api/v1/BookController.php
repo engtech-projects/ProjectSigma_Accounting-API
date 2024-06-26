@@ -10,6 +10,7 @@ use App\Http\Resources\resources\BookResource;
 use App\Models\Book;
 
 use App\Services\Api\v1\BookService;
+use Exception;
 use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
