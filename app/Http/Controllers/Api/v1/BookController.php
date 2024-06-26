@@ -46,7 +46,6 @@ class BookController extends Controller
     public function show(Book $book)
     {
         $book = $this->bookService->getById($book, ['account_group_books.accounts']);
-
         return new BookResource($book);
     }
 

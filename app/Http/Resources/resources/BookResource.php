@@ -16,12 +16,17 @@ class BookResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
         return [
             "book_id" => $this->book_id,
             "book_name" => $this->book_name,
             "symbol" => $this->symbol,
+
             "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
-            "account_groups" => AccountGroupResource::collection($this->whenLoaded('account_group_books')),
+            "account_group" => $this->whenLoaded('account_group_books',function($group) {
+                return $group->first();
+            }),
+            //"account_groups" => new AccountGroupResource('account_group_books'), //AccountGroupResource::collection($this->whenLoaded('account_group_books')),
         ];
         //return parent::toArray($request);
     }

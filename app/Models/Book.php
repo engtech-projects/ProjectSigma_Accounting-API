@@ -7,6 +7,7 @@ use App\Models\Pivot\AccountGroupBook;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Book extends Model
@@ -32,12 +33,29 @@ class Book extends Model
             ->withPivot(['book_id', 'account_id'])
             ->withTimestamps();
     }
+    public function account_group_book(): BelongsTo
+    {
+        return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
+            ->using(AccountGroupBook::class)
+            ->withPivot(['book_id', 'account_group_id'])
+            ->withTimestamps()
+            ->first();
+    }
     public function account_group_books(): BelongsToMany
     {
         return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
             ->using(AccountGroupBook::class)
             ->withPivot(['book_id', 'account_group_id'])
             ->withTimestamps();
+    }
+
+    public function singleAccountGroup()
+    {
+        return $this->account_group_books()->limit(1);
+    }
+    public function getFirstAccountGroupAttribute()
+    {
+        return $this->singleAccountGroup()->first();
     }
 
 

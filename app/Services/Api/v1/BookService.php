@@ -32,11 +32,10 @@ class BookService
     public function getById(Book $book, ?array $relation = [])
     {
 
-        $query = $book->query();
         if ($relation) {
-            $query->with($relation);
+            $book->load($relation);
         }
-        return $query->find($book)->first();
+        return $book;
     }
 
 
