@@ -23,7 +23,7 @@ class BookResource extends JsonResource
             "symbol" => $this->symbol,
 
             "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
-            "account_group" => $this->whenLoaded('account_group_books',function($group) {
+            "account_groups" => $this->whenLoaded('account_group_books',function($group) {
                 return $group->first();
             }),
             //"account_groups" => new AccountGroupResource('account_group_books'), //AccountGroupResource::collection($this->whenLoaded('account_group_books')),

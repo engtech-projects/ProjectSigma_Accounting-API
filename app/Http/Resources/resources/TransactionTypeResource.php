@@ -35,5 +35,5 @@ class TransactionTypeResource extends JsonResource
                 ];
             }),
         ];
-    }
+}
 }

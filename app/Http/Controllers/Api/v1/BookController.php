@@ -45,7 +45,7 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book = $this->bookService->getById($book, ['account_group_books.accounts']);
+        $book = $this->bookService->getById($book, ['accounts', 'account_group_books.accounts']);
         return new BookResource($book);
     }
 
@@ -60,7 +60,6 @@ class BookController extends Controller
             'success' => true,
             'message' => "Book successfully updated."
         ]);
-
     }
 
     /**
