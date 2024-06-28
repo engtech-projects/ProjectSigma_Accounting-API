@@ -54,7 +54,7 @@ class Transaction extends Model
     }
     public function generateTransactionNumber()
     {
-        $series = $this->transaction_type->document_series()->activeSeries()->first();
+        $series = $this->transaction_type->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
         $series->next_number = $series->next_number + 1;
         $series->save();
