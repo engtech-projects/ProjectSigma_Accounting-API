@@ -34,10 +34,15 @@ class Transaction extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $model->created_by = auth()->user()->id;
-            $model->transaction_no = $model->generateTransactionNumber();
-            $model->reference_no = $model->generateReferenceNumber();
-            $model->period_id = PostingPeriod::open_status()->period_id;
+            $postingPeriod = PostingPeriod::open_status();
+            if ($postingPeriod) {
+                $model->created_by = auth()->user()->id;
+                $model->transaction_no = $model->generateTransactionNumber();
+                $model->reference_no = $model->generateReferenceNumber();
+                $model->period_id = PostingPeriod::open_status()->period_id;
+            } else {
+                throw new Exception("Posting period open not found.");
+            }
         });
     }
 
