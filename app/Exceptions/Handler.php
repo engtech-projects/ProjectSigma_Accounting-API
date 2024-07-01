@@ -47,7 +47,7 @@ class Handler extends ExceptionHandler
         }
         if ($e instanceof HttpException) {
             if ($request->is('api/v1/*')) {
-                $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_NOT_FOUND);
+                $response = new JsonResponse(['success' => false, 'message' => "Resource not."], JsonResponse::HTTP_NOT_FOUND);
             }
         }
         return $response;
