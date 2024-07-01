@@ -36,7 +36,7 @@ class Transaction extends Model
         parent::boot();
         static::creating(function ($model) {
             $model->created_by = auth()->user()->id;
-            $model->transaction_no = $model->generateTransactionNumber();
+            $model->transaction_no = $model->generateTransactionNumber($model->transaction_type_id);
             $model->reference_no = $model->generateReferenceNumber();
             $model->period_id = PostingPeriod::open_status()->period_id;
         });
@@ -54,12 +54,13 @@ class Transaction extends Model
     {
         return $this->belongsTo(TransactionType::class, 'transaction_type_id', 'transaction_type_id');
     }
-    public function generateTransactionNumber()
+    public function generateTransactionNumber($transactionTypeId)
     {
-        if ($this->transaction_type->document_series) {
-            throw new DBTransactionException("error");
-        }
-        $series = $this->transaction_type->document_series->activeSeries()->first();
+        $transactionType = TransactionType::whereHas('document_series', function ($query) use ($transactionTypeId) {
+            $query->where('transaction_type_id', $transactionTypeId);
+        })->firstOrFail();
+
+        $series = $transactionType->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
         $series->next_number = $series->next_number + 1;
         $series->save();

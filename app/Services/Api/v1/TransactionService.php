@@ -43,8 +43,9 @@ class TransactionService
 
     public function createTransaction(array $attributes)
     {
-
+        $transactionTypeId = $attributes['transaction_type_id'];
         try {
+
             DB::transaction(function () use ($attributes) {
                 $transaction = Transaction::create($attributes);
                 $transaction->transaction_details()->createMany($attributes["details"]);
