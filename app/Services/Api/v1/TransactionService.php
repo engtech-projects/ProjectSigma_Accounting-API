@@ -43,9 +43,7 @@ class TransactionService
 
     public function createTransaction(array $attributes)
     {
-        if() {
-            
-        }
+
         try {
             DB::transaction(function () use ($attributes) {
                 $transaction = Transaction::create($attributes);
