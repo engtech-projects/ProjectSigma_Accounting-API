@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Pivot\TransactionDetail;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,7 +37,7 @@ class Transaction extends Model
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber();
             $model->reference_no = $model->generateReferenceNumber();
-            $model->period_id = PostingPeriod::open_status()?->period_id;
+            $model->period_id = PostingPeriod::open_status()->period_id;
         });
     }
 
@@ -54,7 +55,11 @@ class Transaction extends Model
     }
     public function generateTransactionNumber()
     {
-        $series = $this->transaction_type?->document_series->activeSeries()->first();
+        $transactionType = $this->transaction_type; //->document_series->activeSeries()->first();
+        if (!$transactionType->document_series) {
+            throw new Exception("The selected transaction type, no document series found.");
+        }
+        $series = $transactionType->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
         $series->next_number = $series->next_number + 1;
         $series->save();
