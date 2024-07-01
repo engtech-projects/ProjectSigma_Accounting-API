@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Transaction extends Model
 {
@@ -56,9 +57,14 @@ class Transaction extends Model
     }
     public function generateTransactionNumber($transactionTypeId)
     {
-        $transactionType = TransactionType::whereHas('document_series', function ($query) use ($transactionTypeId) {
-            $query->where('transaction_type_id', $transactionTypeId);
-        })->firstOrFail();
+        try {
+            $transactionType = TransactionType::whereHas('document_series', function ($query) use ($transactionTypeId) {
+                $query->where('transaction_type_id', $transactionTypeId);
+            })->firstOrFail();
+        } catch (HttpException $e) {
+            throw new Exception("Unable to generate transaction number. Transaction type doesn't have document series.");
+        }
+
 
         $series = $transactionType->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
