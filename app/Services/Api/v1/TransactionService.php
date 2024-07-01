@@ -4,6 +4,7 @@ namespace App\Services\Api\v1;
 
 use App\Exceptions\DBTransactionException;
 use App\Exceptions\ResourceNotFound;
+use App\Models\PostingPeriod;
 use App\Models\Transaction;
 use App\Models\TransactionType;
 use Exception;
@@ -48,8 +49,9 @@ class TransactionService
     {
         $transactionTypeId = $attributes['transaction_type_id'];
         try {
-
             DB::transaction(function () use ($attributes) {
+                $PostingPeriod = PostingPeriod::open_status();
+                throw_if(!$PostingPeriod, "Posting period not yet open.");
                 $transaction = Transaction::create($attributes);
                 $transaction->transaction_details()->createMany($attributes["details"]);
             });

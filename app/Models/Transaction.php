@@ -40,6 +40,7 @@ class Transaction extends Model
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber($model->transaction_type_id);
             $model->reference_no = $model->generateReferenceNumber();
+
             $model->period_id = PostingPeriod::open_status()->period_id;
         });
     }
@@ -55,6 +56,10 @@ class Transaction extends Model
     public function transaction_type(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class, 'transaction_type_id', 'transaction_type_id');
+    }
+    public function posting_period()
+    {
+        return $this->belongsTo(PostingPeriod::class, 'period_id', 'period_id');
     }
     public function generateTransactionNumber($transactionTypeId)
     {
