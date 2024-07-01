@@ -2,8 +2,11 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\Transaction;
 use App\Models\TransactionType;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
@@ -38,8 +41,19 @@ class TransactionService
         return $transaction;
     }
 
-    public function createTransaction(array $attribute)
+    public function createTransaction(array $attributes)
     {
+        if() {
+            
+        }
+        try {
+            DB::transaction(function () use ($attributes) {
+                $transaction = Transaction::create($attributes);
+                $transaction->transaction_details()->createMany($attributes["details"]);
+            });
+        } catch (Exception $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        }
     }
 
     public function updateTransaction($transactionType, array $attribute)

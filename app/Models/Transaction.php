@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\DBTransactionException;
 use App\Models\Pivot\TransactionDetail;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,15 +35,10 @@ class Transaction extends Model
     {
         parent::boot();
         static::creating(function ($model) {
-            $postingPeriod = PostingPeriod::open_status();
-            if ($postingPeriod) {
-                $model->created_by = auth()->user()->id;
-                $model->transaction_no = $model->generateTransactionNumber();
-                $model->reference_no = $model->generateReferenceNumber();
-                $model->period_id = PostingPeriod::open_status()->period_id;
-            } else {
-                throw new Exception("Posting period open not found.");
-            }
+            $model->created_by = auth()->user()->id;
+            $model->transaction_no = $model->generateTransactionNumber();
+            $model->reference_no = $model->generateReferenceNumber();
+            $model->period_id = PostingPeriod::open_status()->period_id;
         });
     }
 
@@ -60,11 +56,10 @@ class Transaction extends Model
     }
     public function generateTransactionNumber()
     {
-        $transactionType = $this->transaction_type; //->document_series->activeSeries()->first();
-        if (!$transactionType->document_series) {
-            throw new Exception("The selected transaction type, no document series found.");
+        if ($this->transaction_type->document_series) {
+            throw new DBTransactionException("error");
         }
-        $series = $transactionType->document_series->activeSeries()->first();
+        $series = $this->transaction_type->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
         $series->next_number = $series->next_number + 1;
         $series->save();
