@@ -36,7 +36,7 @@ class Transaction extends Model
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber();
             $model->reference_no = $model->generateReferenceNumber();
-            $model->period_id = PostingPeriod::open_status()->period_id;
+            $model->period_id = PostingPeriod::open_status()?->period_id;
         });
     }
 
@@ -54,7 +54,7 @@ class Transaction extends Model
     }
     public function generateTransactionNumber()
     {
-        $series = $this->transaction_type->document_series->activeSeries()->first();
+        $series = $this->transaction_type?->document_series->activeSeries()->first();
         $transactionNo = $series->series_scheme . $series->next_number;
         $series->next_number = $series->next_number + 1;
         $series->save();
