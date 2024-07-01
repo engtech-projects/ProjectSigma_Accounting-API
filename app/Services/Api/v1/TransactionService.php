@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\TransactionType;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TransactionService
 {
@@ -44,15 +45,15 @@ class TransactionService
     public function createTransaction(array $attributes)
     {
         $transactionTypeId = $attributes['transaction_type_id'];
-/*         try { */
+        try {
 
             DB::transaction(function () use ($attributes) {
                 $transaction = Transaction::create($attributes);
                 $transaction->transaction_details()->createMany($attributes["details"]);
             });
-        /* } catch (Exception $e) {
+        } catch (Exception $e) {
             throw new DBTransactionException("Create transaction failed.", 500, $e);
-        } */
+        }
     }
 
     public function updateTransaction($transactionType, array $attribute)

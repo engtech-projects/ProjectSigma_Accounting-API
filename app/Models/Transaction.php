@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\DBTransactionException;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Pivot\TransactionDetail;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -66,8 +67,8 @@ class Transaction extends Model
             $series->next_number = $series->next_number + 1;
             $series->save();
             return $transactionNo;
-        } catch (HttpException $e) {
-            throw new Exception("Unable to generate transaction number. Transaction type doesn't have document series.");
+        } catch (Exception $e) {
+            throw new ResourceNotFound("Unable to generate transaction number. Transaction type doesn't have document series.", 400, $e);
         }
     }
     public function generateReferenceNumber()
