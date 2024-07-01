@@ -50,6 +50,10 @@ class Handler extends ExceptionHandler
                 $response = new JsonResponse(['success' => false, 'message' => "Resource not."], JsonResponse::HTTP_NOT_FOUND);
             }
         }
+        if ($e instanceof ResourceNotFound) {
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         return $response;
     }
 }

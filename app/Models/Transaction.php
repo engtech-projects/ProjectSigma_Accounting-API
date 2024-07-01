@@ -68,7 +68,7 @@ class Transaction extends Model
             $series->save();
             return $transactionNo;
         } catch (Exception $e) {
-            throw new ResourceNotFound("Unable to generate transaction number. Transaction type doesn't have document series.", 400, $e);
+            throw new ResourceNotFound("Unable to generate transaction number. Transaction type doesn't have document series.", 422, $e);
         }
     }
     public function generateReferenceNumber()

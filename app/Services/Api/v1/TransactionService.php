@@ -3,11 +3,13 @@
 namespace App\Services\Api\v1;
 
 use App\Exceptions\DBTransactionException;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Transaction;
 use App\Models\TransactionType;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class TransactionService
 {
@@ -51,8 +53,10 @@ class TransactionService
                 $transaction = Transaction::create($attributes);
                 $transaction->transaction_details()->createMany($attributes["details"]);
             });
-        } catch (Exception $e) {
+        } catch (DBTransactionException $e) {
             throw new DBTransactionException("Create transaction failed.", 500, $e);
+        } catch (ResourceNotFound $e) {
+            throw new ResourceNotFound($e->getMessage(), 422, $e);
         }
     }
 
