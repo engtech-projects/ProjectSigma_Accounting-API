@@ -29,19 +29,13 @@ class Transaction extends Model
         'note',
         'amount',
     ];
-
-
-
-
     public static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
-            
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber($model->transaction_type_id);
             $model->reference_no = $model->generateReferenceNumber();
-
             $model->period_id = PostingPeriod::open_status()->period_id;
         });
     }
