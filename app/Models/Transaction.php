@@ -37,6 +37,7 @@ class Transaction extends Model
     {
         parent::boot();
         static::creating(function ($model) {
+            
             $model->created_by = auth()->user()->id;
             $model->transaction_no = $model->generateTransactionNumber($model->transaction_type_id);
             $model->reference_no = $model->generateReferenceNumber();

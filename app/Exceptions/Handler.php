@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
@@ -39,6 +40,9 @@ class Handler extends ExceptionHandler
     public function handleApiExceptions(Request $request, Exception $e)
     {
         $response = null;
+        if ($e instanceof RuntimeException) {
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_FORBIDDEN);
+        }
         if ($e instanceof AuthorizationException) {
             $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
         }

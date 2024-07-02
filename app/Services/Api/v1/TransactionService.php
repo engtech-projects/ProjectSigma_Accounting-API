@@ -47,7 +47,8 @@ class TransactionService
 
     public function createTransaction(array $attributes)
     {
-        $transactionTypeId = $attributes['transaction_type_id'];
+        $PostingPeriod = PostingPeriod::open_status();
+        throw_if(!$PostingPeriod, "Unable to create transaction, posting period not available.");
         try {
             DB::transaction(function () use ($attributes) {
                 $PostingPeriod = PostingPeriod::open_status();
