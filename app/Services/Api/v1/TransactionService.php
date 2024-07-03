@@ -2,8 +2,16 @@
 
 namespace App\Services\Api\v1;
 
+use App\Exceptions\DBTransactionException;
+use App\Exceptions\ResourceNotFound;
+use App\Models\PostingPeriod;
 use App\Models\Transaction;
 use App\Models\TransactionType;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class TransactionService
 {
@@ -38,8 +46,22 @@ class TransactionService
         return $transaction;
     }
 
-    public function createTransaction(array $attribute)
+    public function createTransaction(array $attributes)
     {
+        $PostingPeriod = PostingPeriod::open_status();
+        throw_if(!$PostingPeriod, new DBTransactionException("Unable to create transaction, posting period not available."));
+        try {
+            DB::transaction(function () use ($attributes) {
+                $PostingPeriod = PostingPeriod::open_status();
+                throw_if(!$PostingPeriod, "Posting period not yet open.");
+                $transaction = Transaction::create($attributes);
+                $transaction->transaction_details()->createMany($attributes["details"]);
+            });
+        } catch (DBTransactionException $e) {
+            throw new DBTransactionException("Create transaction failed.", 500, $e);
+        } catch (ResourceNotFound $e) {
+            throw new ResourceNotFound($e->getMessage(), JsonResponse::HTTP_NOT_FOUND, $e);
+        }
     }
 
     public function updateTransaction($transactionType, array $attribute)

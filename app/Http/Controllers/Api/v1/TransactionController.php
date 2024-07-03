@@ -46,14 +46,7 @@ class TransactionController extends Controller
     public function store(StoreTransactionRequest $request)
     {
         $attributes = $request->validated();
-        try {
-            DB::transaction(function () use ($attributes) {
-                $transaction = Transaction::create($attributes);
-                $transaction->transaction_details()->createMany($attributes["details"]);
-            });
-        } catch (Exception $e) {
-            throw new DBTransactionException("Create transaction failed.", 400, $e);
-        }
+        $this->transactionService->createTransaction($attributes);
 
         return new JsonResponse([
             'success' => true,
@@ -68,7 +61,7 @@ class TransactionController extends Controller
     {
         $data = $this->transactionService->getTransactionById(
             $transaction,
-            ['stakeholder','transaction_type', 'transaction_details.account', 'transaction_details.stakeholder']
+            ['stakeholder', 'transaction_type', 'transaction_details.account', 'transaction_details.stakeholder']
         );
         return new JsonResponse([
             'success' => true,

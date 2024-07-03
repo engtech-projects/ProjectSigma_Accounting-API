@@ -8,7 +8,9 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use RuntimeException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -39,17 +41,25 @@ class Handler extends ExceptionHandler
     public function handleApiExceptions(Request $request, Exception $e)
     {
         $response = null;
-        if ($e instanceof AuthorizationException) {
-            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_NOT_FOUND);
+
+/*         if ($e instanceof RuntimeException) {
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+        } */
+        if ($e instanceof NotFoundHttpException) {
+            $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_NOT_FOUND);
         }
         if ($e instanceof DBTransactionException) {
             $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_BAD_REQUEST);
         }
-        if ($e instanceof HttpException) {
+        /*         if ($e instanceof HttpException) {
             if ($request->is('api/v1/*')) {
-                $response = new JsonResponse(['success' => false, 'message' => "Resource not found."], JsonResponse::HTTP_NOT_FOUND);
+                $response = new JsonResponse(['success' => false, 'message' => "Resource not."], JsonResponse::HTTP_NOT_FOUND);
             }
+        } */
+        if ($e instanceof ResourceNotFound) {
+            $response = new JsonResponse(['success' => false, 'message' => $e->getMessage()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
+
         return $response;
     }
 }

@@ -42,12 +42,9 @@ class AuthTokenGuard implements Guard
             $this->user->name = $response->json()['name'];
             $this->user->email = $response->json()['email'];
             $this->user->type = $response->json()['type'];
-            $this->user->accessibilities = [
-                'hrms:dashboard',
-                'hrms:announcement',
-                'accounting:announcement',
-                'accounting:dashboard',
-            ];
+            $this->user->accessibilities = $response->json()['accessibilities'];
+            $this->user->accessibilities_name = $response->json()['accessibility_names'];
+            $this->user->employee = $response->json()['employee'];
         }
         return $this->user;
     }

@@ -40,7 +40,7 @@ class AccountService
         if ($relation) {
             $query->with($relation);
         }
-        return $query->find($account)->first();
+        return $query->find($account)->firstOrFail();
     }
     public function create(array $attributes)
     {

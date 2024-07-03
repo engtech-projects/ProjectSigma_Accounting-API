@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Exceptions\DBTransactionException;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Pivot\TransactionDetail;
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Transaction extends Model
 {
@@ -25,16 +29,12 @@ class Transaction extends Model
         'note',
         'amount',
     ];
-
-
-
-
     public static function boot()
     {
         parent::boot();
         static::creating(function ($model) {
             $model->created_by = auth()->user()->id;
-            $model->transaction_no = $model->generateTransactionNumber();
+            $model->transaction_no = $model->generateTransactionNumber($model->transaction_type_id);
             $model->reference_no = $model->generateReferenceNumber();
             $model->period_id = PostingPeriod::open_status()->period_id;
         });
@@ -52,13 +52,24 @@ class Transaction extends Model
     {
         return $this->belongsTo(TransactionType::class, 'transaction_type_id', 'transaction_type_id');
     }
-    public function generateTransactionNumber()
+    public function posting_period()
     {
-        $series = $this->transaction_type->document_series()->activeSeries()->first();
-        $transactionNo = $series->series_scheme . $series->next_number;
-        $series->next_number = $series->next_number + 1;
-        $series->save();
-        return $transactionNo;
+        return $this->belongsTo(PostingPeriod::class, 'period_id', 'period_id');
+    }
+    public function generateTransactionNumber($transactionTypeId)
+    {
+        try {
+            $transactionType = TransactionType::whereHas('document_series', function ($query) use ($transactionTypeId) {
+                $query->where('transaction_type_id', $transactionTypeId);
+            })->firstOrFail();
+            $series = $transactionType->document_series->activeSeries()->first();
+            $transactionNo = $series->series_scheme . $series->next_number;
+            $series->next_number = $series->next_number + 1;
+            $series->save();
+            return $transactionNo;
+        } catch (Exception $e) {
+            throw new ResourceNotFound("Unable to generate transaction number. Transaction type doesn't have document series.", 422, $e);
+        }
     }
     public function generateReferenceNumber()
     {
