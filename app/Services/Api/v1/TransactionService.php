@@ -52,8 +52,6 @@ class TransactionService
         throw_if(!$PostingPeriod, new DBTransactionException("Unable to create transaction, posting period not available."));
         try {
             DB::transaction(function () use ($attributes) {
-                $PostingPeriod = PostingPeriod::open_status();
-                throw_if(!$PostingPeriod, "Posting period not yet open.");
                 $transaction = Transaction::create($attributes);
                 $transaction->transaction_details()->createMany($attributes["details"]);
             });
