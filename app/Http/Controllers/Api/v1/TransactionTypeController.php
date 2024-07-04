@@ -34,7 +34,7 @@ class TransactionTypeController extends Controller
             'success' => true,
             'message' => "Successfully fetched.",
             'data' => new TransactionTypeCollection($transactionTypes),
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -48,7 +48,7 @@ class TransactionTypeController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Transaction type successfully created."
-        ]);
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -64,7 +64,7 @@ class TransactionTypeController extends Controller
             'success' => true,
             'message' => "Successfully fetched.",
             'data' => new TransactionTypeResource($transactionType),
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -78,7 +78,7 @@ class TransactionTypeController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Transaction type successfully updated."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -90,6 +90,6 @@ class TransactionTypeController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Transaction type successfully deleted."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 }
