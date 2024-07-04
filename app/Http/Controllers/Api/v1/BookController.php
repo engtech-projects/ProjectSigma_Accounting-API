@@ -59,7 +59,7 @@ class BookController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Book successfully updated."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -72,6 +72,6 @@ class BookController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => "Book successfully deleted."
-        ]);
+        ], JsonResponse::HTTP_OK);
     }
 }
