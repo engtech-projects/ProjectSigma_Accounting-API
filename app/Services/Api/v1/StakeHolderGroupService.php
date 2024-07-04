@@ -33,7 +33,7 @@ class StakeHolderGroupService
         DB::transaction(function () use ($attributes) {
             $stakeholderGroup = $this->stakeHolderGroup->create($attributes);
             $stakeholderGroup->type_groups()->attach($attributes["stakeholder_type_id"]);
-            /* $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]); */
+            $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]);
         });
     }
 
