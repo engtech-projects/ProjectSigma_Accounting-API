@@ -56,7 +56,7 @@ class BookService
             $book->fill($attributes);
             $book->update();
             $book->accounts()
-                ->sync($attributes["account_id"]);
+                ->sync($attributes["account_ids"]);
             $book->account_group_books()
                 ->sync($attributes['account_group_id']);
         });
