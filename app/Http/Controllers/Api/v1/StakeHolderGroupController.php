@@ -27,7 +27,6 @@ class StakeHolderGroupController extends Controller
         $stakeHolderGroup = $this->stakeHolderGroupService->getAll();
 
         return new StakeHolderGroupCollection($stakeHolderGroup);
-
     }
 
     /**
@@ -37,7 +36,10 @@ class StakeHolderGroupController extends Controller
     {
         $this->stakeHolderGroupService->create($request->validated());
 
-        return new JsonResponse(['message' => 'Stakeholder Group successfully created.'], JsonResponse::HTTP_CREATED);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Stakeholder Group successfully created.'
+        ], JsonResponse::HTTP_CREATED);
     }
 
     /**
@@ -48,6 +50,11 @@ class StakeHolderGroupController extends Controller
         $stakeHolderGroup = $this->stakeHolderGroupService->getById($stakeHolderGroup);
 
         return new StakeHolderGroupResource($stakeHolderGroup);
+
+        /* return new JsonResponse([
+            'success' => true,
+            'message' => 'Stakeholder Group successfully updated.'
+        ], JsonResponse::HTTP_OK); */
     }
 
     /**
@@ -57,7 +64,10 @@ class StakeHolderGroupController extends Controller
     {
         $this->stakeHolderGroupService->update($stakeHolderGroup, $request->validated());
 
-        return new JsonResponse(['message' => 'Stakeholder Group successfully updated.']);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Stakeholder Group successfully updated.'
+        ], JsonResponse::HTTP_OK);
     }
 
     /**
@@ -67,6 +77,9 @@ class StakeHolderGroupController extends Controller
     {
         $stakeHolderGroup->delete();
 
-        return new JsonResponse(['message' => 'Stakeholder Group successfully deleted.']);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Stakeholder Group successfully deleted.'
+        ], JsonResponse::HTTP_OK);
     }
 }
