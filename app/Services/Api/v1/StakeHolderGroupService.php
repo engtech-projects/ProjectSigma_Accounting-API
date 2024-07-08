@@ -24,7 +24,7 @@ class StakeHolderGroupService
 
     public function getById($stakeHolderGroup)
     {
-        return $stakeHolderGroup;
+        return $stakeHolderGroup->load('type_groups');
     }
 
     public function create(array $attributes)
@@ -32,8 +32,8 @@ class StakeHolderGroupService
 
         DB::transaction(function () use ($attributes) {
             $stakeholderGroup = $this->stakeHolderGroup->create($attributes);
-            $stakeholderGroup->type_groups()->attach($attributes["stakeholder_type_id"]);
-/*             $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]); */
+            $stakeholderGroup->type_groups()->attach($attributes["stakeholder_type_ids"]);
+            /*             $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]); */
         });
     }
 

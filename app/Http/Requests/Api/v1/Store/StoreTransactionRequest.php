@@ -31,10 +31,6 @@ class StoreTransactionRequest extends FormRequest
     {
         return [
             'transaction_date' => 'required|date',
-/*             'status' => [
-                'required',
-                new Enum(TransactionStatus::class)
-            ], */
             'transaction_type_id' => 'required|integer',
             'stakeholder_id' => 'required|integer',
             'description' => 'nullable|string',

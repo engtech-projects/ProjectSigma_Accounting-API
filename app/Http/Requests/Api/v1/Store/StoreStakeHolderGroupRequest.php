@@ -15,9 +15,9 @@ class StoreStakeHolderGroupRequest extends FormRequest
     }
     public function prepareForValidation()
     {
-        /* $this->merge([
-            'stakeholder_ids' => json_decode($this->stakeholder_ids, true)
-        ]); */
+        $this->merge([
+            'stakeholder_type_ids' => json_decode($this->stakeholder_type_ids, true)
+        ]);
     }
 
 
@@ -30,8 +30,8 @@ class StoreStakeHolderGroupRequest extends FormRequest
     {
         return [
             'stakeholder_group_name' => 'required|string',
-            'stakeholder_type_id' => 'nullable|integer',
-/*             'stakeholder_ids' => 'required|array' */
+            'stakeholder_type_ids' => 'nullable|array',
+            /*             'stakeholder_ids' => 'required|array' */
         ];
     }
 }

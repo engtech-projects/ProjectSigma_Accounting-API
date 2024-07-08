@@ -49,12 +49,11 @@ class StakeHolderGroupController extends Controller
     {
         $stakeHolderGroup = $this->stakeHolderGroupService->getById($stakeHolderGroup);
 
-        return new StakeHolderGroupResource($stakeHolderGroup);
-
-        /* return new JsonResponse([
+        return new JsonResponse([
             'success' => true,
-            'message' => 'Stakeholder Group successfully updated.'
-        ], JsonResponse::HTTP_OK); */
+            'message' => 'Stakeholder Group successfully updated.',
+            'data' => new StakeHolderGroupResource($stakeHolderGroup),
+        ], JsonResponse::HTTP_OK);
     }
 
     /**

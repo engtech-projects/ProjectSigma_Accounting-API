@@ -13,6 +13,12 @@ class UpdateStakeHolderGroupRequest extends FormRequest
     {
         return true;
     }
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'stakeholder_type_ids' => json_decode($this->stakeholder_type_ids, true)
+        ]);
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -23,7 +29,7 @@ class UpdateStakeHolderGroupRequest extends FormRequest
     {
         return [
             'stakeholder_group_name' => 'required|string',
-            'stakeholder_type_id' => 'nullable|integer'
+            'stakeholder_type_ids' => 'nullable|array'
         ];
     }
 }
