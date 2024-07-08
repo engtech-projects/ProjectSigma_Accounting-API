@@ -43,7 +43,7 @@ class StakeHolderGroupService
         DB::transaction(function () use ($attributes, $stakeHolderGroup) {
             $stakeHolderGroup->fill($attributes)->update();
             $stakeHolderGroup->type_groups()
-                ->sync($attributes["stakeholder_type_id"]);
+                ->sync($attributes["stakeholder_type_ids"]);
         });
     }
 }
