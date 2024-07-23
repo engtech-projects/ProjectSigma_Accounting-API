@@ -8,6 +8,7 @@ enum AccountCategory: string
     case EQUITY = "equity";
     case EXPENSE = "expenses";
     case INCOME = "income";
+    case REVENUE = "revenue";
     case LIABILITY = "liabilities";
     case CAPITAL = "capital";
 
