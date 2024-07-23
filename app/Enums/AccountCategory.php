@@ -12,4 +12,3 @@ enum AccountCategory: string
     case CAPITAL = "capital";
 
 }
-'asset','equity','expenses','income','liabilities','revenue','capital'
