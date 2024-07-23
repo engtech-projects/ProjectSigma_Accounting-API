@@ -6,8 +6,10 @@ enum AccountCategory: string
 {
     case ASSET = "asset";
     case EQUITY = "equity";
-    case EXPENSE = "expense";
+    case EXPENSE = "expenses";
     case INCOME = "income";
-    case LIABILITY = "liability";
+    case LIABILITY = "liabilities";
+    case CAPITAL = "capital";
 
 }
+'asset','equity','expenses','income','liabilities','revenue','capital'
