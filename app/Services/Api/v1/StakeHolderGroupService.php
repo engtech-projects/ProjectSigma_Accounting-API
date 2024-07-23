@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Services\Api\v1;
+
+use Exception;
+use App\Models\StakeHolderGroup;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\DBTransactionException;
+
+class StakeHolderGroupService
+{
+    protected $stakeHolderGroup;
+    public function __construct(StakeHolderGroup $stakeHolderGroup)
+    {
+        $this->stakeHolderGroup = $stakeHolderGroup;
+    }
+
+    public function getAll()
+    {
+        $query = $this->stakeHolderGroup->query();
+
+        return $query->get();
+    }
+
+    public function getById($stakeHolderGroup)
+    {
+        return $stakeHolderGroup->load('type_groups');
+    }
+
+    public function create(array $attributes)
+    {
+
+        DB::transaction(function () use ($attributes) {
+            $stakeholderGroup = $this->stakeHolderGroup->create($attributes);
+            $stakeholderGroup->type_groups()->attach($attributes["stakeholder_type_ids"]);
+            /*             $stakeholderGroup->stakeholder()->attach($attributes["stakeholder_ids"]); */
+        });
+    }
+
+
+    public function update($stakeHolderGroup, array $attributes)
+    {
+        DB::transaction(function () use ($attributes, $stakeHolderGroup) {
+            $stakeHolderGroup->fill($attributes)->update();
+            $stakeHolderGroup->type_groups()
+                ->sync($attributes["stakeholder_type_ids"]);
+        });
+    }
+}

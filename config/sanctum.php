@@ -21,6 +21,11 @@ return [
         Sanctum::currentApplicationUrlWithPort()
     ))),
 
+    /* 'stateful' => [
+        'provider' => 'hrms',
+        'model' => \App\Models\User::class,
+    ], */
+
     /*
     |--------------------------------------------------------------------------
     | Sanctum Guards
@@ -75,9 +80,9 @@ return [
     */
 
     'middleware' => [
-        'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
+        /* 'authenticate_session' => Laravel\Sanctum\Http\Middleware\AuthenticateSession::class,
         'encrypt_cookies' => App\Http\Middleware\EncryptCookies::class,
-        'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
+        'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class, */
     ],
 
 ];
