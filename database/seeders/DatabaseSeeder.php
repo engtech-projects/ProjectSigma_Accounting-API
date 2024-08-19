@@ -19,8 +19,8 @@ class DatabaseSeeder extends Seeder
             // PostingPeriodSeeder::class,
             // OpeningBalanceSeeder::class,
             // BookSeeder::class,
-            TransactionTypeSeeder::class,
-            DocumentSeriesSeeder::class,
+            // TransactionTypeSeeder::class,
+            // DocumentSeriesSeeder::class,
         ]);
 
     }
