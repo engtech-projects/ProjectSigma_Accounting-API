@@ -23,7 +23,7 @@ class AccountTypeSeeder extends Seeder
         ],
         [
             'account_type' => 'Other Expense',
-            'account_category' => 'expense',
+            'account_category' => 'expenses',
             'balance_type' =>  'debit',
             'notation' => '+'
         ],
