@@ -17,6 +17,7 @@ class PostingPeriodSeeder extends Seeder
         $postingPeriod = [
             "period_start" => Carbon::now(),
             "period_end" => Carbon::now(),
+            "year" => Carbon::now()->year,
         ];
 
         PostingPeriod::create($postingPeriod);
