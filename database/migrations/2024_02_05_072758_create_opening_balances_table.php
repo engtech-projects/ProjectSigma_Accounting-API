@@ -18,9 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('period_id');
 
-            $table->foreign('account_id')->references('account_id')->on('accounts');
-            $table->foreign('period_id')->references('period_id')->on('posting_periods');
-
             $table->softDeletes();
             $table->timestamps();
         });
