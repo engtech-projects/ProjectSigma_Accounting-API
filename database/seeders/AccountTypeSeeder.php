@@ -35,7 +35,7 @@ class AccountTypeSeeder extends Seeder
         ],
         [
             'account_type' => 'Other Current Liabilty',
-            'account_category' => 'liability',
+            'account_category' => 'liabilities',
             'balance_type' =>  'credit',
             'notation' => '-'
         ],
