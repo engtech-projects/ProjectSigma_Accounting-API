@@ -1,0 +1,32 @@
+# Deploying to local staging server
+name: EVENPAR - Deploy
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: EVENPAR - Build
+    types:
+      - completed
+env:
+  APP_NAME: "ProjectSigma_Accounting-API"
+
+concurrency:
+  group: "deployftp ProjectSigma_Accounting-API"
+  cancel-in-progress: false
+
+jobs:
+  deploy-laravel-main:
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ci-pipe-main
+      - name: Upload ftp
+        uses : SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ vars.EVENPAR_FTP_SERVER }}
+          username: ${{ secrets.EVENPAR_FTP_USERNAME }}
+          password: ${{ secrets.EVENPAR_FTP_PASSWORD }}
+          port: ${{ secrets.EVENPAR_FTP_PORT }}
+          protocol: ftp
