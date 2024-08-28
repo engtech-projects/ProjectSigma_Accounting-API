@@ -16,9 +16,9 @@ return new class extends Migration
                 $table->dropConstrainedForeignId('stakeholder_group_id');
                 $table->dropColumn('stakeholder_group_id');
             }
-            $table->unsignedBigInteger('stakeholder_id')->nullable()->after('transaction_id');
+            $table->unsignedBigInteger('stakeholder_id')->nullable()->after('transaction_id')->change();
             $table->foreign('stakeholder_id')->references('stakeholder_id')->on('stakeholders');
-            $table->unsignedBigInteger('account_id')->nullable()->after('stakeholder_id');
+            $table->unsignedBigInteger('account_id')->nullable()->after('stakeholder_id')->change();
             $table->foreign('account_id')->references('account_id')->on('accounts');
         });
     }
