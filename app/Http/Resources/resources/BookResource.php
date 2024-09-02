@@ -21,12 +21,12 @@ class BookResource extends JsonResource
             "book_id" => $this->book_id,
             "book_name" => $this->book_name,
             "symbol" => $this->symbol,
-
-            "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
-            "account_groups" => $this->whenLoaded('account_group_books',function($group) {
-                return $group->first();
-            }),
-            //"account_groups" => new AccountGroupResource('account_group_books'), //AccountGroupResource::collection($this->whenLoaded('account_group_books')),
+            'account_group' => $this->account_group,
+            // "accounts" => AccountResource::collection($this->whenLoaded('accounts')),
+            // "account_groups" => $this->whenLoaded('account_groups',function($group) {
+            //     return $group->first();
+            // }),
+            // "account_groups" => new AccountGroupResource('account_group_books'), //AccountGroupResource::collection($this->whenLoaded('account_group_books')),
         ];
         //return parent::toArray($request);
     }

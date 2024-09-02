@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AccountGroup extends Model
 {
@@ -23,6 +24,13 @@ class AccountGroup extends Model
         "type_id"
     ];
 
+    // public function accounts(): HasMany
+    // {
+    //     return $this->hasMany(Account::class, 'account_has_group', 'account_group_id', 'account_id')
+    //         ->using(AccountHasGroup::class)
+    //         ->withPivot(['account_id', 'account_group_id'])
+    //         ->withTimestamps();
+    // }
 
     public function accounts(): BelongsToMany
     {
@@ -31,11 +39,11 @@ class AccountGroup extends Model
             ->withPivot(['account_id', 'account_group_id'])
             ->withTimestamps();
     }
-    public function books(): BelongsToMany
-    {
-        return $this->belongsToMany(Book::class, 'account_group_books', 'account_group_id', 'book_id')
-            ->using(AccountGroupBook::class)
-            ->withPivot(['account_group_id', 'book_id'])
-            ->withTimestamps();
-    }
+    // public function books(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Book::class, 'account_group_id', 'account_group_id');
+    //         ->using(AccountGroup::class)
+    //         ->withPivot(['account_group_id', 'book_id'])
+    //         ->withTimestamps();
+    // }
 }

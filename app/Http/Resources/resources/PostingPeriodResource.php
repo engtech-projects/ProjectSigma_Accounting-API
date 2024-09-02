@@ -20,9 +20,9 @@ class PostingPeriodResource extends JsonResource
             "period_id" => $this->period_id,
             "period_start" => $this->period_start->format('Y-m-d'),
             "period_end" => $this->period_end->format('Y-m-d'),
+            "year" => $this->year,
             "status" => $this->status,
             "opening_balance" => $this->opening_balance,
         ];
-        //return parent::toArray($request);
     }
 }
