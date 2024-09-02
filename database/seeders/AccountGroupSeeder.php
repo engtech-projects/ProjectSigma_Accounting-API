@@ -15,10 +15,10 @@ class AccountGroupSeeder extends Seeder
     {
         $accountGroupSeed = [
             [
-                'account_group_name' => 'Account Group One'
+                'account_group_name' => 'Journal'
             ],
             [
-                'account_group_name' => 'Account Group Two'
+                'account_group_name' => 'Payroll'
             ],
         ];
 

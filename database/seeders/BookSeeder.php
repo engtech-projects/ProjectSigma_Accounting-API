@@ -17,12 +17,19 @@ class BookSeeder extends Seeder
 
         $bookSeed = [
             [
-                'book_name' => 'Disbursement',
-                'symbol' => 'DSB'
+                'book_name' => 'Disbursement Voucher',
+                'account_group_id' => 1
+                'symbol' => 'DV'
             ],
             [
-                'book_name' => 'Cash Source',
-                'symbol' => 'CHS'
+                'book_name' => 'Payroll Voucher',
+                'account_group_id' => 1
+                'symbol' => 'PV'
+            ],
+            [
+                'book_name' => 'Journal Voucher',
+                'account_group_id' => 1
+                'symbol' => 'JV'
             ],
         ];
 
@@ -31,6 +38,7 @@ class BookSeeder extends Seeder
             $book = Book::create([
                 'book_name' => $book['book_name'],
                 'symbol' => $book['symbol'],
+                'account_group_id' => $book['account_group_id'],
             ]);
 
             $book->accounts()->attach([1]);
