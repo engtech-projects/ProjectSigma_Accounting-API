@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::table('books', function (Blueprint $table) {
             $table->unsignedBigInteger('account_group_id')->nullable()->after('symbol');
         });
     }
