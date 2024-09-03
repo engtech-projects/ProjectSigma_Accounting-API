@@ -14,7 +14,8 @@ use App\Http\Controllers\Api\v1\{
     StakeHolderGroupController,
     StakeHolderTypeController,
     StakeHolderController,
-    TransactionController
+    TransactionController,
+    JournalController,
 };
 
 use App\Http\Controllers\Api\v1\Auth\AuthController;
@@ -58,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('stakeholder', StakeholderController::class);
     Route::resource('stakeholder-group', StakeHolderGroupController::class);
     Route::resource('stakeholder-type', StakeHolderTypeController::class);
+    Route::resource('journal', JournalController::class);
 
 
     /* Route::post('/test-event', function () {

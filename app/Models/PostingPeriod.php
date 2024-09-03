@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Carbon\Carbon;
 
 class PostingPeriod extends Model
 {
@@ -31,6 +32,17 @@ class PostingPeriod extends Model
     protected function serializeDate(DateTimeInterface $date): string
     {
         return $date->format('Y-m-d');
+    }
+
+    public static function getPeriod() {
+        
+        $currentDate = Carbon::now()->toDateString();
+        
+        return self::where(['status' => 'open'])
+                    ->whereDate('period_start', '<=', $currentDate)
+                    ->whereDate('period_end', '>=', $currentDate)
+                    ->get();
+
     }
 
 

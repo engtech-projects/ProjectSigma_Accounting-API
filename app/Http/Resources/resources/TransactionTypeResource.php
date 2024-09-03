@@ -34,6 +34,7 @@ class TransactionTypeResource extends JsonResource
                     }),
                 ];
             }),
+            // 'document_series' => $this->document_series,
         ];
 }
 }
