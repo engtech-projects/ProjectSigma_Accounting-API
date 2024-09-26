@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\v1\Store\StoreVoucherRequest;
 use Illuminate\Http\JsonResponse;
+use App\Models\Voucher;
 
 /**
  * @OA\Info(
@@ -18,9 +19,19 @@ class VoucherController extends Controller
 {
     /**
      * @OA\Post(
- *     path="/api/voucher",
+ *     path="/api/v1/voucher",
  *     summary="Create a Voucher",
- *     tags={"Voucher"},
+ *     tags={"Voucher Creation"},
+ * 	   @OA\Parameter(
+ *         name="Authorization",
+ *         in="header",
+ *         required=true,
+ *         @OA\Schema(
+ *             type="string",
+ *             default="Bearer {token}"
+ *         ),
+ *         description="Authorization token"
+ *     ),
  *     @OA\RequestBody(
  *         required=true,
  *         @OA\JsonContent(

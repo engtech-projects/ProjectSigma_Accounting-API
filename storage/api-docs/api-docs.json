@@ -6,13 +6,25 @@
         "version": "0.0.1"
     },
     "paths": {
-        "/api/voucher": {
+        "/api/v1/voucher": {
             "post": {
                 "tags": [
-                    "Voucher"
+                    "Voucher Creation"
                 ],
                 "summary": "Create a Voucher",
-                "operationId": "19590640f0a82f75c9c3a4071fefee3f",
+                "operationId": "2f1eb250cb91fb36aeb0ddbc11009e5d",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer {token}"
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -121,8 +133,8 @@
     },
     "tags": [
         {
-            "name": "Voucher",
-            "description": "Voucher"
+            "name": "Voucher Creation",
+            "description": "Voucher Creation"
         }
     ]
 }
