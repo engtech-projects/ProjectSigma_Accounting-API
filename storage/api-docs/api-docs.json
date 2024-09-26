@@ -1,0 +1,128 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Accounting Api",
+        "description": "API for managing Accounting Vouchers.",
+        "version": "0.0.1"
+    },
+    "paths": {
+        "/api/voucher": {
+            "post": {
+                "tags": [
+                    "Voucher"
+                ],
+                "summary": "Create a Voucher",
+                "operationId": "19590640f0a82f75c9c3a4071fefee3f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "voucher_no": {
+                                        "type": "string",
+                                        "example": "DV-202402-00001"
+                                    },
+                                    "payee": {
+                                        "type": "string",
+                                        "example": "Maybank"
+                                    },
+                                    "particulars": {
+                                        "type": "text",
+                                        "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                    },
+                                    "net_amount": {
+                                        "type": "integer",
+                                        "example": "5000"
+                                    },
+                                    "date_encoded": {
+                                        "type": "date:Y-m-d",
+                                        "example": "2024-10-11"
+                                    },
+                                    "voucher_date": {
+                                        "type": "date:Y-m-d",
+                                        "example": "2024-10-11"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Voucher has been created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "voucher_no": {
+                                            "type": "string",
+                                            "example": "DV-202402-00001"
+                                        },
+                                        "payee": {
+                                            "type": "string",
+                                            "example": "Maybank"
+                                        },
+                                        "particulars": {
+                                            "type": "text",
+                                            "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                        },
+                                        "net_amount": {
+                                            "type": "integer",
+                                            "example": "5000"
+                                        },
+                                        "date_encoded": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "voucher_date": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Voucher",
+            "description": "Voucher"
+        }
+    ]
+}
