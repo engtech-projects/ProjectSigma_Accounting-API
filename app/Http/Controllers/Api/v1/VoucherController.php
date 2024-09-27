@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Api\v1\Store\StoreVoucherRequest;
+use App\Http\Requests\Api\v1\Update\UpdateVoucherRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Voucher;
 use App\Http\Resources\VoucherResource;
@@ -18,8 +19,8 @@ use App\Http\Resources\VoucherResource;
  */
 class VoucherController extends Controller
 {
-
-		/**
+	
+	/**
 	 *     @OA\Get(
 	 *     path="/api/v1/voucher",
 	 *     summary="Get all vouchers",
@@ -45,7 +46,21 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 			   @OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
+	 * 		
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -84,7 +99,20 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 				@OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -98,7 +126,20 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 				@OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -120,7 +161,8 @@ class VoucherController extends Controller
     public function store(StoreVoucherRequest $request)
     {
 
-        Voucher::create(request->validated());
+        $voucher = Voucher::create(request->validated());
+		$voucher->Items()->createMany($request->line_items);
 
         return response()->json([
             'status' => JsonResponse::HTTP_CREATED,
@@ -154,7 +196,20 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 				@OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -196,7 +251,20 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 				@OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -210,7 +278,20 @@ class VoucherController extends Controller
 	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
 	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
 	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending")
+	 * 			   @OA\Property(property="status", type="string", example="pending"),
+	 * 				@OA\Property(
+	 * 					property="line_items", 
+	 * 					description="Business ID", 
+	 *                  type="array", 
+	 * 					collectionFormat="multi", 
+	 * 					@OA\Items(
+	 * 						type="object",
+	 * 						@OA\Property(property="account_id", type="int", example="10"),
+	 * 						@OA\Property(property="contact", type="string", example="Contact"),
+	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
+	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
+	 * 					),
+	 * 				)
 	 *         )
 	 *     ),
 	 *     @OA\Response(
@@ -229,19 +310,9 @@ class VoucherController extends Controller
 	* 
 	* )
 	*/
-    public function update(Request $request, Voucher $voucher)
+    public function update(UpdateVoucherRequest $request, Voucher $voucher)
     {
-		$validated = $request->validate([
-			'voucher_no' => ['required', 'string'],
-			'particulars' ['nullable|string'],
-			'net_amount' => ['required', 'numeric'],
-			'amount_in_words' => ['nullable', 'string'],
-			'date_encoded' => ['required','date','date_format:Y-m-d'],
-			'voucher_date' => ['required','date','date_format:Y-m-d'],
-			'status' => ['required', 'string']
-		]);
-
-		$voucher->update($validated);
+		$voucher->update($request->validated());
 
 		return response->json([
 			'message' => 'Voucher has been updated',

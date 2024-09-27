@@ -59,6 +59,32 @@
                                         "status": {
                                             "type": "string",
                                             "example": "pending"
+                                        },
+                                        "line_items": {
+                                            "description": "Business ID",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": "10"
+                                                    },
+                                                    "contact": {
+                                                        "type": "string",
+                                                        "example": "Contact"
+                                                    },
+                                                    "debit": {
+                                                        "type": "decimal",
+                                                        "example": "500.00"
+                                                    },
+                                                    "credit": {
+                                                        "type": "decimal",
+                                                        "example": "0.00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "collectionFormat": "multi"
                                         }
                                     },
                                     "type": "object"
@@ -122,6 +148,32 @@
                                     "status": {
                                         "type": "string",
                                         "example": "pending"
+                                    },
+                                    "line_items": {
+                                        "description": "Business ID",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "account_id": {
+                                                    "type": "integer",
+                                                    "example": "10"
+                                                },
+                                                "contact": {
+                                                    "type": "string",
+                                                    "example": "Contact"
+                                                },
+                                                "debit": {
+                                                    "type": "decimal",
+                                                    "example": "500.00"
+                                                },
+                                                "credit": {
+                                                    "type": "decimal",
+                                                    "example": "0.00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "collectionFormat": "multi"
                                     }
                                 },
                                 "type": "object"
@@ -163,6 +215,32 @@
                                         "status": {
                                             "type": "string",
                                             "example": "pending"
+                                        },
+                                        "line_items": {
+                                            "description": "Business ID",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": "10"
+                                                    },
+                                                    "contact": {
+                                                        "type": "string",
+                                                        "example": "Contact"
+                                                    },
+                                                    "debit": {
+                                                        "type": "decimal",
+                                                        "example": "500.00"
+                                                    },
+                                                    "credit": {
+                                                        "type": "decimal",
+                                                        "example": "0.00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "collectionFormat": "multi"
                                         }
                                     },
                                     "type": "object"
@@ -247,6 +325,32 @@
                                         "status": {
                                             "type": "string",
                                             "example": "pending"
+                                        },
+                                        "line_items": {
+                                            "description": "Business ID",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": "10"
+                                                    },
+                                                    "contact": {
+                                                        "type": "string",
+                                                        "example": "Contact"
+                                                    },
+                                                    "debit": {
+                                                        "type": "decimal",
+                                                        "example": "500.00"
+                                                    },
+                                                    "credit": {
+                                                        "type": "decimal",
+                                                        "example": "0.00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "collectionFormat": "multi"
                                         }
                                     },
                                     "type": "object"
@@ -310,6 +414,32 @@
                                     "status": {
                                         "type": "string",
                                         "example": "pending"
+                                    },
+                                    "line_items": {
+                                        "description": "Business ID",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "account_id": {
+                                                    "type": "integer",
+                                                    "example": "10"
+                                                },
+                                                "contact": {
+                                                    "type": "string",
+                                                    "example": "Contact"
+                                                },
+                                                "debit": {
+                                                    "type": "decimal",
+                                                    "example": "500.00"
+                                                },
+                                                "credit": {
+                                                    "type": "decimal",
+                                                    "example": "0.00"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "collectionFormat": "multi"
                                     }
                                 },
                                 "type": "object"
@@ -351,6 +481,32 @@
                                         "status": {
                                             "type": "string",
                                             "example": "pending"
+                                        },
+                                        "line_items": {
+                                            "description": "Business ID",
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "account_id": {
+                                                        "type": "integer",
+                                                        "example": "10"
+                                                    },
+                                                    "contact": {
+                                                        "type": "string",
+                                                        "example": "Contact"
+                                                    },
+                                                    "debit": {
+                                                        "type": "decimal",
+                                                        "example": "500.00"
+                                                    },
+                                                    "credit": {
+                                                        "type": "decimal",
+                                                        "example": "0.00"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "collectionFormat": "multi"
                                         }
                                     },
                                     "type": "object"

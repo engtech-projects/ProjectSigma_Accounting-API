@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
 			$table->unsignedBigInteger('voucher_id');
 			$table->foreign('voucher_id')->references('id')->on('voucher');
-			$table->unsignedBigInteger('account_id')->index();
+			$table->unsignedBigInteger('account_id');
+			$table->foreign('account_id')->references('account_id')->on('accounts');
 			$table->string('contact')->nullable();
 			$table->double('debit')->nullable();
 			$table->double('credit')->nullable();

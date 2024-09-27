@@ -14,6 +14,16 @@ class VoucherResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+			'voucher_no' => $this->voucher_no,
+			'payee' => $this->payee,
+			'particulars' => $this-> particulars,
+			'net_amount' => $this->net_amount,
+			'amount_in_words' => $this->amount_in_words,
+			'date_encoded' =>  $this->date_encoded,
+			'voucher_date' =>  $this->voucher_date,
+			'status' =>  $this->status,
+			'items' => $this->items
+		];
     }
 }

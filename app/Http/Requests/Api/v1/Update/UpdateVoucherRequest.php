@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Http\Requests\api\v1\store;
+namespace App\Http\Requests\api\v1\update;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Http\JsonResponse;
 
-class StoreVoucherRequest extends FormRequest
+class UpdateVoucherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -38,16 +35,5 @@ class StoreVoucherRequest extends FormRequest
 			'line_items.debit' => ['nullable', 'numeric'],
 			'line_items.credit' => ['nullable', 'numeric'],
         ];
-    }
-
-	protected function failedValidation(Validator $validator)
-    {
-        throw new ValidationException(
-            $validator, 
-            response()->json([
-                'message' => 'The given data is invalid', 
-                'errors' => $validator->errors()
-            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY)
-        );
     }
 }
