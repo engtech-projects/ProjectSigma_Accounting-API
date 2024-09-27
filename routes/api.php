@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('api/user', [AuthController::class, 'show']);
 
 Route::middleware('auth:api')->group(function () {
     Route::prefix('auth')->group(function () {

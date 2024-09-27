@@ -7,11 +7,75 @@
     },
     "paths": {
         "/api/v1/voucher": {
+            "get": {
+                "tags": [
+                    "Get a collection of vouchers"
+                ],
+                "summary": "Get all vouchers",
+                "operationId": "8fc8c195bc2159cb790c39ab68eb75aa",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer {token}"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voucher Collection",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "voucher_no": {
+                                            "type": "string",
+                                            "example": "DV-202402-00001"
+                                        },
+                                        "payee": {
+                                            "type": "string",
+                                            "example": "Maybank"
+                                        },
+                                        "particulars": {
+                                            "type": "text",
+                                            "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                        },
+                                        "net_amount": {
+                                            "type": "integer",
+                                            "example": "5000"
+                                        },
+                                        "date_encoded": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "voucher_date": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Voucher Creation"
+                    "Create a voucher"
                 ],
-                "summary": "Create a Voucher",
+                "summary": "Create a new voucher",
                 "operationId": "2f1eb250cb91fb36aeb0ddbc11009e5d",
                 "parameters": [
                     {
@@ -67,7 +131,195 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Voucher has been created",
+                        "description": "New Voucher",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "voucher_no": {
+                                            "type": "string",
+                                            "example": "DV-202402-00001"
+                                        },
+                                        "payee": {
+                                            "type": "string",
+                                            "example": "Maybank"
+                                        },
+                                        "particulars": {
+                                            "type": "text",
+                                            "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                        },
+                                        "net_amount": {
+                                            "type": "integer",
+                                            "example": "5000"
+                                        },
+                                        "date_encoded": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "voucher_date": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/voucher/{id}": {
+            "get": {
+                "tags": [
+                    "Get a voucher"
+                ],
+                "summary": "Get an existing voucher",
+                "operationId": "d8f6ff442c406409eb0866cf3768883f",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer {token}"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get an existing voucher",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "voucher_no": {
+                                            "type": "string",
+                                            "example": "DV-202402-00001"
+                                        },
+                                        "payee": {
+                                            "type": "string",
+                                            "example": "Maybank"
+                                        },
+                                        "particulars": {
+                                            "type": "text",
+                                            "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                        },
+                                        "net_amount": {
+                                            "type": "integer",
+                                            "example": "5000"
+                                        },
+                                        "date_encoded": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "voucher_date": {
+                                            "type": "date:Y-m-d",
+                                            "example": "2024-10-11"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "pending"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Update a voucher"
+                ],
+                "summary": "Update an existing voucher",
+                "operationId": "df471e8e5d290f7fc4415802d48a7ac9",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Authorization token",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "Bearer {token}"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "voucher_no": {
+                                        "type": "string",
+                                        "example": "DV-202402-00001"
+                                    },
+                                    "payee": {
+                                        "type": "string",
+                                        "example": "Maybank"
+                                    },
+                                    "particulars": {
+                                        "type": "text",
+                                        "example": "FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"
+                                    },
+                                    "net_amount": {
+                                        "type": "integer",
+                                        "example": "5000"
+                                    },
+                                    "date_encoded": {
+                                        "type": "date:Y-m-d",
+                                        "example": "2024-10-11"
+                                    },
+                                    "voucher_date": {
+                                        "type": "date:Y-m-d",
+                                        "example": "2024-10-11"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "pending"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Voucher has been updated",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -133,8 +385,20 @@
     },
     "tags": [
         {
-            "name": "Voucher Creation",
-            "description": "Voucher Creation"
+            "name": "Get a collection of vouchers",
+            "description": "Get a collection of vouchers"
+        },
+        {
+            "name": "Create a voucher",
+            "description": "Create a voucher"
+        },
+        {
+            "name": "Get a voucher",
+            "description": "Get a voucher"
+        },
+        {
+            "name": "Update a voucher",
+            "description": "Update a voucher"
         }
     ]
 }
