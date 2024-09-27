@@ -9,7 +9,7 @@
         "/api/v1/voucher": {
             "get": {
                 "tags": [
-                    "Get a collection of vouchers"
+                    "Get all vouchers"
                 ],
                 "summary": "Get all vouchers",
                 "operationId": "8fc8c195bc2159cb790c39ab68eb75aa",
@@ -385,8 +385,8 @@
     },
     "tags": [
         {
-            "name": "Get a collection of vouchers",
-            "description": "Get a collection of vouchers"
+            "name": "Get all vouchers",
+            "description": "Get all vouchers"
         },
         {
             "name": "Create a voucher",

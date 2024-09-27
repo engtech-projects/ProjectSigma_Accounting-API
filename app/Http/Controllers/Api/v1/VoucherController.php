@@ -23,7 +23,7 @@ class VoucherController extends Controller
 	 *     @OA\Get(
 	 *     path="/api/v1/voucher",
 	 *     summary="Get all vouchers",
-	 *     tags={"Get a collection of vouchers"},
+	 *     tags={"Get all vouchers"},
 	 * 	   @OA\Parameter(
 	 *         name="Authorization",
 	 *         in="header",
