@@ -34,7 +34,7 @@ class StoreVoucherRequest extends FormRequest
 			'status' => ['required', 'string'],
 			'line_items' => ['requried', 'min:1', 'array'],
 			'line_items.account_id' => ['required', 'numeric', 'min:0', 'exists:account, account_id'],
-			'line_items.debit.contact' => ['nullable'],
+			'line_items.contact' => ['nullable'],
 			'line_items.debit' => ['nullable', 'numeric'],
 			'line_items.credit' => ['nullable', 'numeric'],
         ];
