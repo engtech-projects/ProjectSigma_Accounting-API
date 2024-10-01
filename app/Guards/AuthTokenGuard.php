@@ -9,6 +9,7 @@ use Illuminate\Http\Client\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum;
+use Illuminate\Support\Facades\Log;
 
 class AuthTokenGuard implements Guard
 {
@@ -28,6 +29,7 @@ class AuthTokenGuard implements Guard
         if ($this->user !== null) {
             return $this->user;
         }
+		
         $token = $this->request->bearerToken();
         $response = Http::withToken($token)
             ->acceptJson()
