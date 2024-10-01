@@ -29,6 +29,7 @@ class StoreVoucherRequest extends FormRequest
 			'particulars' => ['nullable', 'string'],
 			'net_amount' => ['required', 'numeric'],
 			'payee' => ['nullable', 'string'],
+			'created_by' => ['nullable'],
 			'amount_in_words' => ['nullable', 'string'],
 			'date_encoded' => ['required','date','date_format:Y-m-d'],
 			'voucher_date' => ['required','date','date_format:Y-m-d'],
