@@ -25,6 +25,7 @@ class UpdateVoucherRequest extends FormRequest
         	'voucher_no' => ['required', 'string'],
 			'particulars' => ['nullable', 'string'],
 			'net_amount' => ['required', 'numeric'],
+			'payee' => ['nullable', 'string'],
 			'amount_in_words' => ['nullable', 'string'],
 			'date_encoded' => ['required','date','date_format:Y-m-d'],
 			'voucher_date' => ['required','date','date_format:Y-m-d'],
