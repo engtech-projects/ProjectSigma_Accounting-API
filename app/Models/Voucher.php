@@ -25,6 +25,7 @@ class Voucher extends Model
 		'particulars',
 		'net_amount',
 		'amount_in_words',
+		'created_by',
 		'date_encoded',
 		'voucher_date',
 		'status'
