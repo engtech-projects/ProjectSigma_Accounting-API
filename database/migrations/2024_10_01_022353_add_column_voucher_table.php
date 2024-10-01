@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('books', function (Blueprint $table) {
-        //     $table->unsignedBigInteger('account_group_id')->nullable()->after('symbol');
-        // });
+		Schema::table('voucher', function (Blueprint $table) {
+			$table->date('date_encoded');
+        });
+       
     }
 
     /**
@@ -21,8 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Schema::table('books', function (Blueprint $table) {
-        //     $table->dropColumn('account_group_id');
-        // });//
+		Schema::table('voucher', function (Blueprint $table) {
+			$table->dropColumn('date_encoded');
+        });
     }
 };
