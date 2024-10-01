@@ -33,10 +33,10 @@ class StoreVoucherRequest extends FormRequest
 			'voucher_date' => ['required','date','date_format:Y-m-d'],
 			'status' => ['required', 'string'],
 			'line_items' => ['required', 'min:1', 'array'],
-			'line_items.account_id' => ['required', 'numeric'],
-			'line_items.contact' => ['nullable'],
-			'line_items.debit' => ['nullable', 'numeric'],
-			'line_items.credit' => ['nullable', 'numeric'],
+			'line_items.*.account_id' => ['required', 'numeric'],
+			'line_items.*.contact' => ['nullable'],
+			'line_items.*.debit' => ['nullable', 'numeric'],
+			'line_items.*.credit' => ['nullable', 'numeric'],
         ];
     }
 
