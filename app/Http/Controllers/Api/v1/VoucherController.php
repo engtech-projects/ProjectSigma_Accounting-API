@@ -166,7 +166,9 @@ class VoucherController extends Controller
 
         return response()->json([
             'status' => JsonResponse::HTTP_CREATED,
+			'voucher' => new VoucherResource($voucher),
             'message' => "New Voucher",
+
         ], JsonResponse::HTTP_CREATED);
     }
 
