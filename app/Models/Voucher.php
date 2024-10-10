@@ -28,7 +28,11 @@ class Voucher extends Model
 		// 'created_by',
 		'date_encoded',
 		'voucher_date',
-		'status'
+		'status',
+		// added columns
+		'voucher_type',
+		'check_no',
+		'account_id'
     ];
 
 	
