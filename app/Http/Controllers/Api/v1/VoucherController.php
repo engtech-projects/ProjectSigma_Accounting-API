@@ -72,7 +72,9 @@ class VoucherController extends Controller
 	*/
     public function index()
     {
-		return VoucherResource::collection(Voucher::all());
+		return response()->json([
+			'vouchers' => VoucherResource::collection(Voucher::all())
+		]);
     }
 
 	/**

@@ -16,11 +16,6 @@ class Voucher extends Model
 	protected $table = "voucher";
 	protected $primaryKey = "id";
 
-	public const STATUS_PENDING = 'pending';
-	public const STATUS_DRAFT = 'draft';
-	public const STATUS_APPROVED = 'approved';
-	public const STATUS_REJECTED = 'rejected';
-
     protected $fillable = [
 		'voucher_no',
 		'payee',
