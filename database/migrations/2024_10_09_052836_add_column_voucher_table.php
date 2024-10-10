@@ -22,7 +22,6 @@ return new class extends Migration
 
 			if (!Schema::hasColumn('voucher', 'account_id')) {
 				$table->unsignedBigInteger('account_id');
-				$table->foreign('account_id')->references('account_id')->on('accounts');
             }
 
 			
