@@ -21,7 +21,8 @@ return new class extends Migration
             }
 
 			if (!Schema::hasColumn('voucher', 'account_id')) {
-				$table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
+				$table->unsignedBigInteger('account_id');
+				$table->foreign('account_id')->references('account_id')->on('accounts');
             }
 
 			
