@@ -32,6 +32,7 @@ class UpdateVoucherRequest extends FormRequest
 			'voucher_date' => ['required','date','date_format:Y-m-d'],
 			'status' => ['required', 'string'],
 			'account_id' => ['required', 'numeric'],
+			'voucher_type' => ['required', 'string'],
 			'line_items' => ['required', 'min:1', 'array'],
 			'line_items.*.account_id' => ['required', 'numeric'],
 			'line_items.*.contact' => ['nullable'],

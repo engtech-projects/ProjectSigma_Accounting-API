@@ -223,7 +223,7 @@ class VoucherController extends Controller
 	*/
     public function show(Voucher $voucher)
     {
-		return response->json([
+		return response()->json([
 			'message' => 'Resource',
 			'voucher' => new VoucherResource($voucher)
 		]);

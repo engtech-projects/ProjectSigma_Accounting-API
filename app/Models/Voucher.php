@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\VoucherType;
+
 
 class Voucher extends Model
 {
@@ -32,13 +34,15 @@ class Voucher extends Model
 		// added columns
 		'voucher_type',
 		'check_no',
-		'account_id'
+		'account_id',
+		'voucher_type',
     ];
 
 	
     protected $casts = [
         "date_encoded" => 'date:Y-m-d',
         "voucher_date" => 'date:Y-m-d',
+		"voucher_type" => VoucherType::class
     ];
 
 	public function getExpenseAccount()
