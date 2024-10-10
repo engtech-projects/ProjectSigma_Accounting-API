@@ -24,6 +24,7 @@ class VoucherResource extends JsonResource
 			'date_encoded' =>  $this->date_encoded,
 			'voucher_date' =>  $this->voucher_date,
 			'status' =>  $this->status,
+			'account' => $this->getExpenseAccount(),
 			'items' => $this->items
 		];
     }

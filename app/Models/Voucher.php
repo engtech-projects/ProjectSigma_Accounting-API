@@ -41,6 +41,11 @@ class Voucher extends Model
         "voucher_date" => 'date:Y-m-d',
     ];
 
+	public function getExpenseAccount()
+	{
+		return Account::findOrFail($this->account_id);
+	}
+
 	public function Items(): HasMany
     {
         return $this->hasMany(VoucherLineItems::class);
