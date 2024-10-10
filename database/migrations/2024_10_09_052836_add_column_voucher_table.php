@@ -21,7 +21,7 @@ return new class extends Migration
             }
 
 			if (!Schema::hasColumn('voucher', 'account_id')) {
-				$table->foreignId('account_id')->references('account_id')->on('accounts')->onDelete('cascade');
+				$table->foreignId('account_id')->constrained('accounts')->onDelete('cascade');
             }
 
 			
