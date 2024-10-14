@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum VoucherStatus: string
 {
-    case DISBURSEMENT = "disbursement";
+    case DRAFT = "disbursement";
     case CASH = "cash";
 }

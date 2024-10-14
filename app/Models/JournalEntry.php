@@ -11,4 +11,8 @@ class JournalEntry extends Model
 
 	protected $table = "journal_entry";
 	protected $primaryKey = "id";
+
+	protected $fillable = [];
+
+	public function 
 }
