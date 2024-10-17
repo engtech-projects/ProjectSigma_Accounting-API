@@ -12,12 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-		$this->call([
-			AccountTypeSeeder::class,
-			AccountSeeder::class,
-			AccountGroupSeeder::class,
-			BookSeeder::class,
-			PostingPeriodSeeder::class,
-		]);
+		// $this->call([
+		// 	AccountTypeSeeder::class,
+		// 	AccountSeeder::class,
+		// 	AccountGroupSeeder::class,
+		// 	BookSeeder::class,
+		// 	PostingPeriodSeeder::class,
+		// ]);
     }
 }
