@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
 			AccountGroupSeeder::class,
 			BookSeeder::class,
 			PostingPeriodSeeder::class,
-			// StakeholderSeeder::class
 		]);
     }
 }
