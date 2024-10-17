@@ -4,331 +4,95 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Api\v1\Store\StoreVoucherRequest;
-use App\Http\Requests\Api\v1\Update\UpdateVoucherRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use App\Models\Voucher;
+use App\Models\VoucherDetails;
 use App\Http\Resources\VoucherResource;
+use App\Http\Requests\StoreRequest\VoucherStoreRequest;
+use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
+// use App\Models\VoucherDetails;
 
-/**
- * @OA\Info(
- *    title="Accounting Api",
- *    version="0.0.1",
- *    description="API for managing Accounting Vouchers."
- * )
- */
 class VoucherController extends Controller
 {
-	
-	/**
-	 *     @OA\Get(
-	 *     path="/api/v1/voucher",
-	 *     summary="Get all vouchers",
-	 *     tags={"Get all vouchers"},
-	 * 	   @OA\Parameter(
-	 *         name="Authorization",
-	 *         in="header",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="string",
-	 *             default="Bearer {token}"
-	 *         ),
-	 *         description="Authorization token"
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Voucher Collection",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 			   @OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 * 		
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="unauthorized"
-	 *     )
-	* 
-	* )
-	*/
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-		return response()->json([
-			'vouchers' => VoucherResource::collection(Voucher::all())
-		]);
+        return response()->json(VoucherResource::collection(Voucher::all()));
     }
 
-	/**
-	 *     @OA\Post(
-	 *     path="/api/v1/voucher",
-	 *     summary="Create a new voucher",
-	 *     tags={"Create a voucher"},
-	 * 	   @OA\Parameter(
-	 *         name="Authorization",
-	 *         in="header",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="string",
-	 *             default="Bearer {token}"
-	 *         ),
-	 *         description="Authorization token"
-	 *     ),
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 				@OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=201,
-	 *         description="New Voucher",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 				@OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="unauthorized"
-	 *     ),
-	 * 	   @OA\Response(
-	 *		   response=422,
-	*		   description="Validation Error",
-	*		   @OA\JsonContent(
-	*		       type="object",
-	*			   @OA\Property(property="message", type="string"),
-	*			   @OA\Property(property="errors", type="object")
-	*			)
-	*		)
-	* 
-	* )
-	*/
-    public function store(StoreVoucherRequest $request)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-
-        $voucher = Voucher::create($request->validated());
-		$voucher->Items()->createMany($request->line_items);
-
-        return response()->json([
-            'status' => JsonResponse::HTTP_CREATED,
-			'voucher' => new VoucherResource($voucher),
-            'message' => "New Voucher",
-
-        ], JsonResponse::HTTP_CREATED);
+        //
     }
 
-	/**
-	 *     @OA\Get(
-	 *     path="/api/v1/voucher/{id}",
-	 *     summary="Get an existing voucher",
-	 *     tags={"Get a voucher"},
-	 * 	   @OA\Parameter(
-	 *         name="Authorization",
-	 *         in="header",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="string",
-	 *             default="Bearer {token}"
-	 *         ),
-	 *         description="Authorization token"
-	 *     ),
-	 *     @OA\Response(
-	 *         response=200,
-	 *         description="Get an existing voucher",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 				@OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="unauthorized"
-	 *     )
-	* 
-	* )
-	*/
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(VoucherStoreRequest $request)
+    {
+        $voucher = Voucher::create($request->validated());
+		$voucher->details()->createMany($request->details);
+
+		return response()->json(new VoucherResource($voucher), 201);
+    }
+
+    /**voucher
+     * Display the specified resource.
+     */
     public function show(Voucher $voucher)
     {
-		return response()->json([
-			'message' => 'Resource',
-			'voucher' => new VoucherResource($voucher)
-		]);
+		return response()->json(new VoucherResource($voucher), 201);	
     }
 
-	/**
-	 *     @OA\Patch(
-	 *     path="/api/v1/voucher/{id}",
-	 *     summary="Update an existing voucher",
-	 *     tags={"Update a voucher"},
-	 * 	   @OA\Parameter(
-	 *         name="Authorization",
-	 *         in="header",
-	 *         required=true,
-	 *         @OA\Schema(
-	 *             type="string",
-	 *             default="Bearer {token}"
-	 *         ),
-	 *         description="Authorization token"
-	 *     ),
-	 *     @OA\RequestBody(
-	 *         required=true,
-	 *         @OA\JsonContent(
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 				@OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=201,
-	 *         description="Voucher has been updated",
-	 *         @OA\JsonContent(
-	 *             type="object",
-	 *             @OA\Property(property="voucher_no", type="string", example="DV-202402-00001"),
-	 * 		   	   @OA\Property(property="payee", type="string", example="Maybank"),
-	 *             @OA\Property(property="particulars", type="text", example="FORMATTED BY: PAYMENT FOR [*MODE OF PAYROLL], [*MODE OF PAYROLL RELEASE] for the Period Covered: [*DATE OF PAYROLL PERIOD COVERED]"),
-	 *             @OA\Property(property="net_amount", type="integer", example="5000"),
-	 * 			   @OA\Property(property="date_encoded", type="date:Y-m-d", example="2024-10-11"),
-	 * 	           @OA\Property(property="voucher_date", type="date:Y-m-d", example="2024-10-11"),
-	 * 			   @OA\Property(property="status", type="string", example="pending"),
-	 * 				@OA\Property(
-	 * 					property="line_items", 
-	 * 					description="Business ID", 
-	 *                  type="array", 
-	 * 					collectionFormat="multi", 
-	 * 					@OA\Items(
-	 * 						type="object",
-	 * 						@OA\Property(property="account_id", type="int", example="10"),
-	 * 						@OA\Property(property="contact", type="string", example="Contact"),
-	 * 						@OA\Property(property="debit", type="decimal", example="500.00"),
-	 * 						@OA\Property(property="credit", type="decimal", example="0.00"),
-	 * 					),
-	 * 				)
-	 *         )
-	 *     ),
-	 *     @OA\Response(
-	 *         response=401,
-	 *         description="unauthorized"
-	 *     ),
-	 * 	   @OA\Response(
-	 *		   response=422,
-	*		   description="Validation Error",
-	*		   @OA\JsonContent(
-	*		       type="object",
-	*			   @OA\Property(property="message", type="string"),
-	*			   @OA\Property(property="errors", type="object")
-	*			)
-	*		)
-	* 
-	* )
-	*/
-    public function update(UpdateVoucherRequest $request, Voucher $voucher)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
     {
-		$voucher->update($request->validated());
 
-		return response->json([
-			'message' => 'Voucher has been updated',
-			'voucher' => new VoucherResource($voucher)
-		]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(VoucherUpdateRequest $request, Voucher $voucher)
+    {
+        $voucher->update($request->validated());
+
+		// Get current voucher details
+		$existingIds = $voucher->details()->pluck('id')->toArray();
+
+		$voucherDetails = $request->details;
+		$incomingIds = [];
+
+		foreach ($voucherDetails as $voucherDetail) 
+		{
+			$detail = $voucher->details()->updateOrCreate($voucherDetail);
+			$incomingIds[] = $detail->id;
+		}
+		// Remove voucher details that are no longer present
+		$toDelete = array_diff($existingIds, $incomingIds);
+		$voucher->details()->whereIn('id', $toDelete)->delete();
+		return response()->json(new VoucherResource($voucher), 201);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy()
+    public function destroy(string $id)
     {
-       
+        //
     }
+
+	// api/voucher/number/{dv or cv}
+	public function voucherNo($prefix = 'DV')
+	{
+		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
+	}
 }

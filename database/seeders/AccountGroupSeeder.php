@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\AccountGroup;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\AccountGroup;
+use App\Models\Account;
 
 class AccountGroupSeeder extends Seeder
 {
@@ -13,19 +14,23 @@ class AccountGroupSeeder extends Seeder
      */
     public function run(): void
     {
-        $accountGroupSeed = [
-            [
-                'account_group_name' => 'Journal'
-            ],
-            [
-                'account_group_name' => 'Payroll'
-            ],
-        ];
+		$disbursementAccounts = Account::whereHas('accountType', function($query) {
+			$query->where('account_category', 'expenses');
+		})->get();
 
-        foreach ($accountGroupSeed as $accountGroup) {
-            AccountGroup::create([
-                'account_group_name' => $accountGroup['account_group_name']
-            ]);
-        }
+		$cashAccounts = Account::whereHas('accountType', function($query) {
+			$query->whereIn('account_category', ['asset','income', 'revenue']);
+		})->get();
+
+        $disbursement = AccountGroup::create(['name' => 'disbursement']);
+		$cash = AccountGroup::create(['name' => 'cash']);
+		
+		foreach($disbursementAccounts as $dv) {
+			$disbursement->accounts()->sync($dv->id, false);
+		}
+
+		foreach($cashAccounts as $cv) {
+			$cash->accounts()->sync($cv->id, false);
+		}
     }
 }

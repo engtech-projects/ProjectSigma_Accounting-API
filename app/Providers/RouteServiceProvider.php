@@ -2,23 +2,11 @@
 
 namespace App\Providers;
 
-use App\Exceptions\ResourceNotFound;
-use App\Models\{
-    AccountType,
-    StakeHolderType,
-    StakeHolderGroup,
-    Transaction
-};
-use App\Models\Account;
-use App\Models\AccountGroup;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-
-
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -40,23 +28,9 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
-        Route::bind('type', function ($value) {
-            return AccountType::findOrFail($value);
-        });
-
-        Route::bind('stakeholder-group', function ($value) {
-            return StakeHolderGroup::findOrFail($value);
-        });
-
-        Route::bind('stakeholder-type', function ($value) {
-            return StakeHolderType::findOrFail($value);
-        });
-
-
-
         $this->routes(function () {
             Route::middleware('api')
-                ->prefix('api/v1/')
+                ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')

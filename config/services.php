@@ -25,7 +25,7 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
-    'api' => [
+	'api' => [
         'HRSM_URL' => env('HRSM_API')
     ],
     'url' => [
@@ -34,7 +34,7 @@ return [
 
     ],
 
-    'key' =>[
+	'key' =>[
         'app_key' => env('APP_KEY')
     ],
 

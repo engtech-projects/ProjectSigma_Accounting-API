@@ -2,71 +2,40 @@
 
 namespace Database\Seeders;
 
-use App\Models\Account;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Account;
+use Illuminate\Support\Facades\DB;
+use League\Csv\Reader; 
+use Carbon\Carbon;
 
 class AccountSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
-
-    private $accountSeeds = [
-        [
-            'account_number' => "1000",
-            'account_name' => "CURRENT ASSETS",
-            'status' => "active",
-            'type_id' => 1,
-        ],
-
-
-        [
-            'account_number' => "1005",
-            'account_name' => "CASH AND CASH EQUIVALENTS	CASH AND CASH EQUIVALENTS",
-            'status' => "active",
-            'type_id' => 5,
-        ],
-
-        [
-            'account_number' => "1010",
-            'account_name' => "Cash on Hand Cash on Hand",
-            'status' => "active",
-            'type_id' => 2,
-            'type' => "L",
-        ],
-
-        [
-            'account_number' => "1015",
-            'account_name' => "Check and Other Cash Items (COCI)	Check and Other Cash Items (COCI)",
-            'status' => "active",
-            'type_id' => 1,
-            'type' => "L",
-        ],
-        [
-            'account_number' => "1020",
-            'account_name' => "Petty Cash Fund	Petty Cash Fund",
-            'status' => "active",
-            'type_id' => 3,
-            'type' => "L"
-        ],
-        [
-            'account_number' => "1025",
-            'account_name' => "Cash in Bank (EWB)	Cash in Bank (EWB)",
-            'status' => "active",
-            'type_id' => 4,
-            'type' => "L"
-        ],
-    ];
     public function run(): void
     {
-        foreach ($this->accountSeeds as $account) {
-            Account::create([
-                'account_number' => $account['account_number'],
-                'account_name' => $account['account_name'],
-                'status' => $account['status'],
-                'type_id' => $account['type_id'],
-            ]);
+        // Path to the CSV file
+        $file = database_path('seeders/accounts.csv');
+
+        // Open the CSV file
+        $csv = Reader::createFromPath($file, 'r');
+        $csv->setHeaderOffset(0); // Use the first row as the header
+
+		foreach ($csv as $record) {
+            Account::updateOrCreate(
+                ['id' => $record['id']], // Prevent duplicate records
+                [
+                    'account_type_id'     => $record['account_type_id'],
+                    'account_number'      => $record['account_number'],
+                    'account_name'        => $record['account_name'],
+                    'account_description' => $record['account_description'],
+                    'bank_reconciliation' => $record['bank_reconciliation'],
+                    'is_active'           => $record['is_active'],
+                    'statement'           => $record['statement']
+                ]
+            );
         }
     }
 }

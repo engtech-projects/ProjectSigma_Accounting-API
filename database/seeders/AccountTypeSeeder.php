@@ -2,54 +2,35 @@
 
 namespace Database\Seeders;
 
-use App\Models\AccountType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\AccountType;
+use Illuminate\Support\Facades\DB;
+use League\Csv\Reader; 
+use Carbon\Carbon;
 
 class AccountTypeSeeder extends Seeder
 {
-    protected $typeSeeds = [
-        [
-            'account_type' => 'Account Receivable',
-            'account_category' => 'asset',
-            'balance_type' =>  'debit',
-            'notation' => '+'
-        ],
-        [
-            'account_type' => 'Equity',
-            'account_category' => 'equity',
-            'balance_type' =>  'credit',
-            'notation' => '-'
-        ],
-        [
-            'account_type' => 'Other Expense',
-            'account_category' => 'expenses',
-            'balance_type' =>  'debit',
-            'notation' => '+'
-        ],
-        [
-            'account_type' => 'Income',
-            'account_category' => 'income',
-            'balance_type' =>  'credit',
-            'notation' => '-'
-        ],
-        [
-            'account_type' => 'Other Current Liabilty',
-            'account_category' => 'liabilities',
-            'balance_type' =>  'credit',
-            'notation' => '-'
-        ],
-    ];
-
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        foreach ($this->typeSeeds as $value) {
-            AccountType::create([
-                'account_type' => $value['account_type'],
-                'account_category' => $value['account_category'],
-                'balance_type' => $value['balance_type'],
-                'notation' => $value['notation']
-            ]);
+        $file = database_path('seeders/account_types.csv');
+		// Open the CSV file
+        $csv = Reader::createFromPath($file, 'r');
+        $csv->setHeaderOffset(0);
+
+        foreach ($csv as $record) {
+            AccountType::updateOrCreate(
+                ['id' => $record['id']],
+                [
+                    'account_type' => $record['account_type'],
+                    'account_category'  => $record['account_category'],
+                    'balance_type' => $record['balance_type'],
+                    'notation' => $record['notation']
+                ]
+            );
         }
     }
 }

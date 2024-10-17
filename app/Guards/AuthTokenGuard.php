@@ -50,7 +50,5 @@ class AuthTokenGuard implements Guard
         }
         return $this->user;
     }
-    public function validate(array $credentials = [])
-    {
-    }
+    public function validate(array $credentials = []){}
 }

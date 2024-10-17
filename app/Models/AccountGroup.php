@@ -2,48 +2,27 @@
 
 namespace App\Models;
 
-use App\Models\Pivot\AccountGroupBook;
-use App\Models\Pivot\AccountHasGroup;
-use App\Traits\HasBook;
-use App\Traits\HasGroup;
-use App\Traits\HasAccount;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AccountGroup extends Model
 {
-    use HasFactory, SoftDeletes;
-    protected $table = "account_groups";
-    protected $primaryKey = "account_group_id";
+    use HasFactory;
 
-    protected $fillable = [
-        "account_group_name",
-        "type_id"
+	protected $table = 'account_group';
+
+	protected $fillable = [
+		'name',
     ];
 
-    // public function accounts(): HasMany
-    // {
-    //     return $this->hasMany(Account::class, 'account_has_group', 'account_group_id', 'account_id')
-    //         ->using(AccountHasGroup::class)
-    //         ->withPivot(['account_id', 'account_group_id'])
-    //         ->withTimestamps();
-    // }
+	public $timestamps = false;
 
+	/**
+    * The tags that belong to the task.
+    */
     public function accounts(): BelongsToMany
     {
-        return $this->belongsToMany(Account::class, 'account_has_group', 'account_group_id', 'account_id')
-            ->using(AccountHasGroup::class)
-            ->withPivot(['account_id', 'account_group_id'])
-            ->withTimestamps();
+        return $this->belongsToMany(Account::class, 'account_group_accounts', 'account_group_id', 'account_id');
     }
-    // public function books(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Book::class, 'account_group_id', 'account_group_id');
-    //         ->using(AccountGroup::class)
-    //         ->withPivot(['account_group_id', 'book_id'])
-    //         ->withTimestamps();
-    // }
 }
