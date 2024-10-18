@@ -13,8 +13,8 @@ class StakeHolderSeeder extends Seeder
      */
     public function run(): void
     {
-        StakeHolder::create(['name' => 'Maybank']);
-		StakeHolder::create(['name' => 'DYSEKCO ENTERPRISES CORPORATION']);
-		StakeHolder::create(['name' => '22NH0031-MEJVEC']);
+        StakeHolder::updateOrCreate(['name' => 'Maybank']);
+		StakeHolder::updateOrCreate(['name' => 'DYSEKCO ENTERPRISES CORPORATION']);
+		StakeHolder::updateOrCreate(['name' => '22NH0031-MEJVEC']);
     }
 }

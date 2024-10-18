@@ -22,8 +22,8 @@ class AccountGroupSeeder extends Seeder
 			$query->whereIn('account_category', ['asset','income', 'revenue']);
 		})->get();
 
-        $disbursement = AccountGroup::create(['name' => 'disbursement']);
-		$cash = AccountGroup::create(['name' => 'cash']);
+        $disbursement = AccountGroup::updateOrCreate(['name' => 'disbursement']);
+		$cash = AccountGroup::updateOrCreate(['name' => 'cash']);
 		
 		foreach($disbursementAccounts as $dv) {
 			$disbursement->accounts()->sync($dv->id, false);

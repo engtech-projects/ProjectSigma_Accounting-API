@@ -15,13 +15,13 @@ class BookSeeder extends Seeder
     public function run(): void
     {
 
-        Book::create([ 
+        Book::updateOrCreate([ 
 			'name' => 'disbursement',
 			'code' => 'DV',
 			'account_group_id' => 1
 		]);
 
-		Book::create([ 
+		Book::updateOrCreate([ 
 			'name' => 'cash',
 			'code' => 'CV',
 			'account_group_id' => 2

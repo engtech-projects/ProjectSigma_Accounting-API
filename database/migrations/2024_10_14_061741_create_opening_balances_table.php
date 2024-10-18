@@ -16,7 +16,7 @@ return new class extends Migration
 			$table->decimal('opening_balance', 10, 2);
             $table->decimal('remaining_balance', 10, 2);
 			$table->foreignId('account_id')->constrained('accounts');
-			$table->foreignId('period_id')->constrained('posting_periods');
+			$table->foreignId('posting_period_id')->constrained('posting_periods');
 			$table->softDeletes();
             $table->timestamps();
         });

@@ -17,7 +17,7 @@ class PostingPeriodSeeder extends Seeder
     {
 		$currentDate = Carbon::now();
 
-        $postingPeriod = PostingPeriod::create([
+        $postingPeriod = PostingPeriod::updateOrCreate([
 			'period_start' => $currentDate->copy()->startOfYear(),
 			'period_end' => $currentDate->copy()->endOfYear(),
 		]);
@@ -28,7 +28,7 @@ class PostingPeriodSeeder extends Seeder
 			$startOfMonth = Carbon::createFromDate($currentDate->year, $month, 1);
             $endOfMonth = $startOfMonth->copy()->endOfMonth();
 
-			$postingPeriod->periods()->create([
+			$postingPeriod->periods()->updateOrCreate([
 				
 				'start_date' => $startOfMonth,
                 'end_date' => $endOfMonth,
