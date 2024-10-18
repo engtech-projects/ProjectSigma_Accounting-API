@@ -14,7 +14,7 @@ class StakeHolderController extends Controller
      */
     public function index()
     {
-        return StakeholderResource::collection(StakeHolder::all());
+        return StakeHolderResource::collection(StakeHolder::all());
     }
 
     /**
