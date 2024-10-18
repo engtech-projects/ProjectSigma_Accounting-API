@@ -20,7 +20,8 @@ class VoucherController extends Controller
      */
     public function index()
     {
-        return response()->json(VoucherResource::collection(Voucher::all()));
+		$vouchers = Voucher::all();
+        return response()->json(VoucherResource::collection($vouchers));
     }
 
     /**
@@ -47,7 +48,17 @@ class VoucherController extends Controller
      */
     public function show(Voucher $voucher)
     {
-		return response()->json(new VoucherResource($voucher), 201);	
+		
+		return response()->json(
+			new VoucherResource(
+				$voucher->load([
+					'stakeholder', 
+					'account', 
+					'book', 
+					'details'
+				])
+			), 201
+		);
     }
 
     /**

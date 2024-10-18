@@ -75,4 +75,6 @@ class Voucher extends Model
     {
         return $this->belongsTo(Stakeholder::class);
     }
+
+	// public function scope
 }

@@ -36,7 +36,7 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('account-group', AccountGroupController::class);
 	Route::resource('books', BookController::class);
 	Route::resource('posting-period', PostingPeriodController::class);
-	Route::resource('stakeholder', StakeholderController::class);
+	Route::resource('stakeholders', StakeholderController::class);
 	Route::resource('voucher', VoucherController::class);
 
 	Route::get('voucher/number/{prefix}', [VoucherController::class, 'voucherNo']);
