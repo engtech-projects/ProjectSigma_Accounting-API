@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\v1\{
 	BookController,
 	StakeHolderController,
 	AccountGroupController,
+	JournalEntryController,
 };
 
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('posting-period', PostingPeriodController::class);
 	Route::resource('stakeholders', StakeHolderController::class);
 	Route::resource('voucher', VoucherController::class);
+	Route::resource('journal', JournalEntryController::class);
 
 	Route::get('voucher/number/{prefix}', [VoucherController::class, 'voucherNo']);
 });

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use App\Http\Resources\JournalEntryResource;
+use App\Models\JournalEntry;
 
 class JournalEntryController extends Controller
 {
@@ -14,7 +16,8 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        //
+        $journalEntries = JournalEntry::all();
+        return response()->json(JournalEntryResource::collection($journalEntries));
     }
 
     /**
