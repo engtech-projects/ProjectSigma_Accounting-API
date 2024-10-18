@@ -4,17 +4,17 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\StakeholderResource;
-use App\Models\Stakeholder;
+use App\Http\Resources\StakeHolderResource;
+use App\Models\StakeHolder;
 
-class StakeholderController extends Controller
+class StakeHolderController extends Controller
 {
        /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return StakeholderResource::collection(Stakeholder::all());
+        return StakeholderResource::collection(StakeHolder::all());
     }
 
     /**
@@ -36,9 +36,9 @@ class StakeholderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Stakeholder $stakeholder)
+    public function show(StakeHolder $stakeholder)
     {	
-        return response()->json(new StakeholderResource($stakeholder));
+        return response()->json(new StakeHolderResource($stakeholder));
     }
 
     /**

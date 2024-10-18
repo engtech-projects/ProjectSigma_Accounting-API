@@ -4,17 +4,17 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Stakeholder;
+use App\Models\StakeHolder;
 
-class StakeholderSeeder extends Seeder
+class StakeHolderSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Stakeholder::create(['name' => 'Maybank']);
-		Stakeholder::create(['name' => 'DYSEKCO ENTERPRISES CORPORATION']);
-		Stakeholder::create(['name' => '22NH0031-MEJVEC']);
+        StakeHolder::create(['name' => 'Maybank']);
+		StakeHolder::create(['name' => 'DYSEKCO ENTERPRISES CORPORATION']);
+		StakeHolder::create(['name' => '22NH0031-MEJVEC']);
     }
 }
