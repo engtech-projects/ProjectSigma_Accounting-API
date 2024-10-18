@@ -19,7 +19,7 @@ class VoucherResource extends JsonResource
 			'check_no' => $this->check_no,
 			'voucher_no' => $this->voucher_no,
 			'stakeholder_id' => $this->stakeholder_id,
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeHolder')),
+			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
 			'particulars' => $this->particulars,
 			'net_amount' => $this->net_amount,
 			'amount_in_words' => $this->amount_in_words,

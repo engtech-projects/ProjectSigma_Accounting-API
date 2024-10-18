@@ -71,7 +71,7 @@ class Voucher extends Model
         return $this->belongsTo(Book::class);
     }
 
-	public function stakeHolder(): BelongsTo
+	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
     }

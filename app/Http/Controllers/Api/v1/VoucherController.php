@@ -21,7 +21,7 @@ class VoucherController extends Controller
     public function index()
     {
 		$vouchers = Voucher::all();
-        return response()->json(VoucherResource::collection($vouchers->load(['account', 'stakeHolder'])));
+        return response()->json(VoucherResource::collection($vouchers->load(['account','stakeholder'])));
     }
 
     /**
