@@ -11,7 +11,7 @@ class JournalStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,20 @@ class JournalStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'journal_no' => ['required', 'string'],
+            'voucher_id' => ['nullable', 'string'],
+			'status' => ['required', 'string'],
+			'particulars' => ['nullable', 'string'],		
+			'journal_date' => ['required','date','date_format:Y-m-d'],
+			'reference_no' => ['nullable', 'string'],
+			'remarks' => ['nullable'],
+
+			'details' => ['required', 'min:1', 'array'],
+			'details.*.account_id' => ['required', 'numeric'],
+			'details.*.stakeholder_id' => ['required', 'numeric'],
+			'details.*.debit' => ['nullable', 'numeric'],
+			'details.*.credit' => ['nullable', 'numeric'],
+			'details.*.description' => ['nullable'],
         ];
     }
 }

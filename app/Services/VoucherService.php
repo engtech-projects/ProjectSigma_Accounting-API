@@ -13,7 +13,7 @@ class VoucherService
 {
 	public function create(array $attributes)
 	{
-		DB::beginTransaction(); // Start transaction
+		DB::beginTransaction();
 
 		try {
 			$postingPeriodId = PostingPeriod::current()->pluck('id')->first();
@@ -59,11 +59,6 @@ class VoucherService
 			DB::rollBack(); // Rollback if something fails
 			return response()->json($e, 500);
 		}
-	}
-
-	public function update(array $attributes)
-	{
-		
 	}
 
 }

@@ -30,7 +30,7 @@ class VoucherDetails extends Model
         return $this->belongsTo(Account::class);
     }
 
-	public function stakeHolder(): BelongsTo
+	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
     }

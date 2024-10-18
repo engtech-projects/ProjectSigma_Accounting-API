@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JournalEntry extends Model
 {
@@ -24,13 +25,17 @@ class JournalEntry extends Model
 	];
 
 	protected $casts = [
-        "date_encoded" => 'date:Y-m-d',
         "journal_date" => 'date:Y-m-d',
     ];
 
 	public function details(): HasMany
     {
         return $this->hasMany(JournalDetails::class);
+    }
+
+	public function voucher(): BelongsTo
+    {
+        return $this->belongsTo(Voucher::class, 'voucher_id');
     }
 
 }

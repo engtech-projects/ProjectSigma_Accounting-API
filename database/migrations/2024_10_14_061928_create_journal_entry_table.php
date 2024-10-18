@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 			$table->string('journal_no');
 			$table->date('journal_date');
-			$table->foreignId('voucher_id')->constrained('voucher')->nullable();
+			$table->foreignId('voucher_id')->nullable()->constrained('voucher');
 			$table->enum('status', ['draft', 'void', 'open', 'posted'])->default('draft');
             $table->timestamps();
         });

@@ -8,6 +8,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
+use App\Models\PostingPeriod;
+use App\Models\Period;
+use App\Http\Requests\StoreRequest\JournalStoreRequest;
+use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
 
 class JournalEntryController extends Controller
 {
@@ -16,7 +20,7 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        $journalEntries = JournalEntry::all();
+        $journalEntries = JournalEntry::latest('id')->get();
         return response()->json(JournalEntryResource::collection($journalEntries));
     }
 
@@ -31,9 +35,19 @@ class JournalEntryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JournalStoreRequest $request)
     {
-        //
+		$postingPeriodId = PostingPeriod::current()->pluck('id')->first();
+		$periodId = Period::where('posting_period_id', $postingPeriodId)->current()->pluck('id')->first();
+		
+		$validated = $request->validated();
+		$validated['posting_period_id'] = $postingPeriodId;
+		$validated['period_id'] = $periodId;
+		
+        $journalEntry = JournalEntry::create($validated);
+
+		$journalEntry->details()->createMany($request->details);
+		return response()->json(new JournalEntryResource($journalEntry->load('details')), 201);
     }
 
     /**
@@ -55,7 +69,7 @@ class JournalEntryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JournalUpdateRequest $request, string $id)
     {
         //
     }

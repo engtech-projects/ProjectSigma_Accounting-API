@@ -28,4 +28,9 @@ class JournalDetails extends Model
 		$this->belongsTo(Account::class);
 	}
 
+	public function stakeholder(): BelongsTo
+    {
+        return $this->belongsTo(StakeHolder::class);
+    }
+
 }

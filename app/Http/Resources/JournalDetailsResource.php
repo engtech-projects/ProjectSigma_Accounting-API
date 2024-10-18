@@ -14,6 +14,16 @@ class JournalDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+			'id' => $this->id,
+			'journal_entry_id' => $this->journal_entry_id,
+			'account_id' => $this->account_id,
+			'account' => AccountsResource::make($this->whenLoaded('account')),
+			'stakeholder_id' => $this->stakeholder_id,
+			'description' => $this->description,
+			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
+			'debit' => $this->debit,
+			'credit' => $this->credit,
+		];
     }
 }
