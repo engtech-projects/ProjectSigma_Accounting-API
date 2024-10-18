@@ -57,7 +57,7 @@ class VoucherController extends Controller
 		return response()->json(
 			new VoucherResource(
 				$voucher->load([
-					'stakeHolder', 
+					'stakeholder', 
 					'account', 
 					'book', 
 					'details'

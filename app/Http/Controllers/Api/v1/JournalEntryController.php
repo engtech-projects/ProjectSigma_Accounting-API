@@ -53,9 +53,13 @@ class JournalEntryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(JournalEntry $journalEntry)
     {
-        //
+        return response()->json(
+			new JournalEntryResource(
+				$journalEntry->load(['details'])
+			), 201
+		);
     }
 
     /**
@@ -69,9 +73,26 @@ class JournalEntryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(JournalUpdateRequest $request, string $id)
+    public function update(JournalUpdateRequest $request, JournalEntry $journalEntry)
     {
-        //
+        $journalEntry->update($request->validated());
+
+		// Get current voucher details
+		$existingIds = $journalEntry->details()->pluck('id')->toArray();
+
+		$journalDetails = $request->details;
+		$incomingIds = [];
+
+		foreach ($journalDetails as $journalDetail) 
+		{
+			$detail = $journalEntry->details()->updateOrCreate($journalDetail);
+			$incomingIds[] = $detail->id;
+		}
+		// Remove voucher details that are no longer present
+		$toDelete = array_diff($existingIds, $incomingIds);
+		$journalEntry->details()->whereIn('id', $toDelete)->delete();
+
+		return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
     }
 
     /**
