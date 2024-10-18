@@ -3,40 +3,38 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\collections\AccountGroupCollection;
-use App\Http\Resources\resources\AccountGroupResource;
+use Illuminate\Http\Request;
+use App\Http\Resources\Collections\AccountGroupCollection;
+use App\Http\Resources\AccountGroupResource;
 use App\Models\AccountGroup;
-use App\Http\Requests\Api\v1\Store\StoreAccountGroupRequest;
-use App\Http\Requests\Api\v1\Update\UpdateAccountGroupRequest;
-use App\Services\Api\v1\AccountGroupService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AccountGroupController extends Controller
 {
-
-    protected $accountGroupService;
-
-    public function __construct(AccountGroupService $accountGroupService)
-    {
-        $this->accountGroupService = $accountGroupService;
-    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $accountGroup = $this->accountGroupService->getAll(null, ['accounts']);
+        $accountGroups = AccountGroup::all();
+		return new AccountGroupCollection($accountGroups);
+    }
 
-        return new AccountGroupCollection($accountGroup);
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAccountGroupRequest $request)
+    public function store(Request $request)
     {
-        AccountGroupService::create($request->validated());
-        return new JsonResponse(['succes' => true, 'message' => 'Account group successfully created.'], JsonResponse::HTTP_CREATED);
+        //
     }
 
     /**
@@ -44,28 +42,30 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-        $data = $this->accountGroupService->getById($accountGroup, ['accounts', 'books']);
+    	return response()->json(new AccountGroupResource($accountGroup), 201);
+    }
 
-        return new AccountGroupResource($data);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAccountGroupRequest $request, AccountGroup $accountGroup)
+    public function update(Request $request, string $id)
     {
-        $this->accountGroupService->update($accountGroup,$request->validated());
-
-        return new JsonResponse(['succes' => true, 'message' => 'Account group successfully updated.'], JsonResponse::HTTP_OK);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(AccountGroup $accountGroup)
+    public function destroy(string $id)
     {
-        $accountGroup->delete();
-
-        return new JsonResponse(['succes' => true, 'message' => 'Account group successfully deleted.'], JsonResponse::HTTP_OK);
+        //
     }
 }

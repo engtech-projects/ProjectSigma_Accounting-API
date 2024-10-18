@@ -2,66 +2,26 @@
 
 namespace App\Models;
 
-use App\Models\Pivot\BookAccount;
-use App\Models\Pivot\AccountGroupBook;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Book extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
+	protected $table = 'book';
 
-    protected $primaryKey = "book_id";
+	protected $fillable = [
+		'name',
+		'code',
+		'account_group_id',
+	];
 
-    protected $fillable = [
-        "book_code",
-        "book_name",
-        "symbol"
-    ];
+	public $timestamps = false;
 
-
-    ## MODEL RELATION ##
-
-    public function accounts(): BelongsToMany
+	public function accountGroup(): BelongsTo
     {
-        return $this->belongsToMany(Account::class, 'book_accounts', 'book_id', 'account_id')
-            ->using(BookAccount::class)
-            ->withPivot(['book_id', 'account_id'])
-            ->withTimestamps();
+        return $this->belongsTo(AccountGroup::class);
     }
-    public function account_group_book(): BelongsTo
-    {
-        return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
-            ->using(AccountGroupBook::class)
-            ->withPivot(['book_id', 'account_group_id'])
-            ->withTimestamps()
-            ->first();
-    }
-    public function account_group_books(): BelongsToMany
-    {
-        return $this->belongsToMany(AccountGroup::class, 'account_group_books', 'book_id', 'account_group_id')
-            ->using(AccountGroupBook::class)
-            ->withPivot(['book_id', 'account_group_id'])
-            ->withTimestamps();
-    }
-
-    public function singleAccountGroup()
-    {
-        return $this->account_group_books()->limit(1);
-    }
-    public function getFirstAccountGroupAttribute()
-    {
-        return $this->singleAccountGroup()->first();
-    }
-
-
-    ### MODEL SCOPE BINDINGS ###
-
-    /** LOCAL SCOPES */
-
-    /** DYNAMIC SCOPES */
 }

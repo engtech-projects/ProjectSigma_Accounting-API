@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\PostingPeriod;
-use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
+use App\Models\PostingPeriod;
+use App\Models\Period;
 
 class PostingPeriodSeeder extends Seeder
 {
@@ -14,11 +15,26 @@ class PostingPeriodSeeder extends Seeder
      */
     public function run(): void
     {
-        $postingPeriod = [
-            "period_start" => Carbon::now(),
-            "period_end" => Carbon::now(),
-        ];
+		$currentDate = Carbon::now();
 
-        PostingPeriod::create($postingPeriod);
+        $postingPeriod = PostingPeriod::updateOrCreate([
+			'period_start' => $currentDate->copy()->startOfYear(),
+			'period_end' => $currentDate->copy()->endOfYear(),
+		]);
+
+
+		for ($month = 1; $month <= 12; $month++) {
+
+			$startOfMonth = Carbon::createFromDate($currentDate->year, $month, 1);
+            $endOfMonth = $startOfMonth->copy()->endOfMonth();
+
+			$postingPeriod->periods()->updateOrCreate([
+				
+				'start_date' => $startOfMonth,
+                'end_date' => $endOfMonth,
+			]);
+		}
+		
+
     }
 }
