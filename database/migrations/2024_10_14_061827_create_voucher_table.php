@@ -19,7 +19,7 @@ return new class extends Migration
 			$table->text('particulars');
 			$table->double('net_amount');
 			$table->text('amount_in_words')->nullable();
-			$table->enum('status', ['draft', 'pending', 'aproved', 'rejected', 'void'])->default('draft');
+			$table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'void'])->default('draft');
 			$table->date('voucher_date');
 			$table->date('date_encoded');
 			$table->foreignId('account_id')->constrained('accounts');
