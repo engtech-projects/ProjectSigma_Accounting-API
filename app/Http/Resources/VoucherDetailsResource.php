@@ -16,9 +16,9 @@ class VoucherDetailsResource extends JsonResource
     {
 		return [
 			'voucher_id' => $this->voucher_id,
-			'account' => $this->account_id,
+			'account_id' => $this->account_id,
 			'stakeholder_id' => $this->stakeholder_id,
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeHolder')),
+			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
 			'debit' => $this->debit,
 			'credit' => $this->credit,
 		];

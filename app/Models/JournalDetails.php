@@ -15,7 +15,7 @@ class JournalDetails extends Model
 	protected $timestamp = false;
 
 	protected $fillable = [
-		'journal_id',
+		'journal_entry_id',
 		'account_id',
 		'stakeholder_id',
 		'description',

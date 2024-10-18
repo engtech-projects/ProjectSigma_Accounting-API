@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('journal_details', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('journal_id')->constrained('journal_entry');
+			$table->foreignId('journal_entry_id')->constrained('journal_entry');
 			$table->foreignId('account_id')->constrained('accounts');
 			$table->foreignId('stakeholder_id')->constrained('stakeholder')->nullable();
 			$table->tinyText('description')->nullable();

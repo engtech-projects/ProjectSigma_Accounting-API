@@ -11,17 +11,24 @@ use App\Models\VoucherDetails;
 use App\Http\Resources\VoucherResource;
 use App\Http\Requests\StoreRequest\VoucherStoreRequest;
 use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
-// use App\Models\VoucherDetails;
+use App\Services\VoucherService;
 
 class VoucherController extends Controller
 {
+
+	protected $voucherService;
+
+	public function __construct(VoucherService $voucherService)
+    {
+		$this->voucherService = $voucherService;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
 		$vouchers = Voucher::all();
-        return response()->json(VoucherResource::collection($vouchers->load(['account','stakeholder'])));
+        return response()->json(VoucherResource::collection($vouchers->load(['account','stakeholder', 'details'])));
     }
 
     /**
@@ -37,10 +44,8 @@ class VoucherController extends Controller
      */
     public function store(VoucherStoreRequest $request)
     {
-        $voucher = Voucher::create($request->validated());
-		$voucher->details()->createMany($request->details);
-
-		return response()->json(new VoucherResource($voucher), 201);
+		$voucher = $this->voucherService->create($request->validated());
+		return response()->json($voucher, 201);
     }
 
     /**voucher
