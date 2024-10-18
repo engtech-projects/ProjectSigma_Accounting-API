@@ -6,17 +6,15 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\StakeholderResource;
 use App\Models\Stakeholder;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class StakeholderController extends Controller
 {
-    /**
+       /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(StakeholderResource::collection(Stakeholder::all()));
+        return StakeholderResource::collection(Stakeholder::all());
     }
 
     /**
