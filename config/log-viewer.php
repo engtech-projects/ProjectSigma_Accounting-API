@@ -143,4 +143,5 @@ return [
         '^Stack trace:',
     ],
 
+
 ];
