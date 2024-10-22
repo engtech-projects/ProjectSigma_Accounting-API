@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\v1\{
 	StakeHolderController,
 	AccountGroupController,
 	JournalEntryController,
+	PaymentRequestController,
 };
 
 use Illuminate\Http\Request;
@@ -42,6 +43,9 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('journal-entry', JournalEntryController::class);
 
 	Route::get('voucher/number/{prefix}', [VoucherController::class, 'voucherNo']);
+
+	Route::resource('payment-request', PaymentRequestController::class);
+
 });
 
 
