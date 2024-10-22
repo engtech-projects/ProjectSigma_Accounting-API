@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreRequest\PaymentRequestForm;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
+use App\Http\Resources\PaymentRequestResource;
 
 class PaymentRequestController extends Controller
 {
@@ -15,7 +16,8 @@ class PaymentRequestController extends Controller
      */
     public function index()
     {
-        return 'test';
+		$paymentRequest = PaymentRequest::all();
+		return response()->json(PaymentRequestResource::collection($paymentRequest->load(['stakeholder'])));
     }
 
     /**
@@ -42,8 +44,7 @@ class PaymentRequestController extends Controller
 
 		// create form
 		// create 
-		// return $validated;
-		return response()->json(['Payment Request' => $paymentRequest], 201);
+		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 201);
     }
 
     /**
@@ -51,7 +52,7 @@ class PaymentRequestController extends Controller
      */
     public function show(PaymentRequest $paymentRequest)
     {
-        return response()->json($paymentRequest->load('details'), 200); 
+		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 200);
     }
 
     /**
@@ -69,7 +70,7 @@ class PaymentRequestController extends Controller
     {
 		$paymentRequest->update($request->validated());
 
-		// Get current voucher details
+	
 		$existingIds = $paymentRequest->details()->pluck('id')->toArray();
 
 		$paymentRequestDetails = $request->details;
@@ -80,10 +81,10 @@ class PaymentRequestController extends Controller
 			$detail = $paymentRequest->details()->updateOrCreate($paymentRequestDetail);
 			$incomingIds[] = $detail->id;
 		}
-		// Remove voucher details that are no longer present
+
 		$toDelete = array_diff($existingIds, $incomingIds);
 		$paymentRequest->details()->whereIn('id', $toDelete)->delete();
-		return response()->json(['Payment Request' => $paymentRequest->load('details')], 201);
+		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 200);
     }
 
     /**

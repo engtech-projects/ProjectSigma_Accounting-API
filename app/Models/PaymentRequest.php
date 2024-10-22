@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Carbon\Carbon;
 
 class PaymentRequest extends Model
@@ -70,5 +71,8 @@ class PaymentRequest extends Model
         return $this->hasMany(PaymentRequestDetails::class);
     }
 
-
+	public function stakeholder(): BelongsTo
+    {
+        return $this->belongsTo(StakeHolder::class);
+    }
 }
