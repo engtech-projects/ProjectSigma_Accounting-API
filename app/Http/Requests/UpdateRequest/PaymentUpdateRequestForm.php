@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\StoreRequest;
+namespace App\Http\Requests\UpdateRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentRequestForm extends FormRequest
+class PaymentUpdateRequestForm extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,6 +27,7 @@ class PaymentRequestForm extends FormRequest
 			'request_date' => ['required','date','date_format:Y-m-d'],
 			'total' => ['required', 'numeric'],
 			'details' => ['required', 'min:1', 'array'],
+			'details.*.payment_request_id' => ['required', 'numeric'],
 			'details.*.stakeholder_id' => ['required', 'numeric'],
 			'details.*.cost' => ['nullable', 'numeric'],
 			'details.*.vat' => ['nullable', 'numeric'],

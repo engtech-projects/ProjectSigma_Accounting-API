@@ -26,7 +26,10 @@ class Voucher extends Model
 		'voucher_date',
 		'date_encoded',
 		'account_id',
-		'book_id'
+		'book_id',
+		'reference_no',
+		'formable_id',
+		'formable_type'
 	];
 
 	protected $casts = [

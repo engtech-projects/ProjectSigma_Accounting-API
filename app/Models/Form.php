@@ -10,6 +10,15 @@ class Form extends Model
 {
     use HasFactory;
 
+	protected $table = 'forms';
+
+	protected $fillable = [
+		'stakeholder_id',
+		'formable_id',
+		'formable type',
+		'status'
+	];
+
 	public function formable()
 	{
 		return $this->morphTo();

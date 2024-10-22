@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreRequest\PaymentRequestForm;
+use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
 
 class PaymentRequestController extends Controller
@@ -30,21 +31,27 @@ class PaymentRequestController extends Controller
      */
     public function store(PaymentRequestForm $request)
     {
-		$paymentRequest = PaymentRequest::create($request->validated());
+		$prfNo = PaymentRequest::generatePrfNo();
+		$validated = $request->validated();
+		$validated['prf_no'] = $prfNo;
+		$paymentRequest = PaymentRequest::create($validated);
 
 		$details = $request->details;
 
 		$paymentRequest->details()->createMany($request->details);
 
+		// create form
+		// create 
+		// return $validated;
 		return response()->json(['Payment Request' => $paymentRequest], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PaymentRequest $paymentRequest)
     {
-        //
+        return response()->json($paymentRequest->load('details'), 200); 
     }
 
     /**
@@ -58,9 +65,25 @@ class PaymentRequestController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PaymentUpdateRequestForm $request, PaymentRequest $paymentRequest)
     {
-        //
+		$paymentRequest->update($request->validated());
+
+		// Get current voucher details
+		$existingIds = $paymentRequest->details()->pluck('id')->toArray();
+
+		$paymentRequestDetails = $request->details;
+		$incomingIds = [];
+
+		foreach ($paymentRequestDetails as $paymentRequestDetail) 
+		{
+			$detail = $paymentRequest->details()->updateOrCreate($paymentRequestDetail);
+			$incomingIds[] = $detail->id;
+		}
+		// Remove voucher details that are no longer present
+		$toDelete = array_diff($existingIds, $incomingIds);
+		$paymentRequest->details()->whereIn('id', $toDelete)->delete();
+		return response()->json(['Payment Request' => $paymentRequest->load('details')], 201);
     }
 
     /**
