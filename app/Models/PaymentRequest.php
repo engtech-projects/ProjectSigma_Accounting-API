@@ -9,10 +9,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Carbon\Carbon;
+use App\Traits\HasFormable;
 
 class PaymentRequest extends Model
 {
-    use HasFactory;
+    use HasFactory,  HasFormable;
 
 	protected $table = 'payment_request';
 
@@ -47,15 +48,20 @@ class PaymentRequest extends Model
         return $prfNo;
 	}
 
+	// public function form()
+    // {
+    //     return $this->morphOne(Form::class, 'formable');
+    // }
+
 	public function forms()
     {
         return $this->morphMany(Form::class, 'formable');
     }
 
-	public function vouchers()
-	{
-		return $this->morphMany(Voucher::class, 'formable');
-	}
+	// public function vouchers()
+	// {
+	// 	return $this->morphMany(Voucher::class, 'formable');
+	// }
 
 	public function details(): HasMany
     {
