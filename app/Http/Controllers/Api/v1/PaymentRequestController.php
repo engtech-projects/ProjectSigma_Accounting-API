@@ -41,6 +41,8 @@ class PaymentRequestController extends Controller
 		$validated['prf_no'] = $prfNo;
 		$paymentRequest = PaymentRequest::create($validated);
 
+		$paymentRequest->details()->createMany($request->details);
+
 		$form = Form::create([
 			'stakeholder_id' => Auth()->user()->id,
 			'status' => FormStatus::Pending->value,
