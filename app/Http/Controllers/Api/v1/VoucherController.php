@@ -61,7 +61,7 @@ class VoucherController extends Controller
 
 			$voucher->formable_id = $form->formable_id;
 			$voucher->formable_type = $form->formable_type;
-			
+
 		}
 
 		return response()->json($voucher, 201);

@@ -13,5 +13,10 @@ trait HasFormable
         return $this->morphTo();
     }
 
+	public function forms()
+    {
+        return $this->morphMany(Form::class, 'formable');
+    }
+
 	
 }
