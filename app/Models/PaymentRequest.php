@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Carbon\Carbon;
 
 class PaymentRequest extends Model
@@ -22,22 +23,7 @@ class PaymentRequest extends Model
 		'description',
 		'total',
 	];
-
-	// protected static function booted(): void
-    // {
-    //     parent::booted();
-
-    //     static::creating(function (Task $task): void {
-    //         if (blank($task->sort_order)) {
-    //             $task->setAttribute('sort_order', 1);
-    //         }
-    //         /** @var $lastSortOrder */
-    //         $lastSortOrder = (int) static::query()->max('sort_order');
-
-    //         $task->setAttribute('sort_order', ++$lastSortOrder);
-    //     });
-    // }
-
+	
 	public static function generatePrfNo()
 	{	
 		$prefix = strtoupper('RFA-ACCTG');
@@ -46,7 +32,7 @@ class PaymentRequest extends Model
         $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")
             ->orderBy('prf_no', 'desc')
             ->first();
-        // Extract the last series number if a previous voucher exists
+        // Extract the last series number if a previous request exists
         if ($lastPaymentRequest) {
             $lastSeries = (int) substr($lastPaymentRequest->prf_no, -4); // Get last 4 digits
             $nextSeries = $lastSeries + 1;
@@ -61,10 +47,15 @@ class PaymentRequest extends Model
         return $prfNo;
 	}
 
-	public function form()
+	public function forms()
     {
-        return $this->morphOne(Form::class, 'formable');
+        return $this->morphMany(Form::class, 'formable');
     }
+
+	public function vouchers()
+	{
+		return $this->morphMany(Voucher::class, 'formable');
+	}
 
 	public function details(): HasMany
     {
@@ -75,4 +66,9 @@ class PaymentRequest extends Model
     {
         return $this->belongsTo(StakeHolder::class);
     }
+
+	public function scopePrfNo($query, $prfNo)
+	{
+		return $query->where('prf_no', $prfNo);
+	}
 }

@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreRequest\PaymentRequestForm;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
+use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
+use App\Enums\FormStatus;
+use App\Enums\FormType;
 
 class PaymentRequestController extends Controller
 {
@@ -17,7 +20,7 @@ class PaymentRequestController extends Controller
     public function index()
     {
 		$paymentRequest = PaymentRequest::all();
-		return response()->json(PaymentRequestResource::collection($paymentRequest->load(['stakeholder'])));
+		return response()->json(PaymentRequestResource::collection($paymentRequest->load(['stakeholder', 'forms'])));
     }
 
     /**
@@ -38,12 +41,12 @@ class PaymentRequestController extends Controller
 		$validated['prf_no'] = $prfNo;
 		$paymentRequest = PaymentRequest::create($validated);
 
-		$details = $request->details;
+		$form = Form::create([
+			'stakeholder_id' => Auth()->user()->id,
+			'status' => FormStatus::Pending->value,
+		]);
 
-		$paymentRequest->details()->createMany($request->details);
-
-		// create form
-		// create 
+		$paymentRequest->forms()->save($form);
 		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 201);
     }
 
@@ -94,4 +97,15 @@ class PaymentRequestController extends Controller
     {
         //
     }
+
+	/**
+     * 
+     */
+    public function prfNo($prfNo)
+    {
+		// return response()->json(['request' => $request->all()]);
+        return PaymentRequest::PrfNo($prfNo)->first();
+    }
+
+	
 }

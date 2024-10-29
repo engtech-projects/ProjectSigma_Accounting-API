@@ -27,7 +27,7 @@ class VoucherService
 				'journal_date' => Carbon::now()->format('Y-m-d'),
 				'voucher_id' => $voucher->id,
 				'status' => 'open',
-				'remarks' => $voucher->particulars,
+				// 'remarks' => $voucher->particulars,
 				'posting_period_id' => $postingPeriodId,
 				'period_id' => $periodId
 			]);

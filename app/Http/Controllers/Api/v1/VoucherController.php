@@ -12,6 +12,8 @@ use App\Http\Resources\VoucherResource;
 use App\Http\Requests\StoreRequest\VoucherStoreRequest;
 use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
 use App\Services\VoucherService;
+use App\Models\PaymentRequest;
+use App\Models\Form;
 
 class VoucherController extends Controller
 {
@@ -45,6 +47,23 @@ class VoucherController extends Controller
     public function store(VoucherStoreRequest $request)
     {
 		$voucher = $this->voucherService->create($request->validated());
+
+		if( isset($request->form_type) && isset($request->reference_no) )
+		{
+			$prfNumber = 'RFA-ACCTG-2024-10-0004';
+			$form = Form::whereHasMorph(
+				'formable',
+				[PaymentRequest::class],
+				function ($query) use ($prfNumber) {
+					$query->where('prf_no', $prfNumber);
+				}
+			)->first();
+
+			$voucher->formable_id = $form->formable_id;
+			$voucher->formable_type = $form->formable_type;
+			
+		}
+
 		return response()->json($voucher, 201);
     }
 

@@ -8,10 +8,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Traits\HasFormable;
 
 class Voucher extends Model
 {
-    use HasFactory;
+    use HasFactory, HasFormable;
 
 	protected $table = 'voucher';
 
@@ -78,10 +79,5 @@ class Voucher extends Model
 	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
-    }
-
-	public function form()
-    {
-        return $this->morphTo(); // Link to different form types
     }
 }
