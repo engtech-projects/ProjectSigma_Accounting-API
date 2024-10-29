@@ -50,7 +50,7 @@ class VoucherController extends Controller
 
 		if( isset($request->form_type) && isset($request->reference_no) )
 		{
-			$prfNumber = 'RFA-ACCTG-2024-10-0004';
+			$prfNumber = $request->reference_no;
 			$form = Form::whereHasMorph(
 				'formable',
 				[PaymentRequest::class],
