@@ -25,7 +25,5 @@ class PaymentRequestCollection extends ResourceCollection
 			return new PaymentRequestResource($paymentRequest);
 		})->toArray();
 
-		// return ['data' => $this->collection];
-
     }
 }

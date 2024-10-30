@@ -58,7 +58,7 @@ class PaymentRequestController extends Controller
      */
     public function show(PaymentRequest $paymentRequest)
     {
-		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details', 'forms'])), 200);
+		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 200);
     }
 
     /**

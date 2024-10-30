@@ -26,7 +26,6 @@ class Form extends Model
         return $this->belongsTo(Stakeholder::class);
     }
 
-	// A form can have one or many vouchers after approval
     public function vouchers() : HasMany
     {
         return $this->hasMany(Voucher::class);
