@@ -58,5 +58,3 @@ Route::middleware('auth:api')->group(function () {
 	Route::put('form/issued/{id}', [FormController::class, 'issued']);
 
 });
-
-

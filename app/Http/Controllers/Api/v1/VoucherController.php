@@ -145,4 +145,19 @@ class VoucherController extends Controller
 	{
 		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
 	}
+
+	public function approved()
+	{
+
+	}
+
+	public function rejected()
+	{
+		
+	}
+
+	public function void()
+	{
+		
+	}
 }
