@@ -52,7 +52,7 @@ Route::middleware('auth:api')->group(function () {
 		return response()->json([ 'forms' => FormType::cases() ], 200);
 	});
 
-	Route::put('form/approved/{form}', [FormController::class, 'approved']);
+	Route::put('form/approved/{id}', [FormController::class, 'approved']);
 	Route::put('form/rejected/{id}', [FormController::class, 'rejected']);
 	Route::put('form/void/{id}', [FormController::class, 'void']);
 	Route::put('form/issued/{id}', [FormController::class, 'issued']);

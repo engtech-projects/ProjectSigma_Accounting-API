@@ -32,16 +32,20 @@ class Form extends Model
     }
 
 	public function approved() {
-		$this->status = 'approved';
+		 $this->status = 'approved';
+		 return $this->save();
 	}
 	public function rejected() {
 		$this->status = 'rejected';
+		return $this->save();
 	}
 	public function void() {
 		$this->status = 'void';
+		return $this->save();
 	}
 	public function issued() {
 		$this->status = 'issued';
+		return $this->save();
 	}
 
 }
