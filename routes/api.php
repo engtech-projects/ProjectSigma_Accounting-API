@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\v1\{
 	AccountGroupController,
 	JournalEntryController,
 	PaymentRequestController,
+	FormController,
 };
 
 use Illuminate\Http\Request;
@@ -50,6 +51,11 @@ Route::middleware('auth:api')->group(function () {
 	Route::get('form-types', function(Request $request) {
 		return response()->json([ 'forms' => FormType::cases() ], 200);
 	});
+
+	Route::put('form/approved/{form}', [FormController::class, 'approved']);
+	Route::put('form/rejected/{id}', [FormController::class, 'rejected']);
+	Route::put('form/void/{id}', [FormController::class, 'void']);
+	Route::put('form/issued/{id}', [FormController::class, 'issued']);
 
 });
 

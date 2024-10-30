@@ -12,6 +12,7 @@ use App\Http\Resources\PaymentRequestResource;
 use App\Http\Resources\Collections\PaymentRequestCollection;
 use App\Enums\FormStatus;
 use App\Enums\FormType;
+use Illuminate\Support\Facades\DB;
 
 class PaymentRequestController extends Controller
 {
@@ -20,7 +21,16 @@ class PaymentRequestController extends Controller
      */
     public function index(Request $request)
     {	
-		$paymentRequest = PaymentRequest::WhereFormStatus('pending')->orderBy('id', 'desc')->paginate(10);
+
+		$query = PaymentRequest::query();
+
+		if( isset($request->filter['status']) )
+		{
+			$query->FormStatus($request->filter['status']);
+		}
+
+		$paymentRequest = $query->orderBy('id', 'desc')->paginate(10);
+
 		return new PaymentRequestCollection($paymentRequest);
     }
 

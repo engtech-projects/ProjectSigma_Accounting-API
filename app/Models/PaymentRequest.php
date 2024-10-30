@@ -78,7 +78,7 @@ class PaymentRequest extends Model
 		return $query->where('prf_no', $prfNo);
 	}
 
-	public function scopeWhereFormStatus($query, $status)
+	public function scopeFormStatus($query, $status)
 	{
 		return $query->whereHas('form', function ($query) use ($status) {
 			$query->where('forms.status', $status);

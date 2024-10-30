@@ -31,4 +31,17 @@ class Form extends Model
         return $this->hasMany(Voucher::class);
     }
 
+	public function approved() {
+		$this->status = 'approved';
+	}
+	public function rejected() {
+		$this->status = 'rejected';
+	}
+	public function void() {
+		$this->status = 'void';
+	}
+	public function issued() {
+		$this->status = 'issued';
+	}
+
 }
