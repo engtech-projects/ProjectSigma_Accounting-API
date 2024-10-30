@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
+use App\Http\Resources\Collections\PaymentRequestCollection;
 use App\Enums\FormStatus;
 use App\Enums\FormType;
 
@@ -17,10 +18,10 @@ class PaymentRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-		$paymentRequest = PaymentRequest::all();
-		return response()->json(PaymentRequestResource::collection($paymentRequest->load(['stakeholder', 'forms'])));
+    public function index(Request $request)
+    {	
+		$paymentRequest = PaymentRequest::WhereFormStatus('pending')->orderBy('id', 'desc')->paginate(10);
+		return new PaymentRequestCollection($paymentRequest);
     }
 
     /**

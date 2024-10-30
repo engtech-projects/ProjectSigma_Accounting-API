@@ -31,7 +31,7 @@ class VoucherResource extends JsonResource
 			'book_id' => $this->book_id,
 			'book' => BookResource::make($this->whenLoaded('book')),
 			'details' => VoucherDetailsResource::collection($this->whenLoaded('details')),
-			// 'forms' => FormResource::collection($this->whenLoaded('forms')),
+			'form' => $this->form
 		];
     }
 }

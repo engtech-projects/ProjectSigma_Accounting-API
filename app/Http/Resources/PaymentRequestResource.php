@@ -22,7 +22,7 @@ class PaymentRequestResource extends JsonResource
 			'request_date' => $this->request_date ,
 			'description' => $this->description,
 			'total' => $this->total,
-			'forms' => FormResource::collection($this->whenLoaded('forms')),
+			'form' => $this->form,
 			'details' => PaymentRequestDetailsResource::collection($this->whenLoaded('details')),
 		];
     }

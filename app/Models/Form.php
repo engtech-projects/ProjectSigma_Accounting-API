@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasFormable;
 
 class Form extends Model
@@ -24,4 +25,11 @@ class Form extends Model
     {
         return $this->belongsTo(Stakeholder::class);
     }
+
+	// A form can have one or many vouchers after approval
+    public function vouchers() : HasMany
+    {
+        return $this->hasMany(Voucher::class);
+    }
+
 }

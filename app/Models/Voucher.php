@@ -8,11 +8,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use App\Traits\HasFormable;
+use Illuminate\Database\Eloquent\Builder;
 
 class Voucher extends Model
 {
-    use HasFactory, HasFormable;
+    use HasFactory;
 
 	protected $table = 'voucher';
 
@@ -80,4 +80,29 @@ class Voucher extends Model
     {
         return $this->belongsTo(StakeHolder::class);
     }
+
+	// A Voucher can optionally belong to a form
+    public function form() : BelongsTo
+    {
+        return $this->belongsTo(Form::class, 'form_id');
+    }
+
+	public function scopeBookName(Builder $query, string $name): void
+    {
+
+		$book = Book::where('name','LIKE','%'.$name.'%')->first();
+
+        $query->where('book_id', $book->id);
+    }
+
+	public function scopeStatus(Builder $query, string $status): void
+    {
+        $query->where('status', $status);
+    }
+
+	// // public function scopePaymentRequest(Builder $query): void
+    // // {
+    // //     $query->where('votes', '>', 100);
+    // // }
+
 }

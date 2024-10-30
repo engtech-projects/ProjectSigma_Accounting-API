@@ -14,6 +14,8 @@ use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
 use App\Services\VoucherService;
 use App\Models\PaymentRequest;
 use App\Models\Form;
+use Illuminate\Support\Facades\DB;
+use App\Http\Resources\Collections\VoucherCollection;
 
 class VoucherController extends Controller
 {
@@ -27,10 +29,23 @@ class VoucherController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-		$vouchers = Voucher::all();
-        return response()->json(VoucherResource::collection($vouchers->load(['account','stakeholder', 'details'])));
+		$query = Voucher::query();
+
+		if( isset($request->filter['book']) )
+		{
+			$query->bookName($request->filter['book']);
+		}
+
+		if( isset($request->filter['status']) )
+		{
+			$query->status($request->filter['status']);
+		}
+
+		$vouchers = $query->orderBy('id', 'desc')->paginate(10);
+
+		return new VoucherCollection($vouchers->load(['account','stakeholder', 'details']));
     }
 
     /**
@@ -59,8 +74,8 @@ class VoucherController extends Controller
 				}
 			)->first();
 
-			$voucher->formable_id = $form->formable_id;
-			$voucher->formable_type = $form->formable_type;
+			$voucher->form_id = $form->id;
+			$voucher->save();
 
 		}
 
