@@ -43,9 +43,9 @@ class VoucherController extends Controller
 			$query->status($request->filter['status']);
 		}
 
-		$vouchers = $query->orderBy('id', 'desc')->paginate(10);
+		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details'])->paginate(1);
 
-		return new VoucherCollection($vouchers->load(['account','stakeholder', 'details']));
+		return new VoucherCollection($vouchers);
     }
 
     /**
