@@ -42,7 +42,6 @@ class VoucherController extends Controller
 			
 			$query->filterBook($book->id);
 
-			
 		}
 
 		if( isset($request->filter['status']) )
@@ -52,7 +51,7 @@ class VoucherController extends Controller
 
 
 		$query->orderBy('id', 'desc')->with(['account','stakeholder', 'details'])->paginate(10);
-		return $query->toSql(); 
+	
 		return new VoucherCollection($vouchers);
     }
 
