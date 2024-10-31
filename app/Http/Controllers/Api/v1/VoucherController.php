@@ -36,11 +36,12 @@ class VoucherController extends Controller
 
 		if( isset($request->filter['book']) )
 		{
-			$book = Book::byName($request->filter['book'])->first();
+			$book = Book::byName($bookName)->firstOr(function () {
+				return Book::first();
+			});
 
-			if( $book ) {
-				$query->book($book->id);
-			}
+			$query->book($book->id);
+			
 		}
 
 		if( isset($request->filter['status']) )
