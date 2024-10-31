@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class Voucher extends Model
 {
@@ -40,7 +41,7 @@ class Voucher extends Model
 
 	public static function generateVoucherNo($prefix)
 	{	
-		$prefix = strtoupper($prefix);
+		$prefix = Str::upper($prefix);
 		$currentYearMonth = Carbon::now()->format('Ym'); 
         // Find the highest series
         $lastVoucher = Voucher::where('voucher_no', 'like', "{$prefix}-{$currentYearMonth}-%")
@@ -59,6 +60,8 @@ class Voucher extends Model
         $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
 
         return $voucherNo;
+
+		// return $lastVoucher;
 	}
 
 	public function account() : BelongsTo

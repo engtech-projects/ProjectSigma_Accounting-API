@@ -31,8 +31,8 @@ class Period extends Model
 	{
 		$currentDate = Carbon::now();
 		
-		return $query->where('start_date', '<=', $currentDate)
-					 ->where('end_date', '>=', $currentDate)
+		return $query->where('start_date', '<=', $currentDate->toDateString())
+					 ->where('end_date', '>=', $currentDate->toDateString())
 					 ->where('status', 'open');
 	}
 }
