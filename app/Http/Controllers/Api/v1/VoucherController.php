@@ -50,9 +50,9 @@ class VoucherController extends Controller
 		}
 
 
-		$query->orderBy('id', 'desc')->with(['account','stakeholder', 'details'])->paginate(10);
+		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
 	
-		return new VoucherCollection($vouchers);
+		return new VoucherCollection($vouchers->paginate(10));
     }
 
     /**
