@@ -36,12 +36,11 @@ class VoucherController extends Controller
 
 		if( isset($request->filter['book']) )
 		{
-			$book = Book::byName($bookName)->firstOr(function () {
+			$book = Book::byName($request->filter['book'])->firstOr(function () {
 				return Book::first();
 			});
 
 			$query->book($book->id);
-			
 		}
 
 		if( isset($request->filter['status']) )
@@ -51,7 +50,7 @@ class VoucherController extends Controller
 
 		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details'])->paginate(10);
 
-		return new VoucherCollection($vouchers);		
+		return new VoucherCollection($vouchers);
     }
 
     /**
