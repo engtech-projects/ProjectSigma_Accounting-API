@@ -57,4 +57,12 @@ Route::middleware('auth:api')->group(function () {
 	Route::put('form/void/{id}', [FormController::class, 'void']);
 	Route::put('form/issued/{id}', [FormController::class, 'issued']);
 
+	Route::get('voucher/testVoucher', [VoucherController::class, 'testFetchVoucher']);
+
 });
+
+// Route::middleware('guest')->group(function () {
+// 	Route::get('voucher/test', [VoucherController::class, 'testFetchVoucher']);
+// });
+
+

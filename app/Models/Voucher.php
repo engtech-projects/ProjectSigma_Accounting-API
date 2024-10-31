@@ -90,12 +90,12 @@ class Voucher extends Model
         return $this->belongsTo(Form::class, 'form_id');
     }
 
-	public function scopeBook($query, int $id)
+	public function scopeFilterBook($query, $bookId)
     {
-        return $query->where('book_id', $id);
+        return $query->where('book_id', $bookId);
     }
 
-	public function scopeStatus($query, string $status)
+	public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
     }
