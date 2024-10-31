@@ -90,22 +90,13 @@ class Voucher extends Model
         return $this->belongsTo(Form::class, 'form_id');
     }
 
-	public function scopeBook(Builder $query, string $name)
+	public function scopeBook($query, int $id)
     {
-
-		$book = Book::where('name', $name)->first();
-
-        return $query->where('book_id', $book->id);
+        return $query->where('book_id', $id);
     }
 
-	public function scopeStatus(Builder $query, string $status)
+	public function scopeStatus($query, string $status)
     {
         return $query->where('status', $status);
     }
-
-	// // public function scopePaymentRequest(Builder $query): void
-    // // {
-    // //     $query->where('votes', '>', 100);
-    // // }
-
 }

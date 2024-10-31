@@ -14,6 +14,7 @@ use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
 use App\Services\VoucherService;
 use App\Models\PaymentRequest;
 use App\Models\Form;
+use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\Collections\VoucherCollection;
 
@@ -35,7 +36,11 @@ class VoucherController extends Controller
 
 		if( isset($request->filter['book']) )
 		{
-			$query->book($request->filter['book']);
+			$book = Book::byName($request->filter['book'])->first();
+
+			if( $book ) {
+				$query->book($book->id);
+			}
 		}
 
 		if( isset($request->filter['status']) )
