@@ -34,11 +34,11 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
 		$query = Voucher::query();
-
-        Log::info("book: " . $request->filter['book']);
+        Log::info($request->all());
+        // Log::info("book: " . $request->filter['book']);
 		if( isset($request->filter['book']) )
 		{
-            Log::info("book: " . $request->filter['book']);
+            // Log::info("book: " . $request->filter['book']);
 			$book = Book::byName($request->filter['book'])->firstOr(function () {
 				return Book::first();
 			});
