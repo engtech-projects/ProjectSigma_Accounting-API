@@ -34,12 +34,14 @@ class VoucherController extends Controller
     {
 		$query = Voucher::query();
 
+        Log::info("book: " . $request->filter['book']);
 		if( isset($request->filter['book']) )
 		{
+            Log::info("book: " . $request->filter['book']);
 			$book = Book::byName($request->filter['book'])->firstOr(function () {
 				return Book::first();
 			});
-			
+
 			$query->filterBook($book->id);
 
 		}
@@ -51,7 +53,7 @@ class VoucherController extends Controller
 
 
 		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
-	
+
 		return new VoucherCollection($vouchers->paginate(10));
     }
 
@@ -94,13 +96,13 @@ class VoucherController extends Controller
      */
     public function show(Voucher $voucher)
     {
-		
+
 		return response()->json(
 			new VoucherResource(
 				$voucher->load([
-					'stakeholder', 
-					'account', 
-					'book', 
+					'stakeholder',
+					'account',
+					'book',
 					'details'
 				])
 			), 201
@@ -128,7 +130,7 @@ class VoucherController extends Controller
 		$voucherDetails = $request->details;
 		$incomingIds = [];
 
-		foreach ($voucherDetails as $voucherDetail) 
+		foreach ($voucherDetails as $voucherDetail)
 		{
 			$detail = $voucher->details()->updateOrCreate($voucherDetail);
 			$incomingIds[] = $detail->id;
@@ -160,11 +162,11 @@ class VoucherController extends Controller
 
 	public function rejected()
 	{
-		
+
 	}
 
 	public function void()
 	{
-		
+
 	}
 }
