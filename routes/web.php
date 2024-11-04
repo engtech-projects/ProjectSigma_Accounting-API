@@ -20,6 +20,6 @@ Route::get('/', function (Request $request) {
     return response()->json(['version' => app()->version()]);
 });
 Route::get('artisan-clear-optimization', function () {
-    Artisan::call("storage:link");
+    Artisan::call("optimize:clear");
     return "success";
 });
