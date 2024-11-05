@@ -25,6 +25,7 @@ class VoucherStoreRequest extends FormRequest
 			'check_no' => ['nullable', 'string'],
             'voucher_no' => ['required', 'string'],
 			'stakeholder_id' => ['required', 'numeric'],
+			'reference_no' => ['nullable', 'string'],
 			'status' => ['required', 'string'],
 			'account_id' => ['required', 'numeric'],
 			'particulars' => ['nullable', 'string'],
