@@ -34,9 +34,9 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
 		$query = Voucher::query();
-		if( isset($request->filter['book']) )
+		if( isset($request->book) )
 		{
-			$book = Book::byName($request->filter['book'])->firstOr(function () {
+			$book = Book::byName($request->book)->firstOr(function () {
 				return Book::first();
 			});
 
@@ -44,9 +44,9 @@ class VoucherController extends Controller
 
 		}
 
-		if( isset($request->filter['status']) )
+		if( isset($request->status) )
 		{
-			$query->status($request->filter['status']);
+			$query->status($request->status);
 		}
 
 		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
