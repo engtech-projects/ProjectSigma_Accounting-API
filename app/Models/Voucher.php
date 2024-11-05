@@ -99,4 +99,30 @@ class Voucher extends Model
     {
         return $query->where('status', $status);
     }
+
+	public function completed() 
+	{
+		return $this->update(['status' => 'completed']);
+    }
+
+	public function approved() 
+	{
+		return $this->update(['status' => 'approved']);
+    }
+
+	public function rejected() 
+	{
+	   return $this->update(['status' => 'rejected']);
+    }
+
+    public function void() 
+    {
+	   return $this->update(['status' => 'void']);
+    }
+
+    public function issued() 
+    {
+	   return $this->update(['status' => 'issued']);
+    }
+
 }

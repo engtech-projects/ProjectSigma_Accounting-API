@@ -49,7 +49,6 @@ class VoucherController extends Controller
 			$query->status($request->filter['status']);
 		}
 
-
 		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
 	
 		return new VoucherCollection($vouchers->paginate(10));
@@ -153,18 +152,34 @@ class VoucherController extends Controller
 		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
 	}
 
-	public function approved()
+	public function completed(int $id)
 	{
-
+		$voucher = Voucher::findOrFail($id);
+		return $voucher->completed();
 	}
 
-	public function rejected()
+	public function approved(int $id)
 	{
-		
+		$voucher = Voucher::findOrFail($id);
+		return $voucher->approved();
 	}
 
-	public function void()
+	public function rejected(int $id)
 	{
-		
+		$voucher = Voucher::findOrFail($id);
+		return $voucher->rejected();
 	}
+
+	public function void(int $id)
+	{
+		$voucher = Voucher::findOrFail($id);
+		return $voucher->void();
+	}
+
+	public function issued(int $id)
+	{
+		$voucher = Voucher::findOrFail($id);
+		return $voucher->issued();
+	}
+
 }
