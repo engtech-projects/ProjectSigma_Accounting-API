@@ -166,22 +166,14 @@ class VoucherController extends Controller
 
 	public function rejected(int $id)
 	{
-<<<<<<< HEAD
 		$voucher = Voucher::findOrFail($id);
 		return $voucher->rejected();
-=======
-
->>>>>>> 938e96ec88798c2315f81450dee8a8a7ea929bca
 	}
 
 	public function void(int $id)
 	{
-<<<<<<< HEAD
 		$voucher = Voucher::findOrFail($id);
 		return $voucher->void();
-=======
-
->>>>>>> 938e96ec88798c2315f81450dee8a8a7ea929bca
 	}
 
 	public function issued(int $id)
