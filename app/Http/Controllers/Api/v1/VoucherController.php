@@ -16,6 +16,7 @@ use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Models\Book;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Collections\VoucherCollection;
 
 class VoucherController extends Controller
@@ -33,13 +34,12 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
 		$query = Voucher::query();
-
 		if( isset($request->filter['book']) )
 		{
 			$book = Book::byName($request->filter['book'])->firstOr(function () {
 				return Book::first();
 			});
-			
+
 			$query->filterBook($book->id);
 
 		}
@@ -50,7 +50,7 @@ class VoucherController extends Controller
 		}
 
 		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
-	
+
 		return new VoucherCollection($vouchers->paginate(10));
     }
 
@@ -93,13 +93,13 @@ class VoucherController extends Controller
      */
     public function show(Voucher $voucher)
     {
-		
+
 		return response()->json(
 			new VoucherResource(
 				$voucher->load([
-					'stakeholder', 
-					'account', 
-					'book', 
+					'stakeholder',
+					'account',
+					'book',
 					'details'
 				])
 			), 201
@@ -127,7 +127,7 @@ class VoucherController extends Controller
 		$voucherDetails = $request->details;
 		$incomingIds = [];
 
-		foreach ($voucherDetails as $voucherDetail) 
+		foreach ($voucherDetails as $voucherDetail)
 		{
 			$detail = $voucher->details()->updateOrCreate($voucherDetail);
 			$incomingIds[] = $detail->id;
@@ -166,14 +166,22 @@ class VoucherController extends Controller
 
 	public function rejected(int $id)
 	{
+<<<<<<< HEAD
 		$voucher = Voucher::findOrFail($id);
 		return $voucher->rejected();
+=======
+
+>>>>>>> 938e96ec88798c2315f81450dee8a8a7ea929bca
 	}
 
 	public function void(int $id)
 	{
+<<<<<<< HEAD
 		$voucher = Voucher::findOrFail($id);
 		return $voucher->void();
+=======
+
+>>>>>>> 938e96ec88798c2315f81450dee8a8a7ea929bca
 	}
 
 	public function issued(int $id)
