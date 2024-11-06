@@ -16,6 +16,9 @@ use App\Http\Controllers\Api\v1\{
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Enums\FormType;
+use App\Enums\JournalStatus;
+use App\Enums\VoucherStatus;
+use App\Enums\FormStatus;
 
 
 /*
@@ -52,22 +55,41 @@ Route::middleware('auth:api')->group(function () {
 		return response()->json([ 'forms' => FormType::cases() ], 200);
 	});
 
-	Route::put('form/approved/{id}', [FormController::class, 'approved']);
-	Route::put('form/rejected/{id}', [FormController::class, 'rejected']);
-	Route::put('form/void/{id}', [FormController::class, 'void']);
-	Route::put('form/issued/{id}', [FormController::class, 'issued']);
+	Route::prefix('form')->group(function () {
 
-	Route::put('voucher/completed/{id}', [VoucherController::class, 'completed']);
-	Route::put('voucher/approved/{id}', [VoucherController::class, 'approved']);
-	Route::put('voucher/rejected/{id}', [VoucherController::class, 'rejected']);
-	Route::put('voucher/void/{id}', [VoucherController::class, 'void']);
-	Route::put('voucher/issued/{id}', [VoucherController::class, 'issued']);
+		Route::get('/status', function(Request $request) {
+			return response()->json([ 'status' => FormStatus::cases() ], 200);
+		});
+		
+		Route::put('/approved/{id}', [FormController::class, 'approved']);
+		Route::put('/rejected/{id}', [FormController::class, 'rejected']);
+		Route::put('/void/{id}', [FormController::class, 'void']);
+		Route::put('/issued/{id}', [FormController::class, 'issued']);
+	});
 
+	Route::prefix('voucher')->group(function () {
+
+		Route::get('/status', function(Request $request) {
+			return response()->json([ 'status' => VoucherStatus::cases() ], 200);
+		});
+
+		Route::put('/completed/{id}', [VoucherController::class, 'completed']);
+		Route::put('/approved/{id}', [VoucherController::class, 'approved']);
+		Route::put('/rejected/{id}', [VoucherController::class, 'rejected']);
+		Route::put('/void/{id}', [VoucherController::class, 'void']);
+		Route::put('/issued/{id}', [VoucherController::class, 'issued']);
+
+	});
+
+	Route::prefix('journal-entry')->group(function () {
+
+		Route::get('/status', function(Request $request) {
+			return response()->json([ 'status' => JournalStatus::cases() ], 200);
+		});
+
+		Route::put('/post/{id}', [JournalEntryController::class, 'post']);
+		Route::put('/open/{id}', [JournalEntryController::class, 'open']);
+		Route::put('/void/{id}', [JournalEntryController::class, 'void']);
+	});
 
 });
-
-// Route::middleware('guest')->group(function () {
-// 	Route::get('voucher/test', [VoucherController::class, 'testFetchVoucher']);
-// });
-
-

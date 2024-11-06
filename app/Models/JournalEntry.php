@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\JournalStatus;
 
 class JournalEntry extends Model
 {
@@ -38,25 +39,18 @@ class JournalEntry extends Model
         return $this->belongsTo(Voucher::class, 'voucher_id');
     }
 
-	public function scopePosted()
+	public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+	public function updateStatus($newStatus) : bool
 	{
+		if ($this->status === $newStatus->value) {
+            return false;
+        }
 
+		$this->status = $newStatus->value;
+        return $this->save();
 	}
-
-	public function post()
-	{
-		
-	}
-
-	public function void()
-	{
-		
-	}
-
-	public function open()
-	{
-		
-	}
-
-
 }

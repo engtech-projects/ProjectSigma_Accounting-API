@@ -12,6 +12,8 @@ use App\Models\PostingPeriod;
 use App\Models\Period;
 use App\Http\Requests\StoreRequest\JournalStoreRequest;
 use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
+use App\Http\Resources\Collections\JournalEntryCollection;
+use App\Enums\JournalStatus;
 
 class JournalEntryController extends Controller
 {
@@ -20,8 +22,16 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        $journalEntries = JournalEntry::latest('id')->get();
-        return response()->json(JournalEntryResource::collection($journalEntries));
+		$query = JournalEntry::query();
+
+		if( isset($request->status) )
+		{
+			$query->status($request->status);
+		}
+
+        $journalEntries = $query->latest('id')->paginate(10);
+
+        return new JournalEntryCollection($journalEntries);
     }
 
     /**
@@ -102,4 +112,34 @@ class JournalEntryController extends Controller
     {
         //
     }
+
+	public function updateStatus(int $id, JournalStatus $status)
+	{
+		$journal = JournalEntry::find($id);
+
+		if (!$journal) {
+			return response()->json(['error' => 'Journal not found'], 404);
+		}
+		// Attempt to update status
+		if ($voucher->updateStatus($status)) {
+			return response()->json(['message' => 'Journal status updated', 'voucher' => $journal], 200);
+		}
+	}
+
+	public function post(int $id)
+	{
+		return $this->updateStatus($id, JournalStatus::Posted);
+	}
+
+	public function open(int $id)
+	{
+		return $this->updateStatus($id, JournalStatus::Open);
+	}
+
+	public function void(int $id)
+	{
+		return $this->updateStatus($id, JournalStatus::Void);
+	}
+
+
 }
