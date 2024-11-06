@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use App\Enums\VoucherStatus;
 
 class Voucher extends Model
 {
@@ -43,13 +44,13 @@ class Voucher extends Model
 	{	
 		$prefix = Str::upper($prefix);
 		$currentYearMonth = Carbon::now()->format('Ym'); 
-        // Find the highest series
+        // Find the highest series number based on the prefix:DV/CV
         $lastVoucher = Voucher::where('voucher_no', 'like', "{$prefix}-{$currentYearMonth}-%")
             ->orderBy('voucher_no', 'desc')
             ->first();
         // Extract the last series number if a previous voucher exists
         if ($lastVoucher) {
-            $lastSeries = (int) substr($lastVoucher->voucher_no, -4); // Get last 4 digits
+            $lastSeries = (int) substr($lastVoucher->voucher_no, -4); 
             $nextSeries = $lastSeries + 1;
         } else {
             $nextSeries = 1; // Start at 0001 if no previous voucher
@@ -60,8 +61,6 @@ class Voucher extends Model
         $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
 
         return $voucherNo;
-
-		// return $lastVoucher;
 	}
 
 	public function account() : BelongsTo
@@ -100,29 +99,14 @@ class Voucher extends Model
         return $query->where('status', $status);
     }
 
-	public function completed() 
+	public function updateStatus($newStatus) : bool
 	{
-		return $this->update(['status' => 'completed']);
-    }
+		if ($this->status === $newStatus->value) {
+            return false;
+        }
 
-	public function approved() 
-	{
-		return $this->update(['status' => 'approved']);
-    }
-
-	public function rejected() 
-	{
-	   return $this->update(['status' => 'rejected']);
-    }
-
-    public function void() 
-    {
-	   return $this->update(['status' => 'void']);
-    }
-
-    public function issued() 
-    {
-	   return $this->update(['status' => 'issued']);
-    }
+		$this->status = $newStatus->value;
+        return $this->save();
+	}
 
 }

@@ -19,7 +19,7 @@ class PaymentRequestResource extends JsonResource
 			'stakeholder_id' => $this->stakeholder_id,
 			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
 			'prf_no' => $this->prf_no,
-			'request_date' => $this->request_date ,
+			'request_date' => $this->request_date,
 			'description' => $this->description,
 			'total' => $this->total,
 			'form' => $this->form,

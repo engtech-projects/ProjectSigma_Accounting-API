@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasFormable;
+use App\Enums\FormStatus;
 
 class Form extends Model
 {
@@ -31,21 +32,14 @@ class Form extends Model
         return $this->hasMany(Voucher::class);
     }
 
-	public function approved() {
-		 $this->status = 'approved';
-		 return $this->save();
-	}
-	public function rejected() {
-		$this->status = 'rejected';
-		return $this->save();
-	}
-	public function void() {
-		$this->status = 'void';
-		return $this->save();
-	}
-	public function issued() {
-		$this->status = 'issued';
-		return $this->save();
+	public function updateStatus($newStatus) : bool
+	{
+		if ($this->status === $newStatus->value) {
+            return false;
+        }
+
+		$this->status = $newStatus->value;
+        return $this->save();
 	}
 
 }

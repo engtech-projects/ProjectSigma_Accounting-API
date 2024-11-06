@@ -18,6 +18,7 @@ use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Collections\VoucherCollection;
+use App\Enums\VoucherStatus;
 
 class VoucherController extends Controller
 {
@@ -34,14 +35,17 @@ class VoucherController extends Controller
     public function index(Request $request)
     {
 		$query = Voucher::query();
+
 		if( isset($request->book) )
 		{
 			$book = Book::byName($request->book)->firstOr(function () {
 				return Book::first();
 			});
 
-			$query->filterBook($book->id);
-
+			if( $book )
+			{
+				$query->filterBook($book->id);
+			}
 		}
 
 		if( isset($request->status) )
@@ -49,9 +53,11 @@ class VoucherController extends Controller
 			$query->status($request->status);
 		}
 
-		$vouchers = $query->orderBy('id', 'desc')->with(['account','stakeholder', 'details']);
+		$vouchers = $query->latest('id')
+						->with(['account','stakeholder', 'details'])
+						->paginate(10);
 
-		return new VoucherCollection($vouchers->paginate(10));
+		return new VoucherCollection($vouchers);
     }
 
     /**
@@ -152,34 +158,41 @@ class VoucherController extends Controller
 		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
 	}
 
+	public function updateStatus(int $id, VoucherStatus $status)
+	{
+		$voucher = Voucher::find($id);
+
+		if (!$voucher) {
+			return response()->json(['error' => 'Voucher not found'], 404);
+		}
+		// Attempt to update status
+		if ($voucher->updateStatus($status)) {
+			return response()->json(['message' => 'Voucher status updated', 'voucher' => $voucher], 200);
+		}
+	}
+
 	public function completed(int $id)
 	{
-		$voucher = Voucher::findOrFail($id);
-		return $voucher->completed();
+		return $this->updateStatus($id, VoucherStatus::Completed);
 	}
 
 	public function approved(int $id)
 	{
-		$voucher = Voucher::findOrFail($id);
-		return $voucher->approved();
+		return $this->updateStatus($id, VoucherStatus::Approved);
 	}
 
 	public function rejected(int $id)
 	{
-		$voucher = Voucher::findOrFail($id);
-		return $voucher->rejected();
+		return $this->updateStatus($id, VoucherStatus::Rejected);
 	}
 
 	public function void(int $id)
 	{
-		$voucher = Voucher::findOrFail($id);
-		return $voucher->void();
+		return $this->updateStatus($id, VoucherStatus::Void);
 	}
 
-	public function issued(int $id)
+	public function pending(int $id)
 	{
-		$voucher = Voucher::findOrFail($id);
-		return $voucher->issued();
+		return $this->updateStatus($id, VoucherStatus::Pending);
 	}
-
 }

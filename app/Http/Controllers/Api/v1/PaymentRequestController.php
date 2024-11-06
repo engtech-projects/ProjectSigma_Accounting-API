@@ -21,15 +21,14 @@ class PaymentRequestController extends Controller
      */
     public function index(Request $request)
     {	
-
 		$query = PaymentRequest::query();
 
-		if( isset($request->filter['status']) )
+		if( isset($request->status) )
 		{
-			$query->FormStatus($request->filter['status']);
+			$query->FormStatus($request->status);
 		}
 
-		$paymentRequest = $query->orderBy('id', 'desc')->paginate(10);
+		$paymentRequest = $query->latest('id')->with(['stakeholder'])->paginate(10);
 
 		return new PaymentRequestCollection($paymentRequest);
     }
@@ -119,6 +118,4 @@ class PaymentRequestController extends Controller
 		// return response()->json(['request' => $request->all()]);
         return PaymentRequest::PrfNo($prfNo)->first();
     }
-
-	
 }

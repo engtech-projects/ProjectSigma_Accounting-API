@@ -38,4 +38,25 @@ class JournalEntry extends Model
         return $this->belongsTo(Voucher::class, 'voucher_id');
     }
 
+	public function scopePosted()
+	{
+
+	}
+
+	public function post()
+	{
+		
+	}
+
+	public function void()
+	{
+		
+	}
+
+	public function open()
+	{
+		
+	}
+
+
 }
