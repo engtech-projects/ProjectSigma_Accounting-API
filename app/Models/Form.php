@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\HasFormable;
 use App\Enums\FormStatus;
+use App\Traits\HasTransitions;
 
 class Form extends Model
 {
-    use HasFactory, HasFormable;
+    use HasFactory, HasFormable, HasTransitions;
 
 	protected $table = 'forms';
 
@@ -32,14 +33,22 @@ class Form extends Model
         return $this->hasMany(Voucher::class);
     }
 
-	public function updateStatus($newStatus) : bool
-	{
-		if ($this->status === $newStatus->value) {
-            return false;
-        }
+	// public function canTransitionTo(FormStatus $newStatus): bool
+    // {
+    //     return $this->status->nextStatus() === $newStatus;
+    // }
 
-		$this->status = $newStatus->value;
-        return $this->save();
-	}
+	// public function updateStatus(FormStatus $newStatus) : bool
+	// {
+
+	// 	if( $this->canTransitionTo($newStatus) )
+	// 	{
+	// 		$this->status = $newStatus->value;
+	// 		$this->save();
+	// 		return true;
+	// 	}
+
+    //     return $this->false();
+	// }
 
 }

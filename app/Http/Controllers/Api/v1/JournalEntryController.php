@@ -113,33 +113,33 @@ class JournalEntryController extends Controller
         //
     }
 
-	public function updateStatus(int $id, JournalStatus $status)
+	public function changeStatus(int $id, JournalStatus $status)
 	{
 		$journal = JournalEntry::find($id);
 
 		if (!$journal) {
-			return response()->json(['error' => 'Journal not found'], 404);
+			return response()->json(['error' => 'journal not found'], 404);
 		}
-		// Attempt to update status
-		if ($voucher->updateStatus($status)) {
-			return response()->json(['message' => 'Journal status updated', 'voucher' => $journal], 200);
+		
+		if ($journal->updateStatus($status)) {
+			return response()->json(['message' => 'journal status updated', 'journal' => $journal], 200);
+		} else {
+			return response()->json(['error' => 'Transition not allowed', 'journal' => $journal], 405);
 		}
 	}
 
 	public function post(int $id)
 	{
-		return $this->updateStatus($id, JournalStatus::Posted);
+		return $this->changeStatus($id, JournalStatus::Posted);
 	}
 
 	public function open(int $id)
 	{
-		return $this->updateStatus($id, JournalStatus::Open);
+		return $this->changeStatus($id, JournalStatus::Open);
 	}
 
 	public function void(int $id)
 	{
-		return $this->updateStatus($id, JournalStatus::Void);
+		return $this->changeStatus($id, JournalStatus::Void);
 	}
-
-
 }

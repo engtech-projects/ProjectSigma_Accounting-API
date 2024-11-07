@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use App\Enums\VoucherStatus;
+use App\Traits\HasTransitions;
 
 class Voucher extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTransitions;
 
 	protected $table = 'voucher';
 
@@ -99,14 +100,14 @@ class Voucher extends Model
         return $query->where('status', $status);
     }
 
-	public function updateStatus($newStatus) : bool
-	{
-		if ($this->status === $newStatus->value) {
-            return false;
-        }
+	// public function updateStatus($newStatus) : bool
+	// {
+	// 	if ($this->status === $newStatus->value) {
+    //         return false;
+    //     }
 
-		$this->status = $newStatus->value;
-        return $this->save();
-	}
+	// 	$this->status = $newStatus->value;
+    //     return $this->save();
+	// }
 
 }

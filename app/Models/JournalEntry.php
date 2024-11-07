@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\JournalStatus;
+use App\Traits\HasTransitions;
 
 class JournalEntry extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTransitions;
 
 	protected $table = 'journal_entry';
 
@@ -44,13 +45,13 @@ class JournalEntry extends Model
         return $query->where('status', $status);
     }
 
-	public function updateStatus($newStatus) : bool
-	{
-		if ($this->status === $newStatus->value) {
-            return false;
-        }
+	// public function updateStatus($newStatus) : bool
+	// {
+	// 	if ($this->status === $newStatus->value) {
+    //         return false;
+    //     }
 
-		$this->status = $newStatus->value;
-        return $this->save();
-	}
+	// 	$this->status = $newStatus->value;
+    //     return $this->save();
+	// }
 }

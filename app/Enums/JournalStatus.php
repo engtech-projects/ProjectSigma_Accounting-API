@@ -8,4 +8,15 @@ enum JournalStatus: string
     case Posted = 'posted';
     case Open = 'open';
 	case Void = 'void';
+
+	public function nextStatus(): ?JournalStatus
+    {
+        return match($this) {
+            self::Draft => self::Open,
+            self::Open => self::Posted,
+			self::Open => self::Void,
+			self::Posted => null
+        };
+    }
+
 }

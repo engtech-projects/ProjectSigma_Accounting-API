@@ -77,6 +77,7 @@ class VoucherController extends Controller
 
 		if( isset($request->form_type) && isset($request->reference_no) )
 		{
+			// enhancement - Identify form type
 			$prfNumber = $request->reference_no;
 			$form = Form::whereHasMorph(
 				'formable',
@@ -158,41 +159,43 @@ class VoucherController extends Controller
 		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
 	}
 
-	public function updateStatus(int $id, VoucherStatus $status)
+	public function changeStatus(int $id, VoucherStatus $status)
 	{
 		$voucher = Voucher::find($id);
 
 		if (!$voucher) {
-			return response()->json(['error' => 'Voucher not found'], 404);
+			return response()->json(['error' => 'voucher not found'], 404);
 		}
 		// Attempt to update status
 		if ($voucher->updateStatus($status)) {
-			return response()->json(['message' => 'Voucher status updated', 'voucher' => $voucher], 200);
+			return response()->json(['message' => 'voucher status updated', 'voucher' => $voucher], 200);
+		} else {
+			return response()->json(['error' => 'Transition not allowed', 'voucher' => $voucher], 405);
 		}
 	}
 
 	public function completed(int $id)
 	{
-		return $this->updateStatus($id, VoucherStatus::Completed);
+		return $this->changeStatus($id, VoucherStatus::Completed);
 	}
 
 	public function approved(int $id)
 	{
-		return $this->updateStatus($id, VoucherStatus::Approved);
+		return $this->changeStatus($id, VoucherStatus::Approved);
 	}
 
 	public function rejected(int $id)
 	{
-		return $this->updateStatus($id, VoucherStatus::Rejected);
+		return $this->changeStatus($id, VoucherStatus::Rejected);
 	}
 
 	public function void(int $id)
 	{
-		return $this->updateStatus($id, VoucherStatus::Void);
+		return $this->changeStatus($id, VoucherStatus::Void);
 	}
 
 	public function pending(int $id)
 	{
-		return $this->updateStatus($id, VoucherStatus::Pending);
+		return $this->changeStatus($id, VoucherStatus::Pending);
 	}
 }
