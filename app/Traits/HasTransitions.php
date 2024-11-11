@@ -8,7 +8,7 @@ trait HasTransitions
 {
     public function canTransitionTo($newStatus): bool
     {
-        return $this->status->nextStatus() === $newStatus;
+        return $this->status->nextStatus()->value === $newStatus;
     }
 
     public function updateStatus($newStatus): bool

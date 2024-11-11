@@ -10,7 +10,7 @@ use App\Enums\FormStatus;
 class FormController extends Controller
 {
 
-	public function changeStatus(int $id, FormStatus $status)
+	public function changeStatus(int $id, string $status)
 	{
 		$form = Form::find($id);
 
@@ -27,21 +27,21 @@ class FormController extends Controller
 
 	public function approved(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Approved);
+		return $this->changeStatus($id, FormStatus::Approved->value);
 	}
 
 	public function rejected(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Rejected);
+		return $this->changeStatus($id, FormStatus::Rejected->value);
 	}
 
 	public function pending(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Pending);
+		return $this->changeStatus($id, FormStatus::Pending->value);
 	}
 
 	public function issued(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Issued);
+		return $this->changeStatus($id, FormStatus::Issued->value);
 	}
 }
