@@ -19,3 +19,7 @@ use Illuminate\Http\Request;
 Route::get('/', function (Request $request) {
     return response()->json(['version' => app()->version()]);
 });
+Route::get('artisan-clear-optimization', function () {
+    Artisan::call("optimize:clear");
+    return "success";
+});

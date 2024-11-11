@@ -12,6 +12,8 @@ use App\Models\PostingPeriod;
 use App\Models\Period;
 use App\Http\Requests\StoreRequest\JournalStoreRequest;
 use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
+use App\Http\Resources\Collections\JournalEntryCollection;
+use App\Enums\JournalStatus;
 
 class JournalEntryController extends Controller
 {
@@ -20,8 +22,16 @@ class JournalEntryController extends Controller
      */
     public function index()
     {
-        $journalEntries = JournalEntry::latest('id')->get();
-        return response()->json(JournalEntryResource::collection($journalEntries));
+		$query = JournalEntry::query();
+
+		if( isset($request->status) )
+		{
+			$query->status($request->status);
+		}
+
+        $journalEntries = $query->latest('id')->paginate(10);
+
+        return new JournalEntryCollection($journalEntries);
     }
 
     /**
@@ -102,4 +112,34 @@ class JournalEntryController extends Controller
     {
         //
     }
+
+	public function changeStatus(int $id, JournalStatus $status)
+	{
+		$journal = JournalEntry::find($id);
+
+		if (!$journal) {
+			return response()->json(['error' => 'journal not found'], 404);
+		}
+		
+		if ($journal->updateStatus($status)) {
+			return response()->json(['message' => 'journal status updated', 'journal' => $journal], 200);
+		} else {
+			return response()->json(['error' => 'Transition not allowed', 'journal' => $journal], 405);
+		}
+	}
+
+	public function post(int $id)
+	{
+		return $this->changeStatus($id, JournalStatus::Posted);
+	}
+
+	public function open(int $id)
+	{
+		return $this->changeStatus($id, JournalStatus::Open);
+	}
+
+	public function void(int $id)
+	{
+		return $this->changeStatus($id, JournalStatus::Void);
+	}
 }

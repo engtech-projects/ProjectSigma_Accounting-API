@@ -24,4 +24,9 @@ class Book extends Model
     {
         return $this->belongsTo(AccountGroup::class);
     }
+
+	public function scopeByName($query, $name)
+	{
+    	return $query->where('name', $name);
+	}
 }

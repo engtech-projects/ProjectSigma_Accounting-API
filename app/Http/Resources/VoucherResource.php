@@ -17,6 +17,7 @@ class VoucherResource extends JsonResource
 		return [
 			'id' => $this->id,
 			'check_no' => $this->check_no,
+			'reference_no' => $this->reference_no,
 			'voucher_no' => $this->voucher_no,
 			'stakeholder_id' => $this->stakeholder_id,
 			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
@@ -31,6 +32,7 @@ class VoucherResource extends JsonResource
 			'book_id' => $this->book_id,
 			'book' => BookResource::make($this->whenLoaded('book')),
 			'details' => VoucherDetailsResource::collection($this->whenLoaded('details')),
+			'form' => $this->form
 		];
     }
 }

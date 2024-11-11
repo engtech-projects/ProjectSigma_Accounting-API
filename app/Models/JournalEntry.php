@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Enums\JournalStatus;
+use App\Traits\HasTransitions;
 
 class JournalEntry extends Model
 {
-    use HasFactory;
+    use HasFactory, HasTransitions;
 
 	protected $table = 'journal_entry';
 
@@ -38,4 +40,18 @@ class JournalEntry extends Model
         return $this->belongsTo(Voucher::class, 'voucher_id');
     }
 
+	public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+	// public function updateStatus($newStatus) : bool
+	// {
+	// 	if ($this->status === $newStatus->value) {
+    //         return false;
+    //     }
+
+	// 	$this->status = $newStatus->value;
+    //     return $this->save();
+	// }
 }
