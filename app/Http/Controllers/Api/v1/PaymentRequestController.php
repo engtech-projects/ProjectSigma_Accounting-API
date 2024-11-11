@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
-use App\Http\Resources\Collections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Enums\FormStatus;
 use App\Enums\FormType;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +20,7 @@ class PaymentRequestController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {	
+    {
 		$query = PaymentRequest::query();
 
 		if( isset($request->status) )
@@ -85,13 +85,13 @@ class PaymentRequestController extends Controller
     {
 		$paymentRequest->update($request->validated());
 
-	
+
 		$existingIds = $paymentRequest->details()->pluck('id')->toArray();
 
 		$paymentRequestDetails = $request->details;
 		$incomingIds = [];
 
-		foreach ($paymentRequestDetails as $paymentRequestDetail) 
+		foreach ($paymentRequestDetails as $paymentRequestDetail)
 		{
 			$detail = $paymentRequest->details()->updateOrCreate($paymentRequestDetail);
 			$incomingIds[] = $detail->id;
@@ -111,7 +111,7 @@ class PaymentRequestController extends Controller
     }
 
 	/**
-     * 
+     *
      */
     public function prfNo($prfNo)
     {

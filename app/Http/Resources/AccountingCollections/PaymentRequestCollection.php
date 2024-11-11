@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Collections;
+namespace App\Http\Resources\AccountingCollections;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -17,7 +17,7 @@ class PaymentRequestCollection extends ResourceCollection
      *
      * @return array<int|string, mixed>
      */
-	
+
     public function toArray(Request $request): array
     {
 

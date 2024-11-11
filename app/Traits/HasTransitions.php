@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Enums\DocumentStatus;
 
-trait HasStatusTransitions
+trait HasTransitions
 {
     public function canTransitionTo($newStatus): bool
     {

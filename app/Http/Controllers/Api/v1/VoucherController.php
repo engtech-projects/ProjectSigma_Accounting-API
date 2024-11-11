@@ -17,7 +17,7 @@ use App\Models\Form;
 use App\Models\Book;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Resources\Collections\VoucherCollection;
+use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Enums\VoucherStatus;
 
 class VoucherController extends Controller

@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Collections;
+namespace App\Http\Resources\AccountingCollections;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\AccountGroupResource;
 
-class AccountGroupCollection extends ResourceCollection
+class BookCollection extends ResourceCollection
 {
-	public static $wrap = 'account_group';
     /**
      * Transform the resource collection into an array.
      *
@@ -16,10 +14,6 @@ class AccountGroupCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-		$this->collection->transform(function ($accountGroup) {
-            return new AccountGroupResource($accountGroup);
-        });
-
         return parent::toArray($request);
     }
 }

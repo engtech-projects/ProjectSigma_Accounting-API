@@ -12,7 +12,7 @@ use App\Models\PostingPeriod;
 use App\Models\Period;
 use App\Http\Requests\StoreRequest\JournalStoreRequest;
 use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
-use App\Http\Resources\Collections\JournalEntryCollection;
+use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Enums\JournalStatus;
 
 class JournalEntryController extends Controller
@@ -49,11 +49,11 @@ class JournalEntryController extends Controller
     {
 		$postingPeriodId = PostingPeriod::current()->pluck('id')->first();
 		$periodId = Period::where('posting_period_id', $postingPeriodId)->current()->pluck('id')->first();
-		
+
 		$validated = $request->validated();
 		$validated['posting_period_id'] = $postingPeriodId;
 		$validated['period_id'] = $periodId;
-		
+
         $journalEntry = JournalEntry::create($validated);
 
 		$journalEntry->details()->createMany($request->details);
@@ -93,7 +93,7 @@ class JournalEntryController extends Controller
 		$journalDetails = $request->details;
 		$incomingIds = [];
 
-		foreach ($journalDetails as $journalDetail) 
+		foreach ($journalDetails as $journalDetail)
 		{
 			$detail = $journalEntry->details()->updateOrCreate($journalDetail);
 			$incomingIds[] = $detail->id;
@@ -120,7 +120,7 @@ class JournalEntryController extends Controller
 		if (!$journal) {
 			return response()->json(['error' => 'journal not found'], 404);
 		}
-		
+
 		if ($journal->updateStatus($status)) {
 			return response()->json(['message' => 'journal status updated', 'journal' => $journal], 200);
 		} else {

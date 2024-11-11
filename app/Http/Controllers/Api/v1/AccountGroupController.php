@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\Collections\AccountGroupCollection;
+use App\Http\Resources\AccountingCollections\AccountGroupCollection;
 use App\Http\Resources\AccountGroupResource;
 use App\Models\AccountGroup;
 use Illuminate\Http\JsonResponse;
