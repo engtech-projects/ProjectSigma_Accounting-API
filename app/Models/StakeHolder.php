@@ -11,12 +11,13 @@ class StakeHolder extends Model
     use HasFactory;
 
 	protected $table = 'stakeholder';
-
+	public $timestamps = true;
 	protected $fillable = [
-		'name'
+        'id',
+		'name',
+		'type',
+		'source_id'
 	];
-
-	public $timestamps = false;
 
 	public function forms()
     {

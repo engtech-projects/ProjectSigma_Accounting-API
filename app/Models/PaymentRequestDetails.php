@@ -14,7 +14,6 @@ class PaymentRequestDetails extends Model
 
 	protected $fillable = [
 		'payment_request_id',
-		'stakeholder_id',
 		'particulars',
 		'cost',
 		'vat',

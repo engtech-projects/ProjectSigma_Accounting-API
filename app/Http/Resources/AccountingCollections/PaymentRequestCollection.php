@@ -20,10 +20,9 @@ class PaymentRequestCollection extends ResourceCollection
 
     public function toArray(Request $request): array
     {
-
-		return $this->collection->transform(function ($paymentRequest){
-			return new PaymentRequestResource($paymentRequest);
-		})->toArray();
+        return [
+            ...parent::toArray($request),
+        ];
 
     }
 }

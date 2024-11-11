@@ -3,33 +3,29 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Requests\StoreRequest\PaymentRequestForm;
+use App\Http\Requests\ShowStatusRequest;
+use App\Http\Requests\StoreRequest\PaymentRequestFormRequest;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
+use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Enums\FormStatus;
-use App\Enums\FormType;
-use Illuminate\Support\Facades\DB;
 
 class PaymentRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(ShowStatusRequest $request)
     {
+        $validatedData = $request->validated();
 		$query = PaymentRequest::query();
-
-		if( isset($request->status) )
+		if( isset($validatedData['status']) )
 		{
-			$query->FormStatus($request->status);
+			$query->formStatus($validatedData['status']);
 		}
-
-		$paymentRequest = $query->latest('id')->with(['stakeholder'])->paginate(10);
-
+		$paymentRequest = $query->latest('id')->with(['stakeholder'])->paginate(15);
 		return new PaymentRequestCollection($paymentRequest);
     }
 
@@ -44,22 +40,19 @@ class PaymentRequestController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PaymentRequestForm $request)
+    public function store(PaymentRequestFormRequest $request)
     {
+        $validatedData = $request->validated();
 		$prfNo = PaymentRequest::generatePrfNo();
-		$validated = $request->validated();
-		$validated['prf_no'] = $prfNo;
-		$paymentRequest = PaymentRequest::create($validated);
-
-		$paymentRequest->details()->createMany($request->details);
-
+		$validatedData['prf_no'] = $prfNo;
+		$paymentRequest = PaymentRequest::create($validatedData);
+		$paymentRequest->details()->createMany($validatedData['details']);
 		$form = Form::create([
 			'stakeholder_id' => Auth()->user()->id,
 			'status' => FormStatus::Pending->value,
 		]);
-
 		$paymentRequest->forms()->save($form);
-		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 201);
+        return response()->json(['message' => 'Payment Request Created Successfully'], 201);
     }
 
     /**
