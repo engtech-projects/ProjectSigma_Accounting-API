@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\StoreRequest;
 
+use App\Enums\AssignTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class PaymentRequestFormRequest extends FormRequest
 {
@@ -29,6 +31,23 @@ class PaymentRequestFormRequest extends FormRequest
 			'details' => 'required|min:1|array',
 			'details.*.cost' => 'nullable|numeric',
 			'details.*.vat' => 'nullable|numeric',
+            'details.*.charging_type' => [
+                "required",
+                "string",
+                new Enum(AssignTypes::class)
+            ],
+            'details.*.project_id' => [
+                'required_if:details.*.charging_type,==,' . AssignTypes::PROJECT->value,
+                'nullable',
+                "integer",
+                "exists:projects,id",
+            ],
+            'details.*.department_id' => [
+                'required_if:details.*.charging_type,==,' . AssignTypes::DEPARTMENT->value,
+                'nullable',
+                "integer",
+                "exists:departments,id",
+            ],
 			'details.*.amount' => 'nullable|numeric',
 			'details.*.particulars' => 'nullable',
         ];

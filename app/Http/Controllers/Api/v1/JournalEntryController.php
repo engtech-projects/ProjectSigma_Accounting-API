@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
 use App\Models\PostingPeriod;
@@ -29,7 +26,7 @@ class JournalEntryController extends Controller
 			$query->status($request->status);
 		}
 
-        $journalEntries = $query->latest('id')->paginate(10);
+        $journalEntries = $query->latest('id')->paginate(15);
 
         return new JournalEntryCollection($journalEntries);
     }

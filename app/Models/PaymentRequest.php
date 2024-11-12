@@ -14,9 +14,7 @@ use App\Traits\HasFormable;
 class PaymentRequest extends Model
 {
     use HasFactory,  HasFormable;
-
 	protected $table = 'payment_request';
-
 	protected $fillable = [
 		'stakeholder_id',
 		'prf_no',
@@ -24,65 +22,34 @@ class PaymentRequest extends Model
 		'description',
 		'total',
 	];
-	
-	public static function generatePrfNo()
-	{	
-		$prefix = strtoupper('RFA-ACCTG');
-		$currentYearMonth = Carbon::now()->format('Y-m'); 
-        // Find the highest series
-        $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")
-            ->orderBy('prf_no', 'desc')
-            ->first();
-        // Extract the last series number if a previous request exists
-        if ($lastPaymentRequest) {
-            $lastSeries = (int) substr($lastPaymentRequest->prf_no, -4); // Get last 4 digits
-            $nextSeries = $lastSeries + 1;
-        } else {
-            $nextSeries = 1; // Start at 0001 if no previous voucher
-        }
-        // Format the series number to be 4 digits (e.g., 0001)
-        $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
-        // Construct the new reference number
-        $prfNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
-
-        return $prfNo;
-	}
-
 	public function form()
     {
         return $this->morphOne(Form::class, 'formable');
     }
-
-	// public function forms()
-    // {
-    //     return $this->morphMany(Form::class, 'formable');
-    // }
-
-	// public function vouchers()
-	// {
-	// 	return $this->morphMany(Voucher::class, 'formable');
-	// }
-
 	public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);
     }
-
 	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
     }
-
 	public function scopePrfNo($query, $prfNo)
 	{
 		return $query->where('prf_no', $prfNo);
 	}
-
+    public function scopeWithPaymentRequestDetails($query)
+    {
+        return $query->with(['details']);
+    }
 	public function scopeFormStatus($query, $status)
 	{
 		return $query->whereHas('form', function ($query) use ($status) {
 			$query->where('forms.status', $status);
 		});
 	}
-
+    public function scopeWithStakeholder($query)
+    {
+        return $query->with(['stakeholder']);
+    }
 }

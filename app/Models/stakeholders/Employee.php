@@ -2,6 +2,7 @@
 
 namespace App\Models\Stakeholders;
 
+use App\Models\PaymentRequestDetails;
 use App\Models\StakeHolder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,5 +19,9 @@ class Employee extends Model
     public function stakeholder()
     {
         return $this->morphOne(StakeHolder::class, 'stakeholdable');
+    }
+    public function paymentRequestDetails()
+    {
+        return $this->morphMany(PaymentRequestDetails::class, 'chargeable');
     }
 }

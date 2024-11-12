@@ -3,32 +3,52 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ShowStatusRequest;
+use App\Http\Requests\PaymentFilterRequest;
 use App\Http\Requests\StoreRequest\PaymentRequestFormRequest;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
 use App\Enums\FormStatus;
+use App\Services\PaymentServices;
+use Illuminate\Http\JsonResponse;
 
 class PaymentRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(ShowStatusRequest $request)
+    public function index(PaymentFilterRequest $request)
     {
-        $validatedData = $request->validated();
-		$query = PaymentRequest::query();
-		if( isset($validatedData['status']) )
-		{
-			$query->formStatus($validatedData['status']);
-		}
-		$paymentRequest = $query->latest('id')->with(['stakeholder'])->paginate(15);
-		return new PaymentRequestCollection($paymentRequest);
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Payment Requests Successfully Retrieved.',
+                'data' => PaymentServices::getWithPagination($request->validated()),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Payment Requests Failed to Retrieve.',
+            ], 500);
+        }
     }
 
+    public function get(PaymentFilterRequest $request)
+    {
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Payment Requests Successfully Retrieved.',
+                'data' => PaymentServices::get($request->validated()),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Payment Requests Failed to Retrieve.',
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -43,7 +63,7 @@ class PaymentRequestController extends Controller
     public function store(PaymentRequestFormRequest $request)
     {
         $validatedData = $request->validated();
-		$prfNo = PaymentRequest::generatePrfNo();
+		$prfNo = PaymentServices::generatePrfNo();
 		$validatedData['prf_no'] = $prfNo;
 		$paymentRequest = PaymentRequest::create($validatedData);
 		$paymentRequest->details()->createMany($validatedData['details']);
@@ -52,7 +72,10 @@ class PaymentRequestController extends Controller
 			'status' => FormStatus::Pending->value,
 		]);
 		$paymentRequest->forms()->save($form);
-        return response()->json(['message' => 'Payment Request Created Successfully'], 201);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Request Created Successfully',
+        ], 201);
     }
 
     /**
@@ -60,7 +83,11 @@ class PaymentRequestController extends Controller
      */
     public function show(PaymentRequest $paymentRequest)
     {
-		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 200);
+		return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Request Successfully Retrieved.',
+            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])),
+        ], 200);
     }
 
     /**
@@ -77,8 +104,6 @@ class PaymentRequestController extends Controller
     public function update(PaymentUpdateRequestForm $request, PaymentRequest $paymentRequest)
     {
 		$paymentRequest->update($request->validated());
-
-
 		$existingIds = $paymentRequest->details()->pluck('id')->toArray();
 
 		$paymentRequestDetails = $request->details;
@@ -92,7 +117,11 @@ class PaymentRequestController extends Controller
 
 		$toDelete = array_diff($existingIds, $incomingIds);
 		$paymentRequest->details()->whereIn('id', $toDelete)->delete();
-		return response()->json(new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])), 200);
+		return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Request Successfully Updated.',
+            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])),
+        ], 200);
     }
 
     /**
@@ -108,7 +137,10 @@ class PaymentRequestController extends Controller
      */
     public function prfNo($prfNo)
     {
-		// return response()->json(['request' => $request->all()]);
-        return PaymentRequest::PrfNo($prfNo)->first();
+		return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Request Successfully Retrieved.',
+            'data' => PaymentRequest::PrfNo($prfNo)->withStakeholder()->first(),
+        ], 200);
     }
 }
