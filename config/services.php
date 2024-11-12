@@ -29,10 +29,9 @@ return [
         'HRSM_URL' => env('HRSM_API')
     ],
     'url' => [
-        'hrms_app_url' => env('HRMS_APP_URL'),
         'hrms_api_url' => env('HRMS_API_URL'),
-        'inventory_app_url' => env('INVENTORY_APP_URL'),
-        'inventory_api_url' => env('INVENTORY_API_URL')
+        'inventory_api_url' => env('INVENTORY_API_URL'),
+        'project_api_url' => env('PROJECT_API_URL')
     ],
 
 	'key' =>[

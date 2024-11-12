@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\v1\{
 
 use App\Http\Controllers\HrmsController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Enums\FormType;
@@ -82,11 +83,16 @@ Route::middleware('auth:api')->group(function () {
 		Route::put('/void/{id}', [JournalEntryController::class, 'void']);
 	});
     Route::prefix('hrms')->group(function () {
-        Route::get('/employee', [HrmsController::class, 'employee']);
-        Route::get('/project', [HrmsController::class, 'project']);
-        Route::get('/department', [HrmsController::class, 'department']);
+        Route::post('/sync-all', [HrmsController::class, 'syncAll']);
+        Route::post('/sync-employee', [HrmsController::class, 'syncEmployee']);
+        Route::post('/sync-department', [HrmsController::class, 'syncDepartment']);
+    });
+    Route::prefix('project')->group(function () {
+        Route::post('/sync-all', [ProjectController::class, 'syncAll']);
+        Route::post('/sync-project', [ProjectController::class, 'syncProject']);
     });
     Route::prefix('inventory')->group(function () {
-        Route::get('/supplier', [InventoryController::class, 'supplier']);
+        Route::post('/sync-all', [InventoryController::class, 'syncAll']);
+        Route::post('/sync-supplier', [InventoryController::class, 'syncSupplier']);
     });
 });
