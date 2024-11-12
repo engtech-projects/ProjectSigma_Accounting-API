@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ProjectServices;
+use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
@@ -10,18 +11,30 @@ class ProjectController extends Controller
     {
         try{
             ProjectServices::syncProject(auth()->user()->token);
-            return response()->json(['message' => 'Project synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Project Successfully Retrieved.',
+            ], 200);
         }catch(\Exception $e){
-            return response()->json(['message' => 'Project sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Project sync failed',
+            ], 500);
         }
     }
     public function syncProject()
     {
         $project = ProjectServices::syncProject(auth()->user()->token);
         if( $project ){
-            return response()->json(['message' => 'Project synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Project Successfully Retrieved.',
+            ], 200);
         }else{
-            return response()->json(['message' => 'Project sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Project sync failed',
+            ], 500);
         }
     }
 }

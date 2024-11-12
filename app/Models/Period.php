@@ -10,16 +10,13 @@ use Carbon\Carbon;
 class Period extends Model
 {
     use HasFactory;
-
 	protected $table = 'periods';
-
 	protected $fillable = [
 		'period_id',
 		'start_date',
 		'end_date',
 		'status'
 	];
-
 	public $timestamps = false;
 
 	public function postingPeriod() : BelongsTo
@@ -30,9 +27,9 @@ class Period extends Model
 	public function scopeCurrent($query)
 	{
 		$currentDate = Carbon::now();
-		
+
 		return $query->where('start_date', '<=', $currentDate->toDateString())
-					 ->where('end_date', '>=', $currentDate->toDateString())
-					 ->where('status', 'open');
+            ->where('end_date', '>=', $currentDate->toDateString())
+            ->where('status', 'open');
 	}
 }

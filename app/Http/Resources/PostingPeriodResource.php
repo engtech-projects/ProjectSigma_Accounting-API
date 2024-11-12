@@ -15,11 +15,7 @@ class PostingPeriodResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-			'id' => $this->id,
-			'period_start' => $this->period_start,
-			'period_end' => $this->period_end,
-			'status' => $this->status,
-			'periods' => $this->periods
+            ...parent::toArray($request),
 		];
     }
 }

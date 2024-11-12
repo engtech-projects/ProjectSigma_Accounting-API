@@ -13,9 +13,7 @@ use App\Traits\HasTransitions;
 class Form extends Model
 {
     use HasFactory, HasFormable, HasTransitions;
-
 	protected $table = 'forms';
-
 	protected $fillable = [
 		'stakeholder_id',
 		'formable_id',

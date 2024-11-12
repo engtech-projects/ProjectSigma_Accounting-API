@@ -17,7 +17,7 @@ class PaymentServices
         $paymentRequest = $query->latest('id')
             ->withStakeholder()
             ->withPaymentRequestDetails()
-            ->paginate(15);
+            ->paginate(config('services.pagination.limit'));
         return new PaymentRequestCollection($paymentRequest);
     }
     public static function get(array $validatedData)

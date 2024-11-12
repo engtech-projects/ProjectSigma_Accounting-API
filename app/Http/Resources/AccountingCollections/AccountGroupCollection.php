@@ -16,10 +16,8 @@ class AccountGroupCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-		$this->collection->transform(function ($accountGroup) {
-            return new AccountGroupResource($accountGroup);
-        });
-
-        return parent::toArray($request);
+        return [
+            ...parent::toArray($request),
+        ];
     }
 }

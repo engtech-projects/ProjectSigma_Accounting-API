@@ -9,24 +9,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Book extends Model
 {
     use HasFactory;
-
 	protected $table = 'book';
-
 	protected $fillable = [
 		'name',
 		'code',
 		'account_group_id',
 	];
-
 	public $timestamps = false;
-
 	public function accountGroup(): BelongsTo
     {
         return $this->belongsTo(AccountGroup::class);
     }
-
 	public function scopeByName($query, $name)
 	{
-    	return $query->where('name', $name);
+        return $query->where('name', $name);
 	}
 }

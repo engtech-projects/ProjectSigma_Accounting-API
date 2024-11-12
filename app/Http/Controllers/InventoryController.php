@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\InventoryServices;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class InventoryController extends Controller
 {
@@ -11,9 +11,15 @@ class InventoryController extends Controller
     {
         $supplier = InventoryServices::syncSupplier(auth()->user()->token);
         if( $supplier ){
-            return response()->json(['message' => 'Supplier synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Supplier Successfully Retrieved.',
+            ], 200);
         }else{
-            return response()->json(['message' => 'Supplier sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Supplier sync failed',
+            ], 500);
         }
     }
 }

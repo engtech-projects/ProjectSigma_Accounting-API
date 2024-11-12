@@ -10,19 +10,15 @@ use App\Http\Resources\PaymentRequestResource;
 
 class PaymentRequestCollection extends ResourceCollection
 {
-	public static $wrap = 'payment_request';
-
     /**
      * Transform the resource collection into an array.
      *
      * @return array<int|string, mixed>
      */
-
     public function toArray(Request $request): array
     {
         return [
             ...parent::toArray($request),
         ];
-
     }
 }

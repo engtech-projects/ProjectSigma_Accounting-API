@@ -54,8 +54,8 @@ class VoucherController extends Controller
 		}
 
 		$vouchers = $query->latest('id')
-						->with(['account','stakeholder', 'details'])
-						->paginate(10);
+            ->with(['account','stakeholder', 'details'])
+            ->paginate(config('services.pagination.limit'));
 
 		return new VoucherCollection($vouchers);
     }

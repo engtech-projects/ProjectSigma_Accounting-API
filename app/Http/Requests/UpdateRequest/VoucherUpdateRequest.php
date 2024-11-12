@@ -31,9 +31,8 @@ class VoucherUpdateRequest extends FormRequest
 			'net_amount' => ['required', 'numeric'],
 			'amount_in_words' => ['nullable', 'string'],
 			'voucher_date' => ['required','date','date_format:Y-m-d'],
-			'date_encoded' => ['required','date','date_format:Y-m-d'],	
+			'date_encoded' => ['required','date','date_format:Y-m-d'],
 			'book_id' => ['required', 'numeric'],
-
 			'details' => ['required', 'min:1', 'array'],
 			'details.*.account_id' => ['required', 'numeric'],
 			'details.*.stakeholder_id' => ['required', 'numeric'],

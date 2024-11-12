@@ -11,13 +11,13 @@ use App\Http\Requests\StoreRequest\JournalStoreRequest;
 use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Enums\JournalStatus;
-
+use Illuminate\Http\Request;
 class JournalEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 		$query = JournalEntry::query();
 
@@ -25,8 +25,7 @@ class JournalEntryController extends Controller
 		{
 			$query->status($request->status);
 		}
-
-        $journalEntries = $query->latest('id')->paginate(15);
+        $journalEntries = $query->latest('id')->paginate(config('services.pagination.limit'));
 
         return new JournalEntryCollection($journalEntries);
     }

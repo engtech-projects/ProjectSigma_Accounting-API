@@ -17,8 +17,33 @@ class AccountGroupController extends Controller
      */
     public function index()
     {
-        $accountGroups = AccountGroup::all();
-		return new AccountGroupCollection($accountGroups);
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Groups Successfully Retrieved.',
+                'data' => AccountGroup::all(),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Groups Failed to Retrieve.',
+            ], 500);
+        }
+    }
+    public function getWithPagination()
+    {
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Groups Successfully Retrieved.',
+                'data' => AccountGroup::paginate(config('services.pagination.limit')),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Groups Failed to Retrieve.',
+            ], 500);
+        }
     }
 
     /**
@@ -42,9 +67,19 @@ class AccountGroupController extends Controller
      */
     public function show(AccountGroup $accountGroup)
     {
-    	return response()->json(new AccountGroupResource($accountGroup), 201);
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Group Successfully Retrieved.',
+                'data' => new AccountGroupResource($accountGroup),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Group Failed to Retrieve.',
+            ], 500);
+        }
     }
-
     /**
      * Show the form for editing the specified resource.
      */

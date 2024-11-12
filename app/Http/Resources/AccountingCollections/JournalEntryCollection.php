@@ -8,7 +8,6 @@ use App\Http\Resources\JournalEntryResource;
 
 class JournalEntryCollection extends ResourceCollection
 {
-	public static $wrap = 'journal';
     /**
      * Transform the resource collection into an array.
      *
@@ -16,9 +15,8 @@ class JournalEntryCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-		return $this->collection->transform(function ($journal){
-			return new JournalEntryResource($journal);
-		})->toArray();
-
+		return [
+            ...parent::toArray($request),
+        ];
     }
 }

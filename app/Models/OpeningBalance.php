@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class OpeningBalance extends Model
 {
     use HasFactory;
-
 	protected $table = 'opening_balances';
-
-	protected $fillable = [];
+	protected $fillable = [
+        'opening_balance',
+        'remaining_balance',
+        'account_id',
+        'period_id'
+    ];
 }

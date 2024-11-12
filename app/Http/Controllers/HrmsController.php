@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Services\HrmsServices;
-use App\Services\ProjectServices;
+use Illuminate\Http\JsonResponse;
 
 class HrmsController extends Controller
 {
@@ -12,27 +12,45 @@ class HrmsController extends Controller
         try{
             HrmsServices::syncEmployee(auth()->user()->token);
             HrmsServices::syncDepartment(auth()->user()->token);
-            return response()->json(['message' => 'Employee and Department synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Employee and Department Successfully Retrieved.',
+            ], 200);
         }catch(\Exception $e){
-            return response()->json(['message' => 'Employee and Department sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Employee and Department sync failed',
+            ], 500);
         }
     }
     public function syncEmployee()
     {
         $hrms = HrmsServices::syncEmployee(auth()->user()->token);
         if( $hrms ){
-            return response()->json(['message' => 'Employee synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Employee Successfully Retrieved.',
+            ], 200);
         }else{
-            return response()->json(['message' => 'Employee sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Employee sync failed',
+            ], 500);
         }
     }
     public function syncDepartment()
     {
         $department = HrmsServices::syncDepartment(auth()->user()->token);
         if( $department ){
-            return response()->json(['message' => 'Department synced successfully']);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Department Successfully Retrieved.',
+            ], 200);
         }else{
-            return response()->json(['message' => 'Department sync failed']);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Department sync failed',
+            ], 500);
         }
     }
 

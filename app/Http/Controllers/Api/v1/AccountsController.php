@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Resources\AccountsResource;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 
 class AccountsController extends Controller
@@ -17,11 +16,34 @@ class AccountsController extends Controller
      */
     public function index()
     {
-
-		$accounts = Account::all();
-        return response()->json(AccountsResource::collection($accounts));
+		try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Accounts Successfully Retrieved.',
+                'data' => AccountsResource::collection(Account::all()),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Accounts Failed to Retrieve.',
+            ], 500);
+        }
     }
-
+    public function getWithPagination()
+    {
+        try {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Accounts Successfully Retrieved.',
+                'data' => AccountsResource::collection(Account::paginate(config('services.pagination.limit'))),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Accounts Failed to Retrieve.',
+            ], 500);
+        }
+    }
     /**
      * Show the form for creating a new resource.
      */

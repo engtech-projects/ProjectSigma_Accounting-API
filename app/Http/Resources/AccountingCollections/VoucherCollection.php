@@ -8,8 +8,6 @@ use App\Http\Resources\VoucherResource;
 
 class VoucherCollection extends ResourceCollection
 {
-	public static $wrap = 'vouchers';
-
     /**
      * Transform the resource collection into an array.
      *
@@ -17,10 +15,8 @@ class VoucherCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
-
-		return $this->collection->transform(function ($voucher){
-			return new VoucherResource($voucher);
-		})->toArray();
-
+        return [
+            ...parent::toArray($request),
+        ];
     }
 }

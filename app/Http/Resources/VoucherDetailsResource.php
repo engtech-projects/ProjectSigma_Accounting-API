@@ -15,12 +15,8 @@ class VoucherDetailsResource extends JsonResource
     public function toArray(Request $request): array
     {
 		return [
-			'voucher_id' => $this->voucher_id,
-			'account_id' => $this->account_id,
-			'stakeholder_id' => $this->stakeholder_id,
+            ...parent::toArray($request),
 			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
-			'debit' => $this->debit,
-			'credit' => $this->credit,
 		];
     }
 }

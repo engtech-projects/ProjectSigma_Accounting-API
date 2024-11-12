@@ -25,11 +25,10 @@ class JournalStoreRequest extends FormRequest
             'journal_no' => ['required', 'string'],
             'voucher_id' => ['nullable', 'string'],
 			'status' => ['required', 'string'],
-			'particulars' => ['nullable', 'string'],		
+			'particulars' => ['nullable', 'string'],
 			'journal_date' => ['required','date','date_format:Y-m-d'],
 			'reference_no' => ['nullable', 'string'],
 			'remarks' => ['nullable'],
-
 			'details' => ['required', 'min:1', 'array'],
 			'details.*.account_id' => ['required', 'numeric'],
 			'details.*.stakeholder_id' => ['required', 'numeric'],

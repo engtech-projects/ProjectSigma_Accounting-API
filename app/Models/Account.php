@@ -21,9 +21,7 @@ class Account extends Model
 		'is_active',
 		'statement',
     ];
-
-	public $timestamps = false;
-
+    public $timestamps = false;
 	public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
