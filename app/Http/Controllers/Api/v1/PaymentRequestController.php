@@ -95,7 +95,7 @@ class PaymentRequestController extends Controller
 		return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
-            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])),
+            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.chargeable'])),
         ], 200);
     }
 
