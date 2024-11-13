@@ -85,11 +85,6 @@ class PaymentRequestController extends Controller
 				'chargeable_type' => $detail['type']
 			]);
 		}
-		// $form = Form::create([
-		// 	'stakeholder_id' => Auth()->user()->id,
-		// 	'status' => FormStatus::PENDING->value,
-		// ]);
-		// $paymentRequest->forms()->save($form);
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Created Successfully',
