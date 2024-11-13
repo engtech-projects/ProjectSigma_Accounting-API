@@ -4,7 +4,13 @@ namespace App\Enums;
 
 enum StakeHolderType: string
 {
-	case Supplier = 'supplier';
-	case Employee = 'employee';
-	case Projects = 'projects';
+	case SUPPLIER = 'supplier';
+	case EMPLOYEE = 'employee';
+	case PROJECTS = 'projects';
+	case CUSTOMER = 'customer';
+
+	public static function getStakeHolders(): array
+	{
+		return array_column(self::cases(), 'value');
+	}
 }

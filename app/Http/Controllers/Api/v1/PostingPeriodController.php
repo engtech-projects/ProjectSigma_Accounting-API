@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostingPeriodResource;
 use App\Models\PostingPeriod;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-
 class PostingPeriodController extends Controller
 {
     /**
@@ -69,6 +66,6 @@ class PostingPeriodController extends Controller
 
 	public function updatePeriodStatus(PostingPeriod $postingPeriod)
 	{
-		
+
 	}
 }

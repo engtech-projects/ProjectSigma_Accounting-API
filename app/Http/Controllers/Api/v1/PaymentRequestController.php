@@ -78,7 +78,7 @@ class PaymentRequestController extends Controller
 		$paymentRequest->details()->createMany($validatedData['details']);
 		$form = Form::create([
 			'stakeholder_id' => Auth()->user()->id,
-			'status' => FormStatus::Pending->value,
+			'status' => FormStatus::PENDING->value,
 		]);
 		$paymentRequest->forms()->save($form);
         return new JsonResponse([

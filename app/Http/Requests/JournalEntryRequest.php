@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\JournalStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchStakeHolderRequest extends FormRequest
+class JournalEntryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +23,7 @@ class SearchStakeHolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'key' => 'nullable|string|max:255',
-            'type' => 'nullable|string|in:employee,supplier,project',
+            'status' => 'nullable|string|in:' . implode(',', array_column(JournalStatus::cases(), 'value')),
         ];
     }
 }

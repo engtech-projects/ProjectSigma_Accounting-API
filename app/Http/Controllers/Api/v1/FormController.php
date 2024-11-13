@@ -3,45 +3,33 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Form;
-use App\Enums\FormStatus;
+use App\Services\FormServices;
 
 class FormController extends Controller
 {
 
 	public function changeStatus(int $id, string $status)
 	{
-		$form = Form::find($id);
-
-		if (!$form) {
-			return response()->json(['error' => 'Form not found'], 404);
-		}
-		// Attempt to update status
-		if ($form->updateStatus($status)) {
-			return response()->json(['message' => 'Form status updated', 'form' => $form], 200);
-		} else {
-			return response()->json(['error' => 'Transition not allowed', 'form' => $form], 405);
-		}
+		return FormServices::changeStatus($id, $status);
 	}
 
 	public function approved(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Approved->value);
+		return FormServices::approved($id);
 	}
 
 	public function rejected(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Rejected->value);
+		return FormServices::rejected($id);
 	}
 
 	public function pending(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Pending->value);
+		return FormServices::pending($id);
 	}
 
 	public function issued(int $id)
 	{
-		return $this->changeStatus($id, FormStatus::Issued->value);
+		return FormServices::issued($id);
 	}
 }

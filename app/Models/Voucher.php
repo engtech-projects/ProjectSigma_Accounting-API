@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
-use App\Enums\VoucherStatus;
 use App\Traits\HasTransitions;
 
 class Voucher extends Model
@@ -40,29 +37,6 @@ class Voucher extends Model
         "date_encoded" => 'date:Y-m-d',
         "voucher_date" => 'date:Y-m-d',
     ];
-
-	public static function generateVoucherNo($prefix)
-	{	
-		$prefix = Str::upper($prefix);
-		$currentYearMonth = Carbon::now()->format('Ym'); 
-        // Find the highest series number based on the prefix:DV/CV
-        $lastVoucher = Voucher::where('voucher_no', 'like', "{$prefix}-{$currentYearMonth}-%")
-            ->orderBy('voucher_no', 'desc')
-            ->first();
-        // Extract the last series number if a previous voucher exists
-        if ($lastVoucher) {
-            $lastSeries = (int) substr($lastVoucher->voucher_no, -4); 
-            $nextSeries = $lastSeries + 1;
-        } else {
-            $nextSeries = 1; // Start at 0001 if no previous voucher
-        }
-        // Format the series number to be 4 digits (e.g., 0001)
-        $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
-        // Construct the new reference number
-        $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
-
-        return $voucherNo;
-	}
 
 	public function account() : BelongsTo
 	{

@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\VoucherRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use App\Models\Voucher;
-use App\Models\VoucherDetails;
 use App\Http\Resources\VoucherResource;
 use App\Http\Requests\StoreRequest\VoucherStoreRequest;
 use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
@@ -15,51 +14,22 @@ use App\Services\VoucherService;
 use App\Models\PaymentRequest;
 use App\Models\Form;
 use App\Models\Book;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Enums\VoucherStatus;
 
 class VoucherController extends Controller
 {
-
-	protected $voucherService;
-
-	public function __construct(VoucherService $voucherService)
-    {
-		$this->voucherService = $voucherService;
-    }
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(VoucherRequest $request)
     {
-		$query = Voucher::query();
-
-		if( isset($request->book) )
-		{
-			$book = Book::byName($request->book)->firstOr(function () {
-				return Book::first();
-			});
-
-			if( $book )
-			{
-				$query->filterBook($book->id);
-			}
-		}
-
-		if( isset($request->status) )
-		{
-			$query->status($request->status);
-		}
-
-		$vouchers = $query->latest('id')
-            ->with(['account','stakeholder', 'details'])
-            ->paginate(config('services.pagination.limit'));
-
-		return new VoucherCollection($vouchers);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Vouchers fetched',
+            'data' => VoucherService::getWithPagination($request->validated()),
+        ], 201);
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -73,8 +43,7 @@ class VoucherController extends Controller
      */
     public function store(VoucherStoreRequest $request)
     {
-		$voucher = $this->voucherService->create($request->validated());
-
+		$voucher = Voucher::create($request->validated());
 		if( isset($request->form_type) && isset($request->reference_no) )
 		{
 			// enhancement - Identify form type
@@ -86,13 +55,14 @@ class VoucherController extends Controller
 					$query->where('prf_no', $prfNumber);
 				}
 			)->first();
-
 			$voucher->form_id = $form->id;
 			$voucher->save();
-
 		}
-
-		return response()->json($voucher, 201);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Voucher created',
+            'data' => $voucher,
+        ], 201);
     }
 
     /**voucher
@@ -152,50 +122,70 @@ class VoucherController extends Controller
     {
         //
     }
-
-	// api/voucher/number/{dv or cv}
 	public function voucherNo($prefix = 'DV')
 	{
-		return response()->json(['voucher_no' => Voucher::generateVoucherNo($prefix)], 201);
+		try {
+			return new JsonResponse([
+				'success' => true,
+				'message' => 'Voucher number generated',
+				'data' => Voucher::generateVoucherNo($prefix),
+			], 201);
+		} catch (\Exception $e) {
+			return new JsonResponse([
+				'success' => false,
+				'message' => "Voucher number generation failed",
+			], 500);
+		}
 	}
 
 	public function changeStatus(int $id, VoucherStatus $status)
 	{
 		$voucher = Voucher::find($id);
-
 		if (!$voucher) {
-			return response()->json(['error' => 'voucher not found'], 404);
+			return new JsonResponse([
+				'success' => false,
+				'message' => 'Voucher not found',
+				'data' => null,
+			], 404);
 		}
 		// Attempt to update status
 		if ($voucher->updateStatus($status)) {
-			return response()->json(['message' => 'voucher status updated', 'voucher' => $voucher], 200);
+			return new JsonResponse([
+				'success' => true,
+				'message' => 'Voucher status updated',
+				'data' => $voucher,
+			], 200);
 		} else {
-			return response()->json(['error' => 'Transition not allowed', 'voucher' => $voucher], 405);
+			return new JsonResponse([
+				'success' => false,
+				'message' => 'Transition not allowed',
+				'data' => $voucher,
+			], 405);
 		}
 	}
 
 	public function completed(int $id)
 	{
-		return $this->changeStatus($id, VoucherStatus::Completed);
+		return $this->changeStatus($id, VoucherStatus::COMPLETED);
 	}
 
 	public function approved(int $id)
 	{
-		return $this->changeStatus($id, VoucherStatus::Approved);
+		return $this->changeStatus($id, VoucherStatus::APPROVED);
 	}
 
 	public function rejected(int $id)
 	{
-		return $this->changeStatus($id, VoucherStatus::Rejected);
+		return $this->changeStatus($id, VoucherStatus::REJECTED);
 	}
 
 	public function void(int $id)
 	{
-		return $this->changeStatus($id, VoucherStatus::Void);
+		return $this->changeStatus($id, VoucherStatus::VOID);
 	}
 
 	public function pending(int $id)
 	{
-		return $this->changeStatus($id, VoucherStatus::Pending);
+		return $this->changeStatus($id, VoucherStatus::PENDING);
 	}
 }

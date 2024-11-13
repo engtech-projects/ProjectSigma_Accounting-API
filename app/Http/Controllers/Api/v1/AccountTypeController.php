@@ -3,20 +3,34 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountTypeRequest;
+use App\Http\Resources\AccountTypeCollection;
+use App\Services\AccountTypeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountTypeResource;
 use App\Models\AccountType;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class AccountTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(AccountTypeRequest $request)
     {
-        return response()->json(AccountTypeResource::collection(AccountType::all()));
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Types Successfully Retrieved.',
+                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated($request->validated())),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Types Failed to Retrieve.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -40,7 +54,13 @@ class AccountTypeController extends Controller
      */
     public function show(AccountType $accountType)
     {
-        return response()->json(new AccountTypeResource($accountType));
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Type Successfully Retrieved.',
+                'data' => new AccountTypeResource($accountType),
+            ], 200);
+        }
     }
 
     /**

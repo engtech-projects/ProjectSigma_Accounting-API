@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountGroupRequest;
+use App\Services\AccountGroupService;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountingCollections\AccountGroupCollection;
 use App\Http\Resources\AccountGroupResource;
@@ -15,33 +17,19 @@ class AccountGroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(AccountGroupRequest $request)
     {
         try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Groups Successfully Retrieved.',
-                'data' => AccountGroup::all(),
+                'data' =>  AccountGroupCollection::collection(AccountGroupService::getPaginated($request->validated())),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Account Groups Failed to Retrieve.',
-            ], 500);
-        }
-    }
-    public function getWithPagination()
-    {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Account Groups Successfully Retrieved.',
-                'data' => AccountGroup::paginate(config('services.pagination.limit')),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Account Groups Failed to Retrieve.',
+                'data' => null,
             ], 500);
         }
     }

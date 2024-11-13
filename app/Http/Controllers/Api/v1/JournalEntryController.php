@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\JournalEntryRequest;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
 use App\Models\PostingPeriod;
@@ -11,23 +12,30 @@ use App\Http\Requests\StoreRequest\JournalStoreRequest;
 use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Enums\JournalStatus;
-use Illuminate\Http\Request;
+use App\Services\JournalEntryService;
+use DB;
+use Symfony\Component\HttpFoundation\JsonResponse;
 class JournalEntryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(JournalEntryRequest $request)
     {
-		$query = JournalEntry::query();
-
-		if( isset($request->status) )
-		{
-			$query->status($request->status);
-		}
-        $journalEntries = $query->latest('id')->paginate(config('services.pagination.limit'));
-
-        return new JournalEntryCollection($journalEntries);
+        try {
+            $validatedData = $request->validated();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Journal Entries Successfully Retrieved.',
+                'data' => JournalEntryCollection::collection(JournalEntryService::getPaginated($validatedData)),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error retrieving journal entries.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -43,17 +51,27 @@ class JournalEntryController extends Controller
      */
     public function store(JournalStoreRequest $request)
     {
-		$postingPeriodId = PostingPeriod::current()->pluck('id')->first();
-		$periodId = Period::where('posting_period_id', $postingPeriodId)->current()->pluck('id')->first();
-
-		$validated = $request->validated();
-		$validated['posting_period_id'] = $postingPeriodId;
-		$validated['period_id'] = $periodId;
-
-        $journalEntry = JournalEntry::create($validated);
-
-		$journalEntry->details()->createMany($request->details);
-		return response()->json(new JournalEntryResource($journalEntry->load('details')), 201);
+        DB::beginTransaction();
+        try {
+            $validated = $request->validated();
+            $validated['posting_period_id'] = PostingPeriod::currentPostingPeriod();
+            $validated['period_id'] = Period::where('posting_period_id', $validated['posting_period_id'])->current()->pluck('id')->first();
+            $journalEntry = JournalEntry::create($validated);
+            $journalEntry->details()->createMany($request->details);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Journal Entry Successfully Created.',
+                'data' => new JournalEntryResource($journalEntry->load('details')),
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error creating journal entry.',
+                'data' => null
+            ], 500);
+        }
     }
 
     /**
@@ -126,16 +144,16 @@ class JournalEntryController extends Controller
 
 	public function post(int $id)
 	{
-		return $this->changeStatus($id, JournalStatus::Posted);
+		return $this->changeStatus($id, JournalStatus::POSTED);
 	}
 
 	public function open(int $id)
 	{
-		return $this->changeStatus($id, JournalStatus::Open);
+		return $this->changeStatus($id, JournalStatus::OPEN);
 	}
 
 	public function void(int $id)
 	{
-		return $this->changeStatus($id, JournalStatus::Void);
+		return $this->changeStatus($id, JournalStatus::VOID);
 	}
 }

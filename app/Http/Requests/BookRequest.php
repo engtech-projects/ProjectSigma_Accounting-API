@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchStakeHolderRequest extends FormRequest
+class BookRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class SearchStakeHolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'key' => 'nullable|string|max:255',
-            'type' => 'nullable|string|in:employee,supplier,project',
+            'name' => 'nullable|string|max:255',
+            'code' => 'nullable|string|max:255',
         ];
     }
 }

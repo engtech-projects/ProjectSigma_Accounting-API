@@ -9,12 +9,12 @@ use App\Models\StakeHolder;
 
 class StakeHolderController extends Controller
 {
-       /**
+    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-		// 
+		//
         return StakeholderResource::collection(StakeHolder::all());
     }
 
@@ -38,7 +38,7 @@ class StakeHolderController extends Controller
      * Display the specified resource.
      */
     public function show(StakeHolder $stakeholder)
-    {	
+    {
         return response()->json(new StakeholderResource($stakeholder));
     }
 

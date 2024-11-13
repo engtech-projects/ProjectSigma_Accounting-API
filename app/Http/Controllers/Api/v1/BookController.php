@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BookRequest;
+use App\Http\Resources\BookCollection;
 use Illuminate\Http\Request;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
@@ -14,9 +16,21 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(BookRequest $request)
     {
-        return response()->json(BookResource::collection(Book::all()));
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Books Successfully Retrieved.',
+                'data' => BookCollection::collection(BookService::getPaginated($request->validated())),
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Books Failed to Retrieve.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -40,7 +54,13 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-		return response()->json(new BookResource($book), 201);
+        try {
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Book Successfully Retrieved.',
+                'data' => new BookResource($book),
+            ], 200);
+        }
     }
 
     /**

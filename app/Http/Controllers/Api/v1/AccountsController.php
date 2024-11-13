@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AccountRequest;
+use App\Http\Resources\AccountCollection;
+use App\Services\AccountService;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountsResource;
 use App\Models\Account;
@@ -14,33 +17,19 @@ class AccountsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-		try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountsResource::collection(Account::all()),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Accounts Failed to Retrieve.',
-            ], 500);
-        }
-    }
-    public function getWithPagination()
+    public function index(AccountRequest $request)
     {
         try {
             return new JsonResponse([
-                'success' => false,
+                'success' => true,
                 'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountsResource::collection(Account::paginate(config('services.pagination.limit'))),
+                'data' =>  AccountCollection::collection(AccountService::getPaginated($request->validated())),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Accounts Failed to Retrieve.',
+                'data' => null,
             ], 500);
         }
     }
