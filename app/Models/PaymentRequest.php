@@ -4,11 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Carbon\Carbon;
 use App\Traits\HasFormable;
 
 class PaymentRequest extends Model
@@ -21,7 +18,11 @@ class PaymentRequest extends Model
 		'request_date',
 		'description',
 		'total',
+		'approvals',
 	];
+    protected $casts = [
+        'approvals' => 'array',
+    ];
 	public function form()
     {
         return $this->morphOne(Form::class, 'formable');
@@ -51,5 +52,9 @@ class PaymentRequest extends Model
     public function scopeWithStakeholder($query)
     {
         return $query->with(['stakeholder']);
+    }
+    public function scopeWithDetails($query)
+    {
+        return $query->with(['details.chargeable']);
     }
 }
