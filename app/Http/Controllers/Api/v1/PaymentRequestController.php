@@ -75,12 +75,21 @@ class PaymentRequestController extends Controller
 		$prfNo = PaymentServices::generatePrfNo();
 		$validatedData['prf_no'] = $prfNo;
 		$paymentRequest = PaymentRequest::create($validatedData);
-		$paymentRequest->details()->createMany($validatedData['details']);
-		$form = Form::create([
-			'stakeholder_id' => Auth()->user()->id,
-			'status' => FormStatus::PENDING->value,
-		]);
-		$paymentRequest->forms()->save($form);
+		foreach($validatedData['details'] as $detail) {
+			$paymentRequest->details()->create([
+				'particulars' => $detail['particulars'] ?? null,
+				'cost' => $detail['cost'] ?? null,
+				'vat' => $detail['vat'] ?? null,
+				'amount' => $detail['amount'] ?? null,
+				'chargeable_id' => $detail['id'],
+				'chargeable_type' => $detail['type']
+			]);
+		}
+		// $form = Form::create([
+		// 	'stakeholder_id' => Auth()->user()->id,
+		// 	'status' => FormStatus::PENDING->value,
+		// ]);
+		// $paymentRequest->forms()->save($form);
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Created Successfully',
