@@ -96,11 +96,13 @@ class PaymentRequestController extends Controller
      */
     public function show($id)
     {
-        $paymentRequest = PaymentRequest::find($id)->withDetails()->withStakeholder();
+        $paymentRequest = PaymentRequest::find($id)
+            ->withDetails()
+            ->withStakeholder();
 		return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
-            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.chargeable'])),
+            'data' => new PaymentRequestResource($paymentRequest),
         ], 200);
     }
 
