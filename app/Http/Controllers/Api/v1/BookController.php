@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookRequest;
 use App\Http\Resources\BookCollection;
+use App\Services\BookService;
 use Illuminate\Http\Request;
 use App\Http\Resources\BookResource;
 use App\Models\Book;

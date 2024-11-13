@@ -3,10 +3,9 @@
 namespace App\Http\Resources\AccountingCollections;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use App\Http\Resources\AccountGroupResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountGroupCollection extends ResourceCollection
+class AccountGroupCollection extends JsonResource
 {
 	public static $wrap = 'account_group';
     /**

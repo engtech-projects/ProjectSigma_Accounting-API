@@ -3,10 +3,10 @@
 namespace App\Http\Resources\AccountingCollections;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\VoucherResource;
 
-class VoucherCollection extends ResourceCollection
+class VoucherCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
