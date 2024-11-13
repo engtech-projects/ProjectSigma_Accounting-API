@@ -23,7 +23,7 @@ class PaymentFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'nullable|string|in:'.FormStatus::class
+            'status' => 'nullable|string|in:' . implode(',', array_column(FormStatus::cases(), 'value'))
         ];
     }
 }
