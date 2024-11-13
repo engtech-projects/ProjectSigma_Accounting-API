@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentFilterRequest;
+use App\Http\Requests\SearchStakeHolderRequest;
 use App\Http\Requests\StoreRequest\PaymentRequestFormRequest;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
@@ -11,6 +12,7 @@ use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
 use App\Enums\FormStatus;
 use App\Services\PaymentServices;
+use App\Services\StakeHolderService;
 use Illuminate\Http\JsonResponse;
 
 class PaymentRequestController extends Controller
@@ -33,7 +35,14 @@ class PaymentRequestController extends Controller
             ], 500);
         }
     }
-
+    public function searchStakeHolders(SearchStakeHolderRequest $request)
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Stakeholders Successfully Retrieved.',
+            'data' => StakeHolderService::searchStakeHolders($request->validated()),
+        ], 200);
+    }
     public function get(PaymentFilterRequest $request)
     {
         try {

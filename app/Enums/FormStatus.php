@@ -15,7 +15,7 @@ enum FormStatus: string
         return match($this) {
             self::Draft => self::Pending,
             self::Pending => self::Approved,
-			self::Pending => self::Rejected,
+			self::Rejected => self::Rejected,
 			self::Approved => self::Issued,
 			self::Issued => null
         };
