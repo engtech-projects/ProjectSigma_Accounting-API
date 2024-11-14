@@ -3,11 +3,33 @@
 namespace App\Http\Controllers\Hrms;
 use App\Http\Controllers\Controller;
 use App\Services\HrmsServices;
+use App\Services\InventoryServices;
+use App\Services\ProjectServices;
+use DB;
 use Illuminate\Http\JsonResponse;
 
 class HrmsController extends Controller
 {
 
+    public function overAllSync()
+    {
+        DB::beginTransaction();
+        try {
+            $this->syncAll();
+
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Employee and Department Successfully Retrieved.',
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Employee and Department sync failed',
+            ], 500);
+        }
+    }
     public function syncAll()
     {
         try{

@@ -22,7 +22,10 @@ class AccountTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_type' => 'nullable|string|max:255',
+            'account_type' => 'required|string|max:255',
+            'account_category' => 'required|string|max:255',
+            'balance_type' => 'required|string|max:255',
+            'notation' => 'required|string|in:+,-',
         ];
     }
 }

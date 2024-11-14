@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AccountTypeRequest;
 use App\Http\Resources\AccountTypeCollection;
 use App\Services\AccountTypeService;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountTypeResource;
@@ -36,7 +37,7 @@ class AccountTypeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(AccountTypeRequest $request)
     {
         //
     }
@@ -44,23 +45,45 @@ class AccountTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AccountTypeRequest $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $accountType = AccountType::create($request->validated());
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Type Successfully Created.',
+                'data' => new AccountTypeResource($accountType),
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Type Failed to Create.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(AccountType $accountType)
+    public function show($id)
     {
-        try {
+        $accountType = AccountType::find($id);
+        if (!$accountType) {
             return new JsonResponse([
-                'success' => true,
-                'message' => 'Account Type Successfully Retrieved.',
-                'data' => new AccountTypeResource($accountType),
-            ], 200);
+                'success' => false,
+                'message' => 'Account Type Not Found.',
+                'data' => null,
+            ], 404);
         }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Account Type Successfully Retrieved.',
+            'data' => new AccountTypeResource($accountType),
+        ], 200);
     }
 
     /**
@@ -74,16 +97,49 @@ class AccountTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AccountTypeRequest $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $accountType = AccountType::find($id);
+            $accountType->update($request->validated());
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Type Successfully Updated.',
+                'data' => new AccountTypeResource($accountType),
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Type Failed to Update.',
+                'data' => null,
+            ], 500);
+        }
     }
-
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $accountType = AccountType::find($id);
+            $accountType->delete();
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Type Successfully Deleted.',
+                'data' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Type Failed to Delete.',
+                'data' => null,
+            ], 500);
+        }
     }
 }

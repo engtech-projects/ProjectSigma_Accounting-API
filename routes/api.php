@@ -92,6 +92,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/sync-employee', [HrmsController::class, 'syncEmployee']);
         Route::post('/sync-department', [HrmsController::class, 'syncDepartment']);
     });
+    Route::post('sync-all', [HrmsController::class, 'syncAll']);
     Route::prefix('project')->group(function () {
         Route::post('/sync-all', [ProjectController::class, 'syncAll']);
         Route::post('/sync-project', [ProjectController::class, 'syncProject']);
