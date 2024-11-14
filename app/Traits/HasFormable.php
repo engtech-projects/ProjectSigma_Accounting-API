@@ -18,6 +18,4 @@ trait HasFormable
     {
         return $this->morphMany(Form::class, 'formable');
     }
-
-	
 }

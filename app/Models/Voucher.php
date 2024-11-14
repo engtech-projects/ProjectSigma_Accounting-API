@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Str;
 use App\Traits\HasTransitions;
 
 class Voucher extends Model
@@ -73,15 +71,4 @@ class Voucher extends Model
     {
         return $query->where('status', $status);
     }
-
-	// public function updateStatus($newStatus) : bool
-	// {
-	// 	if ($this->status === $newStatus->value) {
-    //         return false;
-    //     }
-
-	// 	$this->status = $newStatus->value;
-    //     return $this->save();
-	// }
-
 }

@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Actions\Approvals\ApproveApproval;
+use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
+use App\Http\Controllers\Actions\Approvals\VoidApproval;
 use App\Http\Controllers\Api\v1\{
     AccountTypeController,
     AccountsController,
@@ -37,14 +40,11 @@ use App\Enums\FormStatus;
 */
 
 Route::middleware('auth:api')->get('user', function (Request $request) {
-    // Route::get('/user', function (Request $request) {
-		return Auth()->user();
-	// });
+    return Auth()->user();
 });
 
 Route::middleware('auth:api')->group(function () {
 	Route::resource('accounts', AccountsController::class);
-    Route::resource('approvals', ApprovalsController::class);
     Route::get('vat-value', function(Request $request) {
         return response()->json([ 'vat' => config('services.vat.value') ], 200);
     });
@@ -100,5 +100,10 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('inventory')->group(function () {
         Route::post('/sync-all', [InventoryController::class, 'syncAll']);
         Route::post('/sync-supplier', [InventoryController::class, 'syncSupplier']);
+    });
+    Route::prefix('approvals')->group(function () {
+        Route::post('approve/{modelName}/{model}', ApproveApproval::class);
+        Route::post('disapprove/{modelName}/{model}', DisapproveApproval::class);
+        Route::post('void/{modelName}/{model}', VoidApproval::class);
     });
 });

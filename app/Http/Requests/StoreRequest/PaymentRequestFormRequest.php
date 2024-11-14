@@ -32,10 +32,6 @@ class PaymentRequestFormRequest extends FormRequest
 			'details' => 'required|min:1|array',
 			'details.*.cost' => 'nullable|numeric',
 			'details.*.vat' => 'nullable|numeric',
-            'details.*.type' => [
-                "required",
-                "string",
-            ],
             'details.*.id' => [
                 'required',
                 "integer",
