@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\{
 	FormController,
 };
 
+use App\Http\Controllers\ApprovalsController;
 use App\Http\Controllers\HrmsController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProjectController;
@@ -43,6 +44,10 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
 
 Route::middleware('auth:api')->group(function () {
 	Route::resource('accounts', AccountsController::class);
+    Route::resource('approvals', ApprovalsController::class);
+    Route::get('vat-value', function(Request $request) {
+        return response()->json([ 'vat' => config('services.vat.value') ], 200);
+    });
 	Route::resource('account-group', AccountGroupController::class);
 	Route::resource('books', BookController::class);
 	Route::resource('posting-period', PostingPeriodController::class);

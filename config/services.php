@@ -45,6 +45,9 @@ return [
     ],
     'pagination' => [
         'limit' => env('PAGINATION_LIMIT', 10)
+    ],
+    'vat' => [
+        'value' => env('VAT_VALUE', 12)
     ]
 
 ];
