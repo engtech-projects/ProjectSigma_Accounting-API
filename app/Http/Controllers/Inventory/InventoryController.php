@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\Inventory;
+use App\Http\Controllers\Controller;
 use App\Services\InventoryServices;
 use Illuminate\Http\JsonResponse;
 

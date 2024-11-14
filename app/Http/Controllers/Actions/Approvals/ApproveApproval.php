@@ -8,10 +8,6 @@ use App\Notifications\RequestPaymentForApprovalNotification;
 use Illuminate\Http\JsonResponse;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
-use App\Notifications\RequestBOMApprovedNotification;
-use App\Notifications\RequestBOMForApprovalNotification;
-use App\Notifications\RequestItemProfilingApprovedNotification;
-use App\Notifications\RequestItemProfilingForApprovalNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

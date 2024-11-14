@@ -24,4 +24,8 @@ class Book extends Model
 	{
         return $query->where('name', $name);
 	}
+	public function isUsedInAccountGroup(): bool
+	{
+		return $this->accountGroup()->exists();
+	}
 }

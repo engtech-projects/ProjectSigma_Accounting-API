@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Hrms;
+use App\Http\Controllers\Controller;
 use App\Services\HrmsServices;
 use Illuminate\Http\JsonResponse;
 

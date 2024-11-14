@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Resources\PostingPeriodResource;
-use App\Models\PostingPeriod;
-class PostingPeriodController extends Controller
+use App\Http\Resources\StakeholderResource;
+use App\Models\StakeHolder;
+
+class StakeHolderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json(PostingPeriodResource::collection(PostingPeriod::all()));
+		//
+        return StakeholderResource::collection(StakeHolder::all());
     }
 
     /**
@@ -35,9 +37,9 @@ class PostingPeriodController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(StakeHolder $stakeholder)
     {
-        //
+        return response()->json(new StakeholderResource($stakeholder));
     }
 
     /**
@@ -63,9 +65,4 @@ class PostingPeriodController extends Controller
     {
         //
     }
-
-	public function updatePeriodStatus(PostingPeriod $postingPeriod)
-	{
-
-	}
 }

@@ -3,7 +3,7 @@
 use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
-use App\Http\Controllers\Api\v1\{
+use App\Http\Controllers\{
     AccountTypeController,
     AccountsController,
     PostingPeriodController,
@@ -16,10 +16,9 @@ use App\Http\Controllers\Api\v1\{
 	FormController,
 };
 
-use App\Http\Controllers\ApprovalsController;
-use App\Http\Controllers\HrmsController;
-use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\Hrms\HrmsController;
+use App\Http\Controllers\Inventory\InventoryController;
+use App\Http\Controllers\Projects\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Enums\FormType;

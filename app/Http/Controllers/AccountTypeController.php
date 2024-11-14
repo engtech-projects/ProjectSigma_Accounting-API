@@ -1,34 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AccountGroupRequest;
-use App\Services\AccountGroupService;
-use Illuminate\Http\Request;
-use App\Http\Resources\AccountingCollections\AccountGroupCollection;
-use App\Http\Resources\AccountGroupResource;
-use App\Models\AccountGroup;
+use App\Http\Requests\AccountTypeRequest;
+use App\Http\Resources\AccountTypeCollection;
+use App\Services\AccountTypeService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Illuminate\Http\Request;
+use App\Http\Resources\AccountTypeResource;
+use App\Models\AccountType;
 
-class AccountGroupController extends Controller
+class AccountTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(AccountGroupRequest $request)
+    public function index(AccountTypeRequest $request)
     {
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Groups Successfully Retrieved.',
-                'data' =>  AccountGroupCollection::collection(AccountGroupService::getPaginated($request->validated())),
+                'message' => 'Account Types Successfully Retrieved.',
+                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated($request->validated())),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Account Groups Failed to Retrieve.',
+                'message' => 'Account Types Failed to Retrieve.',
                 'data' => null,
             ], 500);
         }
@@ -53,21 +52,17 @@ class AccountGroupController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(AccountGroup $accountGroup)
+    public function show(AccountType $accountType)
     {
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Group Successfully Retrieved.',
-                'data' => new AccountGroupResource($accountGroup),
+                'message' => 'Account Type Successfully Retrieved.',
+                'data' => new AccountTypeResource($accountType),
             ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Account Group Failed to Retrieve.',
-            ], 500);
         }
     }
+
     /**
      * Show the form for editing the specified resource.
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\v1;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentFilterRequest;
@@ -120,22 +120,19 @@ class PaymentRequestController extends Controller
     {
 		$paymentRequest->update($request->validated());
 		$existingIds = $paymentRequest->details()->pluck('id')->toArray();
-
 		$paymentRequestDetails = $request->details;
 		$incomingIds = [];
-
 		foreach ($paymentRequestDetails as $paymentRequestDetail)
 		{
 			$detail = $paymentRequest->details()->updateOrCreate($paymentRequestDetail);
 			$incomingIds[] = $detail->id;
 		}
-
 		$toDelete = array_diff($existingIds, $incomingIds);
 		$paymentRequest->details()->whereIn('id', $toDelete)->delete();
 		return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Updated.',
-            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details'])),
+            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
         ], 200);
     }
 

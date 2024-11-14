@@ -9,8 +9,6 @@ use Illuminate\Http\JsonResponse;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
-use App\Notifications\RequestItemProfilingDeniedNotification;
-use App\Notifications\WarehouseTransactionDeniedNotification;
 use Carbon\Carbon;
 
 class DisapproveApproval extends Controller
