@@ -55,6 +55,6 @@ class PaymentRequest extends Model
     }
     public function scopeWithDetails($query)
     {
-        return $query->with(['details.chargeable']);
+        return $query->with(['details.stakeholder']);
     }
 }

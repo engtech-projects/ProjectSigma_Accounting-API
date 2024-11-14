@@ -15,16 +15,15 @@ class PaymentRequestDetails extends Model
 		'particulars',
 		'cost',
 		'vat',
-		'chargeable_id',
-		'chargeable_type',
+        'stakeholder_id',
 		'amount'
 	];
 	public function paymentRequest(): BelongsTo
     {
         return $this->BelongsTo(PaymentRequest::class);
     }
-	public function chargeable()
+	public function stakeholder(): BelongsTo
 	{
-		return $this->morphTo();
+		return $this->belongsTo(StakeHolder::class);
 	}
 }

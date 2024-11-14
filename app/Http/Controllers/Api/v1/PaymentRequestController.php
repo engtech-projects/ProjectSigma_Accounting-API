@@ -81,8 +81,7 @@ class PaymentRequestController extends Controller
 				'cost' => $detail['cost'] ?? null,
 				'vat' => $detail['vat'] ?? null,
 				'amount' => $detail['amount'] ?? null,
-				'chargeable_id' => $detail['id'],
-				'chargeable_type' => $detail['type']
+                'stakeholder_id' => $detail['id'] ?? null,
 			]);
 		}
         return new JsonResponse([
@@ -96,9 +95,9 @@ class PaymentRequestController extends Controller
      */
     public function show($id)
     {
-        $paymentRequest = PaymentRequest::find($id)
-            ->withDetails()
-            ->withStakeholder();
+        $paymentRequest = PaymentRequest::withDetails()
+            ->withStakeholder()
+            ->find($id);
 		return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
