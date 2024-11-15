@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasTransitions;
 
 class Voucher extends Model
 {
-    use HasFactory, HasTransitions;
+    use HasFactory, HasTransitions, SoftDeletes;
 
 	protected $table = 'voucher';
 
@@ -34,6 +35,7 @@ class Voucher extends Model
 	protected $casts = [
         "date_encoded" => 'date:Y-m-d',
         "voucher_date" => 'date:Y-m-d',
+		'approvals' => 'array',
     ];
 
 	public function account() : BelongsTo
@@ -54,12 +56,6 @@ class Voucher extends Model
 	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
-    }
-
-	// A Voucher can optionally belong to a form
-    public function form() : BelongsTo
-    {
-        return $this->belongsTo(Form::class, 'form_id');
     }
 
 	public function scopeFilterBook($query, $bookId)

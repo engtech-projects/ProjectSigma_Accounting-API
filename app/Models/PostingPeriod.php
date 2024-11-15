@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class PostingPeriod extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
 	protected $table = 'posting_periods';
 	public $timestamps = false;

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Traits\HasTransitions;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class JournalEntry extends Model
 {
-    use HasFactory, HasTransitions;
+    use HasFactory, HasTransitions, SoftDeletes;
 	protected $table = 'journal_entry';
 	protected $fillable = [
 		'journal_no',

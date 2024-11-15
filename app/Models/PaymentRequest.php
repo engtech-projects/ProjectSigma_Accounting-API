@@ -1,17 +1,14 @@
 <?php
 
 namespace App\Models;
-
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasFormable;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class PaymentRequest extends Model
 {
-    use HasFactory,  HasFormable;
+    use HasFactory, SoftDeletes;
 	protected $table = 'payment_request';
 	protected $fillable = [
 		'stakeholder_id',
@@ -24,10 +21,7 @@ class PaymentRequest extends Model
     protected $casts = [
         'approvals' => 'array',
     ];
-	public function form()
-    {
-        return $this->morphOne(Form::class, 'formable');
-    }
+
 	public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);

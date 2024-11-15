@@ -18,10 +18,6 @@ class StakeHolder extends Model
 		'stakeholdable_id',
 	];
 
-	public function forms()
-    {
-        return $this->hasMany(Form::class);
-    }
     public function stakeholdable()
     {
         return $this->morphTo();

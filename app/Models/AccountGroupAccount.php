@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-class OpeningBalance extends Model
+
+class AccountGroupAccount extends Model
 {
     use HasFactory, SoftDeletes;
-	protected $table = 'opening_balances';
-	protected $fillable = [
-        'opening_balance',
-        'remaining_balance',
-        'account_id',
-        'period_id'
+
+    protected $table = 'account_group_account';
+
+    protected $fillable = [
+        'account_group_id',
+        'account_id'
     ];
+
+    public $timestamps = true;
 }

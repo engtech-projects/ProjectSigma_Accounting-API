@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VoucherRequest;
+use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Voucher;
@@ -43,21 +44,30 @@ class VoucherController extends Controller
      */
     public function store(VoucherStoreRequest $request)
     {
-		$voucher = Voucher::create($request->validated());
-		if( isset($request->form_type) && isset($request->reference_no) )
-		{
-			// enhancement - Identify form type
-			$prfNumber = $request->reference_no;
-			$form = Form::whereHasMorph(
-				'formable',
-				[PaymentRequest::class],
-				function ($query) use ($prfNumber) {
-					$query->where('prf_no', $prfNumber);
-				}
-			)->first();
-			$voucher->form_id = $form->id;
-			$voucher->save();
-		}
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->validated();
+            $voucher = Voucher::create($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Voucher created',
+                'data' => $voucher,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Voucher creation failed',
+            ], 500);
+        }
+		// $voucher = Voucher::create($request->validated());
+		// if( isset($request->form_type) && isset($request->reference_no) )
+		// {
+
+		// 	$voucher->form_id = $form->id;
+		// 	$voucher->save();
+		// }
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
