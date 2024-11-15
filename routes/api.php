@@ -19,6 +19,7 @@ use App\Http\Controllers\{
 use App\Http\Controllers\Hrms\HrmsController;
 use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\Projects\ProjectController;
+use App\Http\Controllers\SyncController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Enums\FormType;
@@ -87,12 +88,12 @@ Route::middleware('auth:api')->group(function () {
 		Route::put('/open/{id}', [JournalEntryController::class, 'open']);
 		Route::put('/void/{id}', [JournalEntryController::class, 'void']);
 	});
+    Route::post('/sync-all', [SyncController::class, 'syncAll']);
     Route::prefix('hrms')->group(function () {
-        Route::post('/sync-all', [HrmsController::class, 'syncAll']);
         Route::post('/sync-employee', [HrmsController::class, 'syncEmployee']);
         Route::post('/sync-department', [HrmsController::class, 'syncDepartment']);
+        Route::post('/sync-users', [HrmsController::class, 'syncUsers']);
     });
-    Route::post('sync-all', [HrmsController::class, 'syncAll']);
     Route::prefix('project')->group(function () {
         Route::post('/sync-all', [ProjectController::class, 'syncAll']);
         Route::post('/sync-project', [ProjectController::class, 'syncProject']);
