@@ -88,20 +88,25 @@ Route::middleware('auth:api')->group(function () {
 		Route::put('/open/{id}', [JournalEntryController::class, 'open']);
 		Route::put('/void/{id}', [JournalEntryController::class, 'void']);
 	});
-    Route::post('/sync-all', [SyncController::class, 'syncAll']);
-    Route::prefix('hrms')->group(function () {
-        Route::post('/sync-employee', [HrmsController::class, 'syncEmployee']);
-        Route::post('/sync-department', [HrmsController::class, 'syncDepartment']);
-        Route::post('/sync-users', [HrmsController::class, 'syncUsers']);
+
+    Route::prefix('sync')->group(function () {
+        Route::post('/all', [SyncController::class, 'syncAll']);
+        Route::prefix('hrms')->group(function () {
+            Route::post('/all', [HrmsController::class, 'syncAll']);
+            Route::post('/employee', [HrmsController::class, 'syncEmployee']);
+            Route::post('/department', [HrmsController::class, 'syncDepartment']);
+            Route::post('/users', [HrmsController::class, 'syncUsers']);
+        });
+        Route::prefix('project')->group(function () {
+            Route::post('/all', [ProjectController::class, 'syncAll']);
+            Route::post('/project', [ProjectController::class, 'syncProject']);
+        });
+        Route::prefix('inventory')->group(function () {
+            Route::post('/all', [InventoryController::class, 'syncAll']);
+            Route::post('/supplier', [InventoryController::class, 'syncSupplier']);
+        });
     });
-    Route::prefix('project')->group(function () {
-        Route::post('/sync-all', [ProjectController::class, 'syncAll']);
-        Route::post('/sync-project', [ProjectController::class, 'syncProject']);
-    });
-    Route::prefix('inventory')->group(function () {
-        Route::post('/sync-all', [InventoryController::class, 'syncAll']);
-        Route::post('/sync-supplier', [InventoryController::class, 'syncSupplier']);
-    });
+
     Route::prefix('approvals')->group(function () {
         Route::post('approve/{modelName}/{model}', ApproveApproval::class);
         Route::post('disapprove/{modelName}/{model}', DisapproveApproval::class);
