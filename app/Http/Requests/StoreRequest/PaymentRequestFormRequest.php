@@ -29,6 +29,7 @@ class PaymentRequestFormRequest extends FormRequest
 			'description' => 'nullable|string',
 			'request_date' => 'required|date|date_format:Y-m-d',
 			'total' => 'required|numeric',
+            'approvals' => 'required|array',
 			'details' => 'required|min:1|array',
 			'details.*.cost' => 'nullable|numeric',
 			'details.*.vat' => 'nullable|numeric',

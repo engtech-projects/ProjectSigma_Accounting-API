@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -48,7 +49,7 @@ class PaymentRequest extends Model
 		return $query->whereHas('form', function ($query) use ($status) {
 			$query->where('forms.status', $status);
 		});
-	}
+    }
     public function scopeWithStakeholder($query)
     {
         return $query->with(['stakeholder']);
