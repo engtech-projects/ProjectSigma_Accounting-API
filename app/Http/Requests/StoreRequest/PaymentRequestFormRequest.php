@@ -2,13 +2,11 @@
 
 namespace App\Http\Requests\StoreRequest;
 
-use App\Enums\AssignTypes;
-use App\Enums\StakeHolderType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
-
+use App\Http\Traits\HasApprovalValidation;
 class PaymentRequestFormRequest extends FormRequest
 {
+    use HasApprovalValidation;
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -29,7 +27,6 @@ class PaymentRequestFormRequest extends FormRequest
 			'description' => 'nullable|string',
 			'request_date' => 'required|date|date_format:Y-m-d',
 			'total' => 'required|numeric',
-            'approvals' => 'required|array',
 			'details' => 'required|min:1|array',
 			'details.*.cost' => 'nullable|numeric',
 			'details.*.vat' => 'nullable|numeric',
@@ -39,6 +36,7 @@ class PaymentRequestFormRequest extends FormRequest
             ],
 			'details.*.amount' => 'nullable|numeric',
 			'details.*.particulars' => 'nullable',
+            ...$this->storeApprovals(),
         ];
     }
 }

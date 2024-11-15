@@ -1,14 +1,16 @@
 <?php
 
 namespace App\Models;
+use App\Traits\HasApproval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 class PaymentRequest extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, HasApproval, Notifiable;
 	protected $table = 'payment_request';
 	protected $fillable = [
 		'stakeholder_id',
@@ -17,6 +19,8 @@ class PaymentRequest extends Model
 		'description',
 		'total',
 		'approvals',
+        'created_by',
+        'request_status',
 	];
     protected $casts = [
         'approvals' => 'array',

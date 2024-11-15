@@ -61,18 +61,6 @@ class VoucherController extends Controller
                 'message' => 'Voucher creation failed',
             ], 500);
         }
-		// $voucher = Voucher::create($request->validated());
-		// if( isset($request->form_type) && isset($request->reference_no) )
-		// {
-
-		// 	$voucher->form_id = $form->id;
-		// 	$voucher->save();
-		// }
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Voucher created',
-            'data' => $voucher,
-        ], 201);
     }
 
     /**voucher

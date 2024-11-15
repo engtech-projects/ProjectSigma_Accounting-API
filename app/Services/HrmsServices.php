@@ -4,22 +4,12 @@ namespace App\Services;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
 use App\Models\Stakeholders\Project;
+use App\Models\User;
 use DB;
 use Http;
 
 class HrmsServices
 {
-    public static function syncAll()
-    {
-        try{
-            self::syncEmployee(auth()->user()->token);
-            self::syncDepartment(auth()->user()->token);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public static function syncEmployee($token)
     {
         DB::beginTransaction();
@@ -31,7 +21,7 @@ class HrmsServices
                 return false;
             }
             $employees = $response->json()['data'];
-            $total_inserted = 0;
+            $totalEmployeeCount = Employee::count();
             foreach ($employees as $employee) {
                 $employee_model = Employee::updateOrCreate(
                     [
@@ -42,7 +32,7 @@ class HrmsServices
                         'name' => $employee['fullname_first'],
                     ]
                 );
-                if ($employee_model->stakeholder()->updateOrCreate(
+                $employee_model->stakeholder()->updateOrCreate(
                     [
                         'stakeholdable_type' => Employee::class,
                         'stakeholdable_id' => $employee['id'],
@@ -50,16 +40,11 @@ class HrmsServices
                     [
                         'name' => $employee['fullname_first'],
                     ]
-                )) {
-                    $total_inserted++;
-                }
+                );
             }
             DB::commit();
-            return [
-                'success' => true,
-                'message' => 'Employee Successfully Retrieved.',
-                'total_inserted' => $total_inserted,
-            ];
+            $total_inserted = Employee::count() - $totalEmployeeCount;
+            return $total_inserted;
         } catch (\Exception $e) {
             DB::rollBack();
             return false;
@@ -76,7 +61,7 @@ class HrmsServices
                 return false;
             }
             $projects = $response->json()['data'];
-            $total_inserted = 0;
+            $totalProjectCount = Project::count();
             foreach ($projects as $project) {
                 $project_model = Project::updateOrCreate(
                     [
@@ -88,7 +73,7 @@ class HrmsServices
                         'source_id' => $project['id'],
                     ],
                 );
-                if ($project_model->stakeholder()->updateOrCreate(
+                $project_model->stakeholder()->updateOrCreate(
                     [
                         'source_id' => $project['id'],
                         'stakeholdable_type' => Project::class,
@@ -97,20 +82,41 @@ class HrmsServices
                     [
                         'name' => $project['project_code'],
                     ]
-                )) {
-                    $total_inserted++;
-                }
+                );
             }
             DB::commit();
-            return [
-                'success' => true,
-                'message' => 'Project Successfully Retrieved.',
-                'total_inserted' => $total_inserted,
-            ];
+            $total_inserted = Project::count() - $totalProjectCount;
+            return $total_inserted;
         } catch (\Exception $e) {
             DB::rollBack();
             return false;
         }
+    }
+    public static function syncUsers($token)
+    {
+            $response = Http::withToken($token)
+                ->acceptJson()
+                ->get(config('services.url.hrms_api_url')."/api/employee/users-list");
+            if (!$response->successful()) {
+                return false;
+            }
+            $users = $response->json()['data'];
+            $totalUserCount = User::count();
+            DB::table('users')->upsert(
+                collect($users)->map(fn($user) => [
+                    'id' => $user['id'],
+                    'source_id' => $user['id'],
+                    'name' => $user['employee']['fullname_first'],
+                    'email' => $user['email'],
+                    'email_verified_at' => $user['email_verified_at'],
+                    'password' => "-",
+                    'remember_token' => null,
+                ])->toArray(),
+                ['id', 'source_id'],
+                ['name', 'email', 'email_verified_at', 'password', 'remember_token']
+            );
+            $total_inserted = User::count() - $totalUserCount;
+            return $total_inserted;
     }
     public static function syncDepartment($token)
     {
@@ -123,7 +129,7 @@ class HrmsServices
                 return false;
             }
             $departments = $response->json()['data'];
-            $total_inserted = 0;
+            $totalDepartmentCount = Department::count();
             foreach ($departments as $department) {
                 $department_model = Department::updateOrCreate(
                     [
@@ -134,7 +140,7 @@ class HrmsServices
                         'name' => $department['department_name'],
                     ]
                 );
-                if ($department_model->stakeholder()->updateOrCreate(
+                $department_model->stakeholder()->updateOrCreate(
                     [
                         'stakeholdable_type' => Department::class,
                         'stakeholdable_id' => $department['id'],
@@ -142,16 +148,11 @@ class HrmsServices
                     [
                         'name' => $department['department_name'],
                     ]
-                )) {
-                    $total_inserted++;
-                }
+                );
             }
             DB::commit();
-            return [
-                'success' => true,
-                'message' => 'Department Successfully Retrieved.',
-                'total_inserted' => $total_inserted,
-            ];
+            $total_inserted = Department::count() - $totalDepartmentCount;
+            return $total_inserted;
         } catch (\Exception $e) {
             DB::rollBack();
             return false;
