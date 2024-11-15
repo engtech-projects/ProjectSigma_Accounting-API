@@ -7,13 +7,16 @@ use Illuminate\Http\JsonResponse;
 
 class ProjectController extends Controller
 {
-    public function syncAll()
+    public static function syncAll()
     {
         try{
-            ProjectServices::syncProject(auth()->user()->token);
+            $syncProject = ProjectServices::syncProject(auth()->user()->token);
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Project Successfully Retrieved.',
+                'total_inserted' => [
+                    'project' => $syncProject,
+                ],
             ], 200);
         }catch(\Exception $e){
             return new JsonResponse([
@@ -24,11 +27,12 @@ class ProjectController extends Controller
     }
     public function syncProject()
     {
-        $project = ProjectServices::syncProject(auth()->user()->token);
-        if( $project ){
+        $syncProject = ProjectServices::syncProject(auth()->user()->token);
+        if( $syncProject ){
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Project Successfully Retrieved.',
+                'total_inserted' => $syncProject,
             ], 200);
         }else{
             return new JsonResponse([
