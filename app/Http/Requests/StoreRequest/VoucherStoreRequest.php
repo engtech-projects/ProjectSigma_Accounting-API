@@ -24,6 +24,7 @@ class VoucherStoreRequest extends FormRequest
         return [
 			'check_no' => 'nullable|string',
             'voucher_no' => 'required|string',
+			'type' => 'required|string|in:Cash,Disbursement',
 			'stakeholder_id' => 'required|numeric|exists:stakeholder,id',
 			'reference_no' => 'nullable|string|unique:payment_request,prf_no',
 			'status' => 'required|string|in:draft,posted',

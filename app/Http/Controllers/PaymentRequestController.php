@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RequestStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentFilterRequest;
 use App\Http\Requests\SearchStakeHolderRequest;
@@ -25,7 +26,7 @@ class PaymentRequestController extends Controller
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Payment Requests Successfully Retrieved.',
+                'message' => 'Payment Requests Successfully Retrived.',
                 'data' => PaymentServices::getWithPagination($request->validated()),
             ], 200);
         } catch (\Exception $e) {
@@ -34,6 +35,23 @@ class PaymentRequestController extends Controller
                 'message' => 'Payment Requests Failed to Retrieve.',
             ], 500);
         }
+    }
+    public function myRequest()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment My Requests Successfully Retrieved.',
+            'data' => PaymentServices::myRequest(),
+        ], 200);
+    }
+    public function myApprovals()
+    {
+        $myApprovals = PaymentServices::myApprovals();
+        return new JsonResponse([
+            "success" => true,
+            "message" => "Payment My Approvals Successfully Retrieved.",
+            "data" => $myApprovals
+        ], 200);
     }
     public function searchStakeHolders(SearchStakeHolderRequest $request)
     {
@@ -74,14 +92,17 @@ class PaymentRequestController extends Controller
         $validatedData = $request->validated();
 		$prfNo = PaymentServices::generatePrfNo();
 		$validatedData['prf_no'] = $prfNo;
+		$validatedData['stakeholder_id'] = $validatedData['stakeholderInformation']['id'] ?? null;
+        $validatedData['created_by'] = auth()->user()->id;
+        $validatedData['request_status'] = RequestStatuses::PENDING->value;
 		$paymentRequest = PaymentRequest::create($validatedData);
 		foreach($validatedData['details'] as $detail) {
 			$paymentRequest->details()->create([
 				'particulars' => $detail['particulars'] ?? null,
 				'cost' => $detail['cost'] ?? null,
 				'vat' => $detail['vat'] ?? null,
-				'amount' => $detail['amount'] ?? null,
-                'stakeholder_id' => $detail['id'] ?? null,
+				'amount' => $detail['cost'] ?? null,
+                'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
 			]);
 		}
         return new JsonResponse([

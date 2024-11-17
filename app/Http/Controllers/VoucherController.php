@@ -31,6 +31,23 @@ class VoucherController extends Controller
             'data' => VoucherService::getWithPagination($request->validated()),
         ], 201);
     }
+    public function myRequest()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Voucher My Requests Successfully Retrieved.',
+            'data' => VoucherService::myRequest(),
+        ], 200);
+    }
+    public function myApprovals()
+    {
+        $myApprovals = VoucherService::myApprovals();
+        return new JsonResponse([
+            "success" => true,
+            "message" => "Voucher My Approvals Successfully Retrieved.",
+            "data" => $myApprovals
+        ], 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -66,19 +83,14 @@ class VoucherController extends Controller
     /**voucher
      * Display the specified resource.
      */
-    public function show(Voucher $voucher)
+    public function show($id)
     {
-
-		return response()->json(
-			new VoucherResource(
-				$voucher->load([
-					'stakeholder',
-					'account',
-					'book',
-					'details'
-				])
-			), 201
-		);
+        $voucher = Voucher::find($id)->with(['stakeholder', 'account', 'book', 'details']);
+		return new JsonResponse([
+			'success' => true,
+			'message' => 'Voucher Successfully Retrieved.',
+			'data' => $voucher,
+		], 201);
     }
 
     /**

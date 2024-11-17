@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-use App\Traits\HasApproval;
+use App\Http\Traits\HasApproval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

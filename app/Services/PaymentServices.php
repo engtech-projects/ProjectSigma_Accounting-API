@@ -29,7 +29,19 @@ class PaymentServices
         return $query->latest('id')
             ->withStakeholder()
             ->withPaymentRequestDetails()
-            ->get();
+            ->paginate(config('services.pagination.limit'));
+    }
+    public static function myApprovals()
+    {
+        return PaymentRequest::with(['employee'])
+        ->myApprovals()
+        ->paginate(config('services.pagination.limit'));
+    }
+    public static function myRequest()
+    {
+        return PaymentRequest::with(['employee'])
+        ->myRequest()
+        ->paginate(config('services.pagination.limit'));
     }
     public static function generatePrfNo()
 	{

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Traits\HasTransitions;
-
+use App\Http\Traits\HasTransitions;
+use App\Http\Traits\HasApprovals;
 class Voucher extends Model
 {
-    use HasFactory, HasTransitions, SoftDeletes;
+    use HasFactory, HasTransitions, SoftDeletes, HasApprovals;
 
 	protected $table = 'voucher';
 

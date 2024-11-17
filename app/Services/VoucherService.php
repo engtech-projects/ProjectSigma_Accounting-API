@@ -107,4 +107,16 @@ class VoucherService
             ->with(['account','stakeholder', 'details'])
             ->paginate(config('services.pagination.limit'));
     }
+    public static function myApprovals()
+    {
+        return Voucher::with(['account','stakeholder', 'details'])
+        ->myApprovals()
+        ->paginate(config('services.pagination.limit'));
+    }
+    public static function myRequest()
+    {
+        return Voucher::with(['account','stakeholder', 'details'])
+        ->myRequest()
+        ->paginate(config('services.pagination.limit'));
+    }
 }

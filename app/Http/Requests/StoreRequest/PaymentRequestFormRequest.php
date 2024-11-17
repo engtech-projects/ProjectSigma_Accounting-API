@@ -23,19 +23,15 @@ class PaymentRequestFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stakeholder_id' => 'required|numeric',
 			'description' => 'nullable|string',
 			'request_date' => 'required|date|date_format:Y-m-d',
+            'stakeholderInformation' => 'required|min:1|array',
 			'total' => 'required|numeric',
 			'details' => 'required|min:1|array',
-			'details.*.cost' => 'nullable|numeric',
-			'details.*.vat' => 'nullable|numeric',
-            'details.*.id' => [
-                'required',
-                "integer",
-            ],
-			'details.*.amount' => 'nullable|numeric',
-			'details.*.particulars' => 'nullable',
+			'details.*.cost' => 'required|numeric',
+			'details.*.vat' => 'required|numeric',
+            'details.*.stakeholderInformation' => 'required|min:1|array',
+			'details.*.particulars' => 'required|string',
             ...$this->storeApprovals(),
         ];
     }

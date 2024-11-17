@@ -55,6 +55,11 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('voucher', VoucherController::class);
 	Route::resource('journal-entry', JournalEntryController::class);
 	Route::resource('payment-request', PaymentRequestController::class);
+    Route::prefix('payment-request')->group(function () {
+        Route::get('resource', [PaymentRequestController::class]);
+        Route::get('my-requests',[PaymentRequestController::class, 'myRequest']);
+        Route::get('my-approvals',[PaymentRequestController::class, 'myApprovals']);
+    });
     Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
 	Route::get('voucher/number/{prefix}', [VoucherController::class, 'voucherNo']);
 	Route::get('payment-request/form/{prfNo}', [PaymentRequestController::class, 'prfNo']);
