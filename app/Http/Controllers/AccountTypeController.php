@@ -17,13 +17,13 @@ class AccountTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(AccountTypeRequest $request)
+    public function index()
     {
         try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Types Successfully Retrieved.',
-                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated($request->validated())),
+                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated()),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
