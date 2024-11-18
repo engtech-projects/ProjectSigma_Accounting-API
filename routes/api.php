@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('account-category', function(Request $request) {
         return response()->json([ 'account_category' => AccountCategory::cases() ], 200);
     });
+    Route::resource('account-type', AccountTypeController::class);
     Route::get('balance-type', function(Request $request) {
         return response()->json([ 'balance_type' => BalanceType::cases() ], 200);
     });

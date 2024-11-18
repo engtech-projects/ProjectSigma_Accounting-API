@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AccountCategory;
+use App\Enums\BalanceType;
+use App\Enums\NotationType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AccountTypeRequest extends FormRequest
@@ -23,9 +26,9 @@ class AccountTypeRequest extends FormRequest
     {
         return [
             'account_type' => 'required|string|max:255',
-            'account_category' => 'required|string|max:255',
-            'balance_type' => 'required|string|max:255',
-            'notation' => 'required|string|in:+,-',
+            'account_category' => 'required|string|max:255|in:'.implode(',', AccountCategory::values()),
+            'balance_type' => 'required|string|max:255|in:'.implode(',', BalanceType::values()),
+            'notation' => 'required|string|in:'.implode(',', NotationType::values()),
         ];
     }
 }

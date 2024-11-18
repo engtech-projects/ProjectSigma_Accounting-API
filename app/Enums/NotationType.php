@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum BalanceType: string
+enum NotationType: string
 {
-    case DEBIT = 'debit';
-    case CREDIT = 'credit';
+    case POSITIVE = '+';
+    case NEGATIVE = '-';
 
     public static function values(): array
     {

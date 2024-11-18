@@ -126,6 +126,22 @@ class AccountTypeController extends Controller
         DB::beginTransaction();
         try {
             $accountType = AccountType::find($id);
+            if (!$accountType) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Account Type Not Found.',
+                    'data' => null,
+                ], 404);
+            }
+
+            if ($accountType->accounts()->exists()) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Cannot delete account type that is being used by accounts.',
+                    'data' => null,
+                ], 422);
+            }
+            $accountType = AccountType::find($id);
             $accountType->delete();
             DB::commit();
             return new JsonResponse([
