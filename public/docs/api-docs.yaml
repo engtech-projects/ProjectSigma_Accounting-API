@@ -5,15 +5,15 @@ info:
   version: 1.0.0
 
 paths:
-  /api/sync/all:
-    post:
-      summary: Sync all projects
-      description: Sync all projects using the user's token
+  /api/accounts:
+    get:
+      summary: Get list of accounts
+      description: Retrieve paginated list of accounts
       security:
         - bearerAuth: []
       responses:
         200:
-          description: Sync successful
+          description: Accounts retrieved successfully
           content:
             application/json:
               schema:
@@ -23,8 +23,12 @@ paths:
                     type: boolean
                   message:
                     type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
         500:
-          description: Sync failed
+          description: Failed to retrieve accounts
           content:
             application/json:
               schema:
@@ -34,168 +38,664 @@ paths:
                     type: boolean
                   message:
                     type: string
+                  data:
+                    type: null
 
-  /api/sync/project:
-    post:
-      summary: Sync a single project
-      description: Sync a single project using the user's token
+  /api/vat-value:
+    get:
+      summary: Get VAT value
+      description: Get the configured VAT value
       security:
         - bearerAuth: []
       responses:
         200:
-          description: Sync successful
+          description: VAT value retrieved successfully
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-        500:
-          description: Sync failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
+                  vat:
+                    type: number
 
-  /api/approvals/approve/{modelName}/{model}:
-    post:
-      summary: Approve an approval request
-      description: Approve an approval request for the specified model and model ID
+  /api/account-category:
+    get:
+      summary: Get account categories
+      description: Get list of available account categories
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Account categories retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  account_category:
+                    type: array
+                    items:
+                      type: object
+
+  /api/balance-type:
+    get:
+      summary: Get balance types
+      description: Get list of available balance types
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Balance types retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance_type:
+                    type: array
+                    items:
+                      type: object
+
+  /api/npo/my-requests:
+    get:
+      summary: Get my payment requests
+      description: Get list of payment requests for current user
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Payment requests retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/npo/my-approvals:
+    get:
+      summary: Get my approvals
+      description: Get list of approvals for current user
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Approvals retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/search-stakeholders:
+    get:
+      summary: Search stakeholders
+      description: Search stakeholders by query
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Stakeholders retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/voucher/number/{prefix}:
+    get:
+      summary: Get voucher number
+      description: Get voucher number by prefix
       security:
         - bearerAuth: []
       parameters:
         - in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: model
+          name: prefix
           required: true
           schema:
             type: string
       responses:
         200:
-          description: Approval successful
+          description: Voucher number retrieved successfully
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-        500:
-          description: Approval failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
 
-  /api/approvals/disapprove/{modelName}/{model}:
-    post:
-      summary: Disapprove an approval request
-      description: Disapprove an approval request for the specified model and model ID
+  /api/payment-request/form/{prfNo}:
+    get:
+      summary: Get payment request form
+      description: Get payment request form by PRF number
       security:
         - bearerAuth: []
       parameters:
         - in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: model
+          name: prfNo
           required: true
           schema:
             type: string
       responses:
         200:
-          description: Disapproval successful
+          description: Payment request form retrieved successfully
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-        500:
-          description: Disapproval failed
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
 
-  /api/approvals/void/{modelName}/{model}:
-    post:
-      summary: Void an approval request
-      description: Void an approval request for the specified model and model ID
+  /api/form-types:
+    get:
+      summary: Get form types
+      description: Get list of available form types
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Form types retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  forms:
+                    type: array
+                    items:
+                      type: object
+
+  /api/form/status:
+    get:
+      summary: Get form status
+      description: Get list of available form status
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Form status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: array
+                    items:
+                      type: object
+
+  /api/form/approved/{id}:
+    put:
+      summary: Approve form
+      description: Approve a form by ID
       security:
         - bearerAuth: []
       parameters:
         - in: path
-          name: modelName
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: model
+          name: id
           required: true
           schema:
             type: string
       responses:
         200:
-          description: Void successful
+          description: Form approved successfully
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-        500:
-          description: Void failed
+
+  /api/form/rejected/{id}:
+    put:
+      summary: Reject form
+      description: Reject a form by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Form rejected successfully
           content:
             application/json:
               schema:
                 type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
+
+  /api/form/void/{id}:
+    put:
+      summary: Void form
+      description: Void a form by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Form voided successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/form/issued/{id}:
+    put:
+      summary: Issue form
+      description: Issue a form by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Form issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
 
   /api/voucher/status:
     get:
       summary: Get voucher status
-      description: Get the available voucher status
+      description: Get list of available voucher status
       security:
         - bearerAuth: []
       responses:
         200:
           description: Voucher status retrieved successfully
           content:
-            application/json
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: array
+                    items:
+                      type: object
+
+  /api/voucher/completed/{id}:
+    put:
+      summary: Complete voucher
+      description: Mark a voucher as completed by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voucher completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/voucher/approved/{id}:
+    put:
+      summary: Approve voucher
+      description: Approve a voucher by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voucher approved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/voucher/rejected/{id}:
+    put:
+      summary: Reject voucher
+      description: Reject a voucher by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voucher rejected successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/voucher/void/{id}:
+    put:
+      summary: Void voucher
+      description: Void a voucher by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voucher voided successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/voucher/issued/{id}:
+    put:
+      summary: Issue voucher
+      description: Issue a voucher by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Voucher issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/journal-entry/status:
+    get:
+      summary: Get journal entry status
+      description: Get list of available journal entry status
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Journal entry status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: array
+                    items:
+                      type: object
+
+  /api/journal-entry/post/{id}:
+    put:
+      summary: Post journal entry
+      description: Post a journal entry by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Journal entry posted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/journal-entry/open/{id}:
+    put:
+      summary: Open journal entry
+      description: Open a journal entry by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Journal entry opened successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/journal-entry/void/{id}:
+    put:
+      summary: Void journal entry
+      description: Void a journal entry by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Journal entry voided successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/all:
+    post:
+      summary: Sync all data
+      description: Synchronize all data from external systems
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/sync/hrms/all:
+    post:
+      summary: Sync all HRMS data
+      description: Synchronize all HRMS data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: HRMS sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/hrms/employee:
+    post:
+      summary: Sync HRMS employees
+      description: Synchronize HRMS employee data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Employee sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/hrms/department:
+    post:
+      summary: Sync HRMS departments
+      description: Synchronize HRMS department data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Department sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/hrms/users:
+    post:
+      summary: Sync HRMS users
+      description: Synchronize HRMS user data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Users sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/project/all:
+    post:
+      summary: Sync all project data
+      description: Synchronize all project data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Project sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/project/project:
+    post:
+      summary: Sync project details
+      description: Synchronize specific project details
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Project details sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/inventory/all:
+    post:
+      summary: Sync all inventory data
+      description: Synchronize all inventory data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Inventory sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/sync/inventory/supplier:
+    post:
+      summary: Sync inventory suppliers
+      description: Synchronize inventory supplier data
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Supplier sync successful
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/approvals/approve/{modelName}/{model}:
+    post:
+      summary: Approve model
+      description: Approve a specific model instance
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: modelName
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Model approved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/approvals/disapprove/{modelName}/{model}:
+    post:
+      summary: Disapprove model
+      description: Disapprove a specific model instance
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: modelName
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Model disapproved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/approvals/void/{modelName}/{model}:
+    post:
+      summary: Void model
+      description: Void a specific model instance
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: modelName
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: model
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Model voided successfully
+          content:
+            application/json:
+              schema:
+                type: object
