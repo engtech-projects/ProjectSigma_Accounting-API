@@ -23,7 +23,7 @@ class AccountTypeController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Types Successfully Retrieved.',
-                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated()),
+                'data' =>  AccountTypeCollection::collection(AccountTypeService::getPaginated())->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
