@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('vouchers', function (Blueprint $table) {
+        Schema::table('voucher', function (Blueprint $table) {
             $table->enum('type', ['Cash', 'Disbursement'])->default('Cash')->after('status');
         });
     }
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('vouchers', function (Blueprint $table) {
+        Schema::table('voucher', function (Blueprint $table) {
             $table->dropColumn('type');
         });
     }
