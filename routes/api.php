@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\AccountCategory;
+use App\Enums\BalanceType;
 use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
@@ -48,15 +50,21 @@ Route::middleware('auth:api')->group(function () {
     Route::get('vat-value', function(Request $request) {
         return response()->json([ 'vat' => config('services.vat.value') ], 200);
     });
+    Route::get('account-category', function(Request $request) {
+        return response()->json([ 'account_category' => AccountCategory::cases() ], 200);
+    });
+    Route::get('balance-type', function(Request $request) {
+        return response()->json([ 'balance_type' => BalanceType::cases() ], 200);
+    });
 	Route::resource('account-group', AccountGroupController::class);
 	Route::resource('books', BookController::class);
 	Route::resource('posting-period', PostingPeriodController::class);
 	Route::resource('stakeholders', StakeHolderController::class);
 	Route::resource('voucher', VoucherController::class);
 	Route::resource('journal-entry', JournalEntryController::class);
-	Route::resource('payment-request', PaymentRequestController::class);
-    Route::prefix('payment-request')->group(function () {
-        Route::get('resource', [PaymentRequestController::class]);
+    Route::resource('payment-request', PaymentRequestController::class);
+    Route::prefix('npo')->group(function () {
+        Route::resource('resource',PaymentRequestController::class);
         Route::get('my-requests',[PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals',[PaymentRequestController::class, 'myApprovals']);
     });
@@ -111,7 +119,6 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/supplier', [InventoryController::class, 'syncSupplier']);
         });
     });
-
     Route::prefix('approvals')->group(function () {
         Route::post('approve/{modelName}/{model}', ApproveApproval::class);
         Route::post('disapprove/{modelName}/{model}', DisapproveApproval::class);
