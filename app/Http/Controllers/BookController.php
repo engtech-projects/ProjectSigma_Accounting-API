@@ -98,7 +98,15 @@ class BookController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(BookRequest $request, string $id)
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(BookRequest $request, string $id)
     {
         DB::beginTransaction();
         try {
@@ -126,14 +134,6 @@ class BookController extends Controller
                 'data' => null,
             ], 500);
         }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
