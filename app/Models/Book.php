@@ -20,7 +20,7 @@ class Book extends Model
     {
         return $this->belongsTo(AccountGroup::class);
     }
-    public function vouchers()
+    public function voucher()
     {
         return $this->hasMany(Voucher::class);
     }
@@ -34,6 +34,8 @@ class Book extends Model
 	}
 	public function scopeIsUsedInVoucher($query)
 	{
-		return $query->whereHas('vouchers');
+		return $query->whereHas('vouchers', function ($subQuery) {
+			return $subQuery->whereNotNull('book_id');
+		});
 	}
 }
