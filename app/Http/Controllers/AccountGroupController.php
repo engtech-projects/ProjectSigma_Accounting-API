@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AccountGroupRequest;
+use App\Models\AccountGroupAccount;
 use App\Services\AccountGroupService;
+use DB;
 use Illuminate\Http\Request;
 use App\Http\Resources\AccountingCollections\AccountGroupCollection;
 use App\Http\Resources\AccountGroupResource;
@@ -44,9 +46,23 @@ class AccountGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AccountGroupRequest $request)
     {
-        //
+        try {
+            $validatedData = $request->validated();
+            $accountGroup = AccountGroup::create($validatedData);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Group Successfully Created.',
+                'data' => new AccountGroupResource($accountGroup),
+            ], 201);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Group Failed to Create.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -78,9 +94,30 @@ class AccountGroupController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(AccountGroupRequest $request, string $id)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->validated();
+            $accountGroup = AccountGroup::find($id);
+            if (!$accountGroup) {
+                throw new \Exception('Account Group not found.');
+            }
+            $accountGroup->update($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Group Successfully Updated.',
+                'data' => new AccountGroupResource($accountGroup),
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Group Failed to Update.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -88,6 +125,26 @@ class AccountGroupController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $accountGroup = AccountGroup::find($id);
+            if (!$accountGroup) {
+                throw new \Exception('Account Group not found.');
+            }
+            $accountExist = AccountGroupAccount::where('account_group_id', $id)->exists();
+            if ($accountExist) {
+                throw new \Exception('Account Group has account(s).');
+            }
+            $accountGroup->delete();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Group Successfully Deleted.',
+            ], 200);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Group Failed to Delete.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
