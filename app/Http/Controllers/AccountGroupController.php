@@ -24,7 +24,7 @@ class AccountGroupController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Groups Successfully Retrieved.',
-                'data' =>  AccountGroupCollection::collection(AccountGroupService::getPaginated($request->validated())),
+                'data' =>  AccountGroupCollection::collection(AccountGroupService::getPaginated($request->validated()))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
