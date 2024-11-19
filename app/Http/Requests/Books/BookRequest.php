@@ -22,8 +22,10 @@ class BookRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
-            'code' => 'nullable|string|max:255',
+            'account_group_id' => 'required|string|max:255',
+            'code' => 'required|string|max:255',
+            'id' => 'nullable|integer',
+            'name' => 'required|string|max:255',
         ];
     }
 }
