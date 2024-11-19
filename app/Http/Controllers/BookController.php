@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Books\BookRequest;
+use App\Http\Requests\BookRequestFilter;
+use App\Http\Requests\BookRequest;
 use App\Http\Resources\BookCollection;
 use App\Services\BookService;
 use DB;
@@ -17,7 +18,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(BookRequest $request)
+    public function index(BookRequestFilter $request)
     {
         try {
             return new JsonResponse([
