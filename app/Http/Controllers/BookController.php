@@ -145,11 +145,11 @@ class BookController extends Controller
         try {
             $book = Book::find($id);
             if ($book) {
-                if ($book->isUsedInAccountGroup()) {
+                if ($book->isUsedInVoucher()) {
                     DB::rollBack();
                     return new JsonResponse([
                         'success' => false,
-                    'message' => 'Book is currently being used.',
+                        'message' => 'Book is currently being used in an account group.',
                         'data' => null,
                     ], 400);
                 }

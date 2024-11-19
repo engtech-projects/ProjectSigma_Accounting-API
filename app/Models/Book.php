@@ -20,12 +20,20 @@ class Book extends Model
     {
         return $this->belongsTo(AccountGroup::class);
     }
+    public function vouchers()
+    {
+        return $this->hasMany(Voucher::class);
+    }
 	public function scopeByName($query, $name)
 	{
         return $query->where('name', $name);
 	}
-	public function isUsedInAccountGroup(): bool
+	public function scopeIsUsedInAccountGroup($query)
 	{
-		return $this->accountGroup()->exists();
+		return $query->whereHas('accountGroup');
+	}
+	public function scopeIsUsedInVoucher($query)
+	{
+		return $query->whereHas('vouchers');
 	}
 }
