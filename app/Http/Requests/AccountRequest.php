@@ -25,7 +25,7 @@ class AccountRequest extends FormRequest
         return [
             'account_name' => 'required|string|max:255',
             'account_type_id' => 'required|exists:account_types,id|exists:account_types,id',
-            'account_number' => 'required|numeric|digits:10',
+            'account_number' => 'required|numeric|digits_between:4,10',
             'account_description' => 'required|string|max:255',
             'bank_reconcillation' =>  'required|string|max:255|in:'.implode(',', BankReconcillationType::values()),
             'statement' => 'nullable|string',
