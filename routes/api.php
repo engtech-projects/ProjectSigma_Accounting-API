@@ -2,6 +2,7 @@
 
 use App\Enums\AccountCategory;
 use App\Enums\BalanceType;
+use App\Enums\StakeHolderType;
 use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
@@ -46,17 +47,20 @@ Route::middleware('auth:api')->get('user', function (Request $request) {
 });
 
 Route::middleware('auth:api')->group(function () {
-	Route::resource('accounts', AccountsController::class);
     Route::get('vat-value', function(Request $request) {
         return response()->json([ 'vat' => config('services.vat.value') ], 200);
     });
     Route::get('account-category', function(Request $request) {
         return response()->json([ 'account_category' => AccountCategory::cases() ], 200);
     });
-    Route::resource('account-type', AccountTypeController::class);
     Route::get('balance-type', function(Request $request) {
         return response()->json([ 'balance_type' => BalanceType::cases() ], 200);
     });
+    Route::get('stakeholder-type', function(Request $request) {
+        return response()->json([ 'stakeholder_type' => StakeHolderType::cases() ], 200);
+    });
+    Route::resource('accounts', AccountsController::class);
+    Route::resource('account-type', AccountTypeController::class);
 	Route::resource('account-group', AccountGroupController::class);
 	Route::resource('books', BookController::class);
 	Route::resource('posting-period', PostingPeriodController::class);

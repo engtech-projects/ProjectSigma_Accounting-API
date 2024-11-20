@@ -8,7 +8,6 @@ enum StakeHolderType: string
 	case EMPLOYEE = 'employee';
 	case PROJECTS = 'projects';
 	case DEPARTMENT = 'department';
-    case CUSTOMER = 'customer';
 
 	public static function getStakeHolders(): array
 	{
