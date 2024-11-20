@@ -23,7 +23,6 @@ class StakeholderRequest extends FormRequest
     {
         return [
             'name' => 'required|max:255|string|',
-            'stakeholdable_id' => 'required|numeric',
             'stakeholdable_type' => 'required|string',
         ];
     }
