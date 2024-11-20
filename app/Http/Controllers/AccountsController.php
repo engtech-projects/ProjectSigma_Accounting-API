@@ -111,12 +111,14 @@ class AccountsController extends Controller
     try {
         $account = Account::findOrFail($id);
         $account->update($validatedData);
+        DB::commit();
         return new JsonResponse([
             'success' => true,
             'message' => 'Account Successfully Updated.',
             'data' => new AccountsResource($account),
         ], 200);
     } catch (\Exception $e) {
+        DB::rollBack();
         return new JsonResponse([
             'success' => false,
             'message' => 'Account Failed to Update.',
