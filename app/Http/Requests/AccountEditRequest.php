@@ -22,7 +22,13 @@ class AccountEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'id' => 'required|numeric',
+            'account_name' => 'required|string|max:255',
+            'account_type_id' => 'required|exists:account_types,id|exists:account_types,id',
+            'account_number' => 'required|numeric|digits_between:4,10',
+            'account_description' => 'required|string|max:255',
+            'bank_reconcillation' =>  'required|string|max:255|in:'.implode(',', BankReconcillationType::values()),
+            'statement' => 'nullable|string',
         ];
     }
 }
