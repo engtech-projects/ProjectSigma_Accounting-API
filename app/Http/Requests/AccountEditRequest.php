@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\BankReconcillationType;
+use App\Enums\BankReconciliationType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AccountEditRequest extends FormRequest
@@ -28,7 +28,7 @@ class AccountEditRequest extends FormRequest
             'account_type_id' => 'required|exists:account_types,id|exists:account_types,id',
             'account_number' => 'required|numeric|digits_between:4,10',
             'account_description' => 'required|string|max:255',
-            'bank_reconcillation' =>  'required|string|max:255|in:'.implode(',', BankReconcillationType::values()),
+            'bank_reconciliation' =>  'required|string|max:255|in:'.implode(',', BankReconciliationType::values()),
             'statement' => 'nullable|string',
         ];
     }

@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum BankReconcillationType: string
+enum BankReconciliationType: string
 {
     case YES = 'yes';
     case NO = 'no';
