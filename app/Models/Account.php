@@ -26,4 +26,8 @@ class Account extends Model
     {
         return $this->belongsTo(AccountType::class);
     }
+    public function journalEntryDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JournalDetails::class);
+    }
 }

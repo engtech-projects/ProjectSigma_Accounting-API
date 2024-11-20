@@ -8,7 +8,6 @@ use App\Http\Resources\AccountTypeCollection;
 use App\Services\AccountTypeService;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Resources\AccountTypeResource;
 use App\Models\AccountType;
 

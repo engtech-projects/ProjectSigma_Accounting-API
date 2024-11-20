@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use App\Http\Traits\ModelHelpers;
 class PaymentRequest extends Model
 {
-    use HasFactory, SoftDeletes, HasApproval, Notifiable;
+    use HasFactory, SoftDeletes, HasApproval, ModelHelpers, Notifiable;
 	protected $table = 'payment_request';
 	protected $fillable = [
 		'stakeholder_id',
@@ -34,13 +35,17 @@ class PaymentRequest extends Model
     {
         return $this->belongsTo(StakeHolder::class);
     }
+    public function createdByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 	public function scopePrfNo($query, $prfNo)
 	{
 		return $query->where('prf_no', $prfNo);
 	}
     public function scopeWithPaymentRequestDetails($query)
     {
-        return $query->with(['details']);
+        return $query->with(['details.stakeholder']);
     }
 	public function scopeFormStatus($query, $status)
 	{
@@ -55,5 +60,13 @@ class PaymentRequest extends Model
     public function scopeWithDetails($query)
     {
         return $query->with(['details.stakeholder']);
+    }
+    public function scopeOrderByDesc($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+    public function scopeWithCreatedBy($query)
+    {
+        return $query->with('created_by_user');
     }
 }

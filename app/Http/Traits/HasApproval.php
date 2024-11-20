@@ -19,7 +19,7 @@ trait HasApproval
      */
     public function created_by_user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by', 'source_id');
     }
 
     /**
@@ -29,7 +29,7 @@ trait HasApproval
      */
     public function getCreatedByUserNameAttribute()
     {
-        return $this->created_by_user->employee?->fullname_first ?? $this->created_by_user->name;
+        return $this->created_by_user->employee?->name ?? $this->created_by_user->name ?? "";
     }
 
     /**

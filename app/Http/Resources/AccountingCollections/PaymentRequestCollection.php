@@ -19,6 +19,8 @@ class PaymentRequestCollection extends JsonResource
     {
         return [
             ...parent::toArray($request),
+            "date_filed" => $this->created_at_human,
+            'created_by_user' => $this->created_by_user_name,
         ];
     }
 }

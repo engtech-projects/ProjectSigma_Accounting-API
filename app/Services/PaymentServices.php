@@ -17,8 +17,10 @@ class PaymentServices
         $paymentRequest = $query->latest('id')
             ->withStakeholder()
             ->withPaymentRequestDetails()
+            ->orderByDesc()
+            ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
-        return new PaymentRequestCollection($paymentRequest);
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
     public static function get(array $validatedData)
     {
@@ -26,22 +28,23 @@ class PaymentServices
         if (isset($validatedData['status'])) {
             $query->formStatus($validatedData['status']);
         }
-        return $query->latest('id')
+        $paymentRequest = $query->latest('id')
             ->withStakeholder()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
     public static function myApprovals()
     {
-        return PaymentRequest::with(['employee'])
-        ->myApprovals()
-        ->paginate(config('services.pagination.limit'));
+        $paymentRequest = PaymentRequest::myApprovals()
+            ->paginate(config('services.pagination.limit'));
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
-    public static function myRequest()
+    public static function myRequests()
     {
-        return PaymentRequest::with(['employee'])
-        ->myRequest()
-        ->paginate(config('services.pagination.limit'));
+        $paymentRequest = PaymentRequest::myRequests()
+            ->paginate(config('services.pagination.limit'));
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
     public static function generatePrfNo()
 	{

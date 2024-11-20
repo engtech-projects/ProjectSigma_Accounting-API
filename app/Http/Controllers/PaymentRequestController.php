@@ -9,9 +9,7 @@ use App\Http\Requests\SearchStakeHolderRequest;
 use App\Http\Requests\StoreRequest\PaymentRequestFormRequest;
 use App\Http\Requests\UpdateRequest\PaymentUpdateRequestForm;
 use App\Models\PaymentRequest;
-use App\Models\Form;
 use App\Http\Resources\PaymentRequestResource;
-use App\Enums\FormStatus;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
 use Illuminate\Http\JsonResponse;
@@ -23,25 +21,25 @@ class PaymentRequestController extends Controller
      */
     public function index(PaymentFilterRequest $request)
     {
-        try {
+        //try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Requests Successfully Retrived.',
                 'data' => PaymentServices::getWithPagination($request->validated()),
             ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Payment Requests Failed to Retrieve.',
-            ], 500);
-        }
+        // } catch (\Exception $e) {
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Payment Requests Failed to Retrieve.',
+        //     ], 500);
+        // }
     }
     public function myRequest()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment My Requests Successfully Retrieved.',
-            'data' => PaymentServices::myRequest(),
+            'data' => PaymentServices::myRequests(),
         ], 200);
     }
     public function myApprovals()

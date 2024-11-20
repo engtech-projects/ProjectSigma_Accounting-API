@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\BankReconcillationType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AccountRequest extends FormRequest
@@ -22,8 +23,12 @@ class AccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
-            'account_type_id' => 'nullable|exists:account_types,id',
+            'account_name' => 'required|string|max:255',
+            'account_type_id' => 'required|exists:account_types,id|exists:account_types,id',
+            'account_number' => 'required|numeric|max:255',
+            'account_description' => 'required|string|max:255',
+            'bank_reconcillation' =>  'required|string|max:255|in:'.implode(',', BankReconcillationType::values()),
+            'statement' => 'nullable|string',
         ];
     }
 }

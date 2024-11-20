@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchStakeHolderRequest extends FormRequest
+class AccountFilterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class SearchStakeHolderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'key' => 'nullable|string|max:255',
-            'type' => 'nullable|string',
+            'account_name' => 'nullable|string|max:255',
+            'account_number' => 'nullable|string|max:255',
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Stakeholders\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
@@ -73,6 +75,13 @@ class User extends Authenticatable
             }
         }
         return $accessibilities;
-
+    }
+    public function stakeholder(): HasOne
+    {
+        return $this->hasOne(StakeHolder::class, 'stakeholdable_id');
+    }
+    public function employee(): HasOne
+    {
+        return $this->hasOne(Employee::class, 'source_id');
     }
 }
