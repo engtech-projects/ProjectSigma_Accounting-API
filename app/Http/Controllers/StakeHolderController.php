@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\StakeHolderType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StakeholderEditRequest;
 use App\Http\Requests\StakeholderFilterRequest;
@@ -29,7 +28,7 @@ class StakeHolderController extends Controller
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Payee Successfully Retrieved.',
+                'message' => 'Payee Successfully Retrieve.',
                 'data' =>  StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
@@ -56,24 +55,24 @@ class StakeHolderController extends Controller
     {
         $validatedData = $request->validated();
         DB::beginTransaction();
-        // try {
+        try {
             $validatedData['stakeholdable_id'] = StakeHolderService::createPayee($validatedData);
             $validatedData['stakeholdable_type'] = Payee::class;
             StakeHolder::create($validatedData);
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Payee Successfully Retrieved.',
+                'message' => 'Payee Successfully Save.',
                 'data' => []
             ], 200);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Payee Failed to Retrieve.',
-        //         'data' => null,
-        //     ], 500);
-        // }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Payee Failed to Save.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -112,14 +111,14 @@ class StakeHolderController extends Controller
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Payee Successfully Retrieved.',
+                'message' => 'Payee Successfully Update.',
                 'data' =>  [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Payee Failed to Retrieve.',
+                'message' => 'Payee Failed to Update.',
                 'data' => null,
             ], 500);
         }
@@ -138,14 +137,14 @@ class StakeHolderController extends Controller
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Payee Successfully Retrieved.',
+                'message' => 'Payee Successfully Delete.',
                 'data' =>  [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Payee Failed to Retrieve.',
+                'message' => 'Payee Failed to Delete.',
                 'data' => null,
             ], 500);
         }
