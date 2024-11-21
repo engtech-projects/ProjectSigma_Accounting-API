@@ -1,11 +1,7 @@
 <?php
-
 namespace App\Enums;
 
-use App\Models\RequestBOM;
-use App\Models\RequestItemProfiling;
-use App\Models\WarehouseTransaction;
-
+use App\Models\PaymentRequest;
 enum ApprovalModels: string
 {
     case ACCOUNTING_PAYMENT_REQUEST = PaymentRequest::class;
