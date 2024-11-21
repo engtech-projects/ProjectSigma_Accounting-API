@@ -41,11 +41,6 @@ use App\Enums\FormStatus;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware('auth:api')->get('user', function (Request $request) {
-    return Auth()->user();
-});
-
 Route::middleware('auth:api')->group(function () {
     Route::get('vat-value', function(Request $request) {
         return response()->json([ 'vat' => config('services.vat.value') ], 200);
@@ -59,6 +54,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('stakeholder-type', function(Request $request) {
         return response()->json([ 'stakeholder_type' => StakeHolderType::cases() ], 200);
     });
+    Route::get('form-types', function(Request $request) {
+		return response()->json([ 'forms' => FormType::cases() ], 200);
+	});
+    Route::get('chart-of-accounts',[AccountsController::class, 'chartOfAccounts']);
     Route::resource('accounts', AccountsController::class);
     Route::resource('account-type', AccountTypeController::class);
 	Route::resource('account-group', AccountGroupController::class);
@@ -76,17 +75,14 @@ Route::middleware('auth:api')->group(function () {
     Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
 	Route::get('voucher/number/{prefix}', [VoucherController::class, 'voucherNo']);
 	Route::get('payment-request/form/{prfNo}', [PaymentRequestController::class, 'prfNo']);
-	Route::get('form-types', function(Request $request) {
-		return response()->json([ 'forms' => FormType::cases() ], 200);
-	});
 	Route::prefix('form')->group(function () {
 		Route::get('/status', function(Request $request) {
 			return response()->json([ 'status' => FormStatus::cases() ], 200);
 		});
-		Route::put('/approved/{id}', [FormController::class, 'approved']);
-		Route::put('/rejected/{id}', [FormController::class, 'rejected']);
-		Route::put('/void/{id}', [FormController::class, 'void']);
-		Route::put('/issued/{id}', [FormController::class, 'issued']);
+		// Route::put('/approved/{id}', [FormController::class, 'approved']);
+		// Route::put('/rejected/{id}', [FormController::class, 'rejected']);
+		// Route::put('/void/{id}', [FormController::class, 'void']);
+		// Route::put('/issued/{id}', [FormController::class, 'issued']);
 	});
 	Route::prefix('voucher')->group(function () {
 		Route::get('/status', function(Request $request) {

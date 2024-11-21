@@ -37,12 +37,16 @@ class PaymentServices
     public static function myApprovals()
     {
         $paymentRequest = PaymentRequest::myApprovals()
+            ->withStakeholder()
+            ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
     public static function myRequests()
     {
         $paymentRequest = PaymentRequest::myRequests()
+            ->withStakeholder()
+            ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }

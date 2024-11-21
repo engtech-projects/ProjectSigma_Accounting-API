@@ -30,4 +30,8 @@ class Account extends Model
     {
         return $this->hasMany(JournalDetails::class);
     }
+    public function scopeWithAccountType($query)
+    {
+        return $query->with('accountType');
+    }
 }

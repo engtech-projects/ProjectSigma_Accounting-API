@@ -155,4 +155,19 @@ class AccountsController extends Controller
             ], 500);
         }
     }
+    public function chartOfAccounts()
+    {
+        $data = Account::withAccountType()->orderBy('account_number')->get()->groupBy(function($account) {
+            return $account->accountType->account_category;
+        })->map(function($accounts) {
+            return $accounts->groupBy(function($account) {
+                return $account->accountType->account_type;
+            });
+        });
+        return new JsonResponse([
+            'success' => false,
+            'message' => 'Chart of Accounts Successfully Fetch.',
+            'data' => $data,
+        ], 200);
+    }
 }
