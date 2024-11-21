@@ -56,6 +56,7 @@ class PaymentServices
 		$currentYearMonth = Carbon::now()->format('Y-m');
         // Find the highest series
         $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")
+            ->whereNull('deleted_at')
             ->orderBy('prf_no', 'desc')
             ->first();
         // Extract the last series number if a previous request exists
