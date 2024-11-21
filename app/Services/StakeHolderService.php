@@ -26,55 +26,11 @@ class StakeHolderService
         }
         return $query->paginate(config('services.pagination.limit'));
     }
-    public static function createEmployee ($data)
-    {
-        $lastEmployee = Employee::orderBy('id', 'desc')->first();
-        $id = $lastEmployee ? $lastEmployee->id + 1 : 1;
-        $employee = Employee::create([
-            'id' => $id,
-            'name' => $data['name'],
-            'source_id' => $id,
-        ]);
-        return $id;
-    }
-    public static function createProject ($data)
-    {
-        $lastProject = Project::orderBy('id', 'desc')->first();
-        $id = $lastProject ? $lastProject->id + 1 : 1;
-        $project = Project::create([
-            'id' => $id,
-            'name' => $data['name'],
-            'source_id' => $id,
-        ]);
-        return $id;
-    }
     public static function createPayee ($data)
     {
-        $lastProject = Payee::orderBy('id', 'desc')->first();
-        $id = $lastProject ? $lastProject->id + 1 : 1;
-        $project = Project::create([
-            'id' => $id,
-            'name' => $data['name'],
-            'source_id' => $id,
-        ]);
-        return $id;
-    }
-    public static function createDepartment ($data)
-    {
-        $lastDepartment = Department::orderBy('id', 'desc')->first();
-        $id = $lastDepartment ? $lastDepartment->id + 1 : 1;
-        $department = Department::create([
-            'id' => $id,
-            'name' => $data['name'],
-            'source_id' => $id,
-        ]);
-        return $id;
-    }
-    public static function createSupplier ($data)
-    {
-        $lastSupplier = Supplier::orderBy('id', 'desc')->first();
-        $id = $lastSupplier ? $lastSupplier->id + 1 : 1;
-        $supplier = Supplier::create([
+        $lastPayee = Payee::orderBy('id', 'desc')->first();
+        $id = $lastPayee ? $lastPayee->id + 1 : 1;
+        Payee::create([
             'id' => $id,
             'name' => $data['name'],
             'source_id' => $id,

@@ -58,7 +58,7 @@ class StakeHolderController extends Controller
         DB::beginTransaction();
         // try {
             $validatedData['stakeholdable_id'] = StakeHolderService::createPayee($validatedData);
-            $validatedData['stakeholdable_type'] = Supplier::class;
+            $validatedData['stakeholdable_type'] = Payee::class;
             StakeHolder::create($validatedData);
             DB::commit();
             return new JsonResponse([
