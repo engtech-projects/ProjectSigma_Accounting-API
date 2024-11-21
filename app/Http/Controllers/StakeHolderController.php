@@ -9,11 +9,11 @@ use App\Http\Requests\StakeholderFilterRequest;
 use App\Http\Requests\StakeholderRequest;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
+use App\Models\Stakeholders\Payee;
 use App\Models\Stakeholders\Project;
 use App\Models\Stakeholders\Supplier;
 use App\Services\StakeHolderService;
 use DB;
-use Illuminate\Http\Request;
 use App\Http\Resources\StakeholderResource;
 use App\Models\StakeHolder;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,13 +29,13 @@ class StakeHolderController extends Controller
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Types Successfully Retrieved.',
+                'message' => 'Payee Successfully Retrieved.',
                 'data' =>  StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Account Types Failed to Retrieve.',
+                'message' => 'Payee Failed to Retrieve.',
                 'data' => null,
             ], 500);
         }
@@ -56,34 +56,24 @@ class StakeHolderController extends Controller
     {
         $validatedData = $request->validated();
         DB::beginTransaction();
-        try {
-            $validatedData['stakeholdable_id'] = match ($validatedData['stakeholder_type']) {
-                StakeHolderType::SUPPLIER->value => StakeHolderService::createSupplier($validatedData),
-                StakeHolderType::EMPLOYEE->value => StakeHolderService::createEmployee($validatedData),
-                StakeHolderType::PROJECTS->value => StakeHolderService::createProject($validatedData),
-                StakeHolderType::DEPARTMENT->value => StakeHolderService::createDepartment($validatedData),
-            };
-            $validatedData['stakeholdable_type'] = match ($validatedData['stakeholdable_type']) {
-                StakeHolderType::SUPPLIER->value  => Supplier::class,
-                StakeHolderType::EMPLOYEE->value  => Employee::class,
-                StakeHolderType::PROJECTS->value  => Project::class,
-                StakeHolderType::DEPARTMENT->value  => Department::class,
-            };
+        // try {
+            $validatedData['stakeholdable_id'] = StakeHolderService::createPayee($validatedData);
+            $validatedData['stakeholdable_type'] = Supplier::class;
             StakeHolder::create($validatedData);
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Types Successfully Retrieved.',
+                'message' => 'Payee Successfully Retrieved.',
                 'data' => []
             ], 200);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Account Types Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Payee Failed to Retrieve.',
+        //         'data' => null,
+        //     ], 500);
+        // }
     }
 
     /**
@@ -122,14 +112,14 @@ class StakeHolderController extends Controller
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Types Successfully Retrieved.',
+                'message' => 'Payee Successfully Retrieved.',
                 'data' =>  [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Account Types Failed to Retrieve.',
+                'message' => 'Payee Failed to Retrieve.',
                 'data' => null,
             ], 500);
         }
@@ -143,24 +133,19 @@ class StakeHolderController extends Controller
         DB::beginTransaction();
         try {
             $stakeholder = StakeHolder::where('stakeholdable_id', $id)->first();
-            match ($stakeholder->stakeholderable_type) {
-                Supplier::class => Supplier::find($id)->delete(),
-                Employee::class => Employee::find($id)->delete(),
-                Project::class => Project::find($id)->delete(),
-                Department::class => Department::find($id)->delete(),
-            };
+            Payee::find($id)->delete();
             $stakeholder->delete();
             DB::commit();
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Account Types Successfully Retrieved.',
+                'message' => 'Payee Successfully Retrieved.',
                 'data' =>  [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Account Types Failed to Retrieve.',
+                'message' => 'Payee Failed to Retrieve.',
                 'data' => null,
             ], 500);
         }
