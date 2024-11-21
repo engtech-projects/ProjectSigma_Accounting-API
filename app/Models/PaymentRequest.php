@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use App\Http\Traits\ModelHelpers;
@@ -68,5 +69,13 @@ class PaymentRequest extends Model
     public function scopeWithCreatedBy($query)
     {
         return $query->with('created_by_user');
+    }
+    public function scopeWithNoReferenceNo($query)
+    {
+        return $query->whereDoesntHave('vouchers');
+    }
+    public function vouchers(): HasOne
+    {
+        return $this->HasOne(Voucher::class, 'prf_no', 'reference_no');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\VoucherType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,7 +31,8 @@ class Voucher extends Model
 		'book_id',
 		'reference_no',
 		'formable_id',
-		'formable_type'
+		'formable_type',
+        'approvals',
 	];
 
 	protected $casts = [
@@ -67,5 +69,17 @@ class Voucher extends Model
 	public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+    public function scopeWhereCash($query)
+    {
+        return $query->where('status', VoucherType::CASH->value);
+    }
+    public function scopeWhereDisbursement($query)
+    {
+        return $query->where('status', VoucherType::CASH->value);
+    }
+    public function scopeOrderDesc($query)
+    {
+        return $query->orderBy('created_at','DESC');
     }
 }

@@ -2,28 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\VoucherType;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\VoucherRequest;
+use App\Http\Requests\CreateCashVoucherRequest;
+use App\Http\Requests\CreateDisbursementVoucherRequest;
+use App\Http\Requests\VoucherRequestFilter;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Models\Voucher;
 use App\Http\Resources\VoucherResource;
 use App\Http\Requests\StoreRequest\VoucherStoreRequest;
 use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
 use App\Services\VoucherService;
-use App\Models\PaymentRequest;
-use App\Models\Form;
-use App\Models\Book;
-use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Enums\VoucherStatus;
+use Request;
 
 class VoucherController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(VoucherRequest $request)
+    public function index(VoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -31,20 +30,63 @@ class VoucherController extends Controller
             'data' => VoucherService::getWithPagination($request->validated()),
         ], 201);
     }
-    public function myRequest()
+    public function disbursementAllRequest(VoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Voucher My Requests Successfully Retrieved.',
-            'data' => VoucherService::myRequest(),
+            'message' => 'Disbursement Vouchers fetched',
+            'data' => VoucherService::getWithPaginationDisbursement($request->validated()),
+        ], 201);
+    }
+    public function disbursementMyRequest()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Disbursement Voucher My Requests Successfully Retrieved.',
+            'data' => VoucherService::myRequestDisbursement(),
         ], 200);
     }
-    public function myApprovals()
+    public function disbursementMyApprovals()
     {
-        $myApprovals = VoucherService::myApprovals();
+        $myApprovals = VoucherService::myApprovalsDisbursement();
         return new JsonResponse([
             "success" => true,
-            "message" => "Voucher My Approvals Successfully Retrieved.",
+            "message" => "Disbursement Voucher My Approvals Successfully Retrieved.",
+            "data" => $myApprovals
+        ], 200);
+    }
+    public function disbursementMyVouchering()
+    {
+        $myvouchering = VoucherService::myVoucheringDisbursement();
+        return new JsonResponse([
+            "success" => true,
+            "message" => "Disbursement Voucher My Approvals Successfully Retrieved.",
+            "data" => $myvouchering
+        ], 200);
+    }
+
+    public function cashAllRequest(Request $request)
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Cash Vouchers fetched',
+            'data' => VoucherService::getWithPaginationCash($request->validated()),
+        ], 201);
+    }
+    public function cashMyRequest()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Cash Voucher My Requests Successfully Retrieved.',
+            'data' => VoucherService::myRequestCash(),
+        ], 200);
+    }
+    public function cashMyApprovals()
+    {
+        $myApprovals = VoucherService::myApprovalsCash();
+        return new JsonResponse([
+            "success" => true,
+            "message" => "Cash Voucher My Approvals Successfully Retrieved.",
             "data" => $myApprovals
         ], 200);
     }
@@ -79,6 +121,49 @@ class VoucherController extends Controller
             ], 500);
         }
     }
+    public function createCash(CreateCashVoucherRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->validated();
+            $validatedData['type'] = VoucherType::CASH->value;
+            $voucher = Voucher::create($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Voucher created',
+                'data' => $voucher,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Voucher creation failed',
+            ], 500);
+        }
+    }
+    public function createDisbursement(CreateDisbursementVoucherRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->validated();
+            $validatedData['type'] = VoucherType::DISBURSEMENT->value;
+            $voucher = Voucher::create($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Voucher created',
+                'data' => $voucher,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Voucher creation failed',
+            ], 500);
+        }
+    }
+
 
     /**voucher
      * Display the specified resource.
@@ -172,30 +257,5 @@ class VoucherController extends Controller
 				'data' => $voucher,
 			], 405);
 		}
-	}
-
-	public function completed(int $id)
-	{
-		return $this->changeStatus($id, VoucherStatus::COMPLETED);
-	}
-
-	public function approved(int $id)
-	{
-		return $this->changeStatus($id, VoucherStatus::APPROVED);
-	}
-
-	public function rejected(int $id)
-	{
-		return $this->changeStatus($id, VoucherStatus::REJECTED);
-	}
-
-	public function void(int $id)
-	{
-		return $this->changeStatus($id, VoucherStatus::VOID);
-	}
-
-	public function pending(int $id)
-	{
-		return $this->changeStatus($id, VoucherStatus::PENDING);
 	}
 }

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VoucherRequest extends FormRequest
+class CreateDisbursementVoucherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class VoucherRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'voucher_no' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
+            //
         ];
     }
 }
