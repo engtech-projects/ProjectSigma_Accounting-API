@@ -129,3 +129,20 @@ Route::middleware('auth:api')->group(function () {
         Route::post('void/{modelName}/{model}', VoidApproval::class);
     });
 });
+// SYSTEM SETUP ROUTES
+if (config()->get('app.artisan') == 'true') {
+    Route::prefix('artisan')->group(function () {
+        Route::get('storage', function () {
+            Artisan::call("storage:link");
+            return "success";
+        });
+        Route::get('optimize', function () {
+            Artisan::call("optimize");
+            return "success";
+        });
+        Route::get('optimize-clear', function () {
+            Artisan::call("optimize:clear");
+            return "success";
+        });
+    });
+}
