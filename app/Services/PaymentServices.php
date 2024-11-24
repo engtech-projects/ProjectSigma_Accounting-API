@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\JournalStatus;
 use App\Models\PaymentRequest;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use Carbon\Carbon;
@@ -50,6 +51,20 @@ class PaymentServices
             ->paginate(config('services.pagination.limit'));
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
+    public static function journalPaymentRequestEntries()
+    {
+        $paymentRequest = PaymentRequest::isApproved()
+            ->withStakeholder()
+            ->where(function($query) {
+                $query->whereHas('journalEntries', function($query) {
+                    $query->where('status', JournalStatus::DRAFTED->value);
+                })
+                ->orWhereDoesntHave('journalEntries');
+            })
+            ->withPaymentRequestDetails()
+            ->paginate(config('services.pagination.limit'));
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+    }
     public static function generatePrfNo()
 	{
 		$prefix = strtoupper('RFA-ACCTG');
@@ -72,4 +87,5 @@ class PaymentServices
         $prfNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
         return $prfNo;
 	}
+
 }

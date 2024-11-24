@@ -34,4 +34,8 @@ class Account extends Model
     {
         return $query->with('accountType');
     }
+    public function getFullAccountAttribute(): string
+    {
+        return "{$this->account_number} - {$this->account_name} ({$this->accountType->account_type})";
+    }
 }

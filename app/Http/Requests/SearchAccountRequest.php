@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RequestStatuses;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PaymentFilterRequest extends FormRequest
+class SearchAccountRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +22,7 @@ class PaymentFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'nullable|string|in:' . implode(',', array_column(RequestStatuses::cases(), 'value'))
+            'key' => 'nullable|string',
         ];
     }
 }

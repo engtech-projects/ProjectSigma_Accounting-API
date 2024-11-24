@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Enums\JournalStatus;
+use App\Enums\RequestStatuses;
 use App\Http\Traits\HasApproval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +25,7 @@ class PaymentRequest extends Model
 		'approvals',
         'created_by',
         'request_status',
+		'particular_group_id',
 	];
     protected $casts = [
         'approvals' => 'array',
@@ -39,6 +42,10 @@ class PaymentRequest extends Model
     public function createdByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+	public function particularGroup(): BelongsTo
+    {
+        return $this->belongsTo(ParticularGroup::class);
     }
 	public function scopePrfNo($query, $prfNo)
 	{
@@ -77,5 +84,9 @@ class PaymentRequest extends Model
     public function vouchers(): HasOne
     {
         return $this->HasOne(Voucher::class, 'prf_no', 'reference_no');
+    }
+    public function journalEntries(): HasMany
+    {
+        return $this->hasMany(JournalEntry::class, 'reference_no', 'prf_no');
     }
 }

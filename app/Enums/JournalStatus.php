@@ -4,19 +4,12 @@ namespace App\Enums;
 
 enum JournalStatus: string
 {
-	case DRAFT = 'draft';
+	case DRAFTED = 'drafted';
+    case UNPOSTED = 'unposted';
     case POSTED = 'posted';
-    case OPEN = 'open';
 	case VOID = 'void';
-
-	public function nextStatus(): ?JournalStatus
+    public static function values(): array
     {
-        return match($this) {
-            self::DRAFT => self::OPEN,
-            self::OPEN => self::POSTED,
-			// self::Open => self::Void,
-			self::POSTED => null
-        };
+        return array_column(self::cases(), 'value');
     }
-
 }

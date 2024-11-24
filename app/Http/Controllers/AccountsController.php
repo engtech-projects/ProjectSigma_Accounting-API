@@ -7,10 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AccountEditRequest;
 use App\Http\Requests\AccountFilterRequest;
 use App\Http\Requests\AccountRequest;
+use App\Http\Requests\SearchAccountRequest;
 use App\Http\Resources\AccountCollection;
 use App\Services\AccountService;
 use DB;
-use Illuminate\Http\Request;
 use App\Http\Resources\AccountsResource;
 use App\Models\Account;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +36,20 @@ class AccountsController extends Controller
                 'data' => null,
             ], 500);
         }
+    }
+    public function searchAccounts(SearchAccountRequest $request)
+    {
+        $query = Account::query();
+        if ($request->has('key')) {
+            $query->where('account_number', 'like', '%' . $request->key . '%')
+                ->orWhere('account_name', 'like', '%' . $request->key . '%')
+                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%' . $request->key . '%');
+        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts Successfully Retrieved.',
+            'data' => AccountCollection::collection($query->orderBy('account_number', 'asc')->with(['accountType'])->paginate(config('app.pagination_limit')))->response()->getData(true),
+        ], 200);
     }
     /**
      * Show the form for creating a new resource.

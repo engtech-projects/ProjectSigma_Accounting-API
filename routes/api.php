@@ -16,11 +16,11 @@ use App\Http\Controllers\{
 	AccountGroupController,
 	JournalEntryController,
 	PaymentRequestController,
-	FormController,
 };
 
 use App\Http\Controllers\Hrms\HrmsController;
 use App\Http\Controllers\Inventory\InventoryController;
+use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\SyncController;
 use Illuminate\Http\Request;
@@ -28,19 +28,7 @@ use Illuminate\Support\Facades\Route;
 use App\Enums\FormType;
 use App\Enums\JournalStatus;
 use App\Enums\VoucherStatus;
-use App\Enums\FormStatus;
 
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 Route::middleware('auth:api')->group(function () {
     Route::get('vat-value', function(Request $request) {
         return response()->json([ 'vat' => config('services.vat.value') ], 200);
@@ -64,20 +52,30 @@ Route::middleware('auth:api')->group(function () {
 	Route::resource('books', BookController::class);
 	Route::resource('posting-period', PostingPeriodController::class);
 	Route::resource('stakeholders', StakeHolderController::class);
-	Route::resource('journal-entry', JournalEntryController::class);
+    Route::resource('particular-group', ParticularGroupController::class);
+    Route::prefix('journal-entry')->group(function () {
+        Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
+        Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
+        Route::get('posted-entries', [JournalEntryController::class, 'postedEntries']);
+        Route::get('drafted-entries', [JournalEntryController::class, 'draftedEntries']);
+        Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
+        Route::resource('resource', JournalEntryController::class)->names('journal-entries');
+        Route::get('status', function(Request $request) {
+            return response()->json([ 'status' => JournalStatus::cases() ], 200);
+        });
+    });
     Route::resource('payment-request', PaymentRequestController::class);
     Route::prefix('npo')->group(function () {
-        Route::resource('resource',PaymentRequestController::class);
+        Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests',[PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals',[PaymentRequestController::class, 'myApprovals']);
     });
+
+    //search routes
     Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
-	Route::get('payment-request/form/{prfNo}', [PaymentRequestController::class, 'prfNo']);
-	Route::prefix('form')->group(function () {
-		Route::get('/status', function(Request $request) {
-			return response()->json([ 'status' => FormStatus::cases() ], 200);
-		});
-	});
+    Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
+    Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);
+
 	Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::post('create-voucher', [VoucherController::class, 'createDisbursement']);
@@ -97,15 +95,6 @@ Route::middleware('auth:api')->group(function () {
             return response()->json([ 'status' => VoucherStatus::cases() ], 200);
         });
     });
-	Route::prefix('journal-entry')->group(function () {
-		Route::get('/status', function(Request $request) {
-			return response()->json([ 'status' => JournalStatus::cases() ], 200);
-		});
-		Route::put('/post/{id}', [JournalEntryController::class, 'post']);
-		Route::put('/open/{id}', [JournalEntryController::class, 'open']);
-		Route::put('/void/{id}', [JournalEntryController::class, 'void']);
-	});
-
     Route::prefix('sync')->group(function () {
         Route::post('/all', [SyncController::class, 'syncAll']);
         Route::prefix('hrms')->group(function () {

@@ -21,18 +21,18 @@ class PaymentRequestController extends Controller
      */
     public function index(PaymentFilterRequest $request)
     {
-        //try {
+        try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Requests Successfully Retrived.',
                 'data' => PaymentServices::getWithPagination($request->validated()),
             ], 200);
-        // } catch (\Exception $e) {
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Payment Requests Failed to Retrieve.',
-        //     ], 500);
-        // }
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Payment Requests Failed to Retrieve.',
+            ], 500);
+        }
     }
     public function myRequest()
     {
@@ -172,6 +172,14 @@ class PaymentRequestController extends Controller
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
             'data' => PaymentRequest::PrfNo($prfNo)->withStakeholder()->first(),
+        ], 200);
+    }
+    public function journalPaymentRequestEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Payment Request Entries Successfully Retrieved.',
+            'data' => PaymentServices::journalPaymentRequestEntries(),
         ], 200);
     }
 }

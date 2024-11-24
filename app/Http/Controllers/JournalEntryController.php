@@ -53,10 +53,11 @@ class JournalEntryController extends Controller
     {
         DB::beginTransaction();
         try {
-            $validated = $request->validated();
-            $validated['posting_period_id'] = PostingPeriod::currentPostingPeriod();
-            $validated['period_id'] = Period::where('posting_period_id', $validated['posting_period_id'])->current()->pluck('id')->first();
-            $journalEntry = JournalEntry::create($validated);
+            $validatedData = $request->validated();
+            $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
+            $validatedData['status'] = JournalStatus::POSTED->value;
+            $validatedData['period_id'] = Period::where('posting_period_id', $validatedData['posting_period_id'])->current()->pluck('id')->first();
+            $journalEntry = JournalEntry::create($validatedData);
             $journalEntry->details()->createMany($request->details);
             DB::commit();
             return new JsonResponse([
@@ -141,19 +142,39 @@ class JournalEntryController extends Controller
 			return response()->json(['error' => 'Transition not allowed', 'journal' => $journal], 405);
 		}
 	}
+    public function unpostedEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Unposted Payment Request Entries Successfully Retrieved.',
+            'data' => JournalEntryService::unpostedEntries(),
+        ], 200);
+    }
 
-	public function post(int $id)
-	{
-		return $this->changeStatus($id, JournalStatus::POSTED);
-	}
+    public function postedEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Posted Payment Request Entries Successfully Retrieved.',
+            'data' => JournalEntryService::postedEntries(),
+        ], 200);
+    }
 
-	public function open(int $id)
-	{
-		return $this->changeStatus($id, JournalStatus::OPEN);
-	}
+    public function draftedEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Drafted Payment Request Entries Successfully Retrieved.',
+            'data' => JournalEntryService::draftedEntries(),
+        ], 200);
+    }
 
-	public function void(int $id)
-	{
-		return $this->changeStatus($id, JournalStatus::VOID);
-	}
+    public function generateJournalNumber()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Number Successfully Generated.',
+            'data' => JournalEntryService::generateJournalNumber(),
+        ], 200);
+    }
 }

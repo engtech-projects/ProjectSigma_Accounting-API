@@ -3,9 +3,9 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AccountCollection extends JsonResource
+class ParticularGroupCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -16,7 +16,6 @@ class AccountCollection extends JsonResource
     {
         return [
             ...parent::toArray($request),
-            'account_name' => $this->full_account,
         ];
     }
 }
