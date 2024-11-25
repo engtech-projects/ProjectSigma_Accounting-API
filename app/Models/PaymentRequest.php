@@ -25,7 +25,7 @@ class PaymentRequest extends Model
 		'approvals',
         'created_by',
         'request_status',
-		'particular_group_id',
+        'total_vat_amount',
 	];
     protected $casts = [
         'approvals' => 'array',

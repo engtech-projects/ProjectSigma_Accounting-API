@@ -52,27 +52,35 @@ class JournalEntryController extends Controller
     public function store(JournalStoreRequest $request)
     {
         DB::beginTransaction();
-        try {
+        // try {
             $validatedData = $request->validated();
             $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::POSTED->value;
             $validatedData['period_id'] = Period::where('posting_period_id', $validatedData['posting_period_id'])->current()->pluck('id')->first();
             $journalEntry = JournalEntry::create($validatedData);
-            $journalEntry->details()->createMany($request->details);
+            foreach($request->details as $detail) {
+                $journalEntry->details()->create([
+                    'account_id' => $detail['journalAccountInfo']['id'] ?? null,
+                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
+                    'description' => $detail['description'] ?? null,
+                    'debit' => $detail['debit'] ?? null,
+                    'credit' => $detail['credit'] ?? null,
+                ]);
+            }
             DB::commit();
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',
                 'data' => new JournalEntryResource($journalEntry->load('details')),
             ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error creating journal entry.',
-                'data' => null
-            ], 500);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Error creating journal entry.',
+        //         'data' => null
+        //     ], 500);
+        // }
     }
 
     /**

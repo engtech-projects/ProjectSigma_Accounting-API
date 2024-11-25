@@ -16,7 +16,9 @@ class PaymentRequestDetails extends Model
 		'cost',
 		'vat',
         'stakeholder_id',
-		'amount'
+		'amount',
+		'total_vat_amount',
+		'particular_group_id'
 	];
 	public function paymentRequest(): BelongsTo
     {
@@ -25,5 +27,9 @@ class PaymentRequestDetails extends Model
 	public function stakeholder(): BelongsTo
 	{
 		return $this->belongsTo(StakeHolder::class);
+	}
+	public function particularGroup(): BelongsTo
+	{
+		return $this->belongsTo(ParticularGroup::class);
 	}
 }
