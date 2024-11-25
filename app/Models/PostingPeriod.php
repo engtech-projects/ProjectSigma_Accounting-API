@@ -36,4 +36,10 @@ class PostingPeriod extends Model
 	{
 		return self::current()->pluck('id')->first();
 	}
+    public function scopeHasJournalEntries($query)
+    {
+        return $query->whereHas('periods', function ($subQuery) {
+            $subQuery->whereHas('journalEntries');
+        });
+    }
 }

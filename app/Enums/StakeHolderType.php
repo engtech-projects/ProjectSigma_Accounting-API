@@ -10,7 +10,7 @@ enum StakeHolderType: string
 	case DEPARTMENT = 'department';
 	case PAYEE = 'payee';
 
-	public static function getStakeHolders(): array
+	public static function values(): array
 	{
 		return array_column(self::cases(), 'value');
 	}
