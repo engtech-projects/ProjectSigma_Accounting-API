@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\StakeHolderType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StakeholderFilterRequest extends FormRequest
@@ -23,6 +24,7 @@ class StakeholderFilterRequest extends FormRequest
     {
         return [
             'name' => 'nullable|string',
+            'type' => 'nullable|in:'.implode(',', StakeHolderType::values()),
         ];
     }
 }

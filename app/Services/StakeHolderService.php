@@ -24,6 +24,9 @@ class StakeHolderService
         if (isset($filters['name'])) {
             $query->where('name', 'like', '%' . $filters['name'] . '%');
         }
+        if (isset($filters['type'])) {
+            $query->where('stakeholdable_type', "App\Models\Stakeholders\\" . ucfirst($filters['type']));
+        }
         return $query->paginate(config('services.pagination.limit'));
     }
     public static function createPayee ($data)
