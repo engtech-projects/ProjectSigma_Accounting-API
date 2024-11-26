@@ -28,6 +28,7 @@ class JournalStoreRequest extends FormRequest
 			'journal_date' => 'required|date|date_format:Y-m-d',
 			'reference_no' => 'nullable|string',
 			'remarks' => 'required|string',
+			'payment_request_id' => 'required|numeric|exists:payment_request,id',
 			'details' => 'required|array|min:1',
 			'details.*.journalAccountInfo' => 'required|array',
 			'details.*.stakeholderInformation' => 'required|array',

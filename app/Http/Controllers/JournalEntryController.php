@@ -57,6 +57,8 @@ class JournalEntryController extends Controller
             $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::POSTED->value;
             $validatedData['period_id'] = Period::where('posting_period_id', $validatedData['posting_period_id'])->current()->pluck('id')->first();
+            $validatedData['payment_request_id'] = $request->payment_request_id;
+            $validatedData['created_by'] = auth()->user()->id;
             $journalEntry = JournalEntry::create($validatedData);
             foreach($request->details as $detail) {
                 $journalEntry->details()->create([
@@ -164,7 +166,7 @@ class JournalEntryController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Posted Payment Request Entries Successfully Retrieved.',
-            'data' => JournalEntryService::postedEntries(),
+            'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
         ], 200);
     }
 

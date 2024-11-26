@@ -20,18 +20,27 @@ class JournalEntryService
     public static function unpostedEntries()
     {
         return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
 
     public static function postedEntries()
     {
         return JournalEntry::where('status', JournalStatus::POSTED->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
 
     public static function draftedEntries()
     {
         return JournalEntry::where('status', JournalStatus::DRAFTED->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
     public static function generateJournalNumber(): string
