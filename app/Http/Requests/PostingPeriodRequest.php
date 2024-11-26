@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PostingPeriodType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostingPeriodRequest extends FormRequest
@@ -11,7 +12,7 @@ class PostingPeriodRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,7 @@ class PostingPeriodRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'status' => 'nullable|in:'.implode(',', PostingPeriodType::values())
         ];
     }
 }

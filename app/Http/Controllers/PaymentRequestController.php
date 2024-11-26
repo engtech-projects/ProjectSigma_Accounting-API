@@ -99,7 +99,7 @@ class PaymentRequestController extends Controller
 				'particulars' => $detail['particulars'] ?? null,
 				'cost' => $detail['cost'] ?? null,
 				'vat' => $detail['vat'] ?? null,
-				'amount' => $detail['cost'] ?? null,
+				'amount' => $detail['amount'] ?? null,
                 'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
 				'particular_group_id' => $detail['particularGroup']['id'] ?? null,
 				'total_vat_amount' => $detail['total_vat_amount'] ?? null,

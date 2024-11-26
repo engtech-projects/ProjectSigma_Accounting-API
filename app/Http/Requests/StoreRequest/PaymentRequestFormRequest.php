@@ -31,6 +31,7 @@ class PaymentRequestFormRequest extends FormRequest
 			'details' => 'required|min:1|array',
 			'details.*.cost' => 'required|numeric',
 			'details.*.vat' => 'required|numeric',
+            'details.*.amount' => 'required|numeric',
             'details.*.total_vat_amount' => 'required|numeric',
             'details.*.particularGroup' => 'nullable|array',
             'details.*.stakeholderInformation' => 'required|min:1|array',
