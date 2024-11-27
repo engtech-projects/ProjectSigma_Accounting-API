@@ -1,88 +1,92 @@
 <?php
 
 namespace App\Models;
-
+use App\Enums\JournalStatus;
+use App\Enums\RequestStatuses;
+use App\Http\Traits\HasApproval;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Carbon\Carbon;
-use App\Traits\HasFormable;
-
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use App\Http\Traits\ModelHelpers;
 class PaymentRequest extends Model
 {
-    use HasFactory,  HasFormable;
-
+    use HasFactory, SoftDeletes, HasApproval, ModelHelpers, Notifiable;
 	protected $table = 'payment_request';
-
 	protected $fillable = [
 		'stakeholder_id',
 		'prf_no',
 		'request_date',
 		'description',
 		'total',
+		'approvals',
+        'created_by',
+        'request_status',
+        'total_vat_amount',
 	];
-	
-	public static function generatePrfNo()
-	{	
-		$prefix = strtoupper('RFA-ACCTG');
-		$currentYearMonth = Carbon::now()->format('Y-m'); 
-        // Find the highest series
-        $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")
-            ->orderBy('prf_no', 'desc')
-            ->first();
-        // Extract the last series number if a previous request exists
-        if ($lastPaymentRequest) {
-            $lastSeries = (int) substr($lastPaymentRequest->prf_no, -4); // Get last 4 digits
-            $nextSeries = $lastSeries + 1;
-        } else {
-            $nextSeries = 1; // Start at 0001 if no previous voucher
-        }
-        // Format the series number to be 4 digits (e.g., 0001)
-        $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
-        // Construct the new reference number
-        $prfNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
-
-        return $prfNo;
-	}
-
-	public function form()
-    {
-        return $this->morphOne(Form::class, 'formable');
-    }
-
-	// public function forms()
-    // {
-    //     return $this->morphMany(Form::class, 'formable');
-    // }
-
-	// public function vouchers()
-	// {
-	// 	return $this->morphMany(Voucher::class, 'formable');
-	// }
+    protected $casts = [
+        'approvals' => 'array',
+    ];
 
 	public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);
     }
-
 	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
     }
-
+    public function createdByUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+	public function particularGroup(): BelongsTo
+    {
+        return $this->belongsTo(ParticularGroup::class);
+    }
 	public function scopePrfNo($query, $prfNo)
 	{
 		return $query->where('prf_no', $prfNo);
 	}
-
+    public function scopeWithPaymentRequestDetails($query)
+    {
+        return $query->with(['details.stakeholder']);
+    }
 	public function scopeFormStatus($query, $status)
 	{
 		return $query->whereHas('form', function ($query) use ($status) {
 			$query->where('forms.status', $status);
 		});
-	}
-
+    }
+    public function scopeWithStakeholder($query)
+    {
+        return $query->with(['stakeholder']);
+    }
+    public function scopeWithDetails($query)
+    {
+        return $query->with(['details.stakeholder']);
+    }
+    public function scopeOrderByDesc($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
+    public function scopeWithCreatedBy($query)
+    {
+        return $query->with('created_by_user');
+    }
+    public function scopeWithNoReferenceNo($query)
+    {
+        return $query->whereDoesntHave('vouchers');
+    }
+    public function vouchers(): HasOne
+    {
+        return $this->HasOne(Voucher::class, 'prf_no', 'reference_no');
+    }
+    public function journalEntries(): HasMany
+    {
+        return $this->hasMany(JournalEntry::class, 'reference_no', 'prf_no');
+    }
 }

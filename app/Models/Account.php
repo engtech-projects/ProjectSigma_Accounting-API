@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Account extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
 	protected $table = 'accounts';
 
@@ -21,11 +21,21 @@ class Account extends Model
 		'is_active',
 		'statement',
     ];
-
-	public $timestamps = false;
-
+    public $timestamps = false;
 	public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
+    }
+    public function journalEntryDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JournalDetails::class);
+    }
+    public function scopeWithAccountType($query)
+    {
+        return $query->with('accountType');
+    }
+    public function getFullAccountAttribute(): string
+    {
+        return "{$this->account_number} - {$this->account_name} ({$this->accountType->account_type})";
     }
 }

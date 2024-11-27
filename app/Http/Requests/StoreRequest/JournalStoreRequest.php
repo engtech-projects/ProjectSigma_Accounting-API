@@ -22,20 +22,19 @@ class JournalStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'journal_no' => ['required', 'string'],
-            'voucher_id' => ['nullable', 'string'],
-			'status' => ['required', 'string'],
-			'particulars' => ['nullable', 'string'],		
-			'journal_date' => ['required','date','date_format:Y-m-d'],
-			'reference_no' => ['nullable', 'string'],
-			'remarks' => ['nullable'],
-
-			'details' => ['required', 'min:1', 'array'],
-			'details.*.account_id' => ['required', 'numeric'],
-			'details.*.stakeholder_id' => ['required', 'numeric'],
-			'details.*.debit' => ['nullable', 'numeric'],
-			'details.*.credit' => ['nullable', 'numeric'],
-			'details.*.description' => ['nullable'],
+            'journal_no' => 'required|string|unique:journal_entry,journal_no,NULL,id,deleted_at,NULL',
+            'voucher_id' => 'nullable|string',
+			'particulars' => 'nullable|string',
+			'journal_date' => 'required|date|date_format:Y-m-d',
+			'reference_no' => 'nullable|string',
+			'remarks' => 'required|string',
+			'payment_request_id' => 'required|numeric|exists:payment_request,id',
+			'details' => 'required|array|min:1',
+			'details.*.journalAccountInfo' => 'required|array',
+			'details.*.stakeholderInformation' => 'required|array',
+			'details.*.debit' => 'nullable|numeric',
+			'details.*.credit' => 'nullable|numeric',
+			'details.*.description' => 'nullable|string',
         ];
     }
 }

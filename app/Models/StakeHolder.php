@@ -4,22 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StakeHolder extends Model
 {
     use HasFactory;
 
 	protected $table = 'stakeholder';
-
+	public $timestamps = true;
 	protected $fillable = [
-		'name'
+        'id',
+		'name',
+		'stakeholdable_type',
+		'stakeholdable_id',
 	];
 
-	public $timestamps = false;
-
-	public function forms()
+    public function stakeholdable()
     {
-        return $this->hasMany(Form::class);
+        return $this->morphTo();
     }
 }

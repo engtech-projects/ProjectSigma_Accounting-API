@@ -15,9 +15,7 @@ class AccountGroupResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-			'id' => $this->id,
-			'name' => $this->name,
-			'accounts' => $this->accounts
-		];
+            ...parent::toArray($request),
+        ];
     }
 }

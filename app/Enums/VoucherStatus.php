@@ -4,22 +4,22 @@ namespace App\Enums;
 
 enum VoucherStatus: string
 {
-	case Draft = 'draft';
-	case Pending = 'pending';
-    case Approved = 'approved';
-    case Rejected = 'rejected';
-	case Void = 'void';
-	case Completed = 'completed';
+	case DRAFT = 'draft';
+	case PENDING = 'pending';
+    case APPROVED = 'approved';
+    case REJECTED = 'rejected';
+	case VOID = 'void';
+	case COMPLETED = 'completed';
 
 	public function nextStatus(): ?VoucherStatus
     {
         return match($this) {
-            self::Draft => self::Pending,
-            self::Pending => self::Approved,
-			self::Pending => self::Rejected,
-			self::Pending => self::Void,
-			self::Approved => self::Completed,
-			self::Completed => null
+            self::DRAFT => self::PENDING,
+            self::PENDING => self::APPROVED,
+			// self::PENDING => self::REJECTED,
+			// self::PENDING => self::VOID,
+			self::APPROVED => self::COMPLETED,
+			self::COMPLETED => null
         };
     }
 }

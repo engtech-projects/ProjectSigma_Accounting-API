@@ -4,6 +4,6 @@ namespace App\Enums;
 
 enum FormType: string
 {
-    case PaymentRequest = 'PaymentRequest';
-	case PayrollRequest = 'PayrollRequest';
+    case PAYMENT_REQUEST = 'PaymentRequest';
+	case PAYROLL_REQUEST = 'PayrollRequest';
 }

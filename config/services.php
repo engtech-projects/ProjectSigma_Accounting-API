@@ -29,9 +29,9 @@ return [
         'HRSM_URL' => env('HRSM_API')
     ],
     'url' => [
-        'hrms_app_url' => env('HRMS_APP_URL'),
-        'hrms_api_url' => env('HRMS_API_URL')
-
+        'hrms_api_url' => env('HRMS_API_URL'),
+        'inventory_api_url' => env('INVENTORY_API_URL'),
+        'project_api_url' => env('PROJECT_API_URL')
     ],
 
 	'key' =>[
@@ -43,5 +43,11 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'pagination' => [
+        'limit' => env('PAGINATION_LIMIT', 10)
+    ],
+    'vat' => [
+        'value' => env('VAT_VALUE', 12)
+    ]
 
 ];

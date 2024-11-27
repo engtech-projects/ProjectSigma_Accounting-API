@@ -23,7 +23,7 @@ class PaymentUpdateRequestForm extends FormRequest
     {
         return [
             'stakeholder_id' => ['required', 'numeric'],
-			'description' => ['nullable', 'string'],		
+			'description' => ['nullable', 'string'],
 			'request_date' => ['required','date','date_format:Y-m-d'],
 			'total' => ['required', 'numeric'],
 			'details' => ['required', 'min:1', 'array'],

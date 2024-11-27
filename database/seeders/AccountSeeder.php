@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Account;
 use Illuminate\Support\Facades\DB;
-use League\Csv\Reader; 
+use League\Csv\Reader;
 use Carbon\Carbon;
 
 class AccountSeeder extends Seeder

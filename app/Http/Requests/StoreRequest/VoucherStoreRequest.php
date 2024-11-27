@@ -22,24 +22,25 @@ class VoucherStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'check_no' => ['nullable', 'string'],
-            'voucher_no' => ['required', 'string'],
-			'stakeholder_id' => ['required', 'numeric'],
-			'reference_no' => ['nullable', 'string'],
-			'status' => ['required', 'string'],
-			'account_id' => ['required', 'numeric'],
-			'particulars' => ['nullable', 'string'],
-			'net_amount' => ['required', 'numeric'],
-			'amount_in_words' => ['nullable', 'string'],
-			'voucher_date' => ['required','date','date_format:Y-m-d'],
-			'date_encoded' => ['required','date','date_format:Y-m-d'],	
-			'book_id' => ['required', 'numeric'],
-
-			'details' => ['required', 'min:1', 'array'],
-			'details.*.account_id' => ['required', 'numeric'],
-			'details.*.stakeholder_id' => ['required', 'numeric'],
-			'details.*.debit' => ['nullable', 'numeric'],
-			'details.*.credit' => ['nullable', 'numeric'],
+			'check_no' => 'nullable|string',
+            'voucher_no' => 'required|string',
+			'type' => 'required|string|in:Cash,Disbursement',
+			'stakeholder_id' => 'required|numeric|exists:stakeholder,id',
+			'reference_no' => 'nullable|string|unique:payment_request,prf_no',
+			'status' => 'required|string|in:draft,posted',
+			'account_id' => 'required|numeric|exists:accounts,id',
+			'particulars' => 'nullable|string',
+			'net_amount' => 'required|numeric',
+			'amount_in_words' => 'nullable|string',
+			'voucher_date' => 'required|date|date_format:Y-m-d',
+			'date_encoded' => 'required|date|date_format:Y-m-d',
+			'book_id' => 'required|numeric|exists:books,id',
+            'approvals' => 'required|array',
+			'details' => 'required|min:1|array',
+			'details.*.account_id' => 'required|numeric|exists:accounts,id',
+			'details.*.stakeholder_id' => 'required|numeric|exists:stakeholder,id',
+			'details.*.debit' => 'nullable|numeric',
+			'details.*.credit' => 'nullable|numeric',
         ];
     }
 }
