@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PostingPeriodType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\JournalEntryRequest;
 use App\Http\Resources\JournalEntryResource;
@@ -51,22 +52,30 @@ class JournalEntryController extends Controller
      */
     public function store(JournalStoreRequest $request)
     {
-        DB::beginTransaction();
-        // try {
+        try {
+            DB::beginTransaction();
             $validatedData = $request->validated();
             $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::POSTED->value;
-            $validatedData['period_id'] = Period::where('posting_period_id', $validatedData['posting_period_id'])->current()->pluck('id')->first();
+            $validatedData['period_id'] = Period::current()->pluck('id')->first();
+            if ($validatedData['period_id'] == null) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'No open period found. Please create a new period. current period',
+                    'data' => null,
+                ], 400);
+            }
             $validatedData['payment_request_id'] = $request->payment_request_id;
             $validatedData['created_by'] = auth()->user()->id;
             $journalEntry = JournalEntry::create($validatedData);
             foreach($request->details as $detail) {
                 $journalEntry->details()->create([
                     'account_id' => $detail['journalAccountInfo']['id'] ?? null,
-                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
+                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
                     'description' => $detail['description'] ?? null,
                     'debit' => $detail['debit'] ?? null,
                     'credit' => $detail['credit'] ?? null,
+                    ''
                 ]);
             }
             DB::commit();
@@ -75,26 +84,27 @@ class JournalEntryController extends Controller
                 'message' => 'Journal Entry Successfully Created.',
                 'data' => new JournalEntryResource($journalEntry->load('details')),
             ], 201);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Error creating journal entry.',
-        //         'data' => null
-        //     ], 500);
-        // }
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error creating journal entry.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(JournalEntry $journalEntry)
+    public function show($id, JournalEntry $journalEntry)
     {
-        return response()->json(
-			new JournalEntryResource(
-				$journalEntry->load(['details'])
-			), 201
-		);
+        $journalEntry = $journalEntry->with(['details'])->paginate(config('service.pagination.limit'));
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entry Successfully Retrieved.',
+            'data' => JournalEntryResource::collection($journalEntry)->response()->getData(true)
+        ]);
     }
 
     /**
@@ -176,6 +186,14 @@ class JournalEntryController extends Controller
             'success' => true,
             'message' => 'Drafted Payment Request Entries Successfully Retrieved.',
             'data' => JournalEntryService::draftedEntries(),
+        ], 200);
+    }
+    public function forVoucherEntriesList()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entries for Voucher Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesList())->response()->getData(true),
         ], 200);
     }
 

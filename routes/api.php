@@ -59,6 +59,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('posted-entries', [JournalEntryController::class, 'postedEntries']);
         Route::get('drafted-entries', [JournalEntryController::class, 'draftedEntries']);
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
+        Route::get('for-voucher-entries', [JournalEntryController::class, 'forVoucherEntriesList']);
         Route::resource('resource', JournalEntryController::class)->names('journal-entries');
         Route::get('status', function(Request $request) {
             return response()->json([ 'status' => JournalStatus::cases() ], 200);
@@ -83,12 +84,14 @@ Route::middleware('auth:api')->group(function () {
             Route::get('my-requests',[VoucherController::class, 'disbursementMyRequest']);
             Route::get('my-approvals',[VoucherController::class, 'disbursementMyApprovals']);
             Route::get('my-vouchering',[VoucherController::class, 'disbursementMyVouchering']);
+            Route::get('generate-number', [VoucherController::class, 'disbursementGenerateVoucherNumber']);
         });
         Route::prefix('cash')->group(function () {
             Route::post('create-voucher', [VoucherController::class, 'createCash']);
             Route::get('all-list',[VoucherController::class, 'cashAllRequest']);
             Route::get('my-requests',[VoucherController::class, 'cashMyRequest']);
             Route::get('my-approvals',[VoucherController::class, 'cashMyApprovals']);
+            Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('number/{prefix}', [VoucherController::class, 'voucherNo']);
         Route::get('status', function(Request $request) {

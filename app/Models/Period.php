@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PostingPeriodType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,6 +32,6 @@ class Period extends Model
 
 		return $query->where('start_date', '<=', $currentDate->toDateString())
             ->where('end_date', '>=', $currentDate->toDateString())
-            ->where('status', 'open');
+            ->where('status', PostingPeriodType::OPEN->value);
 	}
 }

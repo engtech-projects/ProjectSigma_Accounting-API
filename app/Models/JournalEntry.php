@@ -16,7 +16,6 @@ class JournalEntry extends Model
 	protected $fillable = [
 		'journal_no',
 		'journal_date',
-		'voucher_id',
 		'status',
 		'remarks',
 		'posting_period_id',
@@ -30,10 +29,10 @@ class JournalEntry extends Model
     {
         return $this->hasMany(JournalDetails::class);
     }
-	public function voucher(): BelongsTo
-    {
-        return $this->belongsTo(Voucher::class, 'voucher_id');
-    }
+	public function voucher(): HasMany
+	{
+		return $this->hasMany(Voucher::class, 'journal_entry_id');
+	}
 	public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
