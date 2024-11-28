@@ -43,6 +43,15 @@ class JournalEntryService
             ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
+    public static function forVoucherEntriesList()
+    {
+        return JournalEntry::where('status', JournalStatus::POSTED->value)
+            ->whereDoesntHave('voucher')
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->paginate(config('services.pagination.limit'));
+    }
     public static function generateJournalNumber(): string
     {
         $prefix = strtoupper('JE');
@@ -54,7 +63,7 @@ class JournalEntryService
             ->first();
         // Extract the last series number if a previous request exists
         if ($lastJournal) {
-            $lastSeries = (int) substr($lastJournal->journal_number, -4); // Get last 4 digits
+            $lastSeries = (int) substr($lastJournal->journal_no, -4); // Get last 4 digits
             $nextSeries = $lastSeries + 1;
         } else {
             $nextSeries = 1; // Start at 0001 if no previous voucher

@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Broadcasting\HrmsNotifyCreatorChannel;
 use App\Enums\ApprovalModels;
 use App\Models\PaymentRequest;
-use App\Models\RequestItemProfiling;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Notification;

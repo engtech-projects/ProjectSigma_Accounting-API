@@ -27,7 +27,6 @@ class Voucher extends Model
 		'status',
 		'voucher_date',
 		'date_encoded',
-		'account_id',
 		'book_id',
 		'reference_no',
 		'formable_id',
@@ -81,5 +80,9 @@ class Voucher extends Model
     public function scopeOrderDesc($query)
     {
         return $query->orderBy('created_at','DESC');
+    }
+    public function scopeWithPaymentRequestDetails($query)
+    {
+        return $query->with(['details']);
     }
 }

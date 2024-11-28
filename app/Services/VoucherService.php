@@ -159,6 +159,14 @@ class VoucherService
             ->paginate(config('services.pagination.limit'));
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
+    public static function voucherEntriesDisbursement()
+    {
+        $journalEntry = JournalEntry::whereVoucherId()
+            ->withPaymentRequest()
+            ->withDetails()
+            ->paginate(config('services.pagination.limit'));
+        return JournalEntryCollection::collection($journalEntry)->response()->getData(true);
+    }
     public static function getWithPaginationCash(array $validatedData)
     {
         $query = Voucher::query();

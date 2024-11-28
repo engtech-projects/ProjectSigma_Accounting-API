@@ -7,11 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCashVoucherRequest;
 use App\Http\Requests\CreateDisbursementVoucherRequest;
 use App\Http\Requests\VoucherRequestFilter;
+use App\Models\Book;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\Voucher;
 use App\Http\Resources\VoucherResource;
-use App\Http\Requests\StoreRequest\VoucherStoreRequest;
 use App\Http\Requests\UpdateRequest\VoucherUpdateRequest;
 use App\Services\VoucherService;
 use App\Enums\VoucherStatus;
@@ -101,25 +102,9 @@ class VoucherController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(VoucherStoreRequest $request)
+    public function store(Request $request)
     {
-        DB::beginTransaction();
-        try {
-            $validatedData = $request->validated();
-            $voucher = Voucher::create($validatedData);
-            DB::commit();
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Voucher created',
-                'data' => $voucher,
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Voucher creation failed',
-            ], 500);
-        }
+        //
     }
     public function createCash(CreateCashVoucherRequest $request)
     {
@@ -145,23 +130,34 @@ class VoucherController extends Controller
     public function createDisbursement(CreateDisbursementVoucherRequest $request)
     {
         DB::beginTransaction();
-        try {
+        // try {
             $validatedData = $request->validated();
             $validatedData['type'] = VoucherType::DISBURSEMENT->value;
+            $validatedData['book_id'] = Book::where('code', VoucherType::DISBURSEMENT_CODE->value)->first()->id;
+            $validatedData['status'] = VoucherStatus::PENDING->value;
+            $validatedData['date_encoded'] = Carbon::now();
             $voucher = Voucher::create($validatedData);
+            foreach($validatedData['details'] as $detail) {
+                $voucher->details()->create([
+                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
+                    'description' => $detail['description'] ?? null,
+                    'debit' => $detail['debit'] ?? null,
+                    'credit' => $detail['credit'] ?? null,
+                ]);
+            }
             DB::commit();
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Voucher created',
                 'data' => $voucher,
             ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Voucher creation failed',
-            ], 500);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Voucher creation failed',
+        //     ], 500);
+        // }
     }
 
 
@@ -257,5 +253,21 @@ class VoucherController extends Controller
 				'data' => $voucher,
 			], 405);
 		}
+	}
+	public function disbursementGenerateVoucherNumber()
+	{
+		return new JsonResponse([
+			'success' => true,
+			'message' => 'Voucher number generated',
+			'data' => VoucherService::generateVoucherNo('DV'),
+		], 201);
+	}
+	public function cashGenerateVoucherNumber()
+	{
+		return new JsonResponse([
+			'success' => true,
+			'message' => 'Voucher number generated',
+			'data' => VoucherService::generateVoucherNo('CV'),
+		], 201);
 	}
 }
