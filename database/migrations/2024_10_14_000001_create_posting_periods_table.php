@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('posting_periods', function (Blueprint $table) {
             $table->id();
-			$table->date('period_start');
+            $table->date('period_start');
             $table->date('period_end');
-            $table->enum('status', ['open','closed'])->default('open');
+            $table->enum('status', ['open', 'closed'])->default('open');
             $table->softDeletes();
             $table->timestamps();
         });

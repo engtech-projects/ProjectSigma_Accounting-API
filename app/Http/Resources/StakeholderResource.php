@@ -16,6 +16,6 @@ class StakeholderResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-		];
+        ];
     }
 }

@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +18,7 @@ Route::get('/', function (Request $request) {
     return response()->json(['version' => app()->version()]);
 });
 Route::get('artisan-clear-optimization', function () {
-    Artisan::call("optimize:clear");
-    return "success";
+    Artisan::call('optimize:clear');
+
+    return 'success';
 });

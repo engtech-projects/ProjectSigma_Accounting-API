@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('posting_period_id')->constrained('posting_periods')->onDelete('cascade');
-			$table->date('start_date');
+            $table->foreignId('posting_period_id')->constrained('posting_periods')->onDelete('cascade');
+            $table->date('start_date');
             $table->date('end_date');
-            $table->enum('status', ['open','closed'])->default('open');
+            $table->enum('status', ['open', 'closed'])->default('open');
             $table->timestamps();
         });
     }

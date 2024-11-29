@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Enums;
 
 use App\Models\PaymentRequest;
+
 enum ApprovalModels: string
 {
     case ACCOUNTING_PAYMENT_REQUEST = PaymentRequest::class;
@@ -14,6 +16,7 @@ enum ApprovalModels: string
         foreach (self::cases() as $case) {
             $array[$case->name] = $case->value;
         }
+
         return $array;
     }
 
@@ -23,6 +26,7 @@ enum ApprovalModels: string
         foreach (self::cases() as $case) {
             $array[$case->value] = $case->name;
         }
+
         return $array;
     }
 }

@@ -16,6 +16,6 @@ class PaymentRequestResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-		];
+        ];
     }
 }

@@ -14,7 +14,7 @@ class AccountGroupAccount extends Model
 
     protected $fillable = [
         'account_group_id',
-        'account_id'
+        'account_id',
     ];
 
     public $timestamps = true;

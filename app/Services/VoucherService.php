@@ -6,72 +6,72 @@ use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\VoucherResource;
 use App\Models\Book;
-use App\Models\PaymentRequest;
-use App\Models\Voucher;
 use App\Models\JournalEntry;
-use App\Models\PostingPeriod;
+use App\Models\PaymentRequest;
 use App\Models\Period;
-use Illuminate\Support\Facades\DB;
+use App\Models\PostingPeriod;
+use App\Models\Voucher;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Str;
 
 class VoucherService
 {
-	public function create(array $attributes)
-	{
-		DB::beginTransaction();
+    public function create(array $attributes)
+    {
+        DB::beginTransaction();
 
-		try {
-			$postingPeriodId = PostingPeriod::current()->pluck('id')->first();
-			$periodId = Period::where('posting_period_id', $postingPeriodId)->current()->pluck('id')->first();
+        try {
+            $postingPeriodId = PostingPeriod::current()->pluck('id')->first();
+            $periodId = Period::where('posting_period_id', $postingPeriodId)->current()->pluck('id')->first();
 
-			$voucher = Voucher::create($attributes);
-			$voucher->details()->createMany($attributes['details']);
+            $voucher = Voucher::create($attributes);
+            $voucher->details()->createMany($attributes['details']);
 
-			if( !$voucher->check_no )
-			{
-				$journal = JournalEntry::create([
-					'journal_no' => 'JE-' . $voucher->voucher_no,
-					'journal_date' => Carbon::now()->format('Y-m-d'),
-					'voucher_id' => $voucher->id,
-					'status' => 'open',
-					'posting_period_id' => $postingPeriodId,
-					'period_id' => $periodId
-				]);
+            if (! $voucher->check_no) {
+                $journal = JournalEntry::create([
+                    'journal_no' => 'JE-'.$voucher->voucher_no,
+                    'journal_date' => Carbon::now()->format('Y-m-d'),
+                    'voucher_id' => $voucher->id,
+                    'status' => 'open',
+                    'posting_period_id' => $postingPeriodId,
+                    'period_id' => $periodId,
+                ]);
 
-				$journal->details()->create([
-					'journal_entry_id' => $journal->id,
-					'account_id' => $voucher->account_id,
-					'stakeholder_id' => $voucher->stakeholder_id,
-					'debit' => 0.00,
-					'credit' => $voucher->net_amount,
-				]);
+                $journal->details()->create([
+                    'journal_entry_id' => $journal->id,
+                    'account_id' => $voucher->account_id,
+                    'stakeholder_id' => $voucher->stakeholder_id,
+                    'debit' => 0.00,
+                    'credit' => $voucher->net_amount,
+                ]);
 
-				foreach( $voucher->details()->get() as $details )
-				{
-					$journal->details()->create([
-						'journal_entry_id' => $journal->id,
-						'account_id' => $details->account_id,
-						'stakeholder_id' => $details->stakeholder_id,
-						'debit' => $details->debit,
-						'credit' => $details->credit,
-					]);
-				}
-			}
+                foreach ($voucher->details()->get() as $details) {
+                    $journal->details()->create([
+                        'journal_entry_id' => $journal->id,
+                        'account_id' => $details->account_id,
+                        'stakeholder_id' => $details->stakeholder_id,
+                        'debit' => $details->debit,
+                        'credit' => $details->credit,
+                    ]);
+                }
+            }
 
-			DB::commit();
+            DB::commit();
 
-			return $voucher;
+            return $voucher;
 
-		} catch (\Exception $e) {
-			DB::rollBack(); // Rollback if something fails
-			return response()->json($e, 500);
-		}
-	}
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback if something fails
+
+            return response()->json($e, 500);
+        }
+    }
+
     public static function generateVoucherNo($prefix)
-	{
-		$prefix = Str::upper($prefix);
-		$currentYearMonth = Carbon::now()->format('Ym');
+    {
+        $prefix = Str::upper($prefix);
+        $currentYearMonth = Carbon::now()->format('Ym');
         // Find the highest series number based on the prefix:DV/CV
         $lastVoucher = Voucher::where('voucher_no', 'like', "{$prefix}-{$currentYearMonth}-%")
             ->orderBy('voucher_no', 'desc')
@@ -89,57 +89,62 @@ class VoucherService
         $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
 
         return $voucherNo;
-	}
+    }
+
     public static function getWithPagination(array $validatedData)
     {
         $query = Voucher::query();
-        if( isset($validatedData['book']) )
-		{
-			$book = Book::byName($validatedData['book'])->firstOr(function () {
-				return Book::first();
-			});
-			if( $book ) {
-				$query->filterBook($book->id);
-			}
-		}
-		if( isset($validatedData['status']) ) {
+        if (isset($validatedData['book'])) {
+            $book = Book::byName($validatedData['book'])->firstOr(function () {
+                return Book::first();
+            });
+            if ($book) {
+                $query->filterBook($book->id);
+            }
+        }
+        if (isset($validatedData['status'])) {
             $query->status($validatedData['status']);
-		}
-        $voucherRequest =  $query->with(['details'])
+        }
+        $voucherRequest = $query->with(['details'])
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function getWithPaginationDisbursement(array $validatedData)
     {
         $query = Voucher::query();
-        if( isset($validatedData['book']) )
-		{
-			$book = Book::byName($validatedData['book'])->firstOr(function () {
-				return Book::first();
-			});
-			if( $book ) {
-				$query->filterBook($book->id);
-			}
-		}
-		if( isset($validatedData['status']) ) {
+        if (isset($validatedData['book'])) {
+            $book = Book::byName($validatedData['book'])->firstOr(function () {
+                return Book::first();
+            });
+            if ($book) {
+                $query->filterBook($book->id);
+            }
+        }
+        if (isset($validatedData['status'])) {
             $query->status($validatedData['status']);
-		}
-        $voucherRequest =  $query->whereDisbursement()
+        }
+        $voucherRequest = $query->whereDisbursement()
             ->with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function myApprovalsDisbursement()
     {
-        $voucherRequest =  Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
+        $voucherRequest = Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
             ->myApprovals()
             ->whereDisbursement()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function myRequestDisbursement()
     {
         $voucherRequest = Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
@@ -147,8 +152,10 @@ class VoucherService
             ->whereDisbursement()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function myVoucheringDisbursement()
     {
         $paymentRequest = PaymentRequest::myApprovals()
@@ -156,46 +163,53 @@ class VoucherService
             ->isApproved()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
+
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
+
     public static function voucherEntriesDisbursement()
     {
         $journalEntry = JournalEntry::whereVoucherId()
             ->withPaymentRequest()
             ->withDetails()
             ->paginate(config('services.pagination.limit'));
+
         return JournalEntryCollection::collection($journalEntry)->response()->getData(true);
     }
+
     public static function getWithPaginationCash(array $validatedData)
     {
         $query = Voucher::query();
-        if( isset($validatedData['book']) )
-		{
-			$book = Book::byName($validatedData['book'])->firstOr(function () {
-				return Book::first();
-			});
-			if( $book ) {
-				$query->filterBook($book->id);
-			}
-		}
-		if( isset($validatedData['status']) ) {
+        if (isset($validatedData['book'])) {
+            $book = Book::byName($validatedData['book'])->firstOr(function () {
+                return Book::first();
+            });
+            if ($book) {
+                $query->filterBook($book->id);
+            }
+        }
+        if (isset($validatedData['status'])) {
             $query->status($validatedData['status']);
-		}
-        $voucherRequest =  $query->with(['details'])
+        }
+        $voucherRequest = $query->with(['details'])
             ->whereCash()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function myApprovalsCash()
     {
-        $voucherRequest =  Voucher::with(['details'])
+        $voucherRequest = Voucher::with(['details'])
             ->myApprovals()
             ->whereCash()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
+
     public static function myRequestCash()
     {
         $voucherRequest = Voucher::with(['details'])
@@ -203,6 +217,7 @@ class VoucherService
             ->whereCash()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
+
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 }

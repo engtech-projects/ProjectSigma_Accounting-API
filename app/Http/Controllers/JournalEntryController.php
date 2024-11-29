@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PostingPeriodType;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\JournalEntryRequest;
+use App\Enums\JournalStatus;
+use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
+use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
+use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
+use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
-use App\Models\PostingPeriod;
 use App\Models\Period;
-use App\Http\Requests\StoreRequest\JournalStoreRequest;
-use App\Http\Requests\UpdateRequest\JournalUpdateRequest;
-use App\Http\Resources\AccountingCollections\JournalEntryCollection;
-use App\Enums\JournalStatus;
+use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
 use DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
 class JournalEntryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(JournalEntryRequest $request)
+    public function index(JournalEntryRequestFilter $request)
     {
         try {
             $validatedData = $request->validated();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entries Successfully Retrieved.',
@@ -39,18 +36,7 @@ class JournalEntryController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(JournalStoreRequest $request)
+    public function store(JournalEntryRequestStore $request)
     {
         try {
             DB::beginTransaction();
@@ -67,7 +53,7 @@ class JournalEntryController extends Controller
             }
             $validatedData['created_by'] = auth()->user()->id;
             $journalEntry = JournalEntry::create($validatedData);
-            foreach($validatedData['details'] as $detail) {
+            foreach ($validatedData['details'] as $detail) {
                 $journalEntry->details()->create([
                     'account_id' => $detail['journalAccountInfo']['id'] ?? null,
                     'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
@@ -77,13 +63,15 @@ class JournalEntryController extends Controller
                 ]);
             }
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',
                 'data' => new JournalEntryResource($journalEntry->load('details')),
             ], 201);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Error creating journal entry.',
@@ -92,80 +80,41 @@ class JournalEntryController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show($id, JournalEntry $journalEntry)
+    public function show(JournalEntry $journalEntry)
     {
         $journalEntry = $journalEntry->with(['details'])->paginate(config('service.pagination.limit'));
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entry Successfully Retrieved.',
-            'data' => JournalEntryResource::collection($journalEntry)->response()->getData(true)
+            'data' => JournalEntryResource::collection($journalEntry)->response()->getData(true),
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(JournalEntryRequestUpdate $request)
     {
-        //
+        $journalEntry = JournalEntry::find($request->id);
+        $validatedData = $request->validated();
+        $journalEntry->update($validatedData);
+        $existingIds = $journalEntry->details()->pluck('id')->toArray();
+        $journalDetails = $request->details;
+        $incomingIds = [];
+        foreach ($journalDetails as $journalDetail) {
+            $detail = $journalEntry->details()->updateOrCreate($journalDetail);
+            $incomingIds[] = $detail->id;
+        }
+        $toDelete = array_diff($existingIds, $incomingIds);
+        $journalEntry->details()->whereIn('id', $toDelete)->delete();
+
+        return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(JournalUpdateRequest $request, JournalEntry $journalEntry)
-    {
-        $journalEntry->update($request->validated());
-
-		// Get current voucher details
-		$existingIds = $journalEntry->details()->pluck('id')->toArray();
-
-		$journalDetails = $request->details;
-		$incomingIds = [];
-
-		foreach ($journalDetails as $journalDetail)
-		{
-			$detail = $journalEntry->details()->updateOrCreate($journalDetail);
-			$incomingIds[] = $detail->id;
-		}
-		// Remove voucher details that are no longer present
-		$toDelete = array_diff($existingIds, $incomingIds);
-		$journalEntry->details()->whereIn('id', $toDelete)->delete();
-
-		return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
-	public function changeStatus(int $id, JournalStatus $status)
-	{
-		$journal = JournalEntry::find($id);
-
-		if (!$journal) {
-			return response()->json(['error' => 'journal not found'], 404);
-		}
-
-		if ($journal->updateStatus($status)) {
-			return response()->json(['message' => 'journal status updated', 'journal' => $journal], 200);
-		} else {
-			return response()->json(['error' => 'Transition not allowed', 'journal' => $journal], 405);
-		}
-	}
     public function unpostedEntries()
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Unposted Payment Request Entries Successfully Retrieved.',
-            'data' => JournalEntryService::unpostedEntries(),
+            'message' => 'Unposted Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::unpostedEntries())->response()->getData(true),
         ], 200);
     }
 
@@ -173,7 +122,7 @@ class JournalEntryController extends Controller
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Posted Payment Request Entries Successfully Retrieved.',
+            'message' => 'Posted Journal Entries Successfully Retrieved.',
             'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
         ], 200);
     }
@@ -186,6 +135,7 @@ class JournalEntryController extends Controller
             'data' => JournalEntryService::draftedEntries(),
         ], 200);
     }
+
     public function forVoucherEntriesList()
     {
         return new JsonResponse([

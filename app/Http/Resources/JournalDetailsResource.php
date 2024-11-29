@@ -16,8 +16,8 @@ class JournalDetailsResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-			'account' => AccountsResource::make($this->whenLoaded('account')),
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
-		];
+            'account' => AccountsResource::make($this->whenLoaded('account')),
+            'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
+        ];
     }
 }

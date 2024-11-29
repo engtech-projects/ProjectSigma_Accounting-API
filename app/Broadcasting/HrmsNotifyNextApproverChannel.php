@@ -2,7 +2,6 @@
 
 namespace App\Broadcasting;
 
-use App\Http\Services\HrmsService;
 use App\Services\HrmsServices;
 use Notification;
 

@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Book;
-use App\Models\AccountGroup;
+use Illuminate\Database\Seeder;
 
 class BookSeeder extends Seeder
 {
@@ -15,16 +13,16 @@ class BookSeeder extends Seeder
     public function run(): void
     {
 
-        Book::updateOrCreate([ 
-			'name' => 'disbursement',
-			'code' => 'DV',
-			'account_group_id' => 1
-		]);
+        Book::updateOrCreate([
+            'name' => 'disbursement',
+            'code' => 'DV',
+            'account_group_id' => 1,
+        ]);
 
-		Book::updateOrCreate([ 
-			'name' => 'cash',
-			'code' => 'CV',
-			'account_group_id' => 2
-		]);
+        Book::updateOrCreate([
+            'name' => 'cash',
+            'code' => 'CV',
+            'account_group_id' => 2,
+        ]);
     }
 }

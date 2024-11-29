@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Actions\Approvals;
 
 use App\Enums\ApprovalModels;
-use App\Notifications\RequestDisbursementVoucherForApproval;
-use App\Notifications\RequestPaymentForApprovalNotification;
-use Illuminate\Http\JsonResponse;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
+use App\Notifications\RequestDisbursementVoucherForApproval;
+use App\Notifications\RequestPaymentForApprovalNotification;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class VoidApproval extends Controller
 {
@@ -22,7 +22,7 @@ class VoidApproval extends Controller
         $result = collect($model->updateApproval([
             'status' => RequestApprovalStatus::DENIED,
             'remarks' => $attribute['remarks'],
-            "date_denied" => Carbon::now()
+            'date_denied' => Carbon::now(),
         ]));
 
         switch ($modelType) {
@@ -35,6 +35,7 @@ class VoidApproval extends Controller
             default:
                 break;
         }
-        return new JsonResponse(["success" => $result["success"], "message" => $result['message']], JsonResponse::HTTP_OK);
+
+        return new JsonResponse(['success' => $result['success'], 'message' => $result['message']], JsonResponse::HTTP_OK);
     }
 }

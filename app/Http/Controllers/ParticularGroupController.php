@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SearchParticularGroupRequest;
+use App\Http\Requests\ParticularGroup\ParticularGroupRequestFilter;
+use App\Http\Requests\ParticularGroup\ParticularGroupRequestStore;
+use App\Http\Requests\ParticularGroup\ParticularGroupRequestUpdate;
 use App\Http\Resources\ParticularGroupCollection;
 use App\Models\ParticularGroup;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ParticularGroupController extends Controller
 {
@@ -22,12 +23,13 @@ class ParticularGroupController extends Controller
         ], 200);
     }
 
-    public function searchParticularGroups(SearchParticularGroupRequest $request)
+    public function searchParticularGroups(ParticularGroupRequestFilter $request)
     {
         $query = ParticularGroup::query();
         if ($request->has('key')) {
-            $query->where('name', 'like', '%' . $request->key . '%');
+            $query->where('name', 'like', '%'.$request->key.'%');
         }
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Particular Group Successfully Retrieved.',
@@ -35,58 +37,29 @@ class ParticularGroupController extends Controller
         ], 200);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function store(ParticularGroupRequestStore $request)
     {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
+        $validated = $request->validated();
 
         $particularGroup = ParticularGroup::create($validated);
+
         return response()->json($particularGroup, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $particularGroup = ParticularGroup::findOrFail($id);
+
         return response()->json($particularGroup);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(ParticularGroupRequestUpdate $request, string $id)
     {
         $particularGroup = ParticularGroup::findOrFail($id);
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]);
-
+        $validated = $request->validated();
         $particularGroup->update($validated);
+
         return response()->json($particularGroup);
     }
 
@@ -97,6 +70,7 @@ class ParticularGroupController extends Controller
     {
         $particularGroup = ParticularGroup::findOrFail($id);
         $particularGroup->delete();
+
         return response()->json(null, 204);
     }
 }

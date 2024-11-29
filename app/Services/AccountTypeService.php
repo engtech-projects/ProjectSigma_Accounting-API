@@ -10,8 +10,9 @@ class AccountTypeService
     {
         $query = AccountType::query();
         if (isset($filters['account_type'])) {
-            $query->where('account_type', 'like', '%' . $filters['account_type'] . '%');
+            $query->where('account_type', 'like', '%'.$filters['account_type'].'%');
         }
+
         return $query->paginate(config('services.pagination.limit'));
     }
 }

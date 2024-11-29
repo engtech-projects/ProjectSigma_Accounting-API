@@ -13,6 +13,7 @@ class BookService
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
         }
+
         return $query->paginate(config('app.pagination_limit'));
     }
 }

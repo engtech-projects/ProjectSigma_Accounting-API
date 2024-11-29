@@ -7,7 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class AccountGroupCollection extends JsonResource
 {
-	public static $wrap = 'account_group';
+    public static $wrap = 'account_group';
+
     /**
      * Transform the resource collection into an array.
      *

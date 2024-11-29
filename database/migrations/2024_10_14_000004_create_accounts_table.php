@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('account_type_id')->constrained('account_types');
-			$table->string('account_number');
+            $table->foreignId('account_type_id')->constrained('account_types');
+            $table->string('account_number');
             $table->string('account_name');
             $table->string('account_description')->nullable();
             $table->enum('bank_reconciliation', ['yes', 'no'])->index()->default('yes');
-			$table->boolean('is_active')->index()->default(true);
-			$table->string('statement')->nullable();
-			$table->softDeletes();
+            $table->boolean('is_active')->index()->default(true);
+            $table->string('statement')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -3,8 +3,6 @@
 namespace App\Services;
 
 use App\Models\PostingPeriod;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
 
 class PostingPeriodService
 {
@@ -31,6 +29,7 @@ class PostingPeriodService
         if (isset($filters['end_date'])) {
             $query->where('end_date', '<=', $filters['end_date']);
         }
+
         return $query->orderBy('created_at', 'desc')->paginate(config('services.pagination.limit'));
     }
 

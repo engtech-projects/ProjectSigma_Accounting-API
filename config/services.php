@@ -25,17 +25,17 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
-	'api' => [
-        'HRSM_URL' => env('HRSM_API')
+    'api' => [
+        'HRSM_URL' => env('HRSM_API'),
     ],
     'url' => [
         'hrms_api_url' => env('HRMS_API_URL'),
         'inventory_api_url' => env('INVENTORY_API_URL'),
-        'project_api_url' => env('PROJECT_API_URL')
+        'project_api_url' => env('PROJECT_API_URL'),
     ],
 
-	'key' =>[
-        'app_key' => env('APP_KEY')
+    'key' => [
+        'app_key' => env('APP_KEY'),
     ],
 
     'ses' => [
@@ -44,10 +44,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     'pagination' => [
-        'limit' => env('PAGINATION_LIMIT', 10)
+        'limit' => env('PAGINATION_LIMIT', 10),
     ],
     'vat' => [
-        'value' => env('VAT_VALUE', 12)
-    ]
+        'value' => env('VAT_VALUE', 12),
+    ],
 
 ];

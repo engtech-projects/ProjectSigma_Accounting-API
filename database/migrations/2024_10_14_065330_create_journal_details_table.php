@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('journal_details', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('journal_entry_id')->constrained('journal_entry');
-			$table->foreignId('account_id')->constrained('accounts');
-			$table->foreignId('stakeholder_id')->constrained('stakeholder')->nullable();
-			$table->tinyText('description')->nullable();
-			$table->decimal('debit', 10, 2)->nullable();
-			$table->decimal('credit', 10, 2)->nullable();
+            $table->foreignId('journal_entry_id')->constrained('journal_entry');
+            $table->foreignId('account_id')->constrained('accounts');
+            $table->foreignId('stakeholder_id')->constrained('stakeholder')->nullable();
+            $table->tinyText('description')->nullable();
+            $table->decimal('debit', 10, 2)->nullable();
+            $table->decimal('credit', 10, 2)->nullable();
             $table->timestamps();
         });
     }

@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Models\Stakeholders\Project;
 use DB;
 use Http;
-use Symfony\Component\HttpFoundation\JsonResponse;
-
 
 class ProjectServices
 {
@@ -15,8 +13,8 @@ class ProjectServices
         DB::beginTransaction();
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.project_api_url')."/api/projects");
-        if (!$response->successful()) {
+            ->get(config('services.url.project_api_url').'/api/projects');
+        if (! $response->successful()) {
             return false;
         }
         $projects = $response->json()['data'];
@@ -45,8 +43,7 @@ class ProjectServices
         }
         DB::commit();
         $total_inserted = Project::count() - $totalProjectCount;
+
         return $total_inserted;
     }
-
 }
-

@@ -16,8 +16,8 @@ class JournalEntryResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-			'voucher' => VoucherResource::make($this->whenLoaded('voucher')),
-			'details' => JournalDetailsResource::collection($this->whenLoaded('details')),
-		];
+            'voucher' => VoucherResource::make($this->whenLoaded('voucher')),
+            'details' => JournalDetailsResource::collection($this->whenLoaded('details')),
+        ];
     }
 }

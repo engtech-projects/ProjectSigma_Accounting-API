@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\JournalStatus;
 use App\Models\JournalEntry;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 
 class JournalEntryService
 {
@@ -15,8 +14,10 @@ class JournalEntryService
         if (isset($validateData['status'])) {
             $query->status($validateData['status']);
         }
+
         return $query->paginate(config('services.pagination.limit'));
     }
+
     public static function unpostedEntries()
     {
         return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
@@ -43,6 +44,7 @@ class JournalEntryService
             ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
+
     public static function forVoucherEntriesList()
     {
         return JournalEntry::where('status', JournalStatus::POSTED->value)
@@ -52,6 +54,7 @@ class JournalEntryService
             ->withDetails()
             ->paginate(config('services.pagination.limit'));
     }
+
     public static function generateJournalNumber(): string
     {
         $prefix = strtoupper('JE');
@@ -72,6 +75,7 @@ class JournalEntryService
         $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
         // Construct the new reference number
         $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+
         return $journalNo;
     }
 }

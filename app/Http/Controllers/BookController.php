@@ -2,22 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BookRequestFilter;
-use App\Http\Requests\BookRequest;
+use App\Http\Requests\Book\BookRequestFilter;
+use App\Http\Requests\Book\BookRequestStore;
+use App\Http\Requests\Book\BookRequestUpdate;
 use App\Http\Resources\BookCollection;
-use App\Services\BookService;
-use DB;
-use Illuminate\Http\Request;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Services\BookService;
+use DB;
 use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(BookRequestFilter $request)
     {
         try {
@@ -35,23 +31,13 @@ class BookController extends Controller
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(BookRequest $request)
+    public function store(BookRequestStore $request)
     {
         DB::beginTransaction();
         try {
             $book = Book::create($request->validated());
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Book Successfully Created.',
@@ -59,6 +45,7 @@ class BookController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Book Failed to Create.',
@@ -67,9 +54,6 @@ class BookController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         try {
@@ -81,6 +65,7 @@ class BookController extends Controller
                     'data' => new BookResource($book),
                 ], 200);
             }
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Book Not Found.',
@@ -95,18 +80,7 @@ class BookController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(BookRequest $request, string $id)
+    public function update(BookRequestUpdate $request, string $id)
     {
         DB::beginTransaction();
         try {
@@ -114,6 +88,7 @@ class BookController extends Controller
             $book->fill($request->validated());
             if ($book->save()) {
                 DB::commit();
+
                 return new JsonResponse([
                     'success' => true,
                     'message' => 'Book Successfully Updated.',
@@ -121,6 +96,7 @@ class BookController extends Controller
                 ], 200);
             }
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Book Not Found.',
@@ -128,6 +104,7 @@ class BookController extends Controller
             ], 404);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Book Failed to Update.',
@@ -136,9 +113,6 @@ class BookController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         DB::beginTransaction();
@@ -147,6 +121,7 @@ class BookController extends Controller
             if ($book) {
                 $book->delete();
                 DB::commit();
+
                 return new JsonResponse([
                     'success' => true,
                     'message' => 'Book Successfully Deleted.',
@@ -154,13 +129,15 @@ class BookController extends Controller
                 ], 200);
             }
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
-            'message' => 'Book Not Found.',
+                'message' => 'Book Not Found.',
                 'data' => null,
             ], 404);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Book Failed to Delete.',

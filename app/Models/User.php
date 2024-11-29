@@ -6,16 +6,19 @@ namespace App\Models;
 use App\Models\Stakeholders\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, Authorizable, HasApiTokens, SoftDeletes;
+    use Authorizable, HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
     protected $table = 'users';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -53,6 +56,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
     public function getAuthIdentifierName()
     {
         return [
@@ -60,11 +64,11 @@ class User extends Authenticatable
             'email' => 'email',
             'name' => 'name',
             'type' => 'user',
-            'accessibilities' => 'accessibilities'
+            'accessibilities' => 'accessibilities',
         ];
     }
 
-	public function getAccessibilities()
+    public function getAccessibilities()
     {
         $accessibilities = $this->getAttributeFromArray('accessibilities');
         $userAcess = [];
@@ -74,12 +78,15 @@ class User extends Authenticatable
                 array_push($userAcess, $value);
             }
         }
+
         return $accessibilities;
     }
+
     public function stakeholder(): HasOne
     {
         return $this->hasOne(StakeHolder::class, 'stakeholdable_id');
     }
+
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'source_id');

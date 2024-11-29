@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('account_types', function (Blueprint $table) {
             $table->id();
             $table->string('account_type');
-            $table->enum('account_category',['asset','equity','expenses','income','liabilities', 'revenue', 'capital']);
-            $table->enum('balance_type',['debit','credit']);
-            $table->enum('notation',['+','-']);
+            $table->enum('account_category', ['asset', 'equity', 'expenses', 'income', 'liabilities', 'revenue', 'capital']);
+            $table->enum('balance_type', ['debit', 'credit']);
+            $table->enum('notation', ['+', '-']);
             $table->softDeletes();
             $table->timestamps();
         });

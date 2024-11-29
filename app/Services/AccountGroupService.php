@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountGroup;
-use App\Http\Resources\AccountingCollections\AccountGroupCollection;
+use App\Models\AccountGroupAccount;
 
 class AccountGroupService
 {
@@ -11,8 +11,14 @@ class AccountGroupService
     {
         $query = AccountGroup::query();
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where('name', 'like', '%'.$filters['name'].'%');
         }
+
         return $query->paginate(config('services.pagination.limit'));
+    }
+
+    public static function isExistAccountGroupAccount(int $accountGroupId)
+    {
+        return AccountGroupAccount::where('account_group_id', $accountGroupId)->exists();
     }
 }

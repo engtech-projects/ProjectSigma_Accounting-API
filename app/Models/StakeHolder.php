@@ -9,14 +9,16 @@ class StakeHolder extends Model
 {
     use HasFactory;
 
-	protected $table = 'stakeholder';
-	public $timestamps = true;
-	protected $fillable = [
+    protected $table = 'stakeholder';
+
+    public $timestamps = true;
+
+    protected $fillable = [
         'id',
-		'name',
-		'stakeholdable_type',
-		'stakeholdable_id',
-	];
+        'name',
+        'stakeholdable_type',
+        'stakeholdable_id',
+    ];
 
     public function stakeholdable()
     {
