@@ -28,6 +28,7 @@ class CreateDisbursementVoucherRequest extends FormRequest
             'voucher_no' => 'required|string',
 			'stakeholder_id' => 'required|numeric|exists:stakeholder,id',
 			'reference_no' => 'nullable|string|unique:payment_request,prf_no',
+            'journal_entry_id' => 'required|numeric|exists:journal_entry,id',
 			'particulars' => 'nullable|string',
 			'net_amount' => 'required|numeric',
 			'amount_in_words' => 'required|string',

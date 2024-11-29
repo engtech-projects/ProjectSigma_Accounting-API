@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RequestStatuses;
 use App\Enums\VoucherType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateCashVoucherRequest;
@@ -136,10 +137,12 @@ class VoucherController extends Controller
             $validatedData['book_id'] = Book::where('code', VoucherType::DISBURSEMENT_CODE->value)->first()->id;
             $validatedData['status'] = VoucherStatus::PENDING->value;
             $validatedData['date_encoded'] = Carbon::now();
+            $validatedData['request_status'] = RequestStatuses::PENDING->value;
             $voucher = Voucher::create($validatedData);
             foreach($validatedData['details'] as $detail) {
                 $voucher->details()->create([
-                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
+                    'account_id' => $detail['account_id'],
+                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
                     'description' => $detail['description'] ?? null,
                     'debit' => $detail['debit'] ?? null,
                     'credit' => $detail['credit'] ?? null,

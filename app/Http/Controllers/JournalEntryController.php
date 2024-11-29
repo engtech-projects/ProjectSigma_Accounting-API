@@ -65,17 +65,15 @@ class JournalEntryController extends Controller
                     'data' => null,
                 ], 400);
             }
-            $validatedData['payment_request_id'] = $request->payment_request_id;
             $validatedData['created_by'] = auth()->user()->id;
             $journalEntry = JournalEntry::create($validatedData);
-            foreach($request->details as $detail) {
+            foreach($validatedData['details'] as $detail) {
                 $journalEntry->details()->create([
                     'account_id' => $detail['journalAccountInfo']['id'] ?? null,
-                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
                     'description' => $detail['description'] ?? null,
                     'debit' => $detail['debit'] ?? null,
                     'credit' => $detail['credit'] ?? null,
-                    ''
                 ]);
             }
             DB::commit();

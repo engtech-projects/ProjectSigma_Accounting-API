@@ -21,6 +21,7 @@ class VoucherResource extends JsonResource
 			'book' => BookResource::make($this->whenLoaded('book')),
 			'details' => VoucherDetailsResource::collection($this->whenLoaded('details')),
             "approvals" => new ApprovalAttributeResource(["approvals" => $this->approvals]),
+            "date_filed" => $this->created_at_human,
             "next_approval" => $this->getNextPendingApproval(),
 		];
     }

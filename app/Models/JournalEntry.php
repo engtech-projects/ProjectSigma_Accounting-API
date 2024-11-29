@@ -19,6 +19,7 @@ class JournalEntry extends Model
 		'status',
 		'remarks',
 		'posting_period_id',
+        'payment_request_id',
 		'period_id',
 		'reference_no'
 	];

@@ -24,58 +24,56 @@ class Voucher extends Model
 		'particulars',
 		'net_amount',
 		'amount_in_words',
+        'journal_entry_id',
+        'type',
 		'status',
 		'voucher_date',
 		'date_encoded',
 		'book_id',
+        'request_status',
 		'reference_no',
-		'formable_id',
-		'formable_type',
         'approvals',
 	];
-
 	protected $casts = [
         "date_encoded" => 'date:Y-m-d',
         "voucher_date" => 'date:Y-m-d',
 		'approvals' => 'array',
     ];
-
 	public function account() : BelongsTo
 	{
 		return $this->belongsTo(Account::class);
 	}
-
+    public function journalEntry(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntry::class);
+    }
 	public function details(): HasMany
     {
         return $this->hasMany(VoucherDetails::class);
     }
-
 	public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
     }
-
 	public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
     }
-
 	public function scopeFilterBook($query, $bookId)
     {
         return $query->where('book_id', $bookId);
     }
-
 	public function scopeStatus($query, $status)
     {
         return $query->where('status', $status);
     }
     public function scopeWhereCash($query)
     {
-        return $query->where('status', VoucherType::CASH->value);
+        return $query->where('type', VoucherType::CASH->value);
     }
     public function scopeWhereDisbursement($query)
     {
-        return $query->where('status', VoucherType::CASH->value);
+        return $query->where('type', VoucherType::DISBURSEMENT->value);
     }
     public function scopeOrderDesc($query)
     {
