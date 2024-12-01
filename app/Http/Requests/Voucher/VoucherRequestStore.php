@@ -37,7 +37,7 @@ class VoucherRequestStore extends FormRequest
             'approvals' => 'required|array',
             'details' => 'required|min:1|array',
             'details.*.account_id' => 'required|numeric|exists:accounts,id',
-            'details.*.stakeholder_id' => 'required|numeric|exists:stakeholder,id',
+            'details.*.stakeholder_id' => 'nullable|numeric|exists:stakeholder,id',
             'details.*.debit' => 'nullable|numeric',
             'details.*.credit' => 'nullable|numeric',
             ...$this->storeApprovals(),

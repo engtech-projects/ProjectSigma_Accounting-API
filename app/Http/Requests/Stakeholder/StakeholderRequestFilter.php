@@ -23,6 +23,7 @@ class StakeholderRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
+            'key' => 'nullable|string',
             'name' => 'nullable|string',
             'type' => 'nullable|in:'.implode(',', StakeHolderType::values()),
         ];

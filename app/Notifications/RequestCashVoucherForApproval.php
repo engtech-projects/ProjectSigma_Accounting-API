@@ -4,13 +4,12 @@ namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyCreatorChannel;
 use App\Enums\ApprovalModels;
-use App\Models\DisbursementRequest;
-use App\Models\PaymentRequest;
+use App\Models\CashRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
 
-class RequestDisbursementVoucherForApproval extends Notification
+class RequestCashVoucherForApproval extends Notification
 {
     use Queueable;
 
@@ -20,7 +19,7 @@ class RequestDisbursementVoucherForApproval extends Notification
 
     public $id;
 
-    public function __construct($token, DisbursementRequest $model)
+    public function __construct($token, CashRequest $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -61,9 +60,9 @@ class RequestDisbursementVoucherForApproval extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for disbursement voucher has been APPROVED.',
+            'message' => 'A request for cash voucher has been APPROVED.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name,
+            'request_type' => ApprovalModels::ACCOUNTING_CASH_REQUEST->name,
             'request_id' => $this->model->id,
             'action' => 'View',
         ];

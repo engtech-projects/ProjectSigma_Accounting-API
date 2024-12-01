@@ -54,9 +54,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
         Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
         Route::get('posted-entries', [JournalEntryController::class, 'postedEntries']);
+        Route::get('open-entries', [JournalEntryController::class, 'openEntries']);
         Route::get('drafted-entries', [JournalEntryController::class, 'draftedEntries']);
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
-        Route::get('for-voucher-entries', [JournalEntryController::class, 'forVoucherEntriesList']);
+        Route::get('for-voucher-entries-disbursement', [JournalEntryController::class, 'forVoucherEntriesListDisbursement']);
+        Route::get('for-voucher-entries-cash', [JournalEntryController::class, 'forVoucherEntriesListCash']);
         Route::resource('resource', JournalEntryController::class)->names('journal-entries');
         Route::get('status', function (Request $request) {
             return response()->json(['status' => JournalStatus::cases()], 200);
@@ -67,6 +69,7 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals', [PaymentRequestController::class, 'myApprovals']);
+        Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
     });
 
     //search routes
@@ -88,6 +91,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('all-list', [VoucherController::class, 'cashAllRequest']);
             Route::get('my-requests', [VoucherController::class, 'cashMyRequest']);
             Route::get('my-approvals', [VoucherController::class, 'cashMyApprovals']);
+            Route::get('my-vouchering', [VoucherController::class, 'cashMyVouchering']);
             Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('status', function (Request $request) {

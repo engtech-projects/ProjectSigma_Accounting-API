@@ -128,12 +128,12 @@ class VoucherService
         }
         $voucherRequest = $query->whereDisbursement()
             ->with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
+            ->withPaymentRequestDetails()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
-
     public static function myApprovalsDisbursement()
     {
         $voucherRequest = Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
@@ -161,6 +161,8 @@ class VoucherService
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
             ->isApproved()
+            ->whereDisbursement()
+            ->orderDesc()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -171,6 +173,8 @@ class VoucherService
     {
         $journalEntry = JournalEntry::whereVoucherId()
             ->withPaymentRequest()
+            ->whereDisbursement()
+            ->orderDesc()
             ->withDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -194,6 +198,7 @@ class VoucherService
         $voucherRequest = $query->with(['details'])
             ->whereCash()
             ->orderDesc()
+            ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
         return VoucherResource::collection($voucherRequest)->response()->getData(true);

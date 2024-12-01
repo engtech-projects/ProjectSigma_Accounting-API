@@ -2,13 +2,15 @@
 
 namespace App\Enums;
 
+use App\Models\CashRequest;
+use App\Models\DisbursementRequest;
 use App\Models\PaymentRequest;
 
 enum ApprovalModels: string
 {
     case ACCOUNTING_PAYMENT_REQUEST = PaymentRequest::class;
     case ACCOUNTING_DISBURSEMENT_REQUEST = DisbursementRequest::class;
-    case ACCOUNTING_CASH_REQUEST = CashVoucher::class;
+    case ACCOUNTING_CASH_REQUEST = CashRequest::class;
 
     public static function toArray(): array
     {

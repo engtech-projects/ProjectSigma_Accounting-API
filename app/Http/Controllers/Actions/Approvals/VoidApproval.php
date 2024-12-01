@@ -32,6 +32,9 @@ class VoidApproval extends Controller
             case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
                 $model->notify(new RequestDisbursementVoucherForApproval(auth()->user()->token, $model));
                 break;
+            case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
+                $model->notify(new RequestCashVoucherForApproval(auth()->user()->token, $model));
+                break;
             default:
                 break;
         }

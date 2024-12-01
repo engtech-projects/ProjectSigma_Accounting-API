@@ -4,7 +4,7 @@ namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyCreatorChannel;
 use App\Enums\ApprovalModels;
-use App\Models\PaymentRequest;
+use App\Models\DisbursementRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
@@ -19,7 +19,7 @@ class RequestDisbursementVoucherForDenied extends Notification
 
     public $id;
 
-    public function __construct($token, PaymentRequest $model)
+    public function __construct($token, DisbursementRequest $model)
     {
         $this->token = $token;
         $this->model = $model;

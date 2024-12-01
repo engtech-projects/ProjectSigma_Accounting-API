@@ -9,9 +9,11 @@ use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
+use App\Models\PaymentRequest;
 use App\Models\Period;
 use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
+use Carbon\Carbon;
 use DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -42,8 +44,9 @@ class JournalEntryController extends Controller
             DB::beginTransaction();
             $validatedData = $request->validated();
             $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
-            $validatedData['status'] = JournalStatus::POSTED->value;
+            $validatedData['status'] = JournalStatus::OPEN->value;
             $validatedData['period_id'] = Period::current()->pluck('id')->first();
+            $validatedData['journal_date'] = PaymentRequest::find($validatedData['payment_request_id'])->request_date;
             if ($validatedData['period_id'] == null) {
                 return new JsonResponse([
                     'success' => false,
@@ -109,12 +112,12 @@ class JournalEntryController extends Controller
         return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
     }
 
-    public function unpostedEntries()
+    public function openEntries()
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Unposted Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::unpostedEntries())->response()->getData(true),
+            'message' => 'Open Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::OpenEntries())->response()->getData(true),
         ], 200);
     }
 
@@ -136,14 +139,23 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-    public function forVoucherEntriesList()
+    public function forVoucherEntriesListDisbursement()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesList())->response()->getData(true),
+            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement())->response()->getData(true),
         ], 200);
     }
+    public function forVoucherEntriesListCash()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entries for Voucher Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListCash())->response()->getData(true),
+        ], 200);
+    }
+
 
     public function generateJournalNumber()
     {

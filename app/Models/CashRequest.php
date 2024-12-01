@@ -11,10 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Voucher extends Model
+use Illuminate\Notifications\Notifiable;
+class CashRequest extends Model
 {
-    use HasApproval, HasFactory, HasTransitions, ModelHelpers, SoftDeletes;
+    use HasApproval, HasFactory, HasTransitions, ModelHelpers, Notifiable, SoftDeletes;
 
     protected $table = 'voucher';
 
@@ -94,6 +94,6 @@ class Voucher extends Model
 
     public function scopeWithPaymentRequestDetails($query)
     {
-        return $query->with(['journalEntry.paymentRequest.details.stakeholder', 'journalEntry.paymentRequest.stakeholder']);
+        return $query->with(['details']);
     }
 }

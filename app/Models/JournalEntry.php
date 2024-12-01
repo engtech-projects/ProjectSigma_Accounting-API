@@ -24,6 +24,7 @@ class JournalEntry extends Model
         'posting_period_id',
         'payment_request_id',
         'period_id',
+        'entry_date',
         'reference_no',
     ];
 
@@ -53,7 +54,7 @@ class JournalEntry extends Model
 
     public function scopeWithPaymentRequest($query)
     {
-        return $query->with('paymentRequest.stakeholder');
+        return $query->with(['paymentRequest.stakeholder', 'paymentRequest.details.particularGroup']);
     }
 
     public function scopeWithDetails($query)
@@ -63,6 +64,11 @@ class JournalEntry extends Model
 
     public function scopeWithAccounts($query)
     {
-        return $query->with('details.account');
+        return $query->with('details.account.accountType');
+    }
+
+    public function scopeWithVoucher($query)
+    {
+        return $query->with(['voucher.details', 'voucher.book']);
     }
 }

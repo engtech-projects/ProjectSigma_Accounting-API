@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\VoucherStatus;
 use App\Enums\VoucherType;
 use App\Http\Requests\Voucher\VoucherRequestFilter;
 use App\Http\Requests\Voucher\VoucherRequestStore;
 use App\Models\Book;
+use App\Models\JournalEntry;
 use App\Models\Voucher;
 use App\Services\VoucherService;
 use Carbon\Carbon;
@@ -66,7 +68,7 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function cashAllRequest(Request $request)
+    public function cashAllRequest(VoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -101,7 +103,20 @@ class VoucherController extends Controller
         try {
             $validatedData = $request->validated();
             $validatedData['type'] = VoucherType::CASH->value;
+            $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
+            $validatedData['status'] = VoucherStatus::PENDING->value;
+            $validatedData['date_encoded'] = Carbon::now();
+            $validatedData['request_status'] = RequestStatuses::PENDING->value;
             $voucher = Voucher::create($validatedData);
+            foreach ($validatedData['details'] as $detail) {
+                $voucher->details()->create([
+                    'account_id' => $detail['account_id'],
+                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                    'description' => $detail['description'] ?? null,
+                    'debit' => $detail['debit'] ?? null,
+                    'credit' => $detail['credit'] ?? null,
+                ]);
+            }
             DB::commit();
 
             return new JsonResponse([
@@ -139,6 +154,11 @@ class VoucherController extends Controller
                     'credit' => $detail['credit'] ?? null,
                 ]);
             }
+            $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
+            $journalEntry->update([
+                'entry_date' => $validatedData['voucher_date'],
+                'status' => JournalStatus::POSTED->value,
+            ]);
             DB::commit();
 
             return new JsonResponse([

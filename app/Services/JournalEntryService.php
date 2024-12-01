@@ -18,12 +18,13 @@ class JournalEntryService
         return $query->paginate(config('services.pagination.limit'));
     }
 
-    public static function unpostedEntries()
+    public static function OpenEntries()
     {
-        return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
+        return JournalEntry::where('status', JournalStatus::OPEN->value)
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -33,6 +34,7 @@ class JournalEntryService
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -42,16 +44,28 @@ class JournalEntryService
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
             ->paginate(config('services.pagination.limit'));
     }
 
-    public static function forVoucherEntriesList()
+    public static function forVoucherEntriesListDisbursement()
     {
-        return JournalEntry::where('status', JournalStatus::POSTED->value)
+        return JournalEntry::where('status', JournalStatus::OPEN->value)
             ->whereDoesntHave('voucher')
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
+            ->paginate(config('services.pagination.limit'));
+    }
+    public static function forVoucherEntriesListCash()
+    {
+        return JournalEntry::where('status', JournalStatus::POSTED->value)
+            ->whereHas('voucher')
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -75,7 +89,6 @@ class JournalEntryService
         $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
         // Construct the new reference number
         $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
-
         return $journalNo;
     }
 }

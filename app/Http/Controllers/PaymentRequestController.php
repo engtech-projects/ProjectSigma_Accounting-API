@@ -136,22 +136,21 @@ class PaymentRequestController extends Controller
             'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
         ], 200);
     }
-
-    public function prfNo($prfNo)
-    {
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Payment Request Successfully Retrieved.',
-            'data' => PaymentRequest::PrfNo($prfNo)->withStakeholder()->first(),
-        ], 200);
-    }
-
     public function journalPaymentRequestEntries()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Payment Request Entries Successfully Retrieved.',
             'data' => PaymentServices::journalPaymentRequestEntries(),
+        ], 200);
+    }
+
+    public function generatePrfNo()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Request No Successfully Generated.',
+            'data' => PaymentServices::generatePrfNo(),
         ], 200);
     }
 }
