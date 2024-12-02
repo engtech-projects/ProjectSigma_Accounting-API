@@ -25,20 +25,6 @@ class PaymentServices
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
-    public static function get(array $validatedData)
-    {
-        $query = PaymentRequest::query();
-        if (isset($validatedData['status'])) {
-            $query->formStatus($validatedData['status']);
-        }
-        $paymentRequest = $query->latest('id')
-            ->withStakeholder()
-            ->withPaymentRequestDetails()
-            ->paginate(config('services.pagination.limit'));
-
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
-    }
-
     public static function myApprovals()
     {
         $paymentRequest = PaymentRequest::myApprovals()

@@ -50,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('posting-period', PostingPeriodController::class);
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
+    Route::resource('payment-request', PaymentRequestController::class);
     Route::prefix('journal-entry')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
         Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
@@ -64,7 +65,6 @@ Route::middleware('auth:api')->group(function () {
             return response()->json(['status' => JournalStatus::cases()], 200);
         });
     });
-    Route::resource('payment-request', PaymentRequestController::class);
     Route::prefix('npo')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
@@ -79,6 +79,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
+            Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');
             Route::post('create-voucher', [VoucherController::class, 'createDisbursement']);
             Route::get('all-list', [VoucherController::class, 'disbursementAllRequest']);
             Route::get('my-requests', [VoucherController::class, 'disbursementMyRequest']);
@@ -87,6 +88,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('generate-number', [VoucherController::class, 'disbursementGenerateVoucherNumber']);
         });
         Route::prefix('cash')->group(function () {
+            Route::resource('resource', VoucherController::class)->names('vouchers.cash');
             Route::post('create-voucher', [VoucherController::class, 'createCash']);
             Route::get('all-list', [VoucherController::class, 'cashAllRequest']);
             Route::get('my-requests', [VoucherController::class, 'cashMyRequest']);

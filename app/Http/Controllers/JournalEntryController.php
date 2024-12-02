@@ -13,7 +13,6 @@ use App\Models\PaymentRequest;
 use App\Models\Period;
 use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
-use Carbon\Carbon;
 use DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -147,6 +146,7 @@ class JournalEntryController extends Controller
             'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement())->response()->getData(true),
         ], 200);
     }
+
     public function forVoucherEntriesListCash()
     {
         return new JsonResponse([
@@ -155,7 +155,6 @@ class JournalEntryController extends Controller
             'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListCash())->response()->getData(true),
         ], 200);
     }
-
 
     public function generateJournalNumber()
     {

@@ -22,7 +22,8 @@ class PaymentRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'key' => 'nullable|string',
+            'status' => 'nullable|string',
         ];
     }
 }

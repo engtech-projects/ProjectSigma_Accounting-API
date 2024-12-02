@@ -8,6 +8,7 @@ use App\Enums\VoucherStatus;
 use App\Enums\VoucherType;
 use App\Http\Requests\Voucher\VoucherRequestFilter;
 use App\Http\Requests\Voucher\VoucherRequestStore;
+use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
 use App\Models\JournalEntry;
 use App\Models\Voucher;
@@ -15,7 +16,6 @@ use App\Services\VoucherService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Request;
 
 class VoucherController extends Controller
 {
@@ -208,5 +208,18 @@ class VoucherController extends Controller
             'message' => 'Voucher number generated',
             'data' => VoucherService::generateVoucherNo('CV'),
         ], 201);
+    }
+
+    public function show($id)
+    {
+        $voucher = Voucher::withPaymentRequestDetails()
+            ->orderDesc()
+            ->find($id);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Voucher Successfully Retrieved.',
+            'data' => new VoucherCollection($voucher),
+        ], 200);
     }
 }

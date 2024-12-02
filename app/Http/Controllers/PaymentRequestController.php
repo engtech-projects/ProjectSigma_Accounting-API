@@ -60,22 +60,6 @@ class PaymentRequestController extends Controller
         ], 200);
     }
 
-    public function get(PaymentRequestFilter $request)
-    {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Payment Requests Successfully Retrieved.',
-                'data' => PaymentServices::get($request->validated()),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Payment Requests Failed to Retrieve.',
-            ], 500);
-        }
-    }
-
     public function store(PaymentRequestStore $request)
     {
         $validatedData = $request->validated();
@@ -107,6 +91,7 @@ class PaymentRequestController extends Controller
     {
         $paymentRequest = PaymentRequest::withDetails()
             ->withStakeholder()
+            ->withPaymentRequestDetails()
             ->find($id);
 
         return new JsonResponse([
@@ -136,6 +121,7 @@ class PaymentRequestController extends Controller
             'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
         ], 200);
     }
+
     public function journalPaymentRequestEntries()
     {
         return new JsonResponse([
