@@ -61,7 +61,7 @@ class RequestPaymentForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A payment request has been APPROVED.',
+            'message' => 'A payment request that needs your approval.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
             'request_id' => $this->model->id,

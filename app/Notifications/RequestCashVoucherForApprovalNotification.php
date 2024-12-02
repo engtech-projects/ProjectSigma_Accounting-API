@@ -61,7 +61,7 @@ class RequestCashVoucherForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for cash voucher has been APPROVED.',
+            'message' => 'A payment request that needs your approval.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_CASH_REQUEST->name,
             'request_id' => $this->model->id,
