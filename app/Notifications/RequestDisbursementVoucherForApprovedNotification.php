@@ -3,24 +3,23 @@
 namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyCreatorChannel;
-use App\Broadcasting\HrmsNotifyNextApproverChannel;
 use App\Enums\ApprovalModels;
-use App\Models\PaymentRequest;
+use App\Models\DisbursementRequest;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
 
-class RequestPaymentForApprovalNotification extends Notification
+class RequestDisbursementVoucherForApprovedNotification extends Notification
 {
     use Queueable;
 
     private $token;
-
+private $request;
     private $model;
 
     public $id;
 
-    public function __construct($token, PaymentRequest $model)
+    public function __construct($token, DisbursementRequest $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -34,7 +33,7 @@ class RequestPaymentForApprovalNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyNextApproverChannel::class];
+        return [HrmsNotifyCreatorChannel::class];
     }
 
     public function getToken()
@@ -61,9 +60,9 @@ class RequestPaymentForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A payment request has been APPROVED.',
+            'message' => 'A request for disbursement voucher has been APPROVED.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
+            'request_type' => ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name,
             'request_id' => $this->model->id,
             'action' => 'View',
         ];
