@@ -143,34 +143,34 @@ class VoucherController extends Controller
     {
         DB::beginTransaction();
         try {
-            $validatedData = $request->validated();
-            $validatedData['type'] = VoucherType::DISBURSEMENT->value;
-            $validatedData['book_id'] = Book::where('code', VoucherType::DISBURSEMENT_CODE->value)->first()->id;
-            $validatedData['status'] = VoucherStatus::PENDING->value;
-            $validatedData['date_encoded'] = Carbon::now();
-            $validatedData['request_status'] = RequestStatuses::PENDING->value;
-            $voucher = DisbursementRequest::create($validatedData);
-            foreach ($validatedData['details'] as $detail) {
-                $voucher->details()->create([
-                    'account_id' => $detail['account_id'],
-                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
-                    'description' => $detail['description'] ?? null,
-                    'debit' => $detail['debit'] ?? null,
-                    'credit' => $detail['credit'] ?? null,
-                ]);
-            }
-            $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
-            $journalEntry->update([
-                'entry_date' => $validatedData['voucher_date'],
-                'status' => JournalStatus::POSTED->value,
+        $validatedData = $request->validated();
+        $validatedData['type'] = VoucherType::DISBURSEMENT->value;
+        $validatedData['book_id'] = Book::where('code', VoucherType::DISBURSEMENT_CODE->value)->first()->id;
+        $validatedData['status'] = VoucherStatus::PENDING->value;
+        $validatedData['date_encoded'] = Carbon::now();
+        $validatedData['request_status'] = RequestStatuses::PENDING->value;
+        $voucher = DisbursementRequest::create($validatedData);
+        foreach ($validatedData['details'] as $detail) {
+            $voucher->details()->create([
+                'account_id' => $detail['account_id'],
+                'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                'description' => $detail['description'] ?? null,
+                'debit' => $detail['debit'] ?? null,
+                'credit' => $detail['credit'] ?? null,
             ]);
-            DB::commit();
-            $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Voucher created',
-                'data' => $voucher,
-            ], 201);
+        }
+        $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
+        $journalEntry->update([
+            'entry_date' => $validatedData['voucher_date'],
+            'status' => JournalStatus::POSTED->value,
+        ]);
+        DB::commit();
+        $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Voucher created',
+            'data' => $voucher,
+        ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
 

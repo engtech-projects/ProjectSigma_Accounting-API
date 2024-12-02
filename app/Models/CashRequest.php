@@ -55,7 +55,7 @@ class CashRequest extends Model
 
     public function details(): HasMany
     {
-        return $this->hasMany(VoucherDetails::class);
+        return $this->hasMany(VoucherDetails::class, 'voucher_id');
     }
 
     public function book(): BelongsTo
