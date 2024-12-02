@@ -11,6 +11,8 @@ use App\Http\Requests\Voucher\VoucherRequestStore;
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Http\Resources\VoucherResource;
 use App\Models\Book;
+use App\Models\CashRequest;
+use App\Models\DisbursementRequest;
 use App\Models\JournalEntry;
 use App\Models\Voucher;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
@@ -110,7 +112,7 @@ class VoucherController extends Controller
             $validatedData['status'] = VoucherStatus::PENDING->value;
             $validatedData['date_encoded'] = Carbon::now();
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
-            $voucher = Voucher::create($validatedData);
+            $voucher = CashRequest::create($validatedData);
             foreach ($validatedData['details'] as $detail) {
                 $voucher->details()->create([
                     'account_id' => $detail['account_id'],
@@ -147,7 +149,7 @@ class VoucherController extends Controller
             $validatedData['status'] = VoucherStatus::PENDING->value;
             $validatedData['date_encoded'] = Carbon::now();
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
-            $voucher = Voucher::create($validatedData);
+            $voucher = DisbursementRequest::create($validatedData);
             foreach ($validatedData['details'] as $detail) {
                 $voucher->details()->create([
                     'account_id' => $detail['account_id'],
