@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 
 class Voucher extends Model
 {
-    use HasApproval, HasFactory, HasTransitions, ModelHelpers, SoftDeletes;
+    use HasApproval, HasFactory, HasTransitions, Notifiable, ModelHelpers, SoftDeletes;
 
     protected $table = 'voucher';
 
