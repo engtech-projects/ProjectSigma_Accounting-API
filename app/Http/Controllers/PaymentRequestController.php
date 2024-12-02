@@ -110,7 +110,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
-            'data' => PaymentRequestCollection::collection($paymentRequest)->response()->getData(true),
+            'data' => new PaymentRequestCollection($paymentRequest),
         ], 200);
     }
 

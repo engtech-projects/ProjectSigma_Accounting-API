@@ -221,7 +221,7 @@ class VoucherController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Successfully Retrieved.',
-            'data' => VoucherResource::collection($voucher)->response()->getData(true),
+            'data' => new VoucherResource($voucher),
         ], 200);
     }
 }
