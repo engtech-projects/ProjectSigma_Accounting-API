@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\VoucherStatus;
 use App\Http\Traits\HasTransitions;
 use App\Http\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,5 +71,12 @@ class JournalEntry extends Model
     public function scopeWithVoucher($query)
     {
         return $query->with(['voucher.details', 'voucher.book']);
+    }
+
+    public function scopeWhereVoucherIsApproved($query)
+    {
+        return $query->whereHas('voucher', function ($query) {
+            $query->where('request_status', VoucherStatus::APPROVED->value);
+        });
     }
 }

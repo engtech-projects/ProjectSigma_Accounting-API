@@ -63,6 +63,7 @@ class JournalEntryService
     {
         return JournalEntry::where('status', JournalStatus::POSTED->value)
             ->whereHas('voucher')
+            ->whereVoucherIsApproved()
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
