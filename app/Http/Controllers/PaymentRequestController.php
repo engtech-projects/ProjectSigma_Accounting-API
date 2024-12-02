@@ -7,6 +7,7 @@ use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
 use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
+use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\PaymentRequestResource;
 use App\Models\PaymentRequest;
 use App\Notifications\RequestPaymentForApprovalNotification;
@@ -109,7 +110,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
-            'data' => new PaymentRequestResource($paymentRequest),
+            'data' => PaymentRequestCollection::collection($paymentRequest)->response()->getData(true),
         ], 200);
     }
 
