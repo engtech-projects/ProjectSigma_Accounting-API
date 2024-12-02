@@ -12,6 +12,8 @@ use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
 use App\Models\JournalEntry;
 use App\Models\Voucher;
+use App\Notifications\RequestCashVoucherForApprovalNotification;
+use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
 use App\Services\VoucherService;
 use Carbon\Carbon;
 use DB;
@@ -118,7 +120,7 @@ class VoucherController extends Controller
                 ]);
             }
             DB::commit();
-
+            $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Voucher created',
@@ -160,7 +162,7 @@ class VoucherController extends Controller
                 'status' => JournalStatus::POSTED->value,
             ]);
             DB::commit();
-
+            $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Voucher created',
