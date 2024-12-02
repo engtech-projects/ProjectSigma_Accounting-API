@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Actions\Approvals;
 use App\Enums\ApprovalModels;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
-use App\Notifications\RequestDisbursementVoucherForApproval;
+use App\Notifications\RequestCashVoucherForApprovalNotification;
+use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -31,7 +32,10 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
-                    $model->notify(new RequestDisbursementVoucherForApproval(auth()->user()->token, $model));
+                    $model->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $model));
+                    break;
+                case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
+                    $model->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $model));
                     break;
                 default:
                     break;
@@ -42,7 +46,10 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
-                    $model->notify(new RequestDisbursementVoucherForApproval(auth()->user()->token, $model));
+                    $model->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $model));
+                    break;
+                case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
+                    $model->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $model));
                     break;
                 default:
                     break;
