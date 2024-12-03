@@ -7,6 +7,7 @@ use App\Enums\JournalStatus;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
+use App\Models\DisbursementRequest;
 use App\Notifications\RequestDisbursementVoucherForDeniedNotification;
 use App\Notifications\RequestPaymentForDeniedNotification;
 use App\Notifications\RequestCashVoucherForDeniedNotification;
@@ -32,17 +33,32 @@ class DisapproveApproval extends Controller
                 $model->notify(new RequestPaymentForDeniedNotification(auth()->user()->token, $model));
                 break;
             case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
+                //journal entry
                 $model->journalEntry()->update([
-                    'status' => JournalStatus::VOID->name,
+                    'status' => JournalStatus::VOID->value,
+                ]);
+                //payment request
+                $paymentRequest = $model->journalEntry->paymentRequest;
+                $paymentRequest->update([
+                    'request_status' => RequestApprovalStatus::DENIED
                 ]);
                 $model->notify(new RequestDisbursementVoucherForDeniedNotification(auth()->user()->token, $model));
                 break;
             case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
-                $model->journalEntry()->update([
-                    'status' => JournalStatus::VOID->name,
+                //disbursement voucher
+                $disbursement = $model->disbursementVoucher;
+                $disbursement->update([
+                    'request_status' => RequestApprovalStatus::DENIED
                 ]);
-                $model->journalEntry()->paymentRequest()->update([
-                    'status' => RequestApprovalStatus::DENIED,
+                //journal entry
+                $journalEntry = $model->journalEntry;
+                $journalEntry->update([
+                    'status' => JournalStatus::VOID->value
+                ]);
+                //payment request
+                $paymentRequest = $model->journalEntry->paymentRequest;
+                $paymentRequest->update([
+                    'request_status' => RequestApprovalStatus::DENIED
                 ]);
                 $model->notify(new RequestCashVoucherForDeniedNotification(auth()->user()->token, $model));
                 break;
