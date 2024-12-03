@@ -7,7 +7,7 @@ use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
 use App\Notifications\RequestDisbursementVoucherForDeniedNotification;
-use App\Notifications\RequestPaymentForApprovalNotification;
+use App\Notifications\RequestPaymentForDeniedNotification;
 use App\Notifications\RequestCashVoucherForDeniedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +28,7 @@ class DisapproveApproval extends Controller
 
         switch ($modelType) {
             case ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name:
-                $model->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $model));
+                $model->notify(new RequestPaymentForDeniedNotification(auth()->user()->token, $model));
                 break;
             case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
                 $model->notify(new RequestDisbursementVoucherForDeniedNotification(auth()->user()->token, $model));
