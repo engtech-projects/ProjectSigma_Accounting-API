@@ -25,6 +25,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -35,6 +36,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -45,6 +47,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -56,6 +59,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -68,6 +72,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 

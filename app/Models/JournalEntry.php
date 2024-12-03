@@ -79,4 +79,8 @@ class JournalEntry extends Model
             $query->where('request_status', VoucherStatus::APPROVED->value);
         });
     }
+    public function scopeOrderByDesc($query)
+    {
+        return $query->orderBy('created_at', 'desc');
+    }
 }
