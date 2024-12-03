@@ -49,7 +49,7 @@ class VoucherService
         if (isset($validatedData['status'])) {
             $query->status($validatedData['status']);
         }
-        $voucherRequest = $query->with(['details'])
+        $voucherRequest = $query->withDetails()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
@@ -71,7 +71,7 @@ class VoucherService
             $query->status($validatedData['status']);
         }
         $voucherRequest = $query->whereDisbursement()
-            ->with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
+            ->withDetails()
             ->withPaymentRequestDetails()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
@@ -81,10 +81,10 @@ class VoucherService
 
     public static function myApprovalsDisbursement()
     {
-        $voucherRequest = Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
+        $voucherRequest = Voucher::whereDisbursement()
+            ->withDetails()
             ->withPaymentRequestDetails()
             ->myApprovals()
-            ->whereDisbursement()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
@@ -93,9 +93,9 @@ class VoucherService
 
     public static function myRequestDisbursement()
     {
-        $voucherRequest = Voucher::with(['details.account', 'journalEntry.paymentRequest.stakeholder'])
+        $voucherRequest = Voucher::whereDisbursement()
+            ->withDetails()
             ->withPaymentRequestDetails()
-            ->whereDisbursement()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
@@ -129,7 +129,7 @@ class VoucherService
         if (isset($validatedData['status'])) {
             $query->status($validatedData['status']);
         }
-        $voucherRequest = $query->with(['details'])
+        $voucherRequest = $query->withDetails()
             ->whereCash()
             ->orderDesc()
             ->withPaymentRequestDetails()
@@ -140,10 +140,11 @@ class VoucherService
 
     public static function myApprovalsCash()
     {
-        $voucherRequest = Voucher::with(['details'])
+        $voucherRequest = Voucher::withDetails()
             ->myApprovals()
             ->whereCash()
             ->orderDesc()
+            ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
@@ -151,7 +152,7 @@ class VoucherService
 
     public static function myRequestCash()
     {
-        $voucherRequest = Voucher::with(['details'])
+        $voucherRequest = Voucher::withDetails()
             ->withPaymentRequestDetails()
             ->whereCash()
             ->orderDesc()

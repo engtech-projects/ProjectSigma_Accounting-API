@@ -7,6 +7,7 @@ enum JournalStatus: string
     case DRAFTED = 'drafted';
     case OPEN = 'open';
     case POSTED = 'posted';
+    case UNPOSTED = 'unposted';
     case VOID = 'void';
 
     public static function values(): array

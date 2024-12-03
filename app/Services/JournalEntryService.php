@@ -28,10 +28,31 @@ class JournalEntryService
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
+    public static function voidEntries()
+    {
+        return JournalEntry::where('status', JournalStatus::VOID->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
 
     public static function postedEntries()
     {
         return JournalEntry::where('status', JournalStatus::POSTED->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function unpostedEntries()
+    {
+        return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()

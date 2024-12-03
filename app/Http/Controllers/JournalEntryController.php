@@ -120,12 +120,29 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
+    public function voidEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Void Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::voidEntries())->response()->getData(true),
+        ], 200);
+    }
+
     public function postedEntries()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Posted Journal Entries Successfully Retrieved.',
             'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
+        ], 200);
+    }
+    public function unpostedEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Unposted Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::unpostedEntries())->response()->getData(true),
         ], 200);
     }
 

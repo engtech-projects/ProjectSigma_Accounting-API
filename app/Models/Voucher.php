@@ -28,7 +28,6 @@ class Voucher extends Model
         'amount_in_words',
         'journal_entry_id',
         'type',
-        'status',
         'voucher_date',
         'date_encoded',
         'book_id',
@@ -92,7 +91,10 @@ class Voucher extends Model
     {
         return $query->orderBy('created_at', 'DESC');
     }
-
+    public function scopeWithDetails($query)
+    {
+        return $query->with(['details.account']);
+    }
     public function scopeWithPaymentRequestDetails($query)
     {
         return $query->with(['journalEntry.paymentRequest.details.stakeholder', 'journalEntry.paymentRequest.stakeholder']);
