@@ -103,6 +103,6 @@ class PaymentRequest extends Model
 
     public function journalEntries(): HasMany
     {
-        return $this->hasMany(JournalEntry::class, 'reference_no', 'prf_no');
+        return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
 }
