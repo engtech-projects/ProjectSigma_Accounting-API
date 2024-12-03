@@ -32,16 +32,16 @@ class DisapproveApproval extends Controller
                 $model->notify(new RequestPaymentForDeniedNotification(auth()->user()->token, $model));
                 break;
             case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
-                $model->journalEntries()->update([
+                $model->journalEntry()->update([
                     'status' => JournalStatus::VOID->name,
                 ]);
                 $model->notify(new RequestDisbursementVoucherForDeniedNotification(auth()->user()->token, $model));
                 break;
             case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
-                $model->journalEntries()->update([
+                $model->journalEntry()->update([
                     'status' => JournalStatus::VOID->name,
                 ]);
-                $model->journalEntries()->paymentRequest()->update([
+                $model->journalEntry()->paymentRequest()->update([
                     'status' => RequestApprovalStatus::DENIED,
                 ]);
                 $model->notify(new RequestCashVoucherForDeniedNotification(auth()->user()->token, $model));
