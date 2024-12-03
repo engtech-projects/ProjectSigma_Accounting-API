@@ -87,12 +87,14 @@ class PaymentRequestController extends Controller
             }
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Request Created Successfully',
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payment Request Creation Failed',

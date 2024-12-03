@@ -87,6 +87,7 @@ class CashRequest extends Model
     {
         return $query->where('type', VoucherType::DISBURSEMENT->value);
     }
+
     public function disbursementVoucher(): BelongsTo
     {
         return $this->belongsTo(DisbursementRequest::class, 'reference_no', 'reference_no');

@@ -12,7 +12,9 @@ class VoucherDetails extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'voucher_details';
+
     protected $foreignKey = 'voucher_id';
+
     protected $fillable = [
         'voucher_id',
         'account_id',

@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
-use App\Enums\VoucherStatus;
 use App\Enums\VoucherType;
-use App\Http\Requests\Voucher\VoucherRequestFilter;
-use App\Http\Requests\Voucher\VoucherRequestStore;
-use App\Http\Resources\AccountingCollections\VoucherCollection;
+use App\Http\Requests\Voucher\CashVoucherRequestFilter;
+use App\Http\Requests\Voucher\CashVoucherRequestStore;
+use App\Http\Requests\Voucher\DisbursementVoucherRequestFilter;
+use App\Http\Requests\Voucher\DisbursementVoucherRequestStore;
+use App\Http\Requests\Voucher\VoucherFilter;
 use App\Http\Resources\VoucherResource;
 use App\Models\Book;
 use App\Models\CashRequest;
@@ -24,7 +25,7 @@ use Illuminate\Http\JsonResponse;
 
 class VoucherController extends Controller
 {
-    public function index(VoucherRequestFilter $request)
+    public function index(VoucherFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -33,7 +34,7 @@ class VoucherController extends Controller
         ], 201);
     }
 
-    public function disbursementAllRequest(VoucherRequestFilter $request)
+    public function disbursementAllRequest(DisbursementVoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -42,7 +43,7 @@ class VoucherController extends Controller
         ], 201);
     }
 
-    public function disbursementMyRequest(VoucherRequestFilter $request)
+    public function disbursementMyRequest(DisbursementVoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -73,7 +74,7 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function cashAllRequest(VoucherRequestFilter $request)
+    public function cashAllRequest(CashVoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
@@ -102,7 +103,7 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function createCash(VoucherRequestStore $request)
+    public function createCash(CashVoucherRequestStore $request)
     {
         DB::beginTransaction();
         try {
@@ -127,6 +128,7 @@ class VoucherController extends Controller
             ]);
             DB::commit();
             $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Voucher created',
@@ -142,7 +144,7 @@ class VoucherController extends Controller
         }
     }
 
-    public function createDisbursement(VoucherRequestStore $request)
+    public function createDisbursement(DisbursementVoucherRequestStore $request)
     {
         DB::beginTransaction();
         // try {
@@ -168,6 +170,7 @@ class VoucherController extends Controller
         ]);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -222,6 +225,7 @@ class VoucherController extends Controller
         $voucher = Voucher::withPaymentRequestDetails()
             ->orderDesc()
             ->find($id);
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Successfully Retrieved.',

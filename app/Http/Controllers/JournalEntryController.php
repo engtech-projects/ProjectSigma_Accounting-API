@@ -137,6 +137,7 @@ class JournalEntryController extends Controller
             'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
         ], 200);
     }
+
     public function unpostedEntries()
     {
         return new JsonResponse([

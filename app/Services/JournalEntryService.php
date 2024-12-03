@@ -28,6 +28,7 @@ class JournalEntryService
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
+
     public static function voidEntries()
     {
         return JournalEntry::where('status', JournalStatus::VOID->value)

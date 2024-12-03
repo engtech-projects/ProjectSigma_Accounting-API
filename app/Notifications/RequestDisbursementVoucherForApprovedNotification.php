@@ -14,7 +14,9 @@ class RequestDisbursementVoucherForApprovedNotification extends Notification
     use Queueable;
 
     private $token;
-private $request;
+
+    private $request;
+
     private $model;
 
     public $id;

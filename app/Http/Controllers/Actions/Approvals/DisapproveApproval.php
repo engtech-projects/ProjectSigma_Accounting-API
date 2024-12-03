@@ -7,10 +7,9 @@ use App\Enums\JournalStatus;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
-use App\Models\DisbursementRequest;
+use App\Notifications\RequestCashVoucherForDeniedNotification;
 use App\Notifications\RequestDisbursementVoucherForDeniedNotification;
 use App\Notifications\RequestPaymentForDeniedNotification;
-use App\Notifications\RequestCashVoucherForDeniedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 
@@ -40,7 +39,7 @@ class DisapproveApproval extends Controller
                 //payment request
                 $paymentRequest = $model->journalEntry->paymentRequest;
                 $paymentRequest->update([
-                    'request_status' => RequestApprovalStatus::DENIED
+                    'request_status' => RequestApprovalStatus::DENIED,
                 ]);
                 $model->notify(new RequestDisbursementVoucherForDeniedNotification(auth()->user()->token, $model));
                 break;
@@ -48,17 +47,17 @@ class DisapproveApproval extends Controller
                 //disbursement voucher
                 $disbursement = $model->disbursementVoucher;
                 $disbursement->update([
-                    'request_status' => RequestApprovalStatus::DENIED
+                    'request_status' => RequestApprovalStatus::DENIED,
                 ]);
                 //journal entry
                 $journalEntry = $model->journalEntry;
                 $journalEntry->update([
-                    'status' => JournalStatus::VOID->value
+                    'status' => JournalStatus::VOID->value,
                 ]);
                 //payment request
                 $paymentRequest = $model->journalEntry->paymentRequest;
                 $paymentRequest->update([
-                    'request_status' => RequestApprovalStatus::DENIED
+                    'request_status' => RequestApprovalStatus::DENIED,
                 ]);
                 $model->notify(new RequestCashVoucherForDeniedNotification(auth()->user()->token, $model));
                 break;

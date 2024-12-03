@@ -15,7 +15,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Voucher extends Model
 {
-    use HasApproval, HasFactory, HasTransitions, Notifiable, ModelHelpers, SoftDeletes;
+    use HasApproval, HasFactory, HasTransitions, ModelHelpers, Notifiable, SoftDeletes;
 
     protected $table = 'voucher';
 
@@ -91,10 +91,12 @@ class Voucher extends Model
     {
         return $query->orderBy('created_at', 'DESC');
     }
+
     public function scopeWithDetails($query)
     {
         return $query->with(['details.account']);
     }
+
     public function scopeWithPaymentRequestDetails($query)
     {
         return $query->with(['journalEntry.paymentRequest.details.stakeholder', 'journalEntry.paymentRequest.stakeholder']);

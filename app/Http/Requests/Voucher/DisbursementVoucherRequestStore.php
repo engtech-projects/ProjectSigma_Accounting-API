@@ -5,7 +5,7 @@ namespace App\Http\Requests\Voucher;
 use App\Http\Traits\HasApprovalValidation;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VoucherRequestStore extends FormRequest
+class DisbursementVoucherRequestStore extends FormRequest
 {
     use HasApprovalValidation;
 
@@ -28,7 +28,7 @@ class VoucherRequestStore extends FormRequest
             'check_no' => 'nullable|string',
             'voucher_no' => 'required|string',
             'stakeholder_id' => 'required|numeric|exists:stakeholder,id',
-            'reference_no' => 'nullable|string|unique:payment_request,prf_no',
+            'reference_no' => 'required|string|unique:payment_request,prf_no',
             'journal_entry_id' => 'required|numeric|exists:journal_entry,id',
             'particulars' => 'nullable|string',
             'net_amount' => 'required|numeric',

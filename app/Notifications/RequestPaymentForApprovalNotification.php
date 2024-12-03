@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyCreatorChannel;
 use App\Broadcasting\HrmsNotifyNextApproverChannel;
 use App\Enums\ApprovalModels;
 use App\Models\PaymentRequest;

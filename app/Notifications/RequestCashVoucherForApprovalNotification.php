@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyCreatorChannel;
 use App\Broadcasting\HrmsNotifyNextApproverChannel;
 use App\Enums\ApprovalModels;
 use App\Models\CashRequest;
@@ -61,7 +60,7 @@ class RequestCashVoucherForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A payment request that needs your approval.',
+            'message' => 'A request for cash voucher that needs your approval.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_CASH_REQUEST->name,
             'request_id' => $this->model->id,
