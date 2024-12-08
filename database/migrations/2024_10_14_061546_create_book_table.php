@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('book', function (Blueprint $table) {
             $table->id();
-			$table->string('name')->unique();
-			$table->string('code')->unique();
-			$table->foreignId('account_group_id')->constrained('account_group')->nullable();
+            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->foreignId('account_group_id')->constrained('account_group')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

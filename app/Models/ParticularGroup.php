@@ -11,6 +11,7 @@ class ParticularGroup extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
     protected $fillable = [
         'name',
         'description',

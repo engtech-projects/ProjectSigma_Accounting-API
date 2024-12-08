@@ -14,14 +14,15 @@ class VoucherResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-		return [
+        return [
             ...parent::toArray($request),
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
-			'account' => AccountsResource::make($this->whenLoaded('account')),
-			'book' => BookResource::make($this->whenLoaded('book')),
-			'details' => VoucherDetailsResource::collection($this->whenLoaded('details')),
-            "approvals" => new ApprovalAttributeResource(["approvals" => $this->approvals]),
-            "next_approval" => $this->getNextPendingApproval(),
-		];
+            'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
+            'account' => AccountsResource::make($this->whenLoaded('account')),
+            'book' => BookResource::make($this->whenLoaded('book')),
+            'details' => VoucherDetailsResource::collection($this->whenLoaded('details')),
+            'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+            'date_filed' => $this->created_at_human,
+            'next_approval' => $this->getNextPendingApproval(),
+        ];
     }
 }

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\JournalStatus;
 use App\Models\JournalEntry;
 use Carbon\Carbon;
-use Illuminate\Http\JsonResponse;
 
 class JournalEntryService
 {
@@ -15,14 +14,29 @@ class JournalEntryService
         if (isset($validateData['status'])) {
             $query->status($validateData['status']);
         }
+
         return $query->paginate(config('services.pagination.limit'));
     }
-    public static function unpostedEntries()
+
+    public static function OpenEntries()
     {
-        return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
+        return JournalEntry::where('status', JournalStatus::OPEN->value)
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function voidEntries()
+    {
+        return JournalEntry::where('status', JournalStatus::VOID->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -32,6 +46,19 @@ class JournalEntryService
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function unpostedEntries()
+    {
+        return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -41,8 +68,36 @@ class JournalEntryService
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
+
+    public static function forVoucherEntriesListDisbursement()
+    {
+        return JournalEntry::where('status', JournalStatus::OPEN->value)
+            ->whereDoesntHave('voucher')
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function forVoucherEntriesListCash()
+    {
+        return JournalEntry::where('status', JournalStatus::POSTED->value)
+            ->whereHas('voucher')
+            ->whereVoucherIsApproved()
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
     public static function generateJournalNumber(): string
     {
         $prefix = strtoupper('JE');
@@ -54,7 +109,7 @@ class JournalEntryService
             ->first();
         // Extract the last series number if a previous request exists
         if ($lastJournal) {
-            $lastSeries = (int) substr($lastJournal->journal_number, -4); // Get last 4 digits
+            $lastSeries = (int) substr($lastJournal->journal_no, -4); // Get last 4 digits
             $nextSeries = $lastSeries + 1;
         } else {
             $nextSeries = 1; // Start at 0001 if no previous voucher
@@ -63,6 +118,7 @@ class JournalEntryService
         $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
         // Construct the new reference number
         $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+
         return $journalNo;
     }
 }

@@ -21,9 +21,9 @@ return new class extends Migration
     {
         Schema::create('form', function (Blueprint $table) {
             $table->unsignedBigInteger('stakeholder_id');
-			$table->unsignedBigInteger('formable_id')->nullable();
-			$table->string('formable_type')->nullable();
-			$table->enum('status', ['pending', 'approved', 'rejected', 'issued'])->default('pending');
+            $table->unsignedBigInteger('formable_id')->nullable();
+            $table->string('formable_type')->nullable();
+            $table->enum('status', ['pending', 'approved', 'rejected', 'issued'])->default('pending');
             $table->timestamps();
         });
     }

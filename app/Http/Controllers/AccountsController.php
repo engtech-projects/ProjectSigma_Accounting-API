@@ -3,31 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Enums\IsActiveType;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\AccountEditRequest;
-use App\Http\Requests\AccountFilterRequest;
-use App\Http\Requests\AccountRequest;
-use App\Http\Requests\SearchAccountRequest;
+use App\Http\Requests\Account\AccountRequestFilter;
+use App\Http\Requests\Account\AccountRequestSearch;
+use App\Http\Requests\Account\AccountRequestStore;
+use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
-use App\Services\AccountService;
-use DB;
 use App\Http\Resources\AccountsResource;
 use App\Models\Account;
+use App\Services\AccountService;
+use DB;
 use Illuminate\Http\JsonResponse;
-
 
 class AccountsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(AccountFilterRequest $request)
+    public function index(AccountRequestFilter $request)
     {
         try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Accounts Successfully Retrieved.',
-                'data' =>  AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
+                'data' => AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -37,20 +35,23 @@ class AccountsController extends Controller
             ], 500);
         }
     }
-    public function searchAccounts(SearchAccountRequest $request)
+
+    public function searchAccounts(AccountRequestSearch $request)
     {
         $query = Account::query();
         if ($request->has('key')) {
-            $query->where('account_number', 'like', '%' . $request->key . '%')
-                ->orWhere('account_name', 'like', '%' . $request->key . '%')
-                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%' . $request->key . '%');
+            $query->where('account_number', 'like', '%'.$request->key.'%')
+                ->orWhere('account_name', 'like', '%'.$request->key.'%')
+                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%'.$request->key.'%');
         }
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Accounts Successfully Retrieved.',
             'data' => AccountCollection::collection($query->orderBy('account_number', 'asc')->with(['accountType'])->paginate(config('app.pagination_limit')))->response()->getData(true),
         ], 200);
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -62,7 +63,7 @@ class AccountsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AccountRequest $request)
+    public function store(AccountRequestStore $request)
     {
         DB::beginTransaction();
         try {
@@ -70,6 +71,7 @@ class AccountsController extends Controller
             $validatedData['is_active'] = IsActiveType::TRUE->value;
             $account = Account::create($validatedData);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
@@ -77,6 +79,7 @@ class AccountsController extends Controller
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Account Failed to Create.',
@@ -92,6 +95,7 @@ class AccountsController extends Controller
     {
         try {
             $account = Account::with(['accountType'])->findOrFail($id);
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
@@ -99,6 +103,7 @@ class AccountsController extends Controller
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Account Failed to Create.',
@@ -118,27 +123,29 @@ class AccountsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AccountEditRequest $request, string $id)
+    public function update(AccountRequestUpdate $request, string $id)
     {
         DB::beginTransaction();
         $validatedData = $request->validated();
-    try {
-        $account = Account::findOrFail($id);
-        $account->update($validatedData);
-        DB::commit();
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Account Successfully Updated.',
-            'data' => new AccountsResource($account),
-        ], 200);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return new JsonResponse([
-            'success' => false,
-            'message' => 'Account Failed to Update.',
-            'data' => null,
-        ], 500);
-    }
+        try {
+            $account = Account::findOrFail($id);
+            $account->update($validatedData);
+            DB::commit();
+
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Account Successfully Updated.',
+                'data' => new AccountsResource($account),
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Account Failed to Update.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -156,6 +163,7 @@ class AccountsController extends Controller
                 ], 400);
             }
             $account->delete();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Deleted.',
@@ -169,15 +177,17 @@ class AccountsController extends Controller
             ], 500);
         }
     }
+
     public function chartOfAccounts()
     {
-        $data = Account::withAccountType()->orderBy('account_number')->get()->groupBy(function($account) {
+        $data = Account::withAccountType()->orderBy('account_number')->get()->groupBy(function ($account) {
             return $account->accountType->account_category;
-        })->map(function($accounts) {
-            return $accounts->groupBy(function($account) {
+        })->map(function ($accounts) {
+            return $accounts->groupBy(function ($account) {
                 return $account->accountType->account_type;
             });
         });
+
         return new JsonResponse([
             'success' => false,
             'message' => 'Chart of Accounts Successfully Fetch.',

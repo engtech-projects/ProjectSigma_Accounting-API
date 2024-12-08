@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use App\Guards\AuthTokenGuard;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
                     $app['request']
                 );
                 $app->refresh('request', $guard, 'setRequest');
+
                 return $guard;
             }
         );

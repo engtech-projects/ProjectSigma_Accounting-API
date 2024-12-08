@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('voucher', function (Blueprint $table) {
-			$table->string('reference_no')->nullable()->unique();
-			$table->unsignedBigInteger('form_id')->nullable();
-			// $table->string('formable_type')->nullable();
+            $table->string('reference_no')->nullable()->unique();
+            $table->unsignedBigInteger('form_id')->nullable();
+            // $table->string('formable_type')->nullable();
         });
     }
 
@@ -23,10 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-		Schema::table('voucher', function (Blueprint $table) {
-			$table->dropColumn('reference_no');
-			$table->dropColumn('form_id')->nullable();
-			// $table->dropColumn('formable_type')->nullable();
+        Schema::table('voucher', function (Blueprint $table) {
+            $table->dropColumn('reference_no');
+            $table->dropColumn('form_id')->nullable();
+            // $table->dropColumn('formable_type')->nullable();
         });
     }
 };

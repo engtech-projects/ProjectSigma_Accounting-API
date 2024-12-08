@@ -2,12 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Account;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Seeder;
 use League\Csv\Reader;
-use Carbon\Carbon;
 
 class AccountSeeder extends Seeder
 {
@@ -23,17 +20,17 @@ class AccountSeeder extends Seeder
         $csv = Reader::createFromPath($file, 'r');
         $csv->setHeaderOffset(0); // Use the first row as the header
 
-		foreach ($csv as $record) {
+        foreach ($csv as $record) {
             Account::updateOrCreate(
                 ['id' => $record['id']], // Prevent duplicate records
                 [
-                    'account_type_id'     => $record['account_type_id'],
-                    'account_number'      => $record['account_number'],
-                    'account_name'        => $record['account_name'],
+                    'account_type_id' => $record['account_type_id'],
+                    'account_number' => $record['account_number'],
+                    'account_name' => $record['account_name'],
                     'account_description' => $record['account_description'],
                     'bank_reconciliation' => $record['bank_reconciliation'],
-                    'is_active'           => $record['is_active'],
-                    'statement'           => $record['statement']
+                    'is_active' => $record['is_active'],
+                    'statement' => $record['statement'],
                 ]
             );
         }

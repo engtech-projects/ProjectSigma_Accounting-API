@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Stakeholders\Supplier;
 use DB;
 use Http;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class InventoryServices
 {
@@ -14,8 +13,8 @@ class InventoryServices
         DB::beginTransaction();
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.inventory_api_url')."/api/supplier/list");
-        if (!$response->successful()) {
+            ->get(config('services.url.inventory_api_url').'/api/supplier/list');
+        if (! $response->successful()) {
             return false;
         }
         $suppliers = $response->json()['data'];
@@ -43,7 +42,7 @@ class InventoryServices
         }
         DB::commit();
         $total_inserted = Supplier::count() - $totalSupplierCount;
+
         return $total_inserted;
     }
 }
-

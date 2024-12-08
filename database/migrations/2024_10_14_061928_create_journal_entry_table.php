@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('journal_entry', function (Blueprint $table) {
             $table->id();
-			$table->string('journal_no');
-			$table->date('journal_date');
-			$table->foreignId('voucher_id')->nullable()->constrained('voucher');
-			$table->enum('status', ['draft', 'void', 'open', 'posted'])->default('draft');
+            $table->string('journal_no');
+            $table->date('journal_date');
+            $table->foreignId('voucher_id')->nullable()->constrained('voucher');
+            $table->enum('status', ['draft', 'void', 'open', 'posted'])->default('draft');
             $table->timestamps();
         });
     }

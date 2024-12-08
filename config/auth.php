@@ -40,14 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-		'api' => [
+        'api' => [
             'driver' => 'hrms-auth',
             'provider' => 'users',
         ],
         'hrms-auth' => [
             'driver' => 'hrms-auth',
-            'provider' => 'hrms_users'
-        ]
+            'provider' => 'hrms_users',
+        ],
     ],
 
     /*
@@ -73,9 +73,9 @@ return [
             'model' => App\Models\User::class,
         ],
 
-		'hrms_users' => [
+        'hrms_users' => [
             'driver' => 'eloquent',
-            'model' => \App\Models\User::class
+            'model' => \App\Models\User::class,
         ],
 
         // 'users' => [

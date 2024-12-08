@@ -16,6 +16,6 @@ class PostingPeriodResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-		];
+        ];
     }
 }

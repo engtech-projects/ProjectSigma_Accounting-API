@@ -6,9 +6,9 @@ trait HasApprovalValidation
 {
     public function prepareApprovalValidation()
     {
-        if (gettype($this->approvals) == "string") {
+        if (gettype($this->approvals) == 'string') {
             $this->merge([
-                "approvals" => json_decode($this->approvals, true)
+                'approvals' => json_decode($this->approvals, true),
             ]);
         }
     }
@@ -17,35 +17,36 @@ trait HasApprovalValidation
     {
         $data = [
             'approvals' => [
-                "required",
-                "array",
+                'required',
+                'array',
             ],
             'approvals.*' => [
-                "required",
-                "array",
+                'required',
+                'array',
             ],
             'approvals.*.type' => [
-                "required",
-                "string",
+                'required',
+                'string',
             ],
             'approvals.*.user_id' => [
-                "required",
-                "integer",
+                'required',
+                'integer',
                 // "exists:users,id",
             ],
             'approvals.*.status' => [
-                "required",
-                "string",
+                'required',
+                'string',
             ],
             'approvals.*.date_approved' => [
-                "nullable",
-                "date",
+                'nullable',
+                'date',
             ],
             'approvals.*.remarks' => [
-                "nullable",
-                "string",
-            ]
+                'nullable',
+                'string',
+            ],
         ];
+
         return $data;
     }
 
@@ -53,35 +54,36 @@ trait HasApprovalValidation
     {
         $data = [
             'approvals' => [
-                "nullable",
-                "array",
+                'nullable',
+                'array',
             ],
             'approvals.*' => [
-                "nullable",
-                "array",
+                'nullable',
+                'array',
             ],
             'approvals.*.type' => [
-                "nullable",
-                "string",
+                'nullable',
+                'string',
             ],
             'approvals.*.user_id' => [
-                "nullable",
-                "integer",
+                'nullable',
+                'integer',
                 // "exists:users,id",
             ],
             'approvals.*.status' => [
-                "nullable",
-                "string",
+                'nullable',
+                'string',
             ],
             'approvals.*.date_approved' => [
-                "nullable",
-                "date",
+                'nullable',
+                'date',
             ],
             'approvals.*.remarks' => [
-                "nullable",
-                "string",
-            ]
+                'nullable',
+                'string',
+            ],
         ];
+
         return $data;
     }
 }

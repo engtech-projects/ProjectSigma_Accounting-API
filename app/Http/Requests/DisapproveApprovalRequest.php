@@ -22,7 +22,7 @@ class DisapproveApprovalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "remarks" => "required|string|max:255"
+            'remarks' => 'required|string|max:255',
         ];
     }
 }

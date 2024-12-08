@@ -14,9 +14,9 @@ class VoucherDetailsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-		return [
+        return [
             ...parent::toArray($request),
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
-		];
+            'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
+        ];
     }
 }

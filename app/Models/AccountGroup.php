@@ -11,17 +11,17 @@ class AccountGroup extends Model
 {
     use HasFactory, SoftDeletes;
 
-	protected $table = 'account_group';
+    protected $table = 'account_group';
 
-	protected $fillable = [
-		'name',
+    protected $fillable = [
+        'name',
     ];
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	/**
-    * The tags that belong to the task.
-    */
+    /**
+     * The tags that belong to the task.
+     */
     public function accounts(): BelongsToMany
     {
         return $this->belongsToMany(Account::class, 'account_group_accounts', 'account_group_id', 'account_id');

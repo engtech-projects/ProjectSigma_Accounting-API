@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('payment_request_details', function (Blueprint $table) {
             $table->id();
-			$table->foreignId('payment_request_id')->constrained('payment_request');
-			$table->foreignId('stakeholder_id')->constrained('stakeholder');
-			$table->tinyText('particulars')->nullable();
-			$table->decimal('cost', 10, 2)->nullable();
-			$table->decimal('vat', 10, 2)->nullable();
-			$table->decimal('amount', 10, 2)->nullable();
+            $table->foreignId('payment_request_id')->constrained('payment_request');
+            $table->foreignId('stakeholder_id')->constrained('stakeholder');
+            $table->tinyText('particulars')->nullable();
+            $table->decimal('cost', 10, 2)->nullable();
+            $table->decimal('vat', 10, 2)->nullable();
+            $table->decimal('amount', 10, 2)->nullable();
             $table->timestamps();
         });
     }

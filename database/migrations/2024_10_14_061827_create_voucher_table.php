@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('voucher', function (Blueprint $table) {
             $table->id();
-			$table->string('check_no')->nullable();
-			$table->string('voucher_no')->unique();
+            $table->string('check_no')->nullable();
+            $table->string('voucher_no')->unique();
             $table->foreignId('stakeholder_id')->constrained('stakeholder')->nullable();
-			$table->text('particulars');
-			$table->double('net_amount');
-			$table->text('amount_in_words')->nullable();
-			$table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'void', 'completed'])->default('draft');
-			$table->date('voucher_date');
-			$table->date('date_encoded');
-			$table->foreignId('account_id')->constrained('accounts');
-			$table->foreignId('book_id')->constrained('book');
-			$table->softDeletes();
+            $table->text('particulars');
+            $table->double('net_amount');
+            $table->text('amount_in_words')->nullable();
+            $table->enum('status', ['draft', 'pending', 'approved', 'rejected', 'void', 'completed'])->default('draft');
+            $table->date('voucher_date');
+            $table->date('date_encoded');
+            $table->foreignId('account_id')->constrained('accounts');
+            $table->foreignId('book_id')->constrained('book');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

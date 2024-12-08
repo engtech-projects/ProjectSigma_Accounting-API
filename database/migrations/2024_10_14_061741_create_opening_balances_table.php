@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('opening_balances', function (Blueprint $table) {
             $table->id();
-			$table->decimal('opening_balance', 10, 2);
+            $table->decimal('opening_balance', 10, 2);
             $table->decimal('remaining_balance', 10, 2);
-			$table->foreignId('account_id')->constrained('accounts');
-			$table->foreignId('posting_period_id')->constrained('posting_periods');
-			$table->softDeletes();
+            $table->foreignId('account_id')->constrained('accounts');
+            $table->foreignId('posting_period_id')->constrained('posting_periods');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

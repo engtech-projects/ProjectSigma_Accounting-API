@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CreatePostingPeriodRequest;
-use App\Http\Requests\PostingPeriodRequest;
+use App\Http\Requests\PostingPeriod\PostingPeriodRequestFilter;
+use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
 use App\Http\Resources\PostingPeriodCollection;
-use App\Services\PostingPeriodService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Resources\PostingPeriodResource;
 use App\Models\PostingPeriod;
+use App\Services\PostingPeriodService;
+use DB;
+use Illuminate\Http\JsonResponse;
+
 class PostingPeriodController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(PostingPeriodRequest $request)
+    public function index(PostingPeriodRequestFilter $request)
     {
         $validatedData = $request->validated();
         try {
@@ -35,39 +35,22 @@ class PostingPeriodController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create(CreatePostingPeriodRequest $request)
-    {
-        $validatedData = $request->validated();
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Posting Period Successfully Created.',
-                'data' => new PostingPeriodResource(PostingPeriodService::create($validatedData)),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Posting Period Failed to Create.',
-                'data' => null,
-            ], 500);
-        }
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(CreatePostingPeriodRequest $request)
+    public function store(PostingPeriodRequestStore $request)
     {
         $validatedData = $request->validated();
         try {
+            DB::beginTransaction();
+            $postingPeriod = PostingPeriodService::create($validatedData);
+            DB::commit();
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Successfully Created.',
-                'data' => new PostingPeriodResource(PostingPeriodService::create($validatedData)),
+                'data' => $postingPeriod,
             ], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Failed to Create.',
@@ -76,37 +59,10 @@ class PostingPeriodController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $postingPeriod = PostingPeriod::find($id)->whereHas('accountGroups')->first();
-        if (!$postingPeriod) {
+        if (! $postingPeriod) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Not Found.',
@@ -114,9 +70,4 @@ class PostingPeriodController extends Controller
             ], 404);
         }
     }
-
-	public function updatePeriodStatus(PostingPeriod $postingPeriod)
-	{
-
-	}
 }

@@ -2,10 +2,9 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyCreatorChannel;
+use App\Broadcasting\HrmsNotifyNextApproverChannel;
 use App\Enums\ApprovalModels;
 use App\Models\PaymentRequest;
-use App\Models\RequestItemProfiling;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
@@ -15,11 +14,11 @@ class RequestPaymentForApprovalNotification extends Notification
     use Queueable;
 
     private $token;
+
     private $model;
+
     public $id;
 
-    /**
-     */
     public function __construct($token, PaymentRequest $model)
     {
         $this->token = $token;
@@ -34,7 +33,7 @@ class RequestPaymentForApprovalNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyCreatorChannel::class];
+        return [HrmsNotifyNextApproverChannel::class];
     }
 
     public function getToken()
@@ -47,10 +46,10 @@ class RequestPaymentForApprovalNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage())
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return (new MailMessage)
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -61,11 +60,11 @@ class RequestPaymentForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => "A payment request has been APPROVED.",
-            'module' => "Accounting",
+            'message' => 'A Cash Disbursement Voucher that needs your approval.',
+            'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
             'request_id' => $this->model->id,
-            'action' => "View"
+            'action' => 'View',
         ];
     }
 }

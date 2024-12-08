@@ -16,7 +16,7 @@ class PaymentRequestDetailsResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-			'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
-		];
+            'stakeholder' => StakeholderResource::make($this->whenLoaded('stakeholder')),
+        ];
     }
 }

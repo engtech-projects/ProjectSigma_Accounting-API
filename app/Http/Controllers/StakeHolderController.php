@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StakeholderEditRequest;
-use App\Http\Requests\StakeholderFilterRequest;
-use App\Http\Requests\StakeholderRequest;
+use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
+use App\Http\Requests\Stakeholder\StakeholderRequestStore;
+use App\Http\Requests\Stakeholder\StakeholderRequestUpdate;
+use App\Http\Resources\StakeholderResource;
+use App\Models\StakeHolder;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
 use App\Models\Stakeholders\Payee;
@@ -13,8 +14,6 @@ use App\Models\Stakeholders\Project;
 use App\Models\Stakeholders\Supplier;
 use App\Services\StakeHolderService;
 use DB;
-use App\Http\Resources\StakeholderResource;
-use App\Models\StakeHolder;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class StakeHolderController extends Controller
@@ -22,14 +21,14 @@ class StakeHolderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(StakeholderFilterRequest $request)
+    public function index(StakeholderRequestFilter $request)
     {
         $validatedData = $request->validated();
         try {
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payee Successfully Retrieve.',
-                'data' =>  StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
+                'data' => StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -51,7 +50,7 @@ class StakeHolderController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StakeholderRequest $request)
+    public function store(StakeholderRequestStore $request)
     {
         $validatedData = $request->validated();
         DB::beginTransaction();
@@ -60,13 +59,15 @@ class StakeHolderController extends Controller
             $validatedData['stakeholdable_type'] = Payee::class;
             StakeHolder::create($validatedData);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payee Successfully Save.',
-                'data' => []
+                'data' => [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payee Failed to Save.',
@@ -94,7 +95,7 @@ class StakeHolderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(StakeholderEditRequest $request, string $id)
+    public function update(StakeholderRequestUpdate $request, string $id)
     {
         DB::beginTransaction();
         try {
@@ -102,20 +103,22 @@ class StakeHolderController extends Controller
             $stakeholder = StakeHolder::where('stakeholdable_id', $id)->first();
 
             match ($stakeholder->stakeholderable_type) {
-                Supplier::class => Supplier::where('source_id',$validateData['id'])->update(['name' => $validateData['name']]),
-                Employee::class => Employee::where('source_id',$validateData['id'])->update(['name' => $validateData['name']]),
-                Project::class => Project::where('source_id',$validateData['id'])->update(['name' => $validateData['name']]),
-                Department::class => Department::where('source_id',$validateData['id'])->update(['name' => $validateData['name']]),
+                Supplier::class => Supplier::where('source_id', $validateData['id'])->update(['name' => $validateData['name']]),
+                Employee::class => Employee::where('source_id', $validateData['id'])->update(['name' => $validateData['name']]),
+                Project::class => Project::where('source_id', $validateData['id'])->update(['name' => $validateData['name']]),
+                Department::class => Department::where('source_id', $validateData['id'])->update(['name' => $validateData['name']]),
             };
             $stakeholder->delete();
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payee Successfully Update.',
-                'data' =>  [],
+                'data' => [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payee Failed to Update.',
@@ -135,13 +138,15 @@ class StakeHolderController extends Controller
             Payee::find($id)->delete();
             $stakeholder->delete();
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payee Successfully Delete.',
-                'data' =>  [],
+                'data' => [],
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payee Failed to Delete.',

@@ -33,6 +33,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('model', function ($value, $route) {
             $modelName = $route->parameter('modelName');
             $getModel = $this->getModelClass($modelName);
+
             return $getModel::findOrfail($value);
         });
 
@@ -45,14 +46,16 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/web.php'));
         });
     }
+
     private function getModelClass($modelName)
     {
         $modelHasApprovals = ApprovalModels::toArray();
         try {
             array_key_exists($modelName, $modelHasApprovals);
+
             return $modelHasApprovals[$modelName];
         } catch (\Exception $e) {
-            throw new NotFoundHttpException("Resource not found");
+            throw new NotFoundHttpException('Resource not found');
         }
     }
 }
