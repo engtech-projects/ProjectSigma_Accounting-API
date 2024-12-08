@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\PostingPeriod;
 
-use App\Enums\PostingPeriodType;
+use App\Enums\PostingPeriodStatusType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostingPeriodRequestStore extends FormRequest
@@ -25,7 +25,7 @@ class PostingPeriodRequestStore extends FormRequest
         return [
             'period_start' => 'required|date',
             'period_end' => 'required|date',
-            'status' => 'required|in:'.implode(',', PostingPeriodType::values()),
+            'status' => 'required|in:'.implode(',', PostingPeriodStatusType::values()),
         ];
     }
 }

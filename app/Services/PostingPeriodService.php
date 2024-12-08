@@ -29,8 +29,7 @@ class PostingPeriodService
         if (isset($filters['end_date'])) {
             $query->where('end_date', '<=', $filters['end_date']);
         }
-
-        return $query->orderBy('created_at', 'desc')->paginate(config('services.pagination.limit'));
+        return $query->withDetails()->orderByDesc('created_at')->paginate(config('services.pagination.limit'));
     }
 
     public static function create(array $data): PostingPeriod

@@ -8,6 +8,7 @@ use App\Http\Resources\PostingPeriodCollection;
 use App\Http\Resources\PostingPeriodResource;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
+use DB;
 use Illuminate\Http\JsonResponse;
 
 class PostingPeriodController extends Controller
@@ -40,12 +41,16 @@ class PostingPeriodController extends Controller
     {
         $validatedData = $request->validated();
         try {
+            DB::beginTransaction();
+            $postingPeriod = PostingPeriodService::create($validatedData);
+            DB::commit();
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Successfully Created.',
-                'data' => new PostingPeriodResource(PostingPeriodService::create($validatedData)),
+                'data' => $postingPeriod,
             ], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Failed to Create.',

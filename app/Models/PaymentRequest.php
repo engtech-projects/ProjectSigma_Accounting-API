@@ -25,6 +25,7 @@ class PaymentRequest extends Model
         'description',
         'total',
         'approvals',
+        'type',
         'created_by',
         'request_status',
         'total_vat_amount',

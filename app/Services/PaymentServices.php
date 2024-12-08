@@ -61,9 +61,9 @@ class PaymentServices
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
-    public static function generatePrfNo()
+    public static function generatePrfNo($prefix)
     {
-        $prefix = strtoupper('RFA-ACCTG');
+        $prefix = strtoupper($prefix);
         $currentYearMonth = Carbon::now()->format('Y-m');
         // Find the highest series
         $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")

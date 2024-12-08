@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum PostingPeriodType: string
+enum PostingPeriodStatusType: string
 {
     case OPEN = 'open';
     case CLOSED = 'closed';

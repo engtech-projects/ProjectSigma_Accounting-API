@@ -4,6 +4,7 @@ use App\Enums\AccountCategory;
 use App\Enums\BalanceType;
 use App\Enums\FormType;
 use App\Enums\JournalStatus;
+use App\Enums\RequestStatuses;
 use App\Enums\StakeHolderType;
 use App\Enums\VoucherStatus;
 use App\Http\Controllers\AccountGroupController;
@@ -72,6 +73,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('my-approvals', [PaymentRequestController::class, 'myApprovals']);
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
     });
+    Route::prefix('payroll')->group(function () {
+        Route::post('create-request', [PaymentRequestController::class, 'createPayrollRequest']);
+    });
 
     //search routes
     Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
@@ -98,7 +102,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('status', function (Request $request) {
-            return response()->json(['status' => VoucherStatus::cases()], 200);
+            return response()->json(['status' => RequestStatuses::cases()], 200);
         });
     });
     Route::prefix('sync')->group(function () {

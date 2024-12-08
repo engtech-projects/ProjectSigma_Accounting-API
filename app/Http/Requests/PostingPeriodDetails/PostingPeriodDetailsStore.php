@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PostingPeriod;
+namespace App\Http\Requests\PostingPeriodDetails;
 
-use App\Enums\PostingPeriodStatusType;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostingPeriodRequestUpdate extends FormRequest
+class PostingPeriodDetailsStore extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +22,10 @@ class PostingPeriodRequestUpdate extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|integer',
-            'period_start' => 'required|date',
-            'period_end' => 'required|date',
-            'status' => 'required|in:'.implode(',', PostingPeriodStatusType::values()),
+            'posting_period_id' => 'required|exists:posting_periods,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after:start_date',
+            'status' => 'required|in:open,close',
         ];
     }
 }

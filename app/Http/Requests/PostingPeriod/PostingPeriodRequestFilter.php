@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\PostingPeriod;
 
-use App\Enums\PostingPeriodType;
+use App\Enums\PostingPeriodStatusType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostingPeriodRequestFilter extends FormRequest
@@ -24,7 +24,7 @@ class PostingPeriodRequestFilter extends FormRequest
     {
         return [
             'key' => 'nullable|string',
-            'status' => 'nullable|in:'.implode(',', PostingPeriodType::values()),
+            'status' => 'nullable|in:'.implode(',', PostingPeriodStatusType::values()),
         ];
     }
 }

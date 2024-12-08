@@ -2,15 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JournalStatus;
+use App\Enums\PaymentRequestType;
+use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
 use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
+use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\PaymentRequestResource;
+use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
+use App\Models\Period;
+use App\Models\PostingPeriod;
+use App\Models\StakeHolder;
 use App\Notifications\RequestPaymentForApprovalNotification;
+use App\Services\JournalEntryService;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
 use DB;
@@ -68,8 +77,9 @@ class PaymentRequestController extends Controller
         DB::beginTransaction();
         try {
             $validatedData = $request->validated();
-            $prfNo = PaymentServices::generatePrfNo();
+            $prfNo = PaymentServices::generatePrfNo(PrefixType::RFA_ACCTG->value);
             $validatedData['prf_no'] = $prfNo;
+            $validatedData['type'] = PaymentRequestType::PRF->value;
             $validatedData['stakeholder_id'] = $validatedData['stakeholderInformation']['id'] ?? null;
             $validatedData['created_by'] = auth()->user()->id;
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
@@ -146,12 +156,66 @@ class PaymentRequestController extends Controller
         ], 200);
     }
 
+    public function createPayrollRequest(PayrollPaymentRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $validatedData = $request->validated();
+            $paymentRequest = PaymentRequest::create([
+                'prf_no' => PaymentServices::generatePrfNo(PrefixType::RFA_PAYROLL->value),
+                'type' => PaymentRequestType::PAYROLL->value,
+                'request_status' => RequestStatuses::PENDING->value,
+                'description' => $validatedData['description'],
+                'request_date' => $validatedData['request_date'],
+                'total' => $validatedData['total'],
+                'total_vat_amount' => 0,
+                'created_by' => $validatedData['created_by'],
+                'stakeholder_id' => StakeHolder::findIdByName($validatedData['stakeholder_id']),
+            ]);
+            $validatedDataDetails = $validatedData['details'];
+            foreach ($validatedDataDetails as $detail) {
+                $stakeholder = StakeHolder::findStakeholderByNameOrNull($detail['id']);
+                $paymentRequest->details()->create([
+                    'stakeholder_id' => $stakeholder?->id,
+                    'particulars' => $stakeholder?->name . ' - ' . $detail['account'],
+                    'cost' => $detail['amount'] ?? null,
+                    'vat' => 0,
+                    'amount' => $detail['amount'] ?? null,
+                    'total_vat_amount' => 0,
+                ]);
+            }
+            // Journal Entry
+            $paymentRequest->journalEntry()->create([
+                'journal_no' => JournalEntryService::generateJournalNumber(),
+                'status' => JournalStatus::POSTED->value,
+                'posting_period_id' => PostingPeriod::currentPostingPeriod(),
+                'period_id' => Period::current()->pluck('id')->first(),
+                'journal_date' => $validatedData['request_date'],
+                'remarks' => $validatedData['description'],
+                'reference_no' => $paymentRequest->prf_no,
+                'entry_date' => $validatedData['request_date'],
+            ]);
+
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Payroll Request Successfully Created',
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Payroll Request Creation Failed',
+            ], 500);
+        }
+    }
+
     public function generatePrfNo()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request No Successfully Generated.',
-            'data' => PaymentServices::generatePrfNo(),
+            'data' => PaymentServices::generatePrfNo(PrefixType::RFA_ACCTG->value),
         ], 200);
     }
 }

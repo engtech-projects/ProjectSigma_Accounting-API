@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             BookSeeder::class,
             PostingPeriodSeeder::class,
             StakeHolderSeeder::class,
+            TermsSeeder::class,
         ]);
     }
 }

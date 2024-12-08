@@ -24,4 +24,22 @@ class StakeHolder extends Model
     {
         return $this->morphTo();
     }
+    public static function findIdByIdOrNull(?int $id): ?int
+    {
+        if (!$id) {
+            return null;
+        }
+        $stakeholder = self::where('id', $id)->first();
+        return $stakeholder?->id;
+    }
+    public static function findNameByIdOrNull(?int $id): ?string
+    {
+        $stakeholder = self::where('id', $id)->first();
+        return $stakeholder?->name;
+    }
+    public static function findStakeholderByNameOrNull(?string $id): ?StakeHolder
+    {
+        $stakeholder = self::where('id', $id)->first();
+        return $stakeholder;
+    }
 }
