@@ -60,7 +60,7 @@ class RequestPaymentForApprovedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A Cash Disbursement Voucher has been APPROVED.',
+            'message' => 'A Payment Request has been APPROVED.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
             'request_id' => $this->model->id,
