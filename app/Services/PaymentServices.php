@@ -59,12 +59,6 @@ class PaymentServices
             })
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
-        if ($paymentRequest->type === PaymentRequestType::PAYROLL->value) {
-            $paymentRequest->details->map(function ($item) {
-                $item->account_id = Account::withAccountName($item->account_name)->id;
-                return $item;
-            });
-        }
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
