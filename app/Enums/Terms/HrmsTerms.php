@@ -21,6 +21,7 @@ enum HrmsTerms: string
     case HDMF_MODIFIED_PAG_IBIG_2 = 'HDMF_MODIFIED_PAG_IBIG_2';
     case PHIC_PREMIUM_PAYABLE = 'PHIC_PREMIUM_PAYABLE';
     case PHIC_PREMIUM_PAYABLE_OFFICE = 'PHIC_PREMIUM_PAYABLE_OFFICE';
+
     public static function values(): array
     {
         return array_column(self::cases(), 'value');

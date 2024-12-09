@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestFilter;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
 use App\Http\Resources\PostingPeriodCollection;
-use App\Http\Resources\PostingPeriodResource;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
 use DB;
@@ -44,6 +43,7 @@ class PostingPeriodController extends Controller
             DB::beginTransaction();
             $postingPeriod = PostingPeriodService::create($validatedData);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Successfully Created.',
@@ -51,6 +51,7 @@ class PostingPeriodController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Failed to Create.',

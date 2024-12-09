@@ -48,6 +48,7 @@ class PostingPeriod extends Model
             $subQuery->whereHas('journalEntries');
         });
     }
+
     public function scopeWithDetails($query)
     {
         return $query->with(['periods' => function ($query) {

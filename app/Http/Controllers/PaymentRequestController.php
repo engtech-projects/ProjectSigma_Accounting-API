@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\JournalStatus;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
@@ -13,13 +12,9 @@ use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\PaymentRequestResource;
-use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
-use App\Models\Period;
-use App\Models\PostingPeriod;
 use App\Models\StakeHolder;
 use App\Notifications\RequestPaymentForApprovalNotification;
-use App\Services\JournalEntryService;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
 use DB;
@@ -170,39 +165,29 @@ class PaymentRequestController extends Controller
                 'total' => $validatedData['total'],
                 'total_vat_amount' => 0,
                 'created_by' => $validatedData['created_by'],
-                'stakeholder_id' => StakeHolder::findIdByName($validatedData['stakeholder_id']),
+                'stakeholder_id' => StakeHolder::findIdByNameOrNull($validatedData['stakeholder_id']),
             ]);
             $validatedDataDetails = $validatedData['details'];
             foreach ($validatedDataDetails as $detail) {
-                $stakeholder = StakeHolder::findStakeholderByNameOrNull($detail['id']);
                 $paymentRequest->details()->create([
-                    'stakeholder_id' => $stakeholder?->id,
-                    'particulars' => $stakeholder?->name . ' - ' . $detail['account'],
-                    'cost' => $detail['amount'] ?? null,
+                    'stakeholder_id' => StakeHolder::findIdByNameOrNull($detail['id']),
+                    'particulars' => $detail['account'],
+                    'cost' => $detail['cost'] ?? null,
                     'vat' => 0,
-                    'amount' => $detail['amount'] ?? null,
+                    'amount' => $detail['cost'] ?? null,
                     'total_vat_amount' => 0,
                 ]);
             }
-            // Journal Entry
-            $paymentRequest->journalEntry()->create([
-                'journal_no' => JournalEntryService::generateJournalNumber(),
-                'status' => JournalStatus::POSTED->value,
-                'posting_period_id' => PostingPeriod::currentPostingPeriod(),
-                'period_id' => Period::current()->pluck('id')->first(),
-                'journal_date' => $validatedData['request_date'],
-                'remarks' => $validatedData['description'],
-                'reference_no' => $paymentRequest->prf_no,
-                'entry_date' => $validatedData['request_date'],
-            ]);
 
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payroll Request Successfully Created',
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payroll Request Creation Failed',

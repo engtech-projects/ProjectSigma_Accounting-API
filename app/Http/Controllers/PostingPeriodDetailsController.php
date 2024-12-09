@@ -29,6 +29,7 @@ class PostingPeriodDetailsController extends Controller
             DB::beginTransaction();
             $postingPeriodDetails = Period::create($validatedData);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Details Successfully Created.',
@@ -36,6 +37,7 @@ class PostingPeriodDetailsController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Details Failed to Create.',

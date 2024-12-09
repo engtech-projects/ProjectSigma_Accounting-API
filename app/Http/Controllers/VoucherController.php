@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\VoucherType;
 use App\Http\Requests\Voucher\CashVoucherRequestFilter;

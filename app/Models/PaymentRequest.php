@@ -29,6 +29,7 @@ class PaymentRequest extends Model
         'created_by',
         'request_status',
         'total_vat_amount',
+        'attachment_url',
     ];
 
     protected $casts = [

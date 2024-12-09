@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
-use App\Enums\PaymentRequestType;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
-use App\Models\Account;
 use App\Models\PaymentRequest;
 use Carbon\Carbon;
 
@@ -55,10 +53,11 @@ class PaymentServices
                 $query->whereHas('journalEntries', function ($query) {
                     $query->where('status', JournalStatus::DRAFTED->value);
                 })
-                ->orWhereDoesntHave('journalEntries');
+                    ->orWhereDoesntHave('journalEntries');
             })
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
+
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
