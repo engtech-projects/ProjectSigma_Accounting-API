@@ -124,7 +124,6 @@ class VoucherController extends Controller
             }
             $voucher->journalEntry()->update([
                 'entry_date' => $validatedData['voucher_date'],
-                'status' => JournalStatus::UNPOSTED->value,
             ]);
             DB::commit();
             $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
@@ -166,7 +165,6 @@ class VoucherController extends Controller
         $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
         $journalEntry->update([
             'entry_date' => $validatedData['voucher_date'],
-            'status' => JournalStatus::UNPOSTED->value,
         ]);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
