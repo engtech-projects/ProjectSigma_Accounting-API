@@ -50,6 +50,8 @@ class PostingPeriod extends Model
     }
     public function scopeWithDetails($query)
     {
-        return $query->with('periods');
+        return $query->with(['periods' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }]);
     }
 }
