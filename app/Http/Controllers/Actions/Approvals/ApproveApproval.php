@@ -36,15 +36,9 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
-                    $model->journalEntry()->update([
-                        'status' => JournalStatus::UNPOSTED->value,
-                    ]);
                     $model->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
-                    $model->journalEntry()->update([
-                        'status' => JournalStatus::POSTED->value,
-                    ]);
                     $model->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $model));
                     break;
                 default:
@@ -56,9 +50,15 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestPaymentForApprovedNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
+                    $model->journalEntry()->update([
+                        'status' => JournalStatus::UNPOSTED->value,
+                    ]);
                     $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
+                    $model->journalEntry()->update([
+                        'status' => JournalStatus::POSTED->value,
+                    ]);
                     $model->notify(new RequestCashVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 default:
