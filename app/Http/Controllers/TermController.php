@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Terms\TermsRequestFilter;
+use App\Http\Requests\Terms\TermsRequestStore;
 use App\Models\Term;
 use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class TermController extends Controller
 {
@@ -18,14 +19,10 @@ class TermController extends Controller
         ], 200);
     }
 
-    public function store(Request $request)
+    public function store(TermsRequestStore $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'account_id' => 'nullable|exists:accounts,id',
-        ]);
-        $term = Term::create($validated);
+        $validatedData = $request->validated();
+        $term = Term::create($validatedData);
 
         return new JsonResponse([
             'success' => true,
@@ -43,20 +40,29 @@ class TermController extends Controller
         ], 200);
     }
 
-    public function update(Request $request, Term $term)
+    public function update(TermsRequestFilter $request, Term $term)
     {
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'account_id' => 'nullable|exists:accounts,id',
-        ]);
-        $term->update($validated);
+        try {
+            DB::beginTransaction();
+            $validatedData = $request->validated();
+            $term->update($validatedData);
+            DB::commit();
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Term updated successfully',
-            'data' => $term,
-        ], 200);
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Term updated successfully',
+                'data' => $term,
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Term failed to update',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+
     }
 
     public function destroy($id)

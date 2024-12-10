@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Middleware;
-use App\Models\AttendancePortal;
+
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+
 class SecretApiKey
 {
     /**
@@ -19,6 +21,7 @@ class SecretApiKey
         if ($clientSecretKey === $secretKey) {
             return $next($request);
         }
+
         return new JsonResponse([
             'success' => false,
             'message' => 'Access denied. Wrong SECRET KEY',

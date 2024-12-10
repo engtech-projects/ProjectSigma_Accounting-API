@@ -18,12 +18,12 @@ use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
-use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\SyncController;
+use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +54,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);
+    Route::resource('term', TermController::class);
     Route::prefix('journal-entry')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
         Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
@@ -130,11 +131,10 @@ Route::middleware('auth:api')->group(function () {
         Route::post('void/{modelName}/{model}', VoidApproval::class);
     });
 });
- // SECRET API KEY ROUTES
-Route::middleware("secret_api")->group(function () {
+// SECRET API KEY ROUTES
+Route::middleware('secret_api')->group(function () {
     // SIGMA SERVICES ROUTES
-    Route::prefix('sigma')->group(function () {
-    });
+    Route::prefix('sigma')->group(function () {});
 });
 // SYSTEM SETUP ROUTES
 if (config()->get('app.artisan') == 'true') {

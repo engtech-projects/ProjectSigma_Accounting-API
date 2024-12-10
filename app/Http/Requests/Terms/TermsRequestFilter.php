@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\PostingPeriodDetails;
+namespace App\Http\Requests\Terms;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostingPeriodDetailsStore extends FormRequest
+class TermsRequestFilter extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,9 +22,10 @@ class PostingPeriodDetailsStore extends FormRequest
     public function rules(): array
     {
         return [
-            'posting_period_id' => 'required|exists:posting_periods,id',
-            'period_start' => 'required|date',
-            'period_end' => 'required|date|after:period_start',
+            'id' => 'required|numeric',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'account_id' => 'nullable|exists:accounts,id',
         ];
     }
 }
