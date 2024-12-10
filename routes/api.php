@@ -130,6 +130,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('void/{modelName}/{model}', VoidApproval::class);
     });
 });
+ // SECRET API KEY ROUTES
+Route::middleware("secret_api")->group(function () {
+    // SIGMA SERVICES ROUTES
+    Route::prefix('sigma')->group(function () {
+    });
+});
 // SYSTEM SETUP ROUTES
 if (config()->get('app.artisan') == 'true') {
     Route::prefix('artisan')->group(function () {
