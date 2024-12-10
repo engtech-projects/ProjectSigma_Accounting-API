@@ -20,6 +20,7 @@ use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\PeriodController;
 use App\Http\Controllers\PostingPeriodController;
+use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\SyncController;
@@ -49,7 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('account-group', AccountGroupController::class);
     Route::resource('books', BookController::class);
     Route::resource('posting-period', PostingPeriodController::class);
-    Route::resource('periods', PeriodController::class);
+    Route::resource('periods', PostingPeriodDetailsController::class);
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);

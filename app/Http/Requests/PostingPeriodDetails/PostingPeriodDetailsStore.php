@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\PostingPeriodDetails;
 
+use App\Enums\PostingPeriodStatusType;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PostingPeriodDetailsStore extends FormRequest
@@ -23,9 +24,8 @@ class PostingPeriodDetailsStore extends FormRequest
     {
         return [
             'posting_period_id' => 'required|exists:posting_periods,id',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:open,close',
+            'period_start' => 'required|date',
+            'period_end' => 'required|date|after:period_start',
         ];
     }
 }
