@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Terms;
+namespace App\Http\Requests\PayrollRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TermsRequestStore extends FormRequest
+class PayrollRequestFilter extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class TermsRequestStore extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'account_id' => 'required|exists:accounts,id',
+            'prf_no' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
         ];
     }
 }

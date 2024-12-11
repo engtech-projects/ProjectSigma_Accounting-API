@@ -17,6 +17,7 @@ class PaymentServices
         }
         $paymentRequest = $query->latest('id')
             ->withStakeholder()
+            ->payment()
             ->withPaymentRequestDetails()
             ->orderByDesc()
             ->with('created_by_user')
@@ -29,6 +30,7 @@ class PaymentServices
     {
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
+            ->payment()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -39,6 +41,7 @@ class PaymentServices
     {
         $paymentRequest = PaymentRequest::myRequests()
             ->withStakeholder()
+            ->payment()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentRequestType;
 use App\Http\Traits\HasApproval;
 use App\Http\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -107,4 +108,13 @@ class PaymentRequest extends Model
     {
         return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
+    public function scopePayroll($query)
+    {
+        return $query->where('type', PaymentRequestType::PAYROLL->value);
+    }
+    public function scopePayment($query)
+    {
+        return $query->where('type', PaymentRequestType::PRF->value);
+    }
+
 }

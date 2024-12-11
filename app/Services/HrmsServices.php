@@ -17,7 +17,7 @@ class HrmsServices
         try {
             $response = Http::withToken($token)
                 ->acceptJson()
-                ->get(config('services.url.hrms_api_url').'/api/employee/list');
+                ->get(config('services.url.hrms_api').'/api/employee/list');
             if (! $response->successful()) {
                 return false;
             }
@@ -60,7 +60,7 @@ class HrmsServices
         try {
             $response = Http::withToken($token)
                 ->acceptJson()
-                ->get(config('services.url.project_api_url').'/api/projects');
+                ->get(config('services.url.project_api').'/api/projects');
             if (! $response->successful()) {
                 return false;
             }
@@ -103,7 +103,7 @@ class HrmsServices
     {
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.hrms_api_url').'/api/employee/users-list');
+            ->get(config('services.url.hrms_api').'/api/employee/users-list');
         if (! $response->successful()) {
             return false;
         }
@@ -133,7 +133,7 @@ class HrmsServices
         try {
             $response = Http::withToken($token)
                 ->acceptJson()
-                ->get(config('services.url.hrms_api_url').'/api/department/list/v2');
+                ->get(config('services.url.hrms_api').'/api/department/list/v2');
             if (! $response->successful()) {
                 return false;
             }
@@ -178,7 +178,7 @@ class HrmsServices
         $response = Http::withToken(token: $token)
             ->acceptJson()
             ->withBody($notificationData)
-            ->post(config('services.url.hrms_api_url')."/api/notifications/services-notify/{$userid}");
+            ->post(config('services.url.hrms_api')."/api/notifications/services-notify/{$userid}");
         if (! $response->successful()) {
             return false;
         }
@@ -189,7 +189,7 @@ class HrmsServices
         $response = Http::withToken($token)
             ->acceptJson()
             ->withQueryParameters($approvals)
-            ->get(config('services.url.hrms_api_url').'/api/services/format-approvals');
+            ->get(config('services.url.hrms_api').'/api/services/format-approvals');
         if (! $response->successful()) {
             return $approvals;
         }
@@ -201,7 +201,7 @@ class HrmsServices
     {
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.hrms_api_url').'/api/services/user-employees', [
+            ->get(config('services.url.hrms_api').'/api/services/user-employees', [
                 'user_ids' => $user_ids,
             ]);
 

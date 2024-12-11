@@ -13,7 +13,7 @@ class InventoryServices
         DB::beginTransaction();
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.inventory_api_url').'/api/supplier/list');
+            ->get(config('services.url.inventory_api').'/api/sigma/suppliers');
         if (! $response->successful()) {
             return false;
         }

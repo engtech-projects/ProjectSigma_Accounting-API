@@ -18,6 +18,7 @@ use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
+use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\Projects\ProjectController;
@@ -77,7 +78,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
     });
     Route::prefix('payroll')->group(function () {
-        Route::post('create-request', [PaymentRequestController::class, 'createPayrollRequest']);
+        Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
+        Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
+        Route::get('my-requests', [PayrollRequestController::class, 'myRequest']);
+        Route::get('my-approvals', [PayrollRequestController::class, 'myApprovals']);
+        Route::get('generate-payroll-no', [PayrollRequestController::class, 'generatePayrollNo']);
     });
 
     //search routes
