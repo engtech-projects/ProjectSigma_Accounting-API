@@ -18,7 +18,7 @@ class AuthTokenGuard implements Guard
 
     public function __construct(Request $request)
     {
-        $this->hrmsApiUrl = config()->get('services.url.hrms_api_url');
+        $this->hrmsApiUrl = config()->get('services.url.hrms_api');
         $this->request = $request;
     }
 

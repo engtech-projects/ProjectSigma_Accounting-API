@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\PostingPeriod;
+use App\Models\Period;
 
-class PostingPeriodService
+class PeriodService
 {
     public static function getPaginated(array $filters = [])
     {
-        $query = PostingPeriod::query();
+        $query = Period::query();
 
         if (isset($filters['search'])) {
             $search = $filters['search'];
@@ -31,25 +31,5 @@ class PostingPeriodService
         }
 
         return $query->withDetails()->orderByDesc('created_at')->paginate(config('services.pagination.limit'));
-    }
-
-    public static function create(array $data): PostingPeriod
-    {
-        return PostingPeriod::create($data);
-    }
-
-    public static function update(PostingPeriod $postingPeriod, array $data): bool
-    {
-        return $postingPeriod->update($data);
-    }
-
-    public static function delete(PostingPeriod $postingPeriod): bool
-    {
-        return $postingPeriod->delete();
-    }
-
-    public static function findById(int $id): ?PostingPeriod
-    {
-        return PostingPeriod::find($id);
     }
 }

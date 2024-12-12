@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Actions\Approvals;
 
 use App\Enums\ApprovalModels;
+use App\Enums\JournalStatus;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
@@ -49,9 +50,15 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestPaymentForApprovedNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
+                    $model->journalEntry()->update([
+                        'status' => JournalStatus::UNPOSTED->value,
+                    ]);
                     $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
+                    $model->journalEntry()->update([
+                        'status' => JournalStatus::POSTED->value,
+                    ]);
                     $model->notify(new RequestCashVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 default:

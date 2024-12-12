@@ -30,7 +30,8 @@ class PayrollPaymentRequest extends FormRequest
             'details.*.code' => 'nullable|string',
             'details.*.account' => 'required|string',
             'details.*.type' => 'required|string|in:project,department,deduction,bank',
-            'details.*.amount' => 'required|numeric'
+            'details.*.amount' => 'required|numeric',
+            'attachment_url' => 'nullable|string',
         ];
     }
 }

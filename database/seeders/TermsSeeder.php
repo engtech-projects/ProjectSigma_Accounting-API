@@ -3,10 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\MainModuleType;
-use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Term;
+use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TermsSeeder extends Seeder
 {

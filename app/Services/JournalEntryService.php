@@ -87,7 +87,7 @@ class JournalEntryService
 
     public static function forVoucherEntriesListCash()
     {
-        return JournalEntry::where('status', JournalStatus::POSTED->value)
+        return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
             ->whereHas('voucher')
             ->whereVoucherIsApproved()
             ->withPaymentRequest()

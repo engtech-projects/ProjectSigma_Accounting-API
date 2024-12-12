@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PostingPeriodDetails;
+namespace App\Http\Requests\PayrollRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostingPeriodDetailsStore extends FormRequest
+class PayrollRequestFilter extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class PostingPeriodDetailsStore extends FormRequest
     public function rules(): array
     {
         return [
-            'posting_period_id' => 'required|exists:posting_periods,id',
-            'period_start' => 'required|date',
-            'period_end' => 'required|date|after:period_start',
+            'prf_no' => 'nullable|string|max:255',
+            'status' => 'nullable|string|max:255',
         ];
     }
 }

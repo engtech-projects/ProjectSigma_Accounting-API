@@ -44,4 +44,9 @@ class Account extends Model
     {
         return "{$this->account_number} - {$this->account_name} ({$this->accountType->account_type})";
     }
+
+    public function scopeWithAccountName($query, $accountName)
+    {
+        return $query->where('account_name', $accountName)->first()->id;
+    }
 }

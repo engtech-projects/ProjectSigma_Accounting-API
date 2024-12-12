@@ -22,7 +22,7 @@ class StakeholderRequestStore extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:255|string|unique:stakeholders,name',
+            'name' => 'required|max:255|string|unique:stakeholder,name',
         ];
     }
 }

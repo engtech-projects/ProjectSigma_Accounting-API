@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\RequestStatuses;
-use App\Enums\VoucherStatus;
 use App\Http\Traits\HasTransitions;
 use App\Http\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

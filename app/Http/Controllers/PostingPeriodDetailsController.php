@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsFilter;
 use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsStore;
 use App\Models\Period;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,8 +28,17 @@ class PostingPeriodDetailsController extends Controller
         $validatedData = $request->validated();
         try {
             DB::beginTransaction();
+            if (Carbon::parse($validatedData['period_start'])->lessThanOrEqualTo(Carbon::now()) ||
+                Carbon::parse($validatedData['period_end'])->lessThanOrEqualTo(Carbon::now())) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Posting Period Details Failed to Create. The current year is already created.',
+                    'data' => null,
+                ], 500);
+            }
             $postingPeriodDetails = Period::create($validatedData);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Details Successfully Created.',
@@ -36,6 +46,7 @@ class PostingPeriodDetailsController extends Controller
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Details Failed to Create.',

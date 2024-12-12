@@ -13,7 +13,7 @@ class ProjectServices
         DB::beginTransaction();
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.project_api_url').'/api/projects');
+            ->get(config('services.url.project_api').'/api/projects');
         if (! $response->successful()) {
             return false;
         }
