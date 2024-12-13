@@ -5,6 +5,7 @@ namespace App\Http\Services\ApiServices;
 class HrmsService
 {
     protected $apiUrl;
+
     protected $authToken;
 
     public function __construct($authToken)
@@ -12,5 +13,4 @@ class HrmsService
         $this->authToken = $authToken;
         $this->apiUrl = config('services.url.hrms_api');
     }
-
 }

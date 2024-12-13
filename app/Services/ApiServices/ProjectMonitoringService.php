@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 class ProjectMonitoringService
 {
     protected $apiUrl;
+
     protected $authToken;
 
     public function __construct($authToken)
@@ -19,23 +20,25 @@ class ProjectMonitoringService
     public function syncAll()
     {
         $syncProject = $this->syncProjects();
+
         return $syncProject;
     }
+
     public function syncProjects()
     {
         $projects = $this->getAllProjects();
         collect($projects)->map(function ($project) {
             return [
-                "id" => $project['id'],
-                "project_monitoring_id" => $project['id'],
-                "project_code" => $project['code'],
-                "status" => $project['status'],
+                'id' => $project['id'],
+                'project_monitoring_id' => $project['id'],
+                'project_code' => $project['code'],
+                'status' => $project['status'],
             ];
         });
         Project::upsert(
             $projects,
             [
-                'id'
+                'id',
             ],
             [
                 'project_monitoring_id',
@@ -43,22 +46,25 @@ class ProjectMonitoringService
                 'status',
             ]
         );
+
         return true;
     }
+
     public function getAllProjects()
     {
         $response = Http::withToken($this->authToken)
             ->withUrlParameters([
-                "stage" => "awarded",
-                "status" => "ongoing",
-                "paginate" => false,
-                "sort" => "asc"
+                'stage' => 'awarded',
+                'status' => 'ongoing',
+                'paginate' => false,
+                'sort' => 'asc',
             ])
             ->acceptJson()
             ->get($this->apiUrl.'/api/projects');
         if (! $response->successful()) {
             return [];
         }
+
         return $response->json();
     }
 }

@@ -108,13 +108,14 @@ class PaymentRequest extends Model
     {
         return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
+
     public function scopePayroll($query)
     {
         return $query->where('type', PaymentRequestType::PAYROLL->value);
     }
+
     public function scopePayment($query)
     {
         return $query->where('type', PaymentRequestType::PRF->value);
     }
-
 }
