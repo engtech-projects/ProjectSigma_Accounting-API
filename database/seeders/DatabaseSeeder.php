@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             AccountGroupSeeder::class,
             BookSeeder::class,
-            PostingPeriodSeeder::class,
+            //PostingPeriodSeeder::class,
             StakeHolderSeeder::class,
             TermsSeeder::class,
         ]);
