@@ -19,7 +19,7 @@ class Book extends Model
         'account_group_id',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function accountGroup(): BelongsTo
     {

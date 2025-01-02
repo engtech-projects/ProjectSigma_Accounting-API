@@ -23,11 +23,15 @@ class Account extends Model
         'statement',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
+    }
+    public function reportGroup(): BelongsTo
+    {
+        return $this->belongsTo(ReportGroup::class);
     }
 
     public function journalEntryDetails(): \Illuminate\Database\Eloquent\Relations\HasMany

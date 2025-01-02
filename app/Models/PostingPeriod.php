@@ -14,7 +14,7 @@ class PostingPeriod extends Model
 
     protected $table = 'posting_periods';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'period_start',

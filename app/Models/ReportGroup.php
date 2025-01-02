@@ -7,19 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AccountType extends Model
+class ReportGroup extends Model
 {
     use HasFactory, SoftDeletes;
-
-    protected $table = 'account_types';
-
-    public $timestamps = true;
-
+    protected $table = "report_groups";
     protected $fillable = [
-        'account_type',
-        'account_category',
-        'balance_type',
-        'notation',
+        'name',
+        'description',
     ];
 
     public function accounts(): HasMany

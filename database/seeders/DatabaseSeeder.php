@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             //PostingPeriodSeeder::class,
             StakeHolderSeeder::class,
             TermsSeeder::class,
+            ReportGroupSeeder::class,
+            UpdateAccountsReportGroupSeeder::class,
         ]);
     }
 }
