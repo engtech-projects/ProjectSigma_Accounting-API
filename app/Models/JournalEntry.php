@@ -65,7 +65,7 @@ class JournalEntry extends Model
 
     public function scopeWithAccounts($query)
     {
-        return $query->with('details.account.accountType');
+        return $query->with('details.account.accountType', 'details.account.reportGroup');
     }
 
     public function scopeWithVoucher($query)

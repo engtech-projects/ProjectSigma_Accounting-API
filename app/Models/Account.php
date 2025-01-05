@@ -44,9 +44,15 @@ class Account extends Model
         return $query->with('accountType');
     }
 
+    public function scopeWithReportGroup($query)
+    {
+        return $query->with('reportGroup');
+    }
+
     public function getFullAccountAttribute(): string
     {
-        return "{$this->account_number} - {$this->account_name} ({$this->accountType->account_type})";
+        $reportGroup = $this->reportGroup ? " - {$this->reportGroup->name}" : '';
+        return "{$this->account_number} - {$this->account_name} $reportGroup";
     }
 
     public function scopeWithAccountName($query, $accountName)
