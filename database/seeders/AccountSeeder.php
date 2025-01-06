@@ -34,5 +34,7 @@ class AccountSeeder extends Seeder
                 ]
             );
         }
+        $ids = range(311, 388);
+        Account::whereIn('id', $ids)->delete();
     }
 }

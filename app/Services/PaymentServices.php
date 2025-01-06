@@ -31,6 +31,7 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
             ->payment()
+            ->orderByDesc()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -42,6 +43,7 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myRequests()
             ->withStakeholder()
             ->payment()
+            ->orderByDesc()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -59,6 +61,7 @@ class PaymentServices
                     ->orWhereDoesntHave('journalEntries');
             })
             ->withPaymentRequestDetails()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);

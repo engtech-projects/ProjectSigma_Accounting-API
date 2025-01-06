@@ -12,25 +12,25 @@ class UpdateAccountsReportGroupSeeder extends Seeder
      */
     public function run(): void
     {
-        \DB::table("accounts")->whereIn("account_name", ["REPLENISHMENT"])->update(["report_group_id" => 137]);
-        \DB::table("accounts")->whereIn("account_name", ["REVOLVING FUND"])->update(["report_group_id" => 142]);
-        \DB::table("accounts")->whereIn("account_name", ["PETTY CASH FUND: EQUIPMENT MANAGEMENT SECTION"])->update(["report_group_id" => 120]);
-        \DB::table("accounts")->whereIn("account_name", ["PETTY CASH FUND: MARKETING SECTION"])->update(["report_group_id" => 121]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK"])->update(["report_group_id" => 23]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- MAYBANK"])->update(["report_group_id" => 35]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK BDO"])->update(["report_group_id" => 24]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK ME3/EP JV ACCOUNT"])->update(["report_group_id" => 36]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- BDO CHECK ACCOUNT"])->update(["report_group_id" => 26]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN VAULT"])->update(["report_group_id" => 39]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK"])->update(["report_group_id" => 28]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- METROBANK"])->update(["report_group_id" => 37]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- DBP"])->update(["report_group_id" => 27]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-ME3-ECDCJV"])->update(["report_group_id" => 32]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-ECDC"])->update(["report_group_id" => 29]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-REYROSE-ECDCJV"])->update(["report_group_id" => 33]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-UKC-ECDCJV"])->update(["report_group_id" => 34]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-EPCC-ECDCJV"])->update(["report_group_id" => 30]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- METROBANK - DOLLAR ACCOUNT"])->update(["report_group_id" => 38]);
+        \DB::table("accounts")->whereIn("account_name", ["REPLENISHMENT"])->update(["report_group_id" => 138]);
+        \DB::table("accounts")->whereIn("account_name", ["REVOLVING FUND"])->update(["report_group_id" => 143]);
+        \DB::table("accounts")->whereIn("account_name", ["PETTY CASH FUND: EQUIPMENT MANAGEMENT SECTION"])->update(["report_group_id" => 121]);
+        \DB::table("accounts")->whereIn("account_name", ["PETTY CASH FUND: MARKETING SECTION"])->update(["report_group_id" => 122]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK"])->update(["report_group_id" => 24]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- MAYBANK"])->update(["report_group_id" => 36]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK BDO"])->update(["report_group_id" => 25]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK ME3/EP JV ACCOUNT"])->update(["report_group_id" => 37]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- BDO CHECK ACCOUNT"])->update(["report_group_id" => 27]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN VAULT"])->update(["report_group_id" => 40]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK"])->update(["report_group_id" => 29]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- METROBANK"])->update(["report_group_id" => 38]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- DBP"])->update(["report_group_id" => 28]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-ME3-ECDCJV"])->update(["report_group_id" => 33]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-ECDC"])->update(["report_group_id" => 30]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-REYROSE-ECDCJV"])->update(["report_group_id" => 34]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-UKC-ECDCJV"])->update(["report_group_id" => 35]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- LANDBANK-EPCC-ECDCJV"])->update(["report_group_id" => 31]);
+        \DB::table("accounts")->whereIn("account_name", ["CASH IN BANK- METROBANK - DOLLAR ACCOUNT"])->update(["report_group_id" => 39]);
         \DB::table("accounts")->whereIn("account_name", ["ACCOUNTS RECEIVABLE- NON TRADE"])->update(["report_group_id" => 3]);
         \DB::table("accounts")->whereIn("account_name", ["CASH ADVANCE FOR OPERATING EXPENSE"])->update(["report_group_id" => 22]);
         \DB::table("accounts")->whereIn("account_name", ["OTHER RECEIVABLES"])->update(["report_group_id" => 113]);
@@ -39,7 +39,7 @@ class UpdateAccountsReportGroupSeeder extends Seeder
         \DB::table("accounts")->whereIn("account_name", ["INPUT VAT"])->update(["report_group_id" => 85]);
         \DB::table("accounts")->whereIn("account_name", ["ACCOUNTS RECEIVABLE"])->update(["report_group_id" => 2]);
         \DB::table("accounts")->whereIn("account_name", ["INVENTORIES"])->update(["report_group_id" => 89]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION MATERIALS INVENTORY"])->update(["report_group_id" => 61]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION MATERIALS INVENTORY"])->update(["report_group_id" => 62]);
         \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION SPARE PARTS INVENTORY"])->update(["report_group_id" => 63]);
         \DB::table("accounts")->whereIn("account_name", ["FUEL, OIL AND LUBRICANTS INVENTORY"])->update(["report_group_id" => 81]);
         \DB::table("accounts")->whereIn("account_name", ["OFFICE SUPPLIES INVENTORY"])->update(["report_group_id" => 105]);
@@ -60,20 +60,20 @@ class UpdateAccountsReportGroupSeeder extends Seeder
         \DB::table("accounts")->whereIn("account_name", ["FURNITURES AND FIXTURES"])->update(["report_group_id" => 82]);
         \DB::table("accounts")->whereIn("account_name", ["FURNITURES AND FIXTURES (OFFICE)"])->update(["report_group_id" => 82]);
         \DB::table("accounts")->whereIn("account_name", ["ACCUMULATED DEPRECIATION - FURNITURES AND FIXTURES"])->update(["report_group_id" => 82]);
-        \DB::table("accounts")->whereIn("account_name", ["OFFICE EQUIPMENT"])->update(["report_group_id" => 102]);
-        \DB::table("accounts")->whereIn("account_name", ["OFFICE EQUIPMENT (OFFICE)"])->update(["report_group_id" => 102]);
+        \DB::table("accounts")->whereIn("account_name", ["OFFICE EQUIPMENT"])->update(["report_group_id" => 103]);
+        \DB::table("accounts")->whereIn("account_name", ["OFFICE EQUIPMENT (OFFICE)"])->update(["report_group_id" => 103]);
         \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION EQUIPMENT"])->update(["report_group_id" => 50]);
         \DB::table("accounts")->whereIn("account_name", ["PREPAID ASSET"])->update(["report_group_id" => 125]);
         \DB::table("accounts")->whereIn("account_name", ["INFORMATION AND COMMUNICATION TECHNOLOGY EQUIPMENT"])->update(["report_group_id" => 84]);
         \DB::table("accounts")->whereIn("account_name", ["INFORMATION AND COMMUNICATION TECHNOLOGY EQUIPMENT (OFFICE)"])->update(["report_group_id" => 84]);
         \DB::table("accounts")->whereIn("account_name", ["ACCUMULATED DEPRECIATION - INFORMATION AND COMMUNICATION TECHNOLOGY EQUIPMENT"])->update(["report_group_id" => 8]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS - OFFICE BUILDING"])->update(["report_group_id" => 56]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS - FURNITURES AND FIXTURES"])->update(["report_group_id" => 52]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- FUEL DEPOT"])->update(["report_group_id" => 51]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- WAREHOUSE"])->update(["report_group_id" => 59]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- PANTRY"])->update(["report_group_id" => 57]);
-        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- PAVING BLOCK"])->update(["report_group_id" => 58]);
-        \DB::table("accounts")->whereIn("account_name", ["FUEL DEPOT"])->update(["report_group_id" => 78]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS - OFFICE BUILDING"])->update(["report_group_id" => 57]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS - FURNITURES AND FIXTURES"])->update(["report_group_id" => 53]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- FUEL DEPOT"])->update(["report_group_id" => 52]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- WAREHOUSE"])->update(["report_group_id" => 60]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- PANTRY"])->update(["report_group_id" => 58]);
+        \DB::table("accounts")->whereIn("account_name", ["CONSTRUCTION IN PROGRESS- PAVING BLOCK"])->update(["report_group_id" => 59]);
+        \DB::table("accounts")->whereIn("account_name", ["FUEL DEPOT"])->update(["report_group_id" => 79]);
         \DB::table("accounts")->whereIn("account_name", ["ACCUMULATED DEPRECIATION - FUEL DEPOT"])->update(["report_group_id" => 6]);
         \DB::table("accounts")->whereIn("account_name", ["BUILDINGS"])->update(["report_group_id" => 21]);
         \DB::table("accounts")->whereIn("account_name", ["ACCUMULATED DEPRECIATION - BUILDINGS"])->update(["report_group_id" => 4]);
@@ -322,14 +322,5 @@ class UpdateAccountsReportGroupSeeder extends Seeder
         \DB::table("accounts")->whereIn("account_name", ["INTEREST ON BANK DEPOSITS"])->update(["report_group_id" => 142]);
         \DB::table("accounts")->whereIn("account_name", ["GAIN ON SALE OF ASSET"])->update(["report_group_id" => 142]);
         \DB::table("accounts")->whereIn("account_name", ["GAIN ON SALE OF INVESTMENT"])->update(["report_group_id" => 142]);
-
-
-        //sir ryan accounts
-        \DB::table("accounts")->whereIn("account_name", ["CURRENT ASSETS"])->update(["report_group_id" => null]);
-        \DB::table("accounts")->whereIn("account_name", ["CASH AND CASH EQUIVALENTS	CASH AND CASH EQUIVALENTS"])->update(["report_group_id" => null]);
-        \DB::table("accounts")->whereIn("account_name", ["Cash on Hand Cash on Hand"])->update(["report_group_id" => null]);
-        \DB::table("accounts")->whereIn("account_name", ["Check and Other Cash Items (COCI)	Check and Other Cash Items (COCI)"])->update(["report_group_id" => null]);
-        \DB::table("accounts")->whereIn("account_name", ["Petty Cash Fund	Petty Cash Fund"])->update(["report_group_id" => null]);
-        \DB::table("accounts")->whereIn("account_name", ["Cash in Bank (EWB)	Cash in Bank (EWB)"])->update(["report_group_id" => null]);
     }
 }
