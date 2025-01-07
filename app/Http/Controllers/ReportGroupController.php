@@ -28,7 +28,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupResorce::collection(ReportGroup::where('name', 'like', '%' . $validatedData['name'] . '%')->get()),
+            'data' => ReportGroupResorce::collection(ReportGroup::where('name', 'like', '%' . $validatedData['name'] . '%')->limit(10)->get()),
         ], 200);
     }
 
