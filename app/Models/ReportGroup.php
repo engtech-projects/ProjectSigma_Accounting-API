@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ReportGroup extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $table = "report_groups";
+
+    protected $table = 'report_groups';
+
     protected $fillable = [
         'name',
         'description',

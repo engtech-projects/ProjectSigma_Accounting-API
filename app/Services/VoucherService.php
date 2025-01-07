@@ -93,7 +93,8 @@ class VoucherService
 
     public static function myRequestDisbursement()
     {
-        $voucherRequest = Voucher::whereDisbursement()
+        $voucherRequest = Voucher::myRequests()
+            ->whereDisbursement()
             ->withDetails()
             ->withPaymentRequestDetails()
             ->orderDesc()
@@ -152,9 +153,23 @@ class VoucherService
 
     public static function myRequestCash()
     {
-        $voucherRequest = Voucher::withDetails()
+        $voucherRequest = Voucher::myRequests()
+            ->withDetails()
             ->withPaymentRequestDetails()
             ->whereCash()
+            ->orderDesc()
+            ->paginate(config('services.pagination.limit'));
+
+        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+    }
+
+    public static function myClearingVouchersCash()
+    {
+        $query = Voucher::query();
+        $voucherRequest = $query
+            ->whereCash()
+            ->withDetails()
+            ->withPaymentRequestDetails()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 

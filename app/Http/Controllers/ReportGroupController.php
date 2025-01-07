@@ -22,13 +22,15 @@ class ReportGroupController extends Controller
             'data' => ReportGroupResorce::collection(ReportGroup::all()),
         ], 200);
     }
+
     public function searchReportGroups(ReportGroupSearchRequest $request)
     {
         $validatedData = $request->validated();
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupResorce::collection(ReportGroup::where('name', 'like', '%' . $validatedData['name'] . '%')->limit(10)->get()),
+            'data' => ReportGroupResorce::collection(ReportGroup::where('name', 'like', '%'.$validatedData['name'].'%')->limit(10)->get()),
         ], 200);
     }
 
@@ -38,6 +40,7 @@ class ReportGroupController extends Controller
     public function store(ReportGroupStoreRequest $request)
     {
         $validatedData = $request->validated();
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group created successfully',

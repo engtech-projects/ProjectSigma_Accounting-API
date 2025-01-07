@@ -92,6 +92,15 @@ class VoucherController extends Controller
         ], 200);
     }
 
+    public function cashMyClearingVouchers()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Cash Voucher My Clearing/Settlement Successfully Retrieved.',
+            'data' => VoucherService::myClearingVouchersCash(),
+        ], 200);
+    }
+
     public function cashMyApprovals()
     {
         $myApprovals = VoucherService::myApprovalsCash();
@@ -112,6 +121,7 @@ class VoucherController extends Controller
             $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
             $validatedData['date_encoded'] = Carbon::now();
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
+            $validatedData['created_by'] = auth()->user()->id;
             $voucher = CashRequest::create($validatedData);
             foreach ($validatedData['details'] as $detail) {
                 $voucher->details()->create([
@@ -153,6 +163,7 @@ class VoucherController extends Controller
         $validatedData['book_id'] = Book::where('code', VoucherType::DISBURSEMENT_CODE->value)->first()->id;
         $validatedData['date_encoded'] = Carbon::now();
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
+        $validatedData['created_by'] = auth()->user()->id;
         $voucher = DisbursementRequest::create($validatedData);
         foreach ($validatedData['details'] as $detail) {
             $voucher->details()->create([

@@ -29,6 +29,7 @@ class Account extends Model
     {
         return $this->belongsTo(AccountType::class);
     }
+
     public function reportGroup(): BelongsTo
     {
         return $this->belongsTo(ReportGroup::class);
@@ -52,6 +53,7 @@ class Account extends Model
     public function getFullAccountAttribute(): string
     {
         $reportGroup = $this->reportGroup ? " - {$this->reportGroup->name}" : '';
+
         return "{$this->account_number} - {$this->account_name} $reportGroup";
     }
 
