@@ -163,10 +163,11 @@ class VoucherService
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
-    public static function myClearingVouchersCash()
+    public static function getClearingVouchersCash()
     {
         $query = Voucher::query();
         $voucherRequest = $query
+            ->clearedVoucherCash()
             ->whereCash()
             ->withDetails()
             ->withPaymentRequestDetails()

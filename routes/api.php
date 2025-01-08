@@ -116,7 +116,7 @@ Route::middleware('auth:api')->group(function () {
             Route::get('my-requests', [VoucherController::class, 'cashMyRequest']);
             Route::get('my-approvals', [VoucherController::class, 'cashMyApprovals']);
             Route::get('my-vouchering', [VoucherController::class, 'cashMyVouchering']);
-            Route::get('my-clearing-vouchers', [VoucherController::class, 'cashMyClearingVouchers']);
+            Route::get('get-clearing-vouchers', [VoucherController::class, 'cashGetClearingVouchers']);
             Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('status', function (Request $request) {

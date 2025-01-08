@@ -97,6 +97,10 @@ class Voucher extends Model
     {
         return $query->with(['details.account']);
     }
+    public function scopeClearedVoucherCash($query)
+    {
+        return $query->whereNotNull('received_by')->whereNotNull('received_date');
+    }
 
     public function scopeWithPaymentRequestDetails($query)
     {
