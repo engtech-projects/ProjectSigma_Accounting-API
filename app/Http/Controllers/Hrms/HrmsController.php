@@ -28,51 +28,30 @@ class HrmsController extends Controller
     public function syncEmployee()
     {
         $hrmsEmployee = HrmsServices::syncEmployee(auth()->user()->token);
-        if ($hrmsEmployee) {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Employee Successfully Retrieved.',
-                'total_inserted' => $hrmsEmployee,
-            ], 200);
-        } else {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Employee sync failed',
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Employee Successfully Retrieved.',
+            'total_inserted' => $hrmsEmployee,
+        ], 200);
     }
 
     public function syncDepartment()
     {
         $department = HrmsServices::syncDepartment(auth()->user()->token);
-        if ($department) {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Department Successfully Retrieved.',
-                'total_inserted' => $department,
-            ], 200);
-        } else {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Department sync failed',
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Department Successfully Retrieved.',
+            'total_inserted' => $department,
+        ], 200);
     }
 
     public function syncUsers()
     {
         $users = HrmsServices::syncUsers(auth()->user()->token);
-        if ($users) {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Users Successfully Retrieved.',
-                'total_inserted' => $users,
-            ], 200);
-        } else {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Users sync failed',
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Users Successfully Retrieved.',
+            'total_inserted' => $users,
+        ], 200);
     }
 }

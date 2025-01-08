@@ -13,51 +13,42 @@ class HrmsServices
 {
     public static function syncEmployee($token)
     {
-        DB::beginTransaction();
-        try {
-            $response = Http::withToken($token)
-                ->acceptJson()
-                ->get(config('services.url.hrms_api').'/api/employee/list');
-            if (! $response->successful()) {
-                return false;
-            }
-            $employees = $response->json()['data'];
-            $totalEmployeeCount = Employee::count();
-            foreach ($employees as $employee) {
-                $employee_model = Employee::updateOrCreate(
-                    [
-                        'id' => $employee['id'],
-                        'source_id' => $employee['id'],
-                    ],
-                    [
-                        'name' => $employee['fullname_first'],
-                    ]
-                );
-                $employee_model->stakeholder()->updateOrCreate(
-                    [
-                        'stakeholdable_type' => Employee::class,
-                        'stakeholdable_id' => $employee['id'],
-                    ],
-                    [
-                        'name' => $employee['fullname_first'],
-                    ]
-                );
-            }
-            DB::commit();
-            $total_inserted = Employee::count() - $totalEmployeeCount;
-
-            return $total_inserted;
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return false;
+        $response = Http::withToken($token)
+            ->acceptJson()
+            ->get(config('services.url.hrms_api').'/api/employee/list');
+        if (! $response->successful()) {
+            return 0;
         }
+        $employees = $response->json()['data'];
+        $totalEmployeeCount = Employee::count();
+        foreach ($employees as $employee) {
+            $employee_model = Employee::updateOrCreate(
+                [
+                    'id' => $employee['id'],
+                    'source_id' => $employee['id'],
+                ],
+                [
+                    'name' => $employee['fullname_first'],
+                ]
+            );
+            $employee_model->stakeholder()->updateOrCreate(
+                [
+                    'stakeholdable_type' => Employee::class,
+                    'stakeholdable_id' => $employee['id'],
+                ],
+                [
+                    'name' => $employee['fullname_first'],
+                ]
+            );
+        }
+        DB::commit();
+        $total_inserted = Employee::count() - $totalEmployeeCount;
+
+        return $total_inserted;
     }
 
     public static function syncProject($token)
     {
-        DB::beginTransaction();
-        try {
             $response = Http::withToken($token)
                 ->acceptJson()
                 ->get(config('services.url.project_api').'/api/projects');
@@ -88,15 +79,8 @@ class HrmsServices
                     ]
                 );
             }
-            DB::commit();
             $total_inserted = Project::count() - $totalProjectCount;
-
             return $total_inserted;
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return false;
-        }
     }
 
     public static function syncUsers($token)

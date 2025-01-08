@@ -12,6 +12,7 @@ use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
+use App\Http\Controllers\APiSyncController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\Hrms\HrmsController;
 use App\Http\Controllers\Inventory\InventoryController;
@@ -126,20 +127,19 @@ Route::middleware('auth:api')->group(function () {
 
     //SYNCHRONIZATION ROUTES
     Route::prefix('sync')->group(function () {
-        Route::post('/all', [SyncController::class, 'syncAll']);
         Route::prefix('hrms')->group(function () {
-            Route::post('/all', [HrmsController::class, 'syncAll']);
-            Route::post('/employee', [HrmsController::class, 'syncEmployee']);
-            Route::post('/department', [HrmsController::class, 'syncDepartment']);
-            Route::post('/users', [HrmsController::class, 'syncUsers']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/employee', [APiSyncController::class, 'syncEmployees']);
+            Route::post('/department', [APiSyncController::class, 'syncDepartments']);
+            Route::post('/users', [APiSyncController::class, 'syncUsers']);
         });
         Route::prefix('project')->group(function () {
-            Route::post('/all', [ProjectController::class, 'syncAll']);
-            Route::post('/project', [ProjectController::class, 'syncProject']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/project', [APiSyncController::class, 'syncProjects']);
         });
         Route::prefix('inventory')->group(function () {
-            Route::post('/all', [InventoryController::class, 'syncAll']);
-            Route::post('/supplier', [InventoryController::class, 'syncSupplier']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/supplier', [APiSyncController::class, 'syncSuppliers']);
         });
     });
 
