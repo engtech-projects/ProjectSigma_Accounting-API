@@ -24,7 +24,8 @@ class AccountRequestStore extends FormRequest
     {
         return [
             'account_name' => 'required|string|max:255',
-            'account_type_id' => 'required|exists:account_types,id|exists:account_types,id',
+            'account_type_id' => 'required|exists:account_types,id',
+            'report_group_id' => 'required|exists:report_groups,id',
             'account_number' => 'required|numeric|digits_between:4,10',
             'account_description' => 'required|string|max:255',
             'bank_reconciliation' => 'required|string|max:255|in:'.implode(',', BankReconciliationType::values()),
