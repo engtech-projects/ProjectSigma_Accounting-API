@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\VoucherType;
+use App\Http\Requests\CashReceivedRequest;
 use App\Http\Requests\Voucher\CashVoucherRequestFilter;
 use App\Http\Requests\Voucher\CashVoucherRequestStore;
 use App\Http\Requests\Voucher\DisbursementVoucherRequestFilter;
@@ -15,9 +16,13 @@ use App\Models\Book;
 use App\Models\CashRequest;
 use App\Models\DisbursementRequest;
 use App\Models\JournalEntry;
+use App\Models\PaymentRequest;
+use App\Models\Period;
+use App\Models\PostingPeriod;
 use App\Models\Voucher;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
 use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
+use App\Services\JournalEntryService;
 use App\Services\VoucherService;
 use Carbon\Carbon;
 use DB;
@@ -92,12 +97,21 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function cashMyClearingVouchers()
+    public function cashGetClearingVouchers()
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Cash Voucher My Clearing/Settlement Successfully Retrieved.',
-            'data' => VoucherService::myClearingVouchersCash(),
+            'data' => VoucherService::getClearingVouchersCash(),
+        ], 200);
+    }
+
+    public function cashGetClearedVouchers()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Cash Voucher My Clearing/Settlement Successfully Retrieved.',
+            'data' => VoucherService::getClearedVouchersCash(),
         ], 200);
     }
 
@@ -115,8 +129,22 @@ class VoucherController extends Controller
     public function createCash(CashVoucherRequestStore $request)
     {
         DB::beginTransaction();
-        try {
+        // try {
             $validatedData = $request->validated();
+            $paymentRequestId = PaymentRequest::where('prf_no', $validatedData['reference_no'])->first()->id;
+            $journalEntry = JournalEntry::create(
+                [
+                    'journal_no' => JournalEntryService::generateJournalNumber(),
+                    'entry_date' => Carbon::now(),
+                    'journal_date' => Carbon::now(),
+                    'status' => JournalStatus::UNPOSTED->value,
+                    'posting_period_id' => PostingPeriod::currentPostingPeriod(),
+                    'period_id' => Period::current()->pluck('id')->first(),
+                    'reference_no' => $validatedData['reference_no'],
+                    'payment_request_id' => $paymentRequestId,
+                    'remarks' => $validatedData['particulars'],
+                ]
+            );
             $validatedData['type'] = VoucherType::CASH->value;
             $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
             $validatedData['date_encoded'] = Carbon::now();
@@ -131,10 +159,16 @@ class VoucherController extends Controller
                     'debit' => $detail['debit'] ?? null,
                     'credit' => $detail['credit'] ?? null,
                 ]);
+                $journalEntry->details()->create([
+                    'account_id' => $detail['account_id'],
+                    'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                    'description' => $detail['description'] ?? null,
+                    'debit' => $detail['credit'] ?? null,
+                    'credit' => $detail['debit'] ?? null,
+                ]);
             }
             $voucher->journalEntry()->update([
                 'entry_date' => $validatedData['voucher_date'],
-                'status' => JournalStatus::POSTED->value,
             ]);
             DB::commit();
             $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
@@ -144,14 +178,47 @@ class VoucherController extends Controller
                 'message' => 'Voucher created',
                 'data' => $voucher,
             ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
 
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Voucher creation failed',
+        //     ], 500);
+        // }
+    }
+
+    public function cashReceived(CashReceivedRequest $request)
+    {
+        DB::beginTransaction();
+        // try {
+            $validatedData = $request->validated();
+            $voucher = CashRequest::findOrFail($validatedData['voucher_id']);
+            $voucher->update([
+                'received_by' => $validatedData['received_by'],
+                'received_date' => $validatedData['received_date'],
+                'receipt_no' => $validatedData['receipt_no'],
+                'attach_file' => $validatedData['attach_file'] ?? null,
+            ]);
+
+            JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
+                'status' => JournalStatus::POSTED->value,
+            ]);
+
+            DB::commit();
             return new JsonResponse([
-                'success' => false,
-                'message' => 'Voucher creation failed',
-            ], 500);
-        }
+                'success' => true,
+                'message' => 'Voucher Updated',
+                'data' => $voucher,
+            ], 201);
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Voucher creation failed',
+        //     ], 500);
+        // }
     }
 
     public function createDisbursement(DisbursementVoucherRequestStore $request)
@@ -177,7 +244,6 @@ class VoucherController extends Controller
         $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
         $journalEntry->update([
             'entry_date' => $validatedData['voucher_date'],
-            'status' => JournalStatus::UNPOSTED->value,
         ]);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));

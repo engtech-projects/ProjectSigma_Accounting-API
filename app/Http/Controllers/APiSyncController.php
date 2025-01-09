@@ -16,24 +16,27 @@ class APiSyncController extends Controller
         DB::transaction(function () use ($authToken) {
             $hrmsService = new HrmsService($authToken);
             $inventoryService = new ProjectMonitoringService($authToken);
-            if (!$hrmsService->syncAll() || !$inventoryService->syncAll()){
-                throw new \Exception("HRMS sync failed.");
+            if (! $hrmsService->syncAll() || ! $inventoryService->syncAll()) {
+                throw new \Exception('HRMS sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced with api services.',
             'success' => true,
         ]);
     }
+
     public function syncEmployees(Request $request)
     {
         $authToken = $request->bearerToken();
         DB::transaction(function () use ($authToken) {
             $hrmsService = new HrmsService($authToken);
-            if (!$hrmsService->syncEmployees()){
-                throw new \Exception("HRMS sync failed.");
+            if (! $hrmsService->syncEmployees()) {
+                throw new \Exception('HRMS sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced all employees.',
             'success' => true,
@@ -45,24 +48,27 @@ class APiSyncController extends Controller
         $authToken = $request->bearerToken();
         DB::transaction(function () use ($authToken) {
             $hrmsService = new HrmsService($authToken);
-            if (!$hrmsService->syncDepartments()){
-                throw new \Exception("HRMS sync failed.");
+            if (! $hrmsService->syncDepartments()) {
+                throw new \Exception('HRMS sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced all departments.',
             'success' => true,
         ]);
     }
+
     public function syncUsers(Request $request)
     {
         $authToken = $request->bearerToken();
         DB::transaction(function () use ($authToken) {
             $hrmsService = new HrmsService($authToken);
-            if (!$hrmsService->syncUsers()){
-                throw new \Exception("HRMS sync failed.");
+            if (! $hrmsService->syncUsers()) {
+                throw new \Exception('HRMS sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced all Users.',
             'success' => true,
@@ -74,24 +80,27 @@ class APiSyncController extends Controller
         $authToken = $request->bearerToken();
         DB::transaction(function () use ($authToken) {
             $projectService = new ProjectMonitoringService($authToken);
-            if (!$projectService->syncProjects()){
-                throw new \Exception("Project monitoring sync failed.");
+            if (! $projectService->syncProjects()) {
+                throw new \Exception('Project monitoring sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced all projects.',
             'success' => true,
         ]);
     }
+
     public function syncSuppliers(Request $request)
     {
         $authToken = $request->bearerToken();
         DB::transaction(function () use ($authToken) {
             $inventoryService = new InventoryService($authToken);
-            if (!$inventoryService->syncSuppliers()){
-                throw new \Exception("Inventory sync failed.");
+            if (! $inventoryService->syncSuppliers()) {
+                throw new \Exception('Inventory sync failed.');
             }
         });
+
         return response()->json([
             'message' => 'Successfully synced all suppliers.',
             'success' => true,

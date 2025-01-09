@@ -167,6 +167,20 @@ class VoucherService
     {
         $query = Voucher::query();
         $voucherRequest = $query
+            ->isApproved()
+            ->whereCash()
+            ->withDetails()
+            ->withPaymentRequestDetails()
+            ->orderDesc()
+            ->paginate(config('services.pagination.limit'));
+
+        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+    }
+
+    public static function getClearedVouchersCash()
+    {
+        $query = Voucher::query();
+        $voucherRequest = $query
             ->clearedVoucherCash()
             ->whereCash()
             ->withDetails()

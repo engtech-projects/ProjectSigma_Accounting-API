@@ -5,7 +5,6 @@ namespace App\Services\ApiServices;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
 use App\Models\User;
-use DB;
 use Http;
 
 class HrmsService
@@ -19,12 +18,14 @@ class HrmsService
         $this->authToken = $authToken;
         $this->apiUrl = config('services.url.hrms_api');
     }
+
     public function syncAll()
     {
         $syncData = [
             'employees' => $this->syncEmployees(),
-            'departments' => $this->syncDepartments()
+            'departments' => $this->syncDepartments(),
         ];
+
         return $syncData;
     }
 
@@ -58,8 +59,10 @@ class HrmsService
                 ]
             );
         }
+
         return true;
     }
+
     public function syncDepartments()
     {
         $departments = $this->getAllDepartment();
@@ -70,8 +73,7 @@ class HrmsService
                 'name' => $department['department_name'],
             ];
         });
-        foreach ($departments as $department)
-        {
+        foreach ($departments as $department) {
             $department_model = Department::updateOrCreate(
                 [
                     'id' => $department['id'],
@@ -91,8 +93,10 @@ class HrmsService
                 ]
             );
         }
+
         return true;
     }
+
     public function syncUsers()
     {
         $users = $this->getAllUsers();
@@ -107,8 +111,7 @@ class HrmsService
                 'remember_token' => null,
             ];
         });
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             $user_model = User::updateOrCreate(
                 [
                     'id' => $user['id'],
@@ -132,8 +135,10 @@ class HrmsService
                 ]
             );
         }
+
         return true;
     }
+
     public function getAllEmployees()
     {
         $response = Http::withToken($this->authToken)
@@ -145,6 +150,7 @@ class HrmsService
 
         return $response->json()['data'];
     }
+
     public function getAllUsers()
     {
         $response = Http::withToken($this->authToken)
@@ -156,6 +162,7 @@ class HrmsService
 
         return $response->json()['data'];
     }
+
     public function getAllDepartment()
     {
         $response = Http::withToken($this->authToken)

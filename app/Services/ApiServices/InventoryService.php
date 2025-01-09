@@ -22,6 +22,7 @@ class InventoryService
         $syncData = [
             'suppliers' => $this->syncSuppliers(),
         ];
+
         return $syncData;
     }
 
@@ -32,7 +33,7 @@ class InventoryService
             return [
                 'id' => $supplier['id'],
                 'source_id' => $supplier['id'],
-                'name' => $supplier['supplier_code'] .'-'. $supplier['company_name'],
+                'name' => $supplier['supplier_code'].'-'.$supplier['company_name'],
             ];
         });
         Supplier::upsert(
@@ -57,6 +58,7 @@ class InventoryService
         if (! $response->successful()) {
             return false;
         }
+
         return $response->json();
     }
 }

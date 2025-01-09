@@ -14,18 +14,14 @@ use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
 use App\Http\Controllers\APiSyncController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\Hrms\HrmsController;
-use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
-use App\Http\Controllers\Projects\ProjectController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
-use App\Http\Controllers\SyncController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
 use Illuminate\Http\Request;
@@ -113,11 +109,13 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('cash')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.cash');
             Route::post('create-voucher', [VoucherController::class, 'createCash']);
+            Route::post('received', [VoucherController::class, 'cashReceived']);
             Route::get('all-list', [VoucherController::class, 'cashAllRequest']);
             Route::get('my-requests', [VoucherController::class, 'cashMyRequest']);
             Route::get('my-approvals', [VoucherController::class, 'cashMyApprovals']);
             Route::get('my-vouchering', [VoucherController::class, 'cashMyVouchering']);
             Route::get('get-clearing-vouchers', [VoucherController::class, 'cashGetClearingVouchers']);
+            Route::get('get-cleared-vouchers', [VoucherController::class, 'cashGetClearedVouchers']);
             Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('status', function (Request $request) {

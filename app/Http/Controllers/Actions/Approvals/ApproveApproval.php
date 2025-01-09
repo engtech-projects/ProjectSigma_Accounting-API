@@ -30,7 +30,6 @@ class ApproveApproval extends Controller
 
         $nextApproval = $model->getNextPendingApproval();
         if ($nextApproval) {
-            $nextApprovalUser = $nextApproval['user_id'];
             switch ($modelType) {
                 case ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name:
                     $model->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $model));
@@ -56,9 +55,6 @@ class ApproveApproval extends Controller
                     $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
-                    $model->journalEntry()->update([
-                        'status' => JournalStatus::POSTED->value,
-                    ]);
                     $model->notify(new RequestCashVoucherForApprovedNotification(auth()->user()->token, $model));
                     break;
                 default:

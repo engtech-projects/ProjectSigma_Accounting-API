@@ -28,6 +28,7 @@ class HrmsController extends Controller
     public function syncEmployee()
     {
         $hrmsEmployee = HrmsServices::syncEmployee(auth()->user()->token);
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Employee Successfully Retrieved.',
@@ -38,6 +39,7 @@ class HrmsController extends Controller
     public function syncDepartment()
     {
         $department = HrmsServices::syncDepartment(auth()->user()->token);
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Department Successfully Retrieved.',
@@ -48,6 +50,7 @@ class HrmsController extends Controller
     public function syncUsers()
     {
         $users = HrmsServices::syncUsers(auth()->user()->token);
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Users Successfully Retrieved.',

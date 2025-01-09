@@ -35,6 +35,10 @@ class Voucher extends Model
         'reference_no',
         'approvals',
         'created_by',
+        'received_by',
+        'received_date',
+        'receipt_no',
+        'attach_file'
     ];
 
     protected $casts = [
@@ -97,9 +101,15 @@ class Voucher extends Model
     {
         return $query->with(['details.account']);
     }
+
     public function scopeClearedVoucherCash($query)
     {
         return $query->whereNotNull('received_by')->whereNotNull('received_date');
+    }
+
+    public function scopeUnclearedVoucherCash($query)
+    {
+        return $query->whereNull('received_by')->whereNull('received_date');
     }
 
     public function scopeWithPaymentRequestDetails($query)
