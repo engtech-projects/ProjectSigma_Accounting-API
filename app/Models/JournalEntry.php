@@ -27,6 +27,7 @@ class JournalEntry extends Model
         'period_id',
         'entry_date',
         'reference_no',
+        'created_by',
     ];
 
     protected $casts = [

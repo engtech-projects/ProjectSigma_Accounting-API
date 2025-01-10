@@ -134,6 +134,7 @@ class VoucherService
             ->whereCash()
             ->orderDesc()
             ->withPaymentRequestDetails()
+            ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
@@ -146,6 +147,7 @@ class VoucherService
             ->whereCash()
             ->orderDesc()
             ->withPaymentRequestDetails()
+            ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
         return VoucherResource::collection($voucherRequest)->response()->getData(true);
@@ -156,6 +158,7 @@ class VoucherService
         $voucherRequest = Voucher::myRequests()
             ->withDetails()
             ->withPaymentRequestDetails()
+            ->withStakeholder()
             ->whereCash()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
@@ -171,6 +174,7 @@ class VoucherService
             ->whereCash()
             ->withDetails()
             ->withPaymentRequestDetails()
+            ->withStakeholder()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
@@ -185,6 +189,7 @@ class VoucherService
             ->whereCash()
             ->withDetails()
             ->withPaymentRequestDetails()
+            ->withStakeholder()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 

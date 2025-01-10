@@ -11,7 +11,10 @@ trait ModelHelpers
      * MODEL RELATIONSHIPS
      * ==================================================
      */
-
+    public function scopeWithStakeholder($query)
+    {
+        return $query->with(['stakeholder']);
+    }
     /**
      * ==================================================
      * MODEL ATTRIBUTES

@@ -74,11 +74,6 @@ class PaymentRequest extends Model
         });
     }
 
-    public function scopeWithStakeholder($query)
-    {
-        return $query->with(['stakeholder']);
-    }
-
     public function scopeWithDetails($query)
     {
         return $query->with(['details.stakeholder']);

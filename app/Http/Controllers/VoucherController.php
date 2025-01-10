@@ -143,12 +143,17 @@ class VoucherController extends Controller
                     'reference_no' => $validatedData['reference_no'],
                     'payment_request_id' => $paymentRequestId,
                     'remarks' => $validatedData['particulars'],
+                    'created_by' => auth()->user()->id,
                 ]
             );
             $validatedData['type'] = VoucherType::CASH->value;
             $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
             $validatedData['date_encoded'] = Carbon::now();
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
+
+            // ID of the newly created cash journal entry
+            $validatedData['journal_entry_id'] = $journalEntry->id;
+
             $validatedData['created_by'] = auth()->user()->id;
             $voucher = CashRequest::create($validatedData);
             foreach ($validatedData['details'] as $detail) {
@@ -163,8 +168,8 @@ class VoucherController extends Controller
                     'account_id' => $detail['account_id'],
                     'stakeholder_id' => $detail['stakeholder_id'] ?? null,
                     'description' => $detail['description'] ?? null,
-                    'debit' => $detail['credit'] ?? null,
-                    'credit' => $detail['debit'] ?? null,
+                    'debit' => $detail['debit'] ?? null,
+                    'credit' => $detail['credit'] ?? null,
                 ]);
             }
             $voucher->journalEntry()->update([

@@ -19,7 +19,7 @@ class JournalEntryCollection extends JsonResource
             ...parent::toArray($request),
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'for cash' : null),
+            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : null),
             'status' => ucfirst($this->status),
             'details' => $this->details->map(function ($detail) {
                 return [
