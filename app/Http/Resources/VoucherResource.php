@@ -23,6 +23,7 @@ class VoucherResource extends JsonResource
             'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
             'date_filed' => $this->created_at_human,
             'next_approval' => $this->getNextPendingApproval(),
+            'journal_entry' => JournalEntryResource::make($this->whenLoaded('journalEntry')),
         ];
     }
 }

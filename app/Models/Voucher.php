@@ -114,6 +114,12 @@ class Voucher extends Model
 
     public function scopeWithPaymentRequestDetails($query)
     {
-        return $query->with(['journalEntry.paymentRequest.details.stakeholder', 'journalEntry.paymentRequest.stakeholder']);
+        return $query->with([
+            'journalEntry.paymentRequest.details.stakeholder',
+            'journalEntry.paymentRequest.stakeholder',
+            'journalEntry.details.account.accountType',
+            'journalEntry.details.account.reportGroup',
+            'journalEntry.details.stakeholder',
+        ]);
     }
 }

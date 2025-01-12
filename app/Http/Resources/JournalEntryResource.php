@@ -18,6 +18,8 @@ class JournalEntryResource extends JsonResource
             ...parent::toArray($request),
             'voucher' => VoucherResource::make($this->whenLoaded('voucher')),
             'details' => JournalDetailsResource::collection($this->whenLoaded('details')),
+            'date_filed' => $this->created_at_human,
+            'created_by_user' => $this->created_by_user_name,
         ];
     }
 }
