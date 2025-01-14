@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\CashVoucherResource;
+use App\Http\Resources\DisbursementVoucherResource;
 use App\Http\Resources\VoucherResource;
 use App\Models\Book;
 use App\Models\PaymentRequest;
@@ -76,7 +78,7 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function myApprovalsDisbursement()
@@ -88,7 +90,7 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function myRequestDisbursement()
@@ -100,7 +102,7 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function myVoucheringDisbursement()
@@ -137,7 +139,7 @@ class VoucherService
             ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function myApprovalsCash()
@@ -150,7 +152,7 @@ class VoucherService
             ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function myRequestCash()
@@ -163,7 +165,7 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function getClearingVouchersCash()
@@ -178,7 +180,7 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 
     public static function getClearedVouchersCash()
@@ -193,6 +195,6 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return VoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
     }
 }
