@@ -10,7 +10,7 @@ use App\Http\Requests\PaymentRequest\PaymentRequestStore;
 use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\PaymentRequestResource;
 use App\Http\Resources\PaymentRequestResource;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
@@ -116,7 +116,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
-            'data' => new PaymentRequestCollection($paymentRequest),
+            'data' => new PaymentRequestResource($paymentRequest),
         ], 200);
     }
 
@@ -137,7 +137,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Updated.',
-            'data' => new PaymentRequestCollection($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
+            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
         ], 200);
     }
 

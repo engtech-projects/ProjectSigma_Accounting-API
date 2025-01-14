@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\PaymentRequestResource;
 use App\Models\PaymentRequest;
 use Carbon\Carbon;
 
@@ -24,7 +24,7 @@ class PaymentServices
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestResource::collection($paymentRequest)->response()->getData(true);
     }
 
     public static function myApprovals()
@@ -37,7 +37,7 @@ class PaymentServices
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestResource::collection($paymentRequest)->response()->getData(true);
     }
 
     public static function myRequests()
@@ -50,7 +50,7 @@ class PaymentServices
             ->withJournalEntryVouchers()
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestResource::collection($paymentRequest)->response()->getData(true);
     }
 
     public static function journalPaymentRequestEntries()
@@ -68,7 +68,7 @@ class PaymentServices
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestResource::collection($paymentRequest)->response()->getData(true);
     }
 
     public static function generatePrfNo($prefix)
