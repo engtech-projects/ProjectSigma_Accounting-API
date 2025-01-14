@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\AccountingCollections\PaymentRequestResource;
+use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\VoucherResource;
 use App\Models\Book;
 use App\Models\PaymentRequest;
@@ -113,7 +113,7 @@ class VoucherService
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestResource::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
     public static function getWithPaginationCash(array $validatedData)

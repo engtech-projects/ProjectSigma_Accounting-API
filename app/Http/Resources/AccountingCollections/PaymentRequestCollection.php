@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 // use App\Http\Resources\StakeholderResource;
 // use App\Http\Resources\FormResource;
 
-class PaymentRequestResource extends JsonResource
+class PaymentRequestCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -37,9 +37,9 @@ class PaymentRequestResource extends JsonResource
             'next_approval' => $this->getNextPendingApproval(),
             'details' => $details,
             'step_approval' => [
-                'payment_request' => new ApprovalAttributeResource(['approvals' => $this->approvals ?? []]),
-                'disbursement_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->first()->voucher()->first()->approvals ?? []]),
-                'cash_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->last()->voucher()->first()->approvals ?? []]),
+                'payment_request' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+                'disbursement_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->first()->voucher()->first()->approvals]),
+                'cash_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->last()->voucher()->first()->approvals]),
             ]
         ]);
     }
