@@ -27,9 +27,18 @@ class DisbursementVoucherResource extends JsonResource
             'journal_entry' => JournalEntryResource::make($this->whenLoaded('journalEntry')),
             'payment_request' => PaymentRequestCollection::make($this->journalEntry->paymentRequest),
             'step_approval' => [
-                'payment_request' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->paymentRequest()->first()->approvals ?? []]),
-                'disbursement_voucher' => new ApprovalAttributeResource(['approvals' => $this->approvals ?? []]),
-                'cash_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->voucher()->first()->approvals ?? []]),
+                'payment_request' => [
+                    'title' => 'Payment Request Approval',
+                    'details' =>new ApprovalAttributeResource(['approvals' => $this->journalEntry->paymentRequest()->first()->approvals ?? []]),
+                ],
+                'disbursement_voucher' => [
+                    'title' => 'Disbursement Voucher Approval',
+                    'details' => new ApprovalAttributeResource(['approvals' => $this->approvals ?? []]),
+                ],
+                'cash_voucher' => [
+                    'title' => 'Cash Voucher Approval',
+                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->voucher()->first()->approvals ?? []]),
+                ],
             ]
         ];
     }
