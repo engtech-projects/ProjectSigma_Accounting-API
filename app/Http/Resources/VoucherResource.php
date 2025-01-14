@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -24,6 +25,7 @@ class VoucherResource extends JsonResource
             'date_filed' => $this->created_at_human,
             'next_approval' => $this->getNextPendingApproval(),
             'journal_entry' => JournalEntryResource::make($this->whenLoaded('journalEntry')),
+            'payment_request' => PaymentRequestCollection::make($this->journalEntry->paymentRequest),
         ];
     }
 }

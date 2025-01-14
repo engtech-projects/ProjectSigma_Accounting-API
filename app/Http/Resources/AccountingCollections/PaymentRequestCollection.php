@@ -36,6 +36,11 @@ class PaymentRequestCollection extends JsonResource
             'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
             'next_approval' => $this->getNextPendingApproval(),
             'details' => $details,
+            'step_approval' => [
+                'payment_request' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+                'disbursement_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->first()->voucher()->first()->approvals]),
+                'cash_voucher' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->last()->voucher()->first()->approvals]),
+            ]
         ]);
     }
 }

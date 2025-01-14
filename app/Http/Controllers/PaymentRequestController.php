@@ -111,7 +111,6 @@ class PaymentRequestController extends Controller
     {
         $paymentRequest = PaymentRequest::withDetails()
             ->withStakeholder()
-            ->withPaymentRequestDetails()
             ->find($id);
 
         return new JsonResponse([
@@ -138,7 +137,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request Successfully Updated.',
-            'data' => new PaymentRequestResource($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
+            'data' => new PaymentRequestCollection($paymentRequest->load(['stakeholder', 'details.stakeholder'])),
         ], 200);
     }
 

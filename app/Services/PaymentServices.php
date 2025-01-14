@@ -20,6 +20,7 @@ class PaymentServices
             ->payment()
             ->withPaymentRequestDetails()
             ->orderByDesc()
+            ->withJournalEntryVouchers()
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
@@ -32,6 +33,7 @@ class PaymentServices
             ->withStakeholder()
             ->payment()
             ->orderByDesc()
+            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
@@ -45,6 +47,7 @@ class PaymentServices
             ->payment()
             ->orderByDesc()
             ->withPaymentRequestDetails()
+            ->withJournalEntryVouchers()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -60,6 +63,7 @@ class PaymentServices
                 })
                     ->orWhereDoesntHave('journalEntries');
             })
+            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));

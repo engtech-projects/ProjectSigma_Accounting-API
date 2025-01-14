@@ -99,7 +99,7 @@ class PaymentRequest extends Model
         return $this->HasOne(Voucher::class, 'prf_no', 'reference_no');
     }
 
-    public function journalEntries(): HasMany
+    public function journalEntry(): HasMany
     {
         return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
@@ -112,5 +112,14 @@ class PaymentRequest extends Model
     public function scopePayment($query)
     {
         return $query->where('type', PaymentRequestType::PRF->value);
+    }
+
+    public function scopeWithJournalEntry($query)
+    {
+        return $query->with('journalEntry');
+    }
+    public function scopeWithJournalEntryVouchers($query)
+    {
+        return $query->with('journalEntry.voucher');
     }
 }
