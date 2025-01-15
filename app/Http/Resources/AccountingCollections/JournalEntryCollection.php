@@ -21,6 +21,8 @@ class JournalEntryCollection extends JsonResource
             'created_by_user' => $this->created_by_user_name,
             'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : null),
             'status' => ucfirst($this->status),
+            'balance' => $this->details->sum('debit') - $this->details->sum('credit'),
+            'net_amount' => $this->details->sum('debit'),
             'details' => $this->details->map(function ($detail) {
                 return [
                     'account_id' => $detail->account_id,

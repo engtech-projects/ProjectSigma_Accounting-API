@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RequestStatuses;
+use App\Http\Traits\HasApproval;
 use App\Http\Traits\HasTransitions;
 use App\Http\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JournalEntry extends Model
 {
-    use HasFactory, HasTransitions, ModelHelpers, SoftDeletes;
+    use HasFactory, HasTransitions, ModelHelpers, SoftDeletes, HasApproval;
 
     protected $table = 'journal_entry';
 
