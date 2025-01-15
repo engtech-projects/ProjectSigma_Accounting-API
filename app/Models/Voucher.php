@@ -120,6 +120,7 @@ class Voucher extends Model
             'journalEntry.details.account.accountType',
             'journalEntry.details.account.reportGroup',
             'journalEntry.details.stakeholder',
+            'journalEntry.voucher',
         ]);
     }
 }
