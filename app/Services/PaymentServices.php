@@ -58,10 +58,10 @@ class PaymentServices
         $paymentRequest = PaymentRequest::isApproved()
             ->withStakeholder()
             ->where(function ($query) {
-                $query->whereHas('journalEntries', function ($query) {
+                $query->whereHas('journalEntry', function ($query) {
                     $query->where('status', JournalStatus::DRAFTED->value);
                 })
-                    ->orWhereDoesntHave('journalEntries');
+                    ->orWhereDoesntHave('journalEntry');
             })
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
