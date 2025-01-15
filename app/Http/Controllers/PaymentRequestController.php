@@ -24,18 +24,11 @@ class PaymentRequestController extends Controller
 {
     public function index(PaymentRequestFilter $request)
     {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Payment Requests Successfully Retrived.',
-                'data' => PaymentServices::getWithPagination($request->validated()),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Payment Requests Failed to Retrieve.',
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment Requests Successfully Retrived.',
+            'data' => PaymentServices::getWithPagination($request->validated()),
+        ], 200);
     }
 
     public function myRequest()

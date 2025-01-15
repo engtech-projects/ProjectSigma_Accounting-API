@@ -18,9 +18,9 @@ class PaymentServices
         $paymentRequest = $query->latest('id')
             ->withStakeholder()
             ->payment()
-            ->withPaymentRequestDetails()
             ->orderByDesc()
             ->withJournalEntryVouchers()
+            ->withPaymentRequestDetails()
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
@@ -32,9 +32,9 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
             ->payment()
-            ->orderByDesc()
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
