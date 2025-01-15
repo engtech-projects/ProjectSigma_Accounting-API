@@ -29,7 +29,7 @@ class DisbursementVoucherResource extends JsonResource
             'step_approval' => [
                 'payment_request' => [
                     'title' => 'Payment Request Approval',
-                    'details' =>new ApprovalAttributeResource(['approvals' => $this->journalEntry->paymentRequest()->first()->approvals ?? []]),
+                    'details' =>new ApprovalAttributeResource(['approvals' => $this->journalEntry?->paymentRequest()?->first()->approvals ?? []]),
                 ],
                 'disbursement_voucher' => [
                     'title' => 'Disbursement Voucher Approval',
@@ -37,7 +37,7 @@ class DisbursementVoucherResource extends JsonResource
                 ],
                 'cash_voucher' => [
                     'title' => 'Cash Voucher Approval',
-                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->voucher()->first()->approvals ?? []]),
+                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry?->voucher()?->first()->approvals ?? []]),
                 ],
             ]
         ];

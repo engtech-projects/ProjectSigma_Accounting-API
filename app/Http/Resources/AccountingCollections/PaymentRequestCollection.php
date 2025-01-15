@@ -33,21 +33,21 @@ class PaymentRequestCollection extends JsonResource
         return array_merge(parent::toArray($request), [
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+            'approvals' => new ApprovalAttributeResource(['approvals' => $this?->approvals]),
             'next_approval' => $this->getNextPendingApproval(),
             'details' => $details,
             'step_approval' => [
                 'payment_request' => [
                     'title' => 'Payment Request Approval',
-                    'details' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+                    'details' => new ApprovalAttributeResource(['approvals' => $this?->approvals]),
                 ],
                 'disbursement_voucher' => [
                     'title' => 'Disbursement Voucher Approval',
-                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->first()->voucher()->first()->approvals ?? []]),
+                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->first()?->voucher()->first()->approvals ?? []]),
                 ],
                 'cash_voucher' => [
                     'title' => 'Cash Voucher Approval',
-                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->last()->voucher()->first()->approvals ?? []]),
+                    'details' => new ApprovalAttributeResource(['approvals' => $this->journalEntry->count() > 1 ? $this->journalEntry->last()?->voucher()->first()->approvals : []]),
                 ],
             ]
         ]);
