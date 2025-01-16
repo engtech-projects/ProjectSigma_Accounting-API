@@ -15,11 +15,9 @@ class PaymentServices
         if (isset($validatedData['status'])) {
             $query->formStatus($validatedData['status']);
         }
-        $paymentRequest = $query->latest('id')
-            ->withStakeholder()
+        $paymentRequest = $query->withStakeholder()
             ->payment()
             ->orderByDesc()
-            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
@@ -32,7 +30,6 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
             ->payment()
-            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
@@ -47,7 +44,6 @@ class PaymentServices
             ->payment()
             ->orderByDesc()
             ->withPaymentRequestDetails()
-            ->withJournalEntryVouchers()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -63,7 +59,6 @@ class PaymentServices
                 })
                     ->orWhereDoesntHave('journalEntry');
             })
-            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
