@@ -12,24 +12,23 @@ use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
+use App\Http\Controllers\APiSyncController;
 use App\Http\Controllers\BookController;
-use App\Http\Controllers\Hrms\HrmsController;
-use App\Http\Controllers\Inventory\InventoryController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
-use App\Http\Controllers\Projects\ProjectController;
+use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
-use App\Http\Controllers\SyncController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
+    //RAW RESPONSE ROUTES BASED ON ENUMS
     Route::get('vat-value', function (Request $request) {
         return response()->json(['vat' => config('services.vat.value')], 200);
     });
@@ -45,7 +44,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('form-types', function (Request $request) {
         return response()->json(['forms' => FormType::cases()], 200);
     });
+
+    //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
+
+    //RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
     Route::resource('account-type', AccountTypeController::class);
     Route::resource('account-group', AccountGroupController::class);
@@ -56,6 +59,9 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);
     Route::resource('term', TermController::class);
+    Route::resource('report-group', ReportGroupController::class);
+
+    //JOURNAL ENTRY ROUTES
     Route::prefix('journal-entry')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
         Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
@@ -71,12 +77,16 @@ Route::middleware('auth:api')->group(function () {
             return response()->json(['status' => JournalStatus::cases()], 200);
         });
     });
+
+    //NON-PURCHASE ORDER ROUTES
     Route::prefix('npo')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals', [PaymentRequestController::class, 'myApprovals']);
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
     });
+
+    //PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
@@ -85,11 +95,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('generate-payroll-no', [PayrollRequestController::class, 'generatePayrollNo']);
     });
 
-    //search routes
-    Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
-    Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
-    Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);
-
+    //VOUCHERS ROUTES
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');
@@ -103,44 +109,58 @@ Route::middleware('auth:api')->group(function () {
         Route::prefix('cash')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.cash');
             Route::post('create-voucher', [VoucherController::class, 'createCash']);
+            Route::post('received', [VoucherController::class, 'cashReceived']);
             Route::get('all-list', [VoucherController::class, 'cashAllRequest']);
             Route::get('my-requests', [VoucherController::class, 'cashMyRequest']);
             Route::get('my-approvals', [VoucherController::class, 'cashMyApprovals']);
             Route::get('my-vouchering', [VoucherController::class, 'cashMyVouchering']);
+            Route::get('get-clearing-vouchers', [VoucherController::class, 'cashGetClearingVouchers']);
+            Route::get('get-cleared-vouchers', [VoucherController::class, 'cashGetClearedVouchers']);
             Route::get('generate-number', [VoucherController::class, 'cashGenerateVoucherNumber']);
         });
         Route::get('status', function (Request $request) {
             return response()->json(['status' => RequestStatuses::cases()], 200);
         });
     });
+
+    //SYNCHRONIZATION ROUTES
     Route::prefix('sync')->group(function () {
-        Route::post('/all', [SyncController::class, 'syncAll']);
         Route::prefix('hrms')->group(function () {
-            Route::post('/all', [HrmsController::class, 'syncAll']);
-            Route::post('/employee', [HrmsController::class, 'syncEmployee']);
-            Route::post('/department', [HrmsController::class, 'syncDepartment']);
-            Route::post('/users', [HrmsController::class, 'syncUsers']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/employee', [APiSyncController::class, 'syncEmployees']);
+            Route::post('/department', [APiSyncController::class, 'syncDepartments']);
+            Route::post('/users', [APiSyncController::class, 'syncUsers']);
         });
         Route::prefix('project')->group(function () {
-            Route::post('/all', [ProjectController::class, 'syncAll']);
-            Route::post('/project', [ProjectController::class, 'syncProject']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/project', [APiSyncController::class, 'syncProjects']);
         });
         Route::prefix('inventory')->group(function () {
-            Route::post('/all', [InventoryController::class, 'syncAll']);
-            Route::post('/supplier', [InventoryController::class, 'syncSupplier']);
+            Route::post('/all', [APiSyncController::class, 'syncAll']);
+            Route::post('/supplier', [APiSyncController::class, 'syncSuppliers']);
         });
     });
+
+    //APPROVALS ROUTES
     Route::prefix('approvals')->group(function () {
         Route::post('approve/{modelName}/{model}', ApproveApproval::class);
         Route::post('disapprove/{modelName}/{model}', DisapproveApproval::class);
         Route::post('void/{modelName}/{model}', VoidApproval::class);
     });
 });
+
 // SECRET API KEY ROUTES
 Route::middleware('secret_api')->group(function () {
     // SIGMA SERVICES ROUTES
     Route::prefix('sigma')->group(function () {});
 });
+
+//SEARCH ROUTES
+Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
+Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
+Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);
+Route::get('search-report-groups', [ReportGroupController::class, 'searchReportGroups']);
+
 // SYSTEM SETUP ROUTES
 if (config()->get('app.artisan') == 'true') {
     Route::prefix('artisan')->group(function () {

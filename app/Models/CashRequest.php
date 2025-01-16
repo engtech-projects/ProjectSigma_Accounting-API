@@ -35,6 +35,11 @@ class CashRequest extends Model
         'request_status',
         'reference_no',
         'approvals',
+        'created_by',
+        'received_by',
+        'received_date',
+        'receipt_no',
+        'attach_file',
     ];
 
     protected $casts = [

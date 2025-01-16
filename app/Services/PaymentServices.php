@@ -15,11 +15,11 @@ class PaymentServices
         if (isset($validatedData['status'])) {
             $query->formStatus($validatedData['status']);
         }
-        $paymentRequest = $query->latest('id')
-            ->withStakeholder()
+        $paymentRequest = $query->withStakeholder()
             ->payment()
-            ->withPaymentRequestDetails()
             ->orderByDesc()
+            ->withJournalEntryVouchers()
+            ->withPaymentRequestDetails()
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
@@ -31,7 +31,9 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myApprovals()
             ->withStakeholder()
             ->payment()
+            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -42,7 +44,9 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myRequests()
             ->withStakeholder()
             ->payment()
+            ->orderByDesc()
             ->withPaymentRequestDetails()
+            ->withJournalEntryVouchers()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -53,12 +57,14 @@ class PaymentServices
         $paymentRequest = PaymentRequest::isApproved()
             ->withStakeholder()
             ->where(function ($query) {
-                $query->whereHas('journalEntries', function ($query) {
+                $query->whereHas('journalEntry', function ($query) {
                     $query->where('status', JournalStatus::DRAFTED->value);
                 })
-                    ->orWhereDoesntHave('journalEntries');
+                    ->orWhereDoesntHave('journalEntry');
             })
+            ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
+            ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);

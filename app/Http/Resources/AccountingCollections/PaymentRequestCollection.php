@@ -19,21 +19,37 @@ class PaymentRequestCollection extends JsonResource
     public function toArray(Request $request): array
     {
         $details = $this->details->map(function ($detail) {
-            $accountDetail = explode("::", $detail->particulars);
+            $accountDetail = explode('::', $detail->particulars);
+
             return array_merge($detail->toArray(), [
                 'account_notation_type' => $accountDetail[0] ?? null,
                 'account_id' => $accountDetail[2] ?? null,
                 'stakeholder_name' => $accountDetail[3] ?? null,
                 'stakeholder_id' => $accountDetail[4] ?? null,
-                'particulars' => $accountDetail[1] ?? null
+                'particulars' => $accountDetail[1] ?? null,
             ]);
         });
+
         return array_merge(parent::toArray($request), [
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
+            'approvals' => new ApprovalAttributeResource(['approvals' => $this?->approvals]),
             'next_approval' => $this->getNextPendingApproval(),
-            'details' => $details
+            'details' => $details,
+            'step_approval' => [
+                'payment_request' => [
+                    'title' => 'Payment Request Approval',
+                    'details' => $this?->approvals,
+                ],
+                'disbursement_voucher' => [
+                    'title' => 'Disbursement Voucher Approval',
+                    'details' => $this->journalEntry->first()?->voucher()->first()->approvals ?? [],
+                ],
+                'cash_voucher' => [
+                    'title' => 'Cash Voucher Approval',
+                    'details' => $this->journalEntry->count() > 1 ? $this->journalEntry->last()?->voucher()->first()->approvals : [],
+                ],
+            ]
         ]);
     }
 }

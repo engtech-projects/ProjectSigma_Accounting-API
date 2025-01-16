@@ -17,7 +17,7 @@ class AccountGroup extends Model
         'name',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     /**
      * The tags that belong to the task.

@@ -22,7 +22,7 @@ class Period extends Model
         'status',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function postingPeriod(): BelongsTo
     {

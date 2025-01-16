@@ -19,8 +19,10 @@ class JournalEntryCollection extends JsonResource
             ...parent::toArray($request),
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'for cash' : null),
+            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : null),
             'status' => ucfirst($this->status),
+            'balance' => $this->details->sum('debit') - $this->details->sum('credit'),
+            'net_amount' => $this->details->sum('debit'),
             'details' => $this->details->map(function ($detail) {
                 return [
                     'account_id' => $detail->account_id,
@@ -29,8 +31,8 @@ class JournalEntryCollection extends JsonResource
                     'remarks' => $detail->description,
                     'debit' => $detail->debit,
                     'stakeholder' => $detail->stakeholder,
-                    'journal_type' => $this->voucher->isEmpty() ? 'no voucher yet' : $this->voucher->first()->book->code,
-                    'reference_no' => $this->voucher->isEmpty() ? 'no voucher yet' : $this->voucher->first()->voucher_no,
+                    'journal_type' => $this->voucher->isEmpty() ? '-' : $this->voucher->first()->book->code,
+                    'reference_no' => $this->voucher->isEmpty() ? '-' : $this->voucher->first()->voucher_no,
                     'reference_series' => $this->voucher->isEmpty() ? null : substr($this->voucher->first()->voucher_no, strpos($this->voucher->first()->voucher_no, '-') + 1),
                     'voucher_date' => $this->voucher->isEmpty() ? null : $this->voucher->first()->date,
                     'po_number' => '',

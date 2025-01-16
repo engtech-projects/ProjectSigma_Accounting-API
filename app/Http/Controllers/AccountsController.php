@@ -180,7 +180,7 @@ class AccountsController extends Controller
 
     public function chartOfAccounts()
     {
-        $data = Account::withAccountType()->orderBy('account_number')->get()->groupBy(function ($account) {
+        $data = Account::withAccountType()->withReportGroup()->orderBy('account_number')->get()->groupBy(function ($account) {
             return $account->accountType->account_category;
         })->map(function ($accounts) {
             return $accounts->groupBy(function ($account) {

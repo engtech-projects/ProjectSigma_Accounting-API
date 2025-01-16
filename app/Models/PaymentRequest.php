@@ -74,11 +74,6 @@ class PaymentRequest extends Model
         });
     }
 
-    public function scopeWithStakeholder($query)
-    {
-        return $query->with(['stakeholder']);
-    }
-
     public function scopeWithDetails($query)
     {
         return $query->with(['details.stakeholder']);
@@ -104,17 +99,27 @@ class PaymentRequest extends Model
         return $this->HasOne(Voucher::class, 'prf_no', 'reference_no');
     }
 
-    public function journalEntries(): HasMany
+    public function journalEntry(): HasMany
     {
         return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
+
     public function scopePayroll($query)
     {
         return $query->where('type', PaymentRequestType::PAYROLL->value);
     }
+
     public function scopePayment($query)
     {
         return $query->where('type', PaymentRequestType::PRF->value);
     }
 
+    public function scopeWithJournalEntry($query)
+    {
+        return $query->with('journalEntry');
+    }
+    public function scopeWithJournalEntryVouchers($query)
+    {
+        return $query->with('journalEntry.voucher');
+    }
 }

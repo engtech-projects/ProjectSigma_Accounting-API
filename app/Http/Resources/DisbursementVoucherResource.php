@@ -6,7 +6,7 @@ use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class VoucherResource extends JsonResource
+class DisbursementVoucherResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -26,6 +26,20 @@ class VoucherResource extends JsonResource
             'next_approval' => $this->getNextPendingApproval(),
             'journal_entry' => JournalEntryResource::make($this->whenLoaded('journalEntry')),
             'payment_request' => PaymentRequestCollection::make($this->journalEntry->paymentRequest),
+            'step_approval' => [
+                'payment_request' => [
+                    'title' => 'Payment Request Approval',
+                    'details' => $this->journalEntry?->paymentRequest()?->first()->approvals ?? [],
+                ],
+                'disbursement_voucher' => [
+                    'title' => 'Disbursement Voucher Approval',
+                    'details' => $this->approvals ?? [],
+                ],
+                'cash_voucher' => [
+                    'title' => 'Cash Voucher Approval',
+                    'details' => $this->journalEntry?->voucher()?->first()->approvals ?? [],
+                ],
+            ]
         ];
     }
 }

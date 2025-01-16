@@ -15,6 +15,7 @@ class Account extends Model
 
     protected $fillable = [
         'account_type_id',
+        'report_group_id',
         'account_number',
         'account_name',
         'account_description',
@@ -23,11 +24,16 @@ class Account extends Model
         'statement',
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
+    }
+
+    public function reportGroup(): BelongsTo
+    {
+        return $this->belongsTo(ReportGroup::class);
     }
 
     public function journalEntryDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -40,9 +46,16 @@ class Account extends Model
         return $query->with('accountType');
     }
 
+    public function scopeWithReportGroup($query)
+    {
+        return $query->with('reportGroup');
+    }
+
     public function getFullAccountAttribute(): string
     {
-        return "{$this->account_number} - {$this->account_name} ({$this->accountType->account_type})";
+        $reportGroup = $this->reportGroup ? " - {$this->reportGroup->name}" : '';
+
+        return "{$this->account_number} - {$this->account_name} $reportGroup";
     }
 
     public function scopeWithAccountName($query, $accountName)
