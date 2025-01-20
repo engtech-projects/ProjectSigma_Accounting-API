@@ -4,6 +4,7 @@ namespace App\Services\ApiServices;
 
 use App\Models\Stakeholders\Project;
 use Illuminate\Support\Facades\Http;
+use Log;
 
 class ProjectMonitoringService
 {
@@ -14,7 +15,7 @@ class ProjectMonitoringService
     public function __construct($authToken)
     {
         $this->authToken = $authToken;
-        $this->apiUrl = config('services.url.projects_api');
+        $this->apiUrl = config('services.url.project_api');
     }
 
     public function syncAll()
@@ -27,25 +28,35 @@ class ProjectMonitoringService
     public function syncProjects()
     {
         $projects = $this->getAllProjects();
-        collect($projects)->map(function ($project) {
+        $projects = collect($projects)->map(function ($project) {
             return [
                 'id' => $project['id'],
                 'project_monitoring_id' => $project['id'],
                 'project_code' => $project['code'],
                 'status' => $project['status'],
             ];
-        });
-        Project::upsert(
-            $projects,
-            [
-                'id',
-            ],
-            [
-                'project_monitoring_id',
-                'project_code',
-                'status',
-            ]
-        );
+        })->toArray();
+        foreach ($projects as $project) {
+            $project_model = Project::updateOrCreate(
+                [
+                    'id' => $project['id'],
+                    'source_id' => $project['id'],
+                ],
+                [
+                    'name' => $project['project_code'],
+                    'source_id' => $project['id'],
+                ],
+            );
+            $project_model->stakeholder()->updateOrCreate(
+                [
+                    'stakeholdable_type' => Project::class,
+                    'stakeholdable_id' => $project['id'],
+                ],
+                [
+                    'name' => $project['project_code'],
+                ]
+            );
+        }
 
         return true;
     }
@@ -64,7 +75,6 @@ class ProjectMonitoringService
         if (! $response->successful()) {
             return [];
         }
-
         return $response->json();
     }
 }

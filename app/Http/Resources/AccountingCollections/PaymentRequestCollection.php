@@ -22,11 +22,10 @@ class PaymentRequestCollection extends JsonResource
             $accountDetail = explode('::', $detail->particulars);
 
             return array_merge($detail->toArray(), [
-                'account_notation_type' => $accountDetail[0] ?? null,
                 'account_id' => $accountDetail[2] ?? null,
                 'stakeholder_name' => $accountDetail[3] ?? null,
                 'stakeholder_id' => $accountDetail[4] ?? null,
-                'particulars' => $accountDetail[1] ?? null,
+                'particulars' => $accountDetail[0] ?? null,
             ]);
         });
 
