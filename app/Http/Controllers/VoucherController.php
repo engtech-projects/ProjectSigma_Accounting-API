@@ -137,7 +137,7 @@ class VoucherController extends Controller
                     'journal_no' => JournalEntryService::generateJournalNumber(),
                     'entry_date' => Carbon::now(),
                     'journal_date' => Carbon::now(),
-                    'status' => JournalStatus::UNPOSTED->value,
+                    'status' => JournalStatus::FOR_PAYMENT->value,
                     'posting_period_id' => PostingPeriod::currentPostingPeriod(),
                     'period_id' => Period::current()->pluck('id')->first(),
                     'reference_no' => $validatedData['reference_no'],
@@ -174,6 +174,9 @@ class VoucherController extends Controller
             }
             $voucher->journalEntry()->update([
                 'entry_date' => $validatedData['voucher_date'],
+            ]);
+            JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
+                'status' => JournalStatus::FOR_PAYMENT->value,
             ]);
             DB::commit();
             $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
@@ -249,6 +252,7 @@ class VoucherController extends Controller
         $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
         $journalEntry->update([
             'entry_date' => $validatedData['voucher_date'],
+            'status' => JournalStatus::FOR_PAYMENT->value,
         ]);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
