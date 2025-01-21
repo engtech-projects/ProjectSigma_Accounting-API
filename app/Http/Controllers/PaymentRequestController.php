@@ -65,7 +65,7 @@ class PaymentRequestController extends Controller
         DB::beginTransaction();
         try {
             $validatedData = $request->validated();
-            $prfNo = PaymentServices::generatePrfNo(PrefixType::PRF_ACCTG->value);
+            $prfNo = PaymentServices::generatePrfNo(PrefixType::PRF_ACS->value);
             $validatedData['prf_no'] = $prfNo;
             $validatedData['type'] = PaymentRequestType::PRF->value;
             $validatedData['stakeholder_id'] = $validatedData['stakeholderInformation']['id'] ?? null;
@@ -192,7 +192,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request No Successfully Generated.',
-            'data' => PaymentServices::generatePrfNo(PrefixType::PRF_ACCTG->value),
+            'data' => PaymentServices::generatePrfNo(PrefixType::PRF_ACS->value),
         ], 200);
     }
 }
