@@ -37,7 +37,7 @@ class DisbursementVoucherResource extends JsonResource
                 ],
                 'cash_voucher' => [
                     'title' => 'Cash Voucher Approval',
-                    'details' => $this->journalEntry?->voucher()?->first()->approvals ?? [],
+                    'details' => [],
                 ],
             ]
         ];
