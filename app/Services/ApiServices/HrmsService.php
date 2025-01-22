@@ -35,7 +35,6 @@ class HrmsService
     public function syncEmployees()
     {
         $employees = $this->getAllEmployees();
-
         $employees = collect(value: $employees)->map(function ($employee) {
             return [
                 'id' => $employee['id'],
@@ -50,19 +49,21 @@ class HrmsService
                 'stakeholdable_type' => Employee::class,
             ];
         });
-
         DB::transaction(function ()use ($employees, $employee_stakeholder) {
-            Employee::upsert($employees->toArray(), ['source_id'], ['name']);
+            Employee::upsert(
+                $employees->toArray(),
+                ['source_id'],
+                ['name']
+            );
             StakeHolder::upsert(
                 $employee_stakeholder->toArray(),
                 [
+                    'stakeholdable_type',
                     'stakeholdable_id',
-                    'stakeholdable_type'
                 ],
                 ['name']
             );
         });
-
         return true;
     }
 
@@ -136,9 +137,6 @@ class HrmsService
         $response = Http::withToken($this->authToken)
             ->acceptJson()
             ->get($this->apiUrl.'/api/employee/list');
-
-
-        Log::info($response);
         if (! $response->successful()) {
             return [];
         }
