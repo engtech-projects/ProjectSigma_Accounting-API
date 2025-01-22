@@ -6,7 +6,7 @@ enum StakeHolderType: string
 {
     case SUPPLIER = 'supplier';
     case EMPLOYEE = 'employee';
-    case PROJECTS = 'Project';
+    case PROJECTS = 'project';
     case DEPARTMENT = 'department';
     case PAYEE = 'payee';
 
