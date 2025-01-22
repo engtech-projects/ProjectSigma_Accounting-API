@@ -2,7 +2,9 @@
 
 namespace App\Services\ApiServices;
 
+use App\Models\StakeHolder;
 use App\Models\Stakeholders\Project;
+use DB;
 use Illuminate\Support\Facades\Http;
 use Log;
 
@@ -31,32 +33,28 @@ class ProjectMonitoringService
         $projects = collect($projects)->map(function ($project) {
             return [
                 'id' => $project['id'],
-                'project_monitoring_id' => $project['id'],
-                'project_code' => $project['code'],
-                'status' => $project['status'],
+                'source_id' => $project['id'],
+                'name' => $project['code'],
             ];
-        })->toArray();
-        foreach ($projects as $project) {
-            $project_model = Project::updateOrCreate(
+        });
+        $projects_stakeholder = collect($projects)->map(function ($project) {
+            return [
+                'stakeholdable_id' => $project['id'],
+                'stakeholdable_type' => Project::class,
+                'name' => $project['name'],
+            ];
+        });
+        DB::transaction(function ()use ($projects, $projects_stakeholder) {
+            Project::upsert($projects->toArray(), ['source_id'], ['name']);
+            StakeHolder::upsert(
+                $projects_stakeholder->toArray(),
                 [
-                    'id' => $project['id'],
-                    'source_id' => $project['id'],
+                    'stakeholdable_id',
+                    'stakeholdable_type'
                 ],
-                [
-                    'name' => $project['project_code'],
-                    'source_id' => $project['id'],
-                ],
+                ['name']
             );
-            $project_model->stakeholder()->updateOrCreate(
-                [
-                    'stakeholdable_type' => Project::class,
-                    'stakeholdable_id' => $project['id'],
-                ],
-                [
-                    'name' => $project['project_code'],
-                ]
-            );
-        }
+        });
 
         return true;
     }
