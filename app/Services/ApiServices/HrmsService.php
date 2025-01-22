@@ -2,10 +2,13 @@
 
 namespace App\Services\ApiServices;
 
+use App\Models\StakeHolder;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
 use App\Models\User;
+use DB;
 use Http;
+use Log;
 
 class HrmsService
 {
@@ -32,33 +35,33 @@ class HrmsService
     public function syncEmployees()
     {
         $employees = $this->getAllEmployees();
-        collect($employees)->map(function ($employee) {
+
+        $employees = collect(value: $employees)->map(function ($employee) {
             return [
                 'id' => $employee['id'],
                 'source_id' => $employee['id'],
                 'name' => $employee['fullname_first'],
             ];
         });
-        foreach ($employees as $employee) {
-            $employee_model = Employee::updateOrCreate(
+        $employee_stakeholder = collect(value: $employees)->map(function ($employee) {
+            return [
+                'name' => $employee['name'],
+                'stakeholdable_id' => $employee['id'],
+                'stakeholdable_type' => Employee::class,
+            ];
+        });
+
+        DB::transaction(function ()use ($employees, $employee_stakeholder) {
+            Employee::upsert($employees->toArray(), ['source_id'], ['name']);
+            StakeHolder::upsert(
+                $employee_stakeholder->toArray(),
                 [
-                    'id' => $employee['id'],
-                    'source_id' => $employee['id'],
+                    'stakeholdable_id',
+                    'stakeholdable_type'
                 ],
-                [
-                    'name' => $employee['fullname_first'],
-                ]
+                ['name']
             );
-            $employee_model->stakeholder()->updateOrCreate(
-                [
-                    'stakeholdable_type' => Employee::class,
-                    'stakeholdable_id' => $employee['id'],
-                ],
-                [
-                    'name' => $employee['fullname_first'],
-                ]
-            );
-        }
+        });
 
         return true;
     }
@@ -66,33 +69,31 @@ class HrmsService
     public function syncDepartments()
     {
         $departments = $this->getAllDepartment();
-        collect($departments)->map(function ($department) {
+        $departments = collect($departments)->map(function ($department) {
             return [
                 'id' => $department['id'],
                 'source_id' => $department['id'],
                 'name' => $department['department_name'],
             ];
         });
-        foreach ($departments as $department) {
-            $department_model = Department::updateOrCreate(
+        $department_stakeholder = collect($departments)->map(function ($department) {
+            return [
+                'stakeholdable_id' => $department['id'],
+                'stakeholdable_type' => Department::class,
+                'name' => $department['name'],
+            ];
+        });
+        DB::transaction(function ()use ($departments, $department_stakeholder) {
+            Department::upsert($departments->toArray(), ['source_id'], ['name']);
+            StakeHolder::upsert(
+                $department_stakeholder->toArray(),
                 [
-                    'id' => $department['id'],
-                    'source_id' => $department['id'],
+                    'stakeholdable_id',
+                    'stakeholdable_type'
                 ],
-                [
-                    'name' => $department['department_name'],
-                ]
+                ['name']
             );
-            $department_model->stakeholder()->updateOrCreate(
-                [
-                    'stakeholdable_type' => Department::class,
-                    'stakeholdable_id' => $department['id'],
-                ],
-                [
-                    'name' => $department['department_name'],
-                ]
-            );
-        }
+        });
 
         return true;
     }
@@ -125,15 +126,6 @@ class HrmsService
                     'remember_token' => null,
                 ]
             );
-            $user_model->stakeholder()->updateOrCreate(
-                [
-                    'stakeholdable_type' => User::class,
-                    'stakeholdable_id' => $user['id'],
-                ],
-                [
-                    'name' => $user['employee']['fullname_first'],
-                ]
-            );
         }
 
         return true;
@@ -144,6 +136,9 @@ class HrmsService
         $response = Http::withToken($this->authToken)
             ->acceptJson()
             ->get($this->apiUrl.'/api/employee/list');
+
+
+        Log::info($response);
         if (! $response->successful()) {
             return [];
         }
