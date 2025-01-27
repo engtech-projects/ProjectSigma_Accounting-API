@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
+use App\Enums\VoucherType;
 use App\Models\JournalEntry;
 use Carbon\Carbon;
 
@@ -90,6 +91,42 @@ class JournalEntryService
         return JournalEntry::where('status', JournalStatus::UNPOSTED->value)
             ->WhereHas('voucher')
             ->whereVoucherIsApproved()
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+    public static function disbursementEntries()
+    {
+        return JournalEntry::whereHas('voucher', function ($query) {
+                $query->where('type', VoucherType::DISBURSEMENT->value);
+            })
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function forPaymentEnrtries()
+    {
+        return JournalEntry::where('status', JournalStatus::FOR_PAYMENT->value)
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc()
+            ->paginate(config('services.pagination.limit'));
+    }
+
+    public static function CashEntries()
+    {
+        return JournalEntry::whereHas('voucher', function ($query) {
+                $query->where('type', VoucherType::CASH->value);
+            })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()

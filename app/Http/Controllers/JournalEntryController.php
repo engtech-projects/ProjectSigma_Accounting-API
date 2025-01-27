@@ -147,14 +147,33 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-    public function draftedEntries()
+    public function disbursementEntries()
     {
         return new JsonResponse([
             'success' => true,
-            'message' => 'Drafted Payment Request Entries Successfully Retrieved.',
-            'data' => JournalEntryService::draftedEntries(),
+            'message' => 'Disbursement Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::disbursementEntries())->response()->getData(true),
         ], 200);
     }
+
+    public function forPaymentEnrtries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entries for Payment Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::forPaymentEnrtries())->response()->getData(true),
+        ], 200);
+    }
+
+    public function CashEntries()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Cash Journal Entries Successfully Retrieved.',
+            'data' => JournalEntryCollection::collection(JournalEntryService::CashEntries())->response()->getData(true),
+        ], 200);
+    }
+
 
     public function forVoucherEntriesListDisbursement()
     {

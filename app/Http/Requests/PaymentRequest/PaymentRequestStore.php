@@ -3,6 +3,7 @@
 namespace App\Http\Requests\PaymentRequest;
 
 use App\Http\Traits\HasApprovalValidation;
+use App\Rules\IsTotalSameAsDetails;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PaymentRequestStore extends FormRequest
@@ -28,7 +29,11 @@ class PaymentRequestStore extends FormRequest
             'description' => 'nullable|string',
             'request_date' => 'required|date|date_format:Y-m-d',
             'stakeholderInformation' => 'required|min:1|array',
-            'total' => 'required|numeric',
+            'total' => [
+                'required',
+                'numeric',
+                new IsTotalSameAsDetails($this->all()['details']),
+            ],
             'total_vat_amount' => 'required|numeric',
             'details' => 'required|min:1|array',
             'details.*.cost' => 'required|numeric',

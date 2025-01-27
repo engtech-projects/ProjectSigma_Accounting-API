@@ -68,7 +68,10 @@ Route::middleware('auth:api')->group(function () {
         Route::get('posted-entries', [JournalEntryController::class, 'postedEntries']);
         Route::get('open-entries', [JournalEntryController::class, 'openEntries']);
         Route::get('void-entries', [JournalEntryController::class, 'voidEntries']);
-        Route::get('drafted-entries', [JournalEntryController::class, 'draftedEntries']);
+        Route::get('disbursement-entries', [JournalEntryController::class, 'disbursementEntries']);
+        Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEnrtries']);
+        Route::get('cash-entries', [JournalEntryController::class, 'CashEntries']);
+
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
         Route::get('for-voucher-entries-disbursement', [JournalEntryController::class, 'forVoucherEntriesListDisbursement']);
         Route::get('for-voucher-entries-cash', [JournalEntryController::class, 'forVoucherEntriesListCash']);
