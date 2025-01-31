@@ -12,8 +12,11 @@ class PaymentServices
     public static function getWithPagination(array $validatedData)
     {
         $query = PaymentRequest::query();
-        if (isset($validatedData['status'])) {
-            $query->formStatus($validatedData['status']);
+        if (isset($validatedData['key'])) {
+            $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+        }
+        if (isset($validatedData['date_from']) && isset($validatedData['date_to'])) {
+            $query->whereBetween('request_date', [$validatedData['date_from'], $validatedData['date_to']]);
         }
         $paymentRequest = $query->withStakeholder()
             ->payment()
