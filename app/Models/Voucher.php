@@ -99,7 +99,10 @@ class Voucher extends Model
 
     public function scopeWithDetails($query)
     {
-        return $query->with(['details.account']);
+        return $query->with([
+            'details.account',
+            'details.stakeholder'
+        ]);
     }
 
     public function scopeClearedVoucherCash($query)
