@@ -167,4 +167,14 @@ class HrmsService
 
         return $response->json()['data'];
     }
+    public function getApprovalName($approvalName)
+    {
+        $response = Http::withToken($this->authToken)
+            ->acceptJson()
+            ->get($this->apiUrl.'/api/get-form-requests/'.$approvalName);
+        if (! $response->successful()) {
+            return [];
+        }
+        return $response->json()['data'];
+    }
 }

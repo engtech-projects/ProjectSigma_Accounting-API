@@ -73,6 +73,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('cash-entries', [JournalEntryController::class, 'CashEntries']);
 
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
+        Route::post('generate-journal-details', [JournalEntryController::class, 'generateJournalDetails']);
         Route::get('for-voucher-entries-disbursement', [JournalEntryController::class, 'forVoucherEntriesListDisbursement']);
         Route::get('for-voucher-entries-cash', [JournalEntryController::class, 'forVoucherEntriesListCash']);
         Route::resource('resource', JournalEntryController::class)->names('journal-entries');
@@ -155,7 +156,11 @@ Route::middleware('auth:api')->group(function () {
 // SECRET API KEY ROUTES
 Route::middleware('secret_api')->group(function () {
     // SIGMA SERVICES ROUTES
-    Route::prefix('sigma')->group(function () {});
+    Route::prefix('sigma')->group(function () {
+        Route::prefix('payroll')->group(function () {
+            Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
+        });
+    });
 });
 
 //SEARCH ROUTES

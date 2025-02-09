@@ -134,6 +134,22 @@ class JournalEntryService
             ->orderByDesc()
             ->paginate(config('services.pagination.limit'));
     }
+    public static function generateJournalDetails($details)
+    {
+        $journalData = collect($details)->map(function ($detail) {
+            return [
+                'stakeholder_id' => $detail['stakeholder_id'],
+                'stakeholder' => $detail['stakeholder'],
+                'journal_date' => $detail['journal_date'],
+                'reference_no' => $detail['reference_no'],
+                'payment_request_id' => $detail['payment_request_id'],
+                'description' => $detail['description'],
+                'remarks' => $detail['remarks'],
+                'total' => $detail['total'],
+            ];
+        });
+        return $journalData;
+    }
 
     public static function generateJournalNumber(): string
     {

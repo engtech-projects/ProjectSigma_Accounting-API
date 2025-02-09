@@ -39,4 +39,9 @@ class StakeHolderService
 
         return $id;
     }
+    public static function findIdByNameOrNull($name)
+    {
+        $stakeholderName = StakeHolder::where('name', $name)->first();
+        return $stakeholderName ? $stakeholderName->id : null;
+    }
 }

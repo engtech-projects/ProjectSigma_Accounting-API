@@ -6,6 +6,7 @@ use App\Enums\JournalStatus;
 use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
 use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
+use App\Http\Requests\JournalEntryDetailsRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
@@ -200,5 +201,16 @@ class JournalEntryController extends Controller
             'message' => 'Journal Number Successfully Generated.',
             'data' => JournalEntryService::generateJournalNumber(),
         ], 200);
+    }
+    public function generateJournalDetails(JournalEntryDetailsRequest $request)
+    {
+        $validatedData = $request->validated();
+        $journalData = $request->all();
+        $journalData['details'] = JournalEntryService::generateJournalDetails($validatedData['details']);
+
+        return new JsonResponse([
+            'message' => 'success',
+            'data' => $journalData,
+        ],  200);
     }
 }
