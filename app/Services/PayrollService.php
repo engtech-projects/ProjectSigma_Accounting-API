@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\PayrollRequestCollection;
 use App\Models\PaymentRequest;
 
 class PayrollService
@@ -20,7 +21,7 @@ class PayrollService
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($payrollRequest)->response()->getData(true);
+        return PayrollRequestCollection::collection($payrollRequest)->response()->getData(true);
     }
 
     public static function getAll($filter)
@@ -37,34 +38,6 @@ class PayrollService
             ->with('created_by_user')
             ->get();
 
-        return PaymentRequestCollection::collection($payrollRequest)->response()->getData(true);
-    }
-
-    public static function myRequests()
-    {
-        $query = PaymentRequest::query();
-        $payrollRequest = $query->myRequests()
-            ->withStakeholder()
-            ->payroll()
-            ->withPaymentRequestDetails()
-            ->orderByDesc()
-            ->with('created_by_user')
-            ->paginate(config('services.pagination.limit'));
-
-        return PaymentRequestCollection::collection($payrollRequest)->response()->getData(true);
-    }
-
-    public static function myApprovals()
-    {
-        $query = PaymentRequest::query();
-        $payrollRequest = $query->myApprovals()
-            ->withStakeholder()
-            ->payroll()
-            ->withPaymentRequestDetails()
-            ->orderByDesc()
-            ->with('created_by_user')
-            ->paginate(config('services.pagination.limit'));
-
-        return PaymentRequestCollection::collection($payrollRequest)->response()->getData(true);
+        return PayrollRequestCollection::collection($payrollRequest)->response()->getData(true);
     }
 }

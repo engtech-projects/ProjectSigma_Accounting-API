@@ -58,7 +58,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);
-    Route::resource('term', TermController::class);
+    Route::resource('terms', TermController::class);
     Route::resource('report-group', ReportGroupController::class);
 
     //JOURNAL ENTRY ROUTES
@@ -94,9 +94,6 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
-        Route::get('my-requests', [PayrollRequestController::class, 'myRequest']);
-        Route::get('my-approvals', [PayrollRequestController::class, 'myApprovals']);
-        Route::get('generate-payroll-no', [PayrollRequestController::class, 'generatePayrollNo']);
     });
 
     //VOUCHERS ROUTES

@@ -8,7 +8,6 @@ use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
 use App\Http\Requests\CreatePayrollRequest;
 use App\Http\Requests\PayrollRequest\PayrollRequestFilter;
-use App\Http\Resources\PayrollRequestCollection;
 use App\Models\PaymentRequest;
 use App\Services\ApiServices\HrmsService;
 use App\Services\PayeeService;
@@ -29,29 +28,7 @@ class PayrollRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payroll Request Successfully Retrieved.',
-            'data' => new PayrollRequestCollection($payrollRequests),
-        ], 200);
-    }
-
-    public function myRequest()
-    {
-        $payrollRequests = PayrollService::myRequests();
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Payroll Request Successfully Retrieved.',
-            'data' => new PayrollRequestCollection($payrollRequests),
-        ], 200);
-    }
-
-    public function myApproval()
-    {
-        $payrollRequests = PayrollService::myApprovals();
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Payroll Request Successfully Retrieved.',
-            'data' => new PayrollRequestCollection($payrollRequests),
+            'data' => $payrollRequests,
         ], 200);
     }
     public function createPayrollRequest(CreatePayrollRequest $request)

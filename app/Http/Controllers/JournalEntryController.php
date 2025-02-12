@@ -70,7 +70,7 @@ class JournalEntryController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',
-                'data' => new JournalEntryResource($journalEntry->load('details')),
+                'data' => new JournalEntryCollection($journalEntry->load('details')),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -81,17 +81,6 @@ class JournalEntryController extends Controller
                 'data' => null,
             ], 500);
         }
-    }
-
-    public function show(JournalEntry $journalEntry)
-    {
-        $journalEntry = $journalEntry->with(['details'])->paginate(config('service.pagination.limit'));
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Journal Entry Successfully Retrieved.',
-            'data' => JournalEntryResource::collection($journalEntry)->response()->getData(true),
-        ]);
     }
 
     public function update(JournalEntryRequestUpdate $request)
@@ -109,7 +98,11 @@ class JournalEntryController extends Controller
         $toDelete = array_diff($existingIds, $incomingIds);
         $journalEntry->details()->whereIn('id', $toDelete)->delete();
 
-        return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entry Successfully Updated.',
+            'data' => new JournalEntryCollection($journalEntry->load('details')),
+        ], 200);
     }
 
     public function openEntries()
