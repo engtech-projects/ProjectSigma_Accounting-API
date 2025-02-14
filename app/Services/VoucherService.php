@@ -61,16 +61,8 @@ class VoucherService
     public static function getWithPaginationDisbursement(array $validatedData)
     {
         $query = Voucher::query();
-        if (isset($validatedData['book'])) {
-            $book = Book::byName($validatedData['book'])->firstOr(function () {
-                return Book::first();
-            });
-            if ($book) {
-                $query->filterBook($book->id);
-            }
-        }
-        if (isset($validatedData['status'])) {
-            $query->status($validatedData['status']);
+        if (isset($validatedData['key'])) {
+            $query->where('voucher_no', 'like', "%{$validatedData['key']}%");
         }
         $voucherRequest = $query->whereDisbursement()
             ->withDetails()
