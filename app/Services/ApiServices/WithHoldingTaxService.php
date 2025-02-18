@@ -10,7 +10,7 @@ class WithHoldingTaxService
     {
         $query = WithHoldingTax::query();
 
-        $query->with(['accounts', 'stakeholder'])
+        $query->with(['accounts'])
             ->orderByDesc('created_at');
 
         return $query->paginate(config('services.pagination.limit'));

@@ -23,9 +23,4 @@ class WithHoldingTax extends Model
     {
         return $this->belongsTo(Account::class);
     }
-
-    public function stakeholder()
-    {
-        return $this->belongsTo(StakeHolder::class);
-    }
 }
