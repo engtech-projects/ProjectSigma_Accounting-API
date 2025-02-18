@@ -33,20 +33,30 @@ class WithHoldingTaxController extends Controller
 
     public function show(WithHoldingTax $withHoldingTax)
     {
-        return new WithHoldingTaxCollection($withHoldingTax);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Created.',
+            'data' => new WithHoldingTaxCollection ($withHoldingTax),
+        ], 200);
     }
 
     public function update(UpdateWithHoldingTaxRequest $request, WithHoldingTax $withHoldingTax)
     {
         $withHoldingTax->update($request->all());
 
-        return new WithHoldingTaxCollection($withHoldingTax);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Updated.',
+        ], 200);
     }
 
     public function destroy(WithHoldingTax $withHoldingTax)
     {
         $withHoldingTax->delete();
 
-        return response()->json(null, 204);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Deleted.',
+        ], 200);
     }
 }
