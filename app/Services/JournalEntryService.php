@@ -21,7 +21,7 @@ class JournalEntryService
         return $query->paginate(config('services.pagination.limit'));
     }
 
-    public static function OpenEntries()
+    public static function OpenEntries($validateData)
     {
         return JournalEntry::where('status', JournalStatus::OPEN->value)
             ->withPaymentRequest()
@@ -76,9 +76,16 @@ class JournalEntryService
             ->paginate(config('services.pagination.limit'));
     }
 
-    public static function forVoucherEntriesListDisbursement()
+    public static function forVoucherEntriesListDisbursement(array $validatedData)
     {
-        return JournalEntry::where('status', JournalStatus::OPEN->value)
+        $query = JournalEntry::query();
+        if (isset($validatedData['key'])) {
+            $query->where('journal_no', 'like', "%{$validatedData['key']}%")
+                ->orWhereHas('voucher', function ($query) use ($validatedData) {
+                    $query->where('voucher_no', 'like', "%{$validatedData['key']}%");
+                });
+        }
+        return $query->where('status', JournalStatus::OPEN->value)
             ->whereDoesntHave('voucher')
             ->withPaymentRequest()
             ->withAccounts()
@@ -103,8 +110,8 @@ class JournalEntryService
     public static function disbursementEntries()
     {
         return JournalEntry::whereHas('voucher', function ($query) {
-                $query->where('type', VoucherType::DISBURSEMENT->value);
-            })
+            $query->where('type', VoucherType::DISBURSEMENT->value);
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
@@ -127,8 +134,8 @@ class JournalEntryService
     public static function CashEntries()
     {
         return JournalEntry::whereHas('voucher', function ($query) {
-                $query->where('type', VoucherType::CASH->value);
-            })
+            $query->where('type', VoucherType::CASH->value);
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()

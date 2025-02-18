@@ -105,12 +105,12 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-    public function openEntries()
+    public function openEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Open Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::OpenEntries())->response()->getData(true),
+            'data' => JournalEntryCollection::collection(JournalEntryService::OpenEntries($request->validated()))->response()->getData(true),
         ], 200);
     }
 
@@ -169,12 +169,12 @@ class JournalEntryController extends Controller
     }
 
 
-    public function forVoucherEntriesListDisbursement()
+    public function forVoucherEntriesListDisbursement(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement())->response()->getData(true),
+            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement($request->validated()))->response()->getData(true),
         ], 200);
     }
 
