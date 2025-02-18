@@ -7,7 +7,7 @@ use App\Http\Requests\Withholdingtax\StoreWithHoldingTaxRequest;
 use App\Http\Requests\Withholdingtax\UpdateWithHoldingTaxRequest;
 use App\Http\Resources\AccountingCollections\WithHoldingTaxCollection;
 use App\Models\WithHoldingTax;
-use App\Services\WithHoldingTaxService;
+use App\Services\ApiServices\WithHoldingTaxService;
 use Illuminate\Http\JsonResponse;
 
 class WithHoldingTaxController extends Controller
