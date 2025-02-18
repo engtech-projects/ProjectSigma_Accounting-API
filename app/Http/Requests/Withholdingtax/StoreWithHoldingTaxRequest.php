@@ -25,7 +25,7 @@ class StoreWithHoldingTaxRequest extends FormRequest
     {
         return [
             'account_id' => 'required|exists:accounts,id',
-            'wtax_name' => 'required|string|max:255',
+            'wtax_name' => 'required|string|max:255|unique:withholding_tax,wtax_name',
             'vat_type' => 'required|string|max:255|in:'.implode(',', VatType::values()),
             'wtax_percentage' => 'required|numeric',
         ];
