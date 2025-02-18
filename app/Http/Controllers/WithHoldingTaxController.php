@@ -42,8 +42,11 @@ class WithHoldingTaxController extends Controller
 
     public function update(UpdateWithHoldingTaxRequest $request, WithHoldingTax $withHoldingTax)
     {
-        $withHoldingTax->update($request->all());
-
+        $validatedData = $request->validated();
+        $withholdingTax = WithHoldingTax::find($validatedData['id']);
+        if($withholdingTax) {
+            $withholdingTax->update($validatedData);
+        }
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Updated.',
