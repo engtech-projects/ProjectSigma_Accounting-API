@@ -24,6 +24,7 @@ use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\WithHoldingTaxController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +45,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('form-types', function (Request $request) {
         return response()->json(['forms' => FormType::cases()], 200);
     });
-
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
 
@@ -60,6 +60,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('payment-request', PaymentRequestController::class);
     Route::resource('terms', TermController::class);
     Route::resource('report-group', ReportGroupController::class);
+    Route::resource('withholding-tax', WithHoldingTaxController::class);
 
     //JOURNAL ENTRY ROUTES
     Route::prefix('journal-entry')->group(function () {
@@ -71,6 +72,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('disbursement-entries', [JournalEntryController::class, 'disbursementEntries']);
         Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEnrtries']);
         Route::get('cash-entries', [JournalEntryController::class, 'CashEntries']);
+        Route::get('get-accounts-vat-tax', [JournalEntryController::class, 'getAccountsVatTax']);
 
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
         Route::post('generate-journal-details', [JournalEntryController::class, 'generateJournalDetails']);

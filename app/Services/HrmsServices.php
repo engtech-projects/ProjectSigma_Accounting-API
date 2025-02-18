@@ -2,11 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Stakeholders\Department;
-use App\Models\Stakeholders\Employee;
-use App\Models\Stakeholders\Project;
-use App\Models\User;
-use DB;
 use Http;
 
 class HrmsServices

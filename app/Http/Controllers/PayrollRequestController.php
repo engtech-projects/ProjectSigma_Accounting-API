@@ -10,7 +10,6 @@ use App\Http\Requests\CreatePayrollRequest;
 use App\Http\Requests\PayrollRequest\PayrollRequestFilter;
 use App\Models\PaymentRequest;
 use App\Services\ApiServices\HrmsService;
-use App\Services\PayeeService;
 use App\Services\PaymentServices;
 use App\Services\PayrollService;
 use App\Services\StakeHolderService;
@@ -31,6 +30,7 @@ class PayrollRequestController extends Controller
             'data' => $payrollRequests,
         ], 200);
     }
+
     public function createPayrollRequest(CreatePayrollRequest $request)
     {
         $authToken = $request->bearerToken();
@@ -40,11 +40,12 @@ class PayrollRequestController extends Controller
             $approvalList = $hrmsService->getApprovalName(ApprovalPayementRequestType::APPROVAL_PAYMENT_REQUEST_PAYROLL->value);
             $details = collect($validatedData['details'])->map(function ($detail) {
                 $stakeholderId = StakeHolderService::findIdByNameOrNull($detail['stakeholder'] ?? '');
+
                 return [
                     'particulars' => $detail['particular'],
                     'cost' => $detail['amount'],
                     'vat' => 0,
-                    'stakeholder_id'  => $stakeholderId,
+                    'stakeholder_id' => $stakeholderId,
                     'amount' => $detail['amount'],
                     'total_vat_amount' => 0,
                     'particular_group_id' => null,
@@ -65,6 +66,7 @@ class PayrollRequestController extends Controller
             ]);
             $paymentRequest->details()->createMany($details->toArray());
         });
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Payroll Request Saved.',

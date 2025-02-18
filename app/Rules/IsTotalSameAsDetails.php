@@ -8,6 +8,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class IsTotalSameAsDetails implements ValidationRule
 {
     protected $details;
+
     public function __construct(array $details)
     {
         $this->details = $details;

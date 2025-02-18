@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\AccountingCollections\PayrollRequestCollection;
 use App\Models\PaymentRequest;
 
@@ -17,7 +16,7 @@ class PayrollService
         $payrollRequest = $query->withStakeholder()
             ->payroll()
             ->withPaymentRequestDetails()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
@@ -34,7 +33,7 @@ class PayrollService
             ->withStakeholder()
             ->payroll()
             ->withPaymentRequestDetails()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->with('created_by_user')
             ->get();
 

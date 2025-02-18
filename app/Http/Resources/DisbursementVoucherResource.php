@@ -40,7 +40,7 @@ class DisbursementVoucherResource extends JsonResource
                     'title' => 'Cash Voucher Approval',
                     'details' => [],
                 ],
-            ]
+            ],
         ];
     }
 }

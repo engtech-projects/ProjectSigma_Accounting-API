@@ -15,6 +15,7 @@ trait ModelHelpers
     {
         return $query->with(['stakeholder']);
     }
+
     /**
      * ==================================================
      * MODEL ATTRIBUTES

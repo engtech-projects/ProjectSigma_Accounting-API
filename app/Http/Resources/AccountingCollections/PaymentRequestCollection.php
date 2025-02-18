@@ -49,7 +49,7 @@ class PaymentRequestCollection extends JsonResource
                     'title' => 'Cash Voucher Approval',
                     'details' => $this->journalEntry->count() > 1 ? $this->journalEntry->last()?->voucher()->first()->approvals : [],
                 ],
-            ]
+            ],
         ]);
     }
 }

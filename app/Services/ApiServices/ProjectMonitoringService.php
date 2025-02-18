@@ -6,7 +6,6 @@ use App\Models\StakeHolder;
 use App\Models\Stakeholders\Project;
 use DB;
 use Illuminate\Support\Facades\Http;
-use Log;
 
 class ProjectMonitoringService
 {
@@ -44,13 +43,13 @@ class ProjectMonitoringService
                 'name' => $project['name'],
             ];
         });
-        DB::transaction(function ()use ($projects, $projects_stakeholder) {
+        DB::transaction(function () use ($projects, $projects_stakeholder) {
             Project::upsert($projects->toArray(), ['source_id'], ['name']);
             StakeHolder::upsert(
                 $projects_stakeholder->toArray(),
                 [
                     'stakeholdable_id',
-                    'stakeholdable_type'
+                    'stakeholdable_type',
                 ],
                 ['name']
             );
@@ -73,6 +72,7 @@ class ProjectMonitoringService
         if (! $response->successful()) {
             return [];
         }
+
         return $response->json();
     }
 }

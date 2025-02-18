@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\BalanceType;
 use App\Enums\JournalStatus;
-use App\Enums\NotationType;
 use App\Enums\PaymentRequestType;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
@@ -24,7 +23,7 @@ class PaymentServices
         }
         $paymentRequest = $query->withStakeholder()
             ->payment()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->with('created_by_user')
@@ -40,7 +39,7 @@ class PaymentServices
             ->payment()
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -51,7 +50,7 @@ class PaymentServices
         $paymentRequest = PaymentRequest::myRequests()
             ->withStakeholder()
             ->payment()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->withPaymentRequestDetails()
             ->withJournalEntryVouchers()
             ->paginate(config('services.pagination.limit'));
@@ -71,7 +70,7 @@ class PaymentServices
             })
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
         $paymentRequest->map(function ($paymentRequest) {
@@ -84,12 +83,13 @@ class PaymentServices
                     if ($terms?->account->accountType?->balance_type === BalanceType::DEBIT->value) {
                         $detail->debit = floatval($detail->amount) + floatval($detail->total_amount_vat);
                         $detail->credit = 0;
-                    } else if ($terms?->account->accountType?->balance_type === BalanceType::CREDIT->value) {
+                    } elseif ($terms?->account->accountType?->balance_type === BalanceType::CREDIT->value) {
                         $detail->credit = floatval($detail->amount) + floatval($detail->total_amount_vat);
                         $detail->debit = 0;
                     }
                 });
             }
+
             return $paymentRequest;
         });
 

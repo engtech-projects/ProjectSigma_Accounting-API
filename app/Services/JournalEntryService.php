@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
-use App\Enums\PaymentRequestType;
 use App\Enums\VoucherType;
+use App\Models\Account;
+use App\Models\AccountType;
 use App\Models\JournalEntry;
-use App\Models\Term;
 use Carbon\Carbon;
 
 class JournalEntryService
@@ -28,7 +28,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -39,7 +39,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -50,7 +50,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -61,7 +61,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -72,7 +72,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -84,7 +84,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -97,19 +97,20 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
+
     public static function disbursementEntries()
     {
         return JournalEntry::whereHas('voucher', function ($query) {
-                $query->where('type', VoucherType::DISBURSEMENT->value);
-            })
+            $query->where('type', VoucherType::DISBURSEMENT->value);
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
@@ -120,22 +121,23 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
 
     public static function CashEntries()
     {
         return JournalEntry::whereHas('voucher', function ($query) {
-                $query->where('type', VoucherType::CASH->value);
-            })
+            $query->where('type', VoucherType::CASH->value);
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc()
+            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
+
     public static function generateJournalDetails($details)
     {
         $journalData = collect($details)->map(function ($detail) {
@@ -150,6 +152,7 @@ class JournalEntryService
                 'total' => $detail['total'],
             ];
         });
+
         return $journalData;
     }
 
@@ -175,5 +178,10 @@ class JournalEntryService
         $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
 
         return $journalNo;
+    }
+
+    public static function getAccountsVatTax()
+    {
+        return Account::whereIn('account_name', AccountType::case())->get();
     }
 }
