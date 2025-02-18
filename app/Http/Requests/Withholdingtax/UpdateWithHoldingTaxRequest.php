@@ -24,7 +24,7 @@ class UpdateWithHoldingTaxRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric|exists:withholding_taxes,id',
+            'id' => 'required|numeric|exists:withholding_tax,id',
             'account_id' => 'required|exists:accounts,id',
             'wtax_name' => 'required|string|max:255|in:'.implode(',', WtaxType::values()),
             'vat_type' => 'required|string|max:255|in:'.implode(',', VatType::values()),
