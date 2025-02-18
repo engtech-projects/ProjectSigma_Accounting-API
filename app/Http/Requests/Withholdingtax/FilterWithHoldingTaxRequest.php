@@ -22,7 +22,7 @@ class FilterWithHoldingTaxRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'wtax_name' => 'nullable|string|max:255',
         ];
     }
 }
