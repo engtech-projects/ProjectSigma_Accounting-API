@@ -16,7 +16,7 @@ class WithHoldingTaxController extends Controller
     {
         $validatedData = $request->validated();
 
-        return WithHoldingTaxCollection::collection(WithHoldingTaxService::getPaginated($validatedData));
+        return new WithHoldingTaxCollection (WithHoldingTaxService::getPaginated($validatedData));
     }
 
     public function store(StoreWithHoldingTaxRequest $request)
@@ -27,7 +27,7 @@ class WithHoldingTaxController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Created.',
-            'data' => WithHoldingTaxCollection::collection($withHoldingTax),
+            'data' => new WithHoldingTaxCollection ($withHoldingTax),
         ], 200);
     }
 
