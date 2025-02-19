@@ -22,6 +22,7 @@ class CashVoucherRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
+            'key' => 'nullable|string|max:255',
             'voucher_no' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
         ];

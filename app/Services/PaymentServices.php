@@ -14,14 +14,13 @@ class PaymentServices
 {
     public static function getWithPagination(array $validatedData)
     {
-        $query = PaymentRequest::query();
-        if (isset($validatedData['key'])) {
-            $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
-        }
-        if (isset($validatedData['date_from']) && isset($validatedData['date_to'])) {
-            $query->whereBetween('request_date', [$validatedData['date_from'], $validatedData['date_to']]);
-        }
-        $paymentRequest = $query->withStakeholder()
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
+            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+            });
+        })
+            ->withStakeholder()
             ->payment()
             ->orderByDesc('created_at')
             ->withJournalEntryVouchers()
@@ -32,9 +31,14 @@ class PaymentServices
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
-    public static function myApprovals()
+    public static function myApprovals(array $validatedData)
     {
-        $paymentRequest = PaymentRequest::myApprovals()
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}")
+            ->orWhereHas("stakeholder", function ($query) use ($validatedData){
+                $query->where('name', 'LIKE', "%{$validatedData['key']}");
+            });
+        })
             ->withStakeholder()
             ->payment()
             ->withJournalEntryVouchers()
@@ -45,9 +49,15 @@ class PaymentServices
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
-    public static function myRequests()
+    public static function myRequests(array $validatedData)
     {
-        $paymentRequest = PaymentRequest::myRequests()
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData){
+            return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
+            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+            });
+        })
+
             ->withStakeholder()
             ->payment()
             ->orderByDesc('created_at')

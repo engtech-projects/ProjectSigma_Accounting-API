@@ -23,6 +23,7 @@ class JournalEntryRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
+            'key' => 'nullable|string',
             'status' => 'nullable|string|in:'.implode(',', array_column(JournalStatus::cases(), 'value')),
         ];
     }
