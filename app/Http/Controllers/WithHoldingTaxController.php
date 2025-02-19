@@ -16,7 +16,7 @@ class WithHoldingTaxController extends Controller
     {
         $validatedData = $request->validated();
 
-        return WithHoldingTaxCollection::collection(WithHoldingTaxService::getPaginated($validatedData));
+        return new WithHoldingTaxCollection (WithHoldingTaxService::getPaginated($validatedData));
     }
 
     public function store(StoreWithHoldingTaxRequest $request)
@@ -27,26 +27,39 @@ class WithHoldingTaxController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Created.',
-            'data' => WithHoldingTaxCollection::collection($withHoldingTax),
+            'data' => new WithHoldingTaxCollection ($withHoldingTax),
         ], 200);
     }
 
     public function show(WithHoldingTax $withHoldingTax)
     {
-        return new WithHoldingTaxCollection($withHoldingTax);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Created.',
+            'data' => new WithHoldingTaxCollection ($withHoldingTax),
+        ], 200);
     }
 
     public function update(UpdateWithHoldingTaxRequest $request, WithHoldingTax $withHoldingTax)
     {
-        $withHoldingTax->update($request->all());
-
-        return new WithHoldingTaxCollection($withHoldingTax);
+        $validatedData = $request->validated();
+        $withholdingTax = WithHoldingTax::find($validatedData['id']);
+        if($withholdingTax) {
+            $withholdingTax->update($validatedData);
+        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Updated.',
+        ], 200);
     }
 
     public function destroy(WithHoldingTax $withHoldingTax)
     {
         $withHoldingTax->delete();
 
-        return response()->json(null, 204);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Withholding Tax Successfully Deleted.',
+        ], 200);
     }
 }

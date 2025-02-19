@@ -5,6 +5,7 @@ namespace App\Http\Requests\Withholdingtax;
 use App\Enums\VatType;
 use App\Enums\WtaxType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateWithHoldingTaxRequest extends FormRequest
 {
@@ -24,9 +25,9 @@ class UpdateWithHoldingTaxRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric|exists:withholding_taxes,id',
+            'id' => 'required|numeric|exists:withholding_tax,id',
             'account_id' => 'required|exists:accounts,id',
-            'wtax_name' => 'required|string|max:255|in:'.implode(',', WtaxType::values()),
+            'wtax_name' => 'nullable|string|max:255',
             'vat_type' => 'required|string|max:255|in:'.implode(',', VatType::values()),
             'wtax_percentage' => 'required|numeric',
         ];

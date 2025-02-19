@@ -3,9 +3,9 @@
 namespace App\Http\Resources\AccountingCollections;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class WithHoldingTaxCollection extends ResourceCollection
+class WithHoldingTaxCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
