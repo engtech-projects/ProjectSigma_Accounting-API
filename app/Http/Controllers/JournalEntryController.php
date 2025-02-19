@@ -109,7 +109,7 @@ class JournalEntryController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Open Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::OpenEntries($request->validated()))->response()->getData(true),
+            'data' => JournalEntryService::OpenEntries($request->validated()),
         ], 200);
     }
 
@@ -122,48 +122,48 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-    public function postedEntries()
+    public function postedEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Posted Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
+            'data' => JournalEntryService::postedEntries($request->validated()),
         ], 200);
     }
 
-    public function unpostedEntries()
+    public function unpostedEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Unposted Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::unpostedEntries())->response()->getData(true),
+            'data' => JournalEntryService::unpostedEntries($request->validated()),
         ], 200);
     }
 
-    public function disbursementEntries()
+    public function disbursementEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Disbursement Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::disbursementEntries())->response()->getData(true),
+            'data' => JournalEntryService::disbursementEntries($request->validated()),
         ], 200);
     }
 
-    public function forPaymentEnrtries()
+    public function forPaymentEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Payment Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forPaymentEnrtries())->response()->getData(true),
+            'data' => JournalEntryService::forPaymentEntries($request->validated()),
         ], 200);
     }
 
-    public function CashEntries()
+    public function CashEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Cash Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::CashEntries())->response()->getData(true),
+            'data' => JournalEntryService::CashEntries($request->validated()),
         ], 200);
     }
 
@@ -173,16 +173,16 @@ class JournalEntryController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement($request->validated()))->response()->getData(true),
+            'data' => JournalEntryService::forVoucherEntriesListDisbursement($request->validated()),
         ], 200);
     }
 
-    public function forVoucherEntriesListCash()
+    public function forVoucherEntriesListCash(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListCash())->response()->getData(true),
+            'data' => JournalEntryService::forVoucherEntriesListCash($request->validated()),
         ], 200);
     }
 

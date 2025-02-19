@@ -88,12 +88,12 @@ class VoucherController extends Controller
         ], 201);
     }
 
-    public function cashMyRequest()
+    public function cashMyRequest(CashVoucherRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Cash Voucher My Requests Successfully Retrieved.',
-            'data' => VoucherService::myRequestCash(),
+            'data' => VoucherService::myRequestCash($request->validated()),
         ], 200);
     }
 
@@ -115,9 +115,9 @@ class VoucherController extends Controller
         ], 200);
     }
 
-    public function cashMyApprovals()
+    public function cashMyApprovals(CashVoucherRequestFilter $request)
     {
-        $myApprovals = VoucherService::myApprovalsCash();
+        $myApprovals = VoucherService::myApprovalsCash($request->validated());
 
         return new JsonResponse([
             'success' => true,

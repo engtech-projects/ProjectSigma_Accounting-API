@@ -23,8 +23,6 @@ class PaymentRequestFilter extends FormRequest
     {
         return [
             'key' => 'nullable|string',
-            'date_from' => 'nullable|date|date_format:Y-m-d',
-            'date_to' => 'nullable|date|date_format:Y-m-d|required_with:date_from',
         ];
     }
 }

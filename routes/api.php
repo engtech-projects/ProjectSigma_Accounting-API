@@ -70,8 +70,8 @@ Route::middleware('auth:api')->group(function () {
         Route::get('open-entries', [JournalEntryController::class, 'openEntries']);
         Route::get('void-entries', [JournalEntryController::class, 'voidEntries']);
         Route::get('disbursement-entries', [JournalEntryController::class, 'disbursementEntries']);
-        Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEnrtries']);
-        Route::get('cash-entries', [JournalEntryController::class, 'CashEntries']);
+        Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEntries']);
+        Route::get('cash-entries', [JournalEntryController::class, 'cashEntries']);
         Route::get('get-accounts-vat-tax', [JournalEntryController::class, 'getAccountsVatTax']);
 
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
