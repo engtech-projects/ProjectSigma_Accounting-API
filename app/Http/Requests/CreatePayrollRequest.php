@@ -26,7 +26,7 @@ class CreatePayrollRequest extends FormRequest
             'amount' => 'required|numeric',
             'remarks' => 'required|string',
             'requested_by' => 'required|numeric',
-            'payroll_summary_id'=> 'required|numeric',
+            'payroll_summary_id' => 'required|numeric',
             'details' => 'required|array|min:1',
             'details.*.particular' => 'required|string',
             'details.*.amount' => 'required|numeric',

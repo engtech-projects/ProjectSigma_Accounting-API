@@ -30,10 +30,12 @@ class Account extends Model
     {
         return $this->belongsTo(AccountType::class);
     }
+
     public function terms(): BelongsTo
     {
         return $this->belongsTo(Term::class);
     }
+
     public function reportGroup(): BelongsTo
     {
         return $this->belongsTo(ReportGroup::class);

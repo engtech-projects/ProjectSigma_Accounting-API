@@ -11,7 +11,6 @@ use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
-use App\Http\Resources\PaymentRequestResource;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use App\Notifications\RequestPaymentForApprovalNotification;

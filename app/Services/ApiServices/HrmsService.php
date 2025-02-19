@@ -8,7 +8,6 @@ use App\Models\Stakeholders\Employee;
 use App\Models\User;
 use DB;
 use Http;
-use Log;
 
 class HrmsService
 {
@@ -49,7 +48,7 @@ class HrmsService
                 'stakeholdable_type' => Employee::class,
             ];
         });
-        DB::transaction(function ()use ($employees, $employee_stakeholder) {
+        DB::transaction(function () use ($employees, $employee_stakeholder) {
             Employee::upsert(
                 $employees->toArray(),
                 ['source_id'],
@@ -64,6 +63,7 @@ class HrmsService
                 ['name']
             );
         });
+
         return true;
     }
 
@@ -84,13 +84,13 @@ class HrmsService
                 'name' => $department['name'],
             ];
         });
-        DB::transaction(function ()use ($departments, $department_stakeholder) {
+        DB::transaction(function () use ($departments, $department_stakeholder) {
             Department::upsert($departments->toArray(), ['source_id'], ['name']);
             StakeHolder::upsert(
                 $department_stakeholder->toArray(),
                 [
                     'stakeholdable_id',
-                    'stakeholdable_type'
+                    'stakeholdable_type',
                 ],
                 ['name']
             );
@@ -167,6 +167,7 @@ class HrmsService
 
         return $response->json()['data'];
     }
+
     public function getApprovalName($approvalName)
     {
         $response = Http::withToken($this->authToken)
@@ -175,6 +176,7 @@ class HrmsService
         if (! $response->successful()) {
             return [];
         }
+
         return $response->json()['data'];
     }
 }

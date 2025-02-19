@@ -8,7 +8,6 @@ use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
 use App\Http\Requests\JournalEntryDetailsRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
-use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
 use App\Models\Period;
@@ -195,6 +194,16 @@ class JournalEntryController extends Controller
             'data' => JournalEntryService::generateJournalNumber(),
         ], 200);
     }
+
+    public function getAccountsVatTax()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts VAT Tax Successfully Retrieved.',
+            'data' => JournalEntryService::getAccountsVatTax(),
+        ], 200);
+    }
+
     public function generateJournalDetails(JournalEntryDetailsRequest $request)
     {
         $validatedData = $request->validated();
@@ -204,6 +213,6 @@ class JournalEntryController extends Controller
         return new JsonResponse([
             'message' => 'success',
             'data' => $journalData,
-        ],  200);
+        ], 200);
     }
 }

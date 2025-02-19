@@ -118,6 +118,7 @@ class PaymentRequest extends Model
     {
         return $query->with('journalEntry');
     }
+
     public function scopeWithJournalEntryVouchers($query)
     {
         return $query->with('journalEntry.voucher');

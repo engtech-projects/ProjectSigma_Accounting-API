@@ -3,7 +3,6 @@
 namespace App\Http\Resources\AccountingCollections;
 
 use App\Enums\JournalStatus;
-use App\Http\Resources\VoucherResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

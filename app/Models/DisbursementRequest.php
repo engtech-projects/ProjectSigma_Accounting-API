@@ -93,11 +93,12 @@ class DisbursementRequest extends Model
     {
         return $query->orderBy('created_at', 'DESC');
     }
+
     public function scopeWithDetails($query)
     {
         return $query->with([
             'details.account',
-            'details.stakeholder'
+            'details.stakeholder',
         ]);
     }
 

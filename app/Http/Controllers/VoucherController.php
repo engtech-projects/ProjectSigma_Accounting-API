@@ -150,10 +150,58 @@ class VoucherController extends Controller
         $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
         $validatedData['date_encoded'] = Carbon::now();
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
+        $validatedData = $request->validated();
+        $paymentRequestId = PaymentRequest::where('prf_no', $validatedData['reference_no'])->first()->id;
+        $journalEntry = JournalEntry::create(
+            [
+                'journal_no' => JournalEntryService::generateJournalNumber(),
+                'entry_date' => Carbon::now(),
+                'journal_date' => Carbon::now(),
+                'status' => JournalStatus::FOR_PAYMENT->value,
+                'posting_period_id' => PostingPeriod::currentPostingPeriod(),
+                'period_id' => Period::current()->pluck('id')->first(),
+                'reference_no' => $validatedData['reference_no'],
+                'payment_request_id' => $paymentRequestId,
+                'remarks' => $validatedData['particulars'],
+                'created_by' => auth()->user()->id,
+            ]
+        );
+        $validatedData['type'] = VoucherType::CASH->value;
+        $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
+        $validatedData['date_encoded'] = Carbon::now();
+        $validatedData['request_status'] = RequestStatuses::PENDING->value;
 
         // ID of the newly created cash journal entry
         $validatedData['journal_entry_id'] = $journalEntry->id;
+        // ID of the newly created cash journal entry
+        $validatedData['journal_entry_id'] = $journalEntry->id;
 
+        $validatedData['created_by'] = auth()->user()->id;
+        $voucher = CashRequest::create($validatedData);
+        foreach ($validatedData['details'] as $detail) {
+            $voucher->details()->create([
+                'account_id' => $detail['account_id'],
+                'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                'description' => $detail['description'] ?? null,
+                'debit' => $detail['debit'] ?? null,
+                'credit' => $detail['credit'] ?? null,
+            ]);
+            $journalEntry->details()->create([
+                'account_id' => $detail['account_id'],
+                'stakeholder_id' => $detail['stakeholder_id'] ?? null,
+                'description' => $detail['description'] ?? null,
+                'debit' => $detail['debit'] ?? null,
+                'credit' => $detail['credit'] ?? null,
+            ]);
+        }
+        $voucher->journalEntry()->update([
+            'entry_date' => $validatedData['voucher_date'],
+        ]);
+        JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
+            'status' => JournalStatus::FOR_PAYMENT->value,
+        ]);
+        DB::commit();
+        $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
         $validatedData['created_by'] = auth()->user()->id;
         $voucher = CashRequest::create($validatedData);
         foreach ($validatedData['details'] as $detail) {
@@ -186,6 +234,11 @@ class VoucherController extends Controller
             'message' => 'Voucher created',
             'data' => $voucher,
         ], 201);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Voucher created',
+            'data' => $voucher,
+        ], 201);
         // } catch (\Exception $e) {
         //     DB::rollBack();
 
@@ -208,7 +261,18 @@ class VoucherController extends Controller
             'receipt_no' => $validatedData['receipt_no'],
             'attach_file' => $validatedData['attach_file'] ?? null,
         ]);
+        $validatedData = $request->validated();
+        $voucher = CashRequest::findOrFail($validatedData['voucher_id']);
+        $voucher->update([
+            'received_by' => $validatedData['received_by'],
+            'received_date' => $validatedData['received_date'],
+            'receipt_no' => $validatedData['receipt_no'],
+            'attach_file' => $validatedData['attach_file'] ?? null,
+        ]);
 
+        JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
+            'status' => JournalStatus::POSTED->value,
+        ]);
         JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
             'status' => JournalStatus::POSTED->value,
         ]);
