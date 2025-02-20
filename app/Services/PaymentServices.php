@@ -43,6 +43,7 @@ class PaymentServices
             ->payment()
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
+            ->myApprovals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -63,6 +64,7 @@ class PaymentServices
             ->orderByDesc('created_at')
             ->withPaymentRequestDetails()
             ->withJournalEntryVouchers()
+            ->myRequests()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
