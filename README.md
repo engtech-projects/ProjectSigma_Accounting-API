@@ -1,13 +1,6 @@
-# HRMS, Inventory, Project Monitoring System
+# SIGMA ACCOUNTING API
 
-This is a Laravel project that combines HRMS, Inventory and Project Monitoring System.
-
-## Features
-
-- **HRMS**: manage employees, departments, leaves, attendance, salary, etc.
-- **Inventory**: manage items, stock, orders, suppliers, etc.
-- **Project Monitoring**: manage projects, tasks, team members, progress, etc.
-
+This is a Laravel project that combines ACCOUNTING
 ## Installation
 
 1. Clone the repository
