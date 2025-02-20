@@ -62,8 +62,8 @@ class VoucherService
     {
         $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('journalEntry', function ($query) use ($validatedData) {
-                    $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
             ->whereDisbursement()
@@ -78,7 +78,10 @@ class VoucherService
     public static function myApprovalsDisbursement(array $validatedData)
     {
         $disbursementRequest = Voucher::when(isset($validatedData['key']), function($query, $key) use ($validatedData) {
-            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%");
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+            ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+            });
         })
             ->whereDisbursement()
             ->withDetails()
@@ -94,8 +97,8 @@ class VoucherService
     {
         $disbursementRequest = Voucher::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
             $query->where('voucher_no', 'like', "%{$validatedData['key']}%")
-                ->orWhereHas('journalEntry', function ($query) use ($validatedData) {
-                    $query->where('journal_no', 'like', "%{$validatedData['key']}%");
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'like', "%{$validatedData['key']}%");
                 });
         })
             ->myRequests()
@@ -125,8 +128,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('journalEntry', function ($query) use ($validatedData){
-                $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%");
+            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
             });
         })
             ->withDetails()
@@ -143,8 +146,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function($query, $key) use ($validatedData) {
             return $query->where('voucher_no','LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas("journalEntry", function($query) use ($validatedData) {
-                $query->where("journal_no", "LIKE", "%{$validatedData['key']}%");
+            ->orWhereHas("stakeholder", function($query) use ($validatedData) {
+                $query->where("name", "LIKE", "%{$validatedData['key']}%");
             });
         })
             ->myApprovals()
@@ -161,8 +164,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('journalEntry', function ($query) use ($validatedData){
-                $query->where('journal_no','LIKE', "%{$validatedData['key']}%");
+            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
+                $query->where('name','LIKE', "%{$validatedData['key']}%");
             });
         })
             ->withDetails()
@@ -179,8 +182,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('journalEntry', function ($query) use ($validatedData) {
-                    $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
             ->isApproved()
@@ -198,8 +201,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('journalEntry', function ($query) use ($validatedData){
-                    $query->where('journal_no', 'LIKE',"%{$validatedData['key']}%");
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData){
+                    $query->where('name', 'LIKE',"%{$validatedData['key']}%");
                 });
         })
             ->clearedVoucherCash()

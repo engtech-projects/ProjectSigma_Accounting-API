@@ -104,7 +104,10 @@ class JournalEntryService
     public static function forVoucherEntriesListDisbursement(array $validatedData)
     {
         $jounalEntries = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
-            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%");
+            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
+            ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+            });
         })
             ->withPaymentRequest()
             ->withAccounts()
@@ -119,7 +122,10 @@ class JournalEntryService
     public static function forVoucherEntriesListCash(array $validatedData)
     {
         $jounalEntries = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
-            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%");
+            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
+            ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+            });
         })
             ->withPaymentRequest()
             ->withAccounts()
