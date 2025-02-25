@@ -18,23 +18,11 @@ class PaymentRequestCollection extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $details = $this->details->map(function ($detail) {
-            $accountDetail = explode('::', $detail->particulars);
-
-            return array_merge($detail->toArray(), [
-                'account_id' => $accountDetail[2] ?? null,
-                'stakeholder_name' => $accountDetail[3] ?? null,
-                'stakeholder_id' => $accountDetail[4] ?? null,
-                'particulars' => $accountDetail[0] ?? null,
-            ]);
-        });
-
         return array_merge(parent::toArray($request), [
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
             'approvals' => new ApprovalAttributeResource(['approvals' => $this?->approvals]),
             'next_approval' => $this->getNextPendingApproval(),
-            'details' => $details,
             'total_amount_formatted' => number_format($this->total, 2, '.', ','),
             'step_approval' => [
                 'payment_request' => [
