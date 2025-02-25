@@ -19,6 +19,7 @@ class WithHoldingTax extends Model
         'vat_type',
         'wtax_percentage',
     ];
+
     protected $appends = ['wtax_percentage_formatter'];
 
     public function getWtaxPercentageFormatterAttribute()

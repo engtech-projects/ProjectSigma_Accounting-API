@@ -6,7 +6,6 @@ use App\Enums\BalanceType;
 use App\Enums\JournalStatus;
 use App\Enums\PaymentRequestType;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
-use App\Models\Account;
 use App\Models\PaymentRequest;
 use App\Models\Term;
 use App\Services\ApiServices\WithHoldingTaxService;
@@ -18,9 +17,9 @@ class PaymentServices
     {
         $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
-                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
-            });
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
         })
             ->withStakeholder()
             ->payment()
@@ -38,9 +37,9 @@ class PaymentServices
     {
         $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}")
-            ->orWhereHas("stakeholder", function ($query) use ($validatedData){
-                $query->where('name', 'LIKE', "%{$validatedData['key']}");
-            });
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}");
+                });
         })
             ->withStakeholder()
             ->payment()
@@ -55,11 +54,11 @@ class PaymentServices
 
     public static function myRequests(array $validatedData)
     {
-        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData){
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('stakeholder', function ($query) use ($validatedData){
-                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
-            });
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
         })
 
             ->withStakeholder()
@@ -94,7 +93,7 @@ class PaymentServices
                 $detail->credit = 0;
             });
             if (floatval($paymentRequest->total_vat_amount) > 0) {
-                $accountVat = (Object) AccountService::getVatAccount();
+                $accountVat = (object) AccountService::getVatAccount();
                 $paymentRequest->details[] = [
                     'id' => $accountVat->id,
                     'journalAccountInfo' => $accountVat->information,
@@ -108,11 +107,11 @@ class PaymentServices
             if ($paymentRequest->with_holding_tax_id) {
                 $withholdingTax = (object) WithHoldingTaxService::getWithHoldingTax($paymentRequest->with_holding_tax_id);
                 $accountWithHoldingTax = (object) AccountService::getWithHoldingTaxAccount($withholdingTax->information->account_id);
-                $withHoldingTaxAmount = floatval($paymentRequest->taxableAmount) * floatVal($withholdingTax->information->wtax_percentage / 100);
+                $withHoldingTaxAmount = floatval($paymentRequest->taxableAmount) * floatval($withholdingTax->information->wtax_percentage / 100);
                 $paymentRequest->details[] = [
                     'id' => $accountWithHoldingTax->id,
                     'journalAccountInfo' => $accountWithHoldingTax->information,
-                    'particulars' => 'WITHHOLDING TAX (' . $withholdingTax?->information?->wtax_percentage_formatter . ')',
+                    'particulars' => 'WITHHOLDING TAX ('.$withholdingTax?->information?->wtax_percentage_formatter.')',
                     'amount' => floatval($withHoldingTaxAmount),
                     'cost' => floatval($withHoldingTaxAmount),
                     'debit' => 0,
@@ -125,11 +124,10 @@ class PaymentServices
                     $detail->account_id = $terms?->account->id;
                     $detail->journalAccountInfo = $terms?->account;
                     $detail->stakeholderInformation = $detail->stakeholder;
-                    if (!$terms?->debit_credit) {
+                    if (! $terms?->debit_credit) {
                         $detail->debit = floatval($detail->amount);
                         $detail->credit = 0;
-                    }
-                    else if ($terms?->debit_credit === BalanceType::DEBIT->value) {
+                    } elseif ($terms?->debit_credit === BalanceType::DEBIT->value) {
                         $detail->debit = floatval($detail->amount);
                         $detail->credit = 0;
                     } elseif ($terms?->debit_credit === BalanceType::CREDIT->value) {
@@ -148,6 +146,7 @@ class PaymentServices
                     'credit' => null,
                 ];
             }
+
             return $paymentRequest;
         });
 

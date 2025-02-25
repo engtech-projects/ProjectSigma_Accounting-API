@@ -19,6 +19,7 @@ class WithHoldingTaxService
     public static function getWithHoldingTax($id)
     {
         $withholdingTax = WithHoldingTax::find($id);
+
         return [
             'id' => $withholdingTax->id,
             'information' => $withholdingTax,

@@ -167,7 +167,6 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-
     public function forVoucherEntriesListDisbursement(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
