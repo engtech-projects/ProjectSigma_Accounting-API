@@ -10,8 +10,8 @@ class AccountGroupService
     public static function getPaginated(array $filters = [])
     {
         $query = AccountGroup::query();
-        if (isset($filters['name'])) {
-            $query->where('name', 'like', '%'.$filters['name'].'%');
+        if (isset($filters['key'])) {
+            $query->where('name', 'like', '%' . $filters['key'] . '%');
         }
 
         return $query->paginate(config('services.pagination.limit'));
