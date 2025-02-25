@@ -25,6 +25,7 @@ use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
+use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,9 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::get('form-types', function (Request $request) {
         return response()->json(['forms' => FormType::cases()], 200);
+    });
+    Route::get('get-all-withholding-tax', function (Request $request) {
+        return response()->json(['data' => WithHoldingTax::pluck('wtax_name', 'id')], 200);
     });
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);

@@ -37,6 +37,9 @@ class PaymentRequest extends Model
         'approvals' => 'array',
     ];
 
+    protected $appends = [
+        'taxableAmount',
+    ];
     public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);
@@ -103,7 +106,10 @@ class PaymentRequest extends Model
     {
         return $this->hasMany(JournalEntry::class, 'payment_request_id');
     }
-
+    public function withHoldingTax(): BelongsTo
+    {
+        return $this->BelongsTo(WithHoldingTax::class);
+    }
     public function scopePayroll($query)
     {
         return $query->where('type', PaymentRequestType::PAYROLL->value);
@@ -118,9 +124,18 @@ class PaymentRequest extends Model
     {
         return $query->with('journalEntry');
     }
-
+    public function scopeWithHoldingTax($query)
+    {
+        return $query->with('withHoldingTax');
+    }
     public function scopeWithJournalEntryVouchers($query)
     {
         return $query->with('journalEntry.voucher');
     }
+
+    public function getTaxableAmountAttribute()
+    {
+        return floatval($this->total) - floatVal($this->total_vat_amount);
+    }
+
 }

@@ -53,9 +53,18 @@ class WithHoldingTaxController extends Controller
         ], 200);
     }
 
-    public function destroy(WithHoldingTax $withHoldingTax)
+    public function destroy($id)
     {
-        $withHoldingTax->delete();
+        $withHoldingTax = WithHoldingTax::with('paymentRequest')->find($id);
+        if($withHoldingTax->paymentRequest->isNotEmpty()) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Withholding Tax cannot be deleted as it is associated with a payment request.',
+            ], 400);
+        }
+        if($withHoldingTax) {
+            $withHoldingTax->delete();
+        }
 
         return new JsonResponse([
             'success' => true,
