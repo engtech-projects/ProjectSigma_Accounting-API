@@ -10,8 +10,8 @@ class TermsService
     {
         $query = Term::query();
 
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
+        if (isset($filters['key'])) {
+            $query->where('name', 'LIKE', "%{$filters['key']}%");
         }
         $query->with(['account']);
 
