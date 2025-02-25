@@ -10,8 +10,8 @@ class BookService
     {
         $query = Book::query();
 
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
+        if (isset($filters['key'])) {
+            $query->where('name', 'like', "%{$filters['key']}%");
         }
 
         return $query->paginate(config('app.pagination_limit'));
