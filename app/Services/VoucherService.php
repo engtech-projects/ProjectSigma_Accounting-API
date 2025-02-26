@@ -60,49 +60,55 @@ class VoucherService
 
     public static function getWithPaginationDisbursement(array $validatedData)
     {
-        $query = Voucher::query();
-        if (isset($validatedData['book'])) {
-            $book = Book::byName($validatedData['book'])->firstOr(function () {
-                return Book::first();
-            });
-            if ($book) {
-                $query->filterBook($book->id);
-            }
-        }
-        if (isset($validatedData['status'])) {
-            $query->status($validatedData['status']);
-        }
-        $voucherRequest = $query->whereDisbursement()
-            ->withDetails()
-            ->withPaymentRequestDetails()
-            ->orderDesc()
-            ->paginate(config('services.pagination.limit'));
-
-        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
-    }
-
-    public static function myApprovalsDisbursement()
-    {
-        $voucherRequest = Voucher::whereDisbursement()
-            ->withDetails()
-            ->withPaymentRequestDetails()
-            ->myApprovals()
-            ->orderDesc()
-            ->paginate(config('services.pagination.limit'));
-
-        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
-    }
-
-    public static function myRequestDisbursement()
-    {
-        $voucherRequest = Voucher::myRequests()
+        $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
             ->whereDisbursement()
             ->withDetails()
             ->withPaymentRequestDetails()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return DisbursementVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return DisbursementVoucherResource::collection($disbursementRequest)->response()->getData(true);
+    }
+
+    public static function myApprovalsDisbursement(array $validatedData)
+    {
+        $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
+            ->whereDisbursement()
+            ->withDetails()
+            ->withPaymentRequestDetails()
+            ->myApprovals()
+            ->orderDesc()
+            ->paginate(config('services.pagination.limit'));
+
+        return DisbursementVoucherResource::collection($disbursementRequest)->response()->getData(true);
+    }
+
+    public static function myRequestDisbursement(array $validatedData)
+    {
+        $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            $query->where('voucher_no', 'like', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'like', "%{$validatedData['key']}%");
+                });
+        })
+            ->myRequests()
+            ->whereDisbursement()
+            ->withDetails()
+            ->withPaymentRequestDetails()
+            ->orderDesc()
+            ->paginate(config('services.pagination.limit'));
+
+        return DisbursementVoucherResource::collection($disbursementRequest)->response()->getData(true);
     }
 
     public static function myVoucheringDisbursement()
@@ -120,31 +126,30 @@ class VoucherService
 
     public static function getWithPaginationCash(array $validatedData)
     {
-        $query = Voucher::query();
-        if (isset($validatedData['book'])) {
-            $book = Book::byName($validatedData['book'])->firstOr(function () {
-                return Book::first();
-            });
-            if ($book) {
-                $query->filterBook($book->id);
-            }
-        }
-        if (isset($validatedData['status'])) {
-            $query->status($validatedData['status']);
-        }
-        $voucherRequest = $query->withDetails()
+        $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
+            ->withDetails()
             ->whereCash()
             ->orderDesc()
             ->withPaymentRequestDetails()
             ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
-        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($cashRequest)->response()->getData(true);
     }
 
-    public static function myApprovalsCash()
+    public static function myApprovalsCash(array $validatedData)
     {
-        $voucherRequest = Voucher::withDetails()
+        $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
             ->myApprovals()
             ->whereCash()
             ->orderDesc()
@@ -152,12 +157,17 @@ class VoucherService
             ->withStakeholder()
             ->paginate(config('services.pagination.limit'));
 
-        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($cashRequest)->response()->getData(true);
     }
 
-    public static function myRequestCash()
+    public static function myRequestCash(array $validatedData)
     {
-        $voucherRequest = Voucher::myRequests()
+        $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
             ->withDetails()
             ->withPaymentRequestDetails()
             ->withStakeholder()
@@ -165,13 +175,17 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($cashRequest)->response()->getData(true);
     }
 
-    public static function getClearingVouchersCash()
+    public static function getClearingVouchersCash(array $validatedData)
     {
-        $query = Voucher::query();
-        $voucherRequest = $query
+        $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
             ->isApproved()
             ->whereCash()
             ->withDetails()
@@ -180,21 +194,26 @@ class VoucherService
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($cashRequest)->response()->getData(true);
     }
 
-    public static function getClearedVouchersCash()
+    public static function getClearedVouchersCash(array $validatedData)
     {
-        $query = Voucher::query();
-        $voucherRequest = $query
+        $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
             ->clearedVoucherCash()
             ->whereCash()
             ->withDetails()
             ->withPaymentRequestDetails()
             ->withStakeholder()
+            ->withStakeholder()
             ->orderDesc()
             ->paginate(config('services.pagination.limit'));
 
-        return CashVoucherResource::collection($voucherRequest)->response()->getData(true);
+        return CashVoucherResource::collection($cashRequest)->response()->getData(true);
     }
 }

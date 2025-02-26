@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -24,22 +25,22 @@ class CashVoucherResource extends JsonResource
             'approvals' => new ApprovalAttributeResource(['approvals' => $this->approvals]),
             'date_filed' => $this->created_at_human,
             'next_approval' => $this->getNextPendingApproval(),
-            'journal_entry' => JournalEntryResource::make($this->whenLoaded('journalEntry')),
+            'journal_entry' => JournalEntryCollection::make($this->whenLoaded('journalEntry')),
             'payment_request' => PaymentRequestCollection::make($this->journalEntry->paymentRequest),
             'step_approval' => [
                 'payment_request' => [
                     'title' => 'Payment Request Approval',
-                    'data'  => $this->journalEntry->paymentRequest()?->first()->approvals ?? []
+                    'data' => $this->journalEntry->paymentRequest()?->first()->approvals ?? [],
                 ],
                 'disbursement_voucher' => [
                     'title' => 'Disbursement Voucher Approval',
-                    'data'  => $this->journalEntry?->voucher()?->first()->approvals ?? []
+                    'data' => $this->journalEntry?->voucher()?->first()->approvals ?? [],
                 ],
                 'cash_voucher' => [
                     'title' => 'Cash Voucher Approval',
-                    'data'  => $this->approvals ?? []
+                    'data' => $this->approvals ?? [],
                 ],
-            ]
+            ],
         ];
     }
 }

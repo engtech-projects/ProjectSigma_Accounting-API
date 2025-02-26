@@ -4,18 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Terms\TermsRequestFilter;
 use App\Http\Requests\Terms\TermsRequestStore;
+use App\Http\Resources\TermsCollection;
 use App\Models\Term;
+use App\Services\TermsService;
 use DB;
 use Illuminate\Http\JsonResponse;
 
 class TermController extends Controller
 {
-    public function index()
+    public function index(TermsRequestFilter $request)
     {
+        $terms = TermsService::getPaginated($request->validated());
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Terms fetched successfully',
-            'data' => Term::all(),
+            'data' => new TermsCollection($terms),
         ], 200);
     }
 
@@ -40,7 +44,7 @@ class TermController extends Controller
         ], 200);
     }
 
-    public function update(TermsRequestFilter $request, Term $term)
+    public function update(TermsRequestStore $request, Term $term)
     {
         try {
             DB::beginTransaction();

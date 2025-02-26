@@ -23,7 +23,6 @@ class PaymentRequestFilter extends FormRequest
     {
         return [
             'key' => 'nullable|string',
-            'status' => 'nullable|string',
         ];
     }
 }

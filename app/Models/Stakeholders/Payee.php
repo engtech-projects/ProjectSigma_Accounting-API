@@ -29,4 +29,9 @@ class Payee extends Model
     {
         return $this->morphMany(PaymentRequestDetails::class, 'chargeable');
     }
+
+    public function scopeWherePayee($query, $payee)
+    {
+        return $query->where('name', $payee);
+    }
 }

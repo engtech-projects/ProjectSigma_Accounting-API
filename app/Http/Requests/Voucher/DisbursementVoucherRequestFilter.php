@@ -22,8 +22,7 @@ class DisbursementVoucherRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
-            'voucher_no' => 'nullable|string|max:255',
-            'status' => 'nullable|string|max:255',
+            'key' => 'nullable|string|max:255',
         ];
     }
 }

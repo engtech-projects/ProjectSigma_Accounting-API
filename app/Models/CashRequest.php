@@ -103,6 +103,14 @@ class CashRequest extends Model
         return $query->orderBy('created_at', 'DESC');
     }
 
+    public function scopeWithDetails($query)
+    {
+        return $query->with([
+            'details.account',
+            'details.stakeholder',
+        ]);
+    }
+
     public function scopeWithPaymentRequestDetails($query)
     {
         return $query->with(['details']);

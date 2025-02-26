@@ -22,8 +22,9 @@ class TermsRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|numeric',
-            'name' => 'required|string',
+            'id' => 'nullable|numeric',
+            'name' => 'nullable|string',
+            'debit_credit' => 'nullable|string',
             'description' => 'nullable|string',
             'account_id' => 'nullable|exists:accounts,id',
         ];

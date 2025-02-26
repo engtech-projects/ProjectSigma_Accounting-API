@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table("stakeholder", function (Blueprint $table) {
-            $table->unique(["stakeholdable_id", "stakeholdable_type"]);
+        Schema::table('stakeholder', function (Blueprint $table) {
+            $table->unique(['stakeholdable_id', 'stakeholdable_type']);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table("stakeholder", function (Blueprint $table) {
-            $table->dropUnique(["stakeholdable_id", "stakeholdable_type"]);
+        Schema::table('stakeholder', function (Blueprint $table) {
+            $table->dropUnique(['stakeholdable_id', 'stakeholdable_type']);
         });
     }
 };

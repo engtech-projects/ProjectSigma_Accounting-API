@@ -24,6 +24,7 @@ class TermsRequestStore extends FormRequest
         return [
             'name' => 'required|string',
             'description' => 'nullable|string',
+            'debit_credit' => 'required|string',
             'account_id' => 'required|exists:accounts,id',
         ];
     }

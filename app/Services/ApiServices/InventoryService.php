@@ -45,13 +45,13 @@ class InventoryService
                 'name' => $supplier['name'],
             ];
         });
-        DB::transaction(function ()use ($suppliers, $suppliers_stakeholder) {
+        DB::transaction(function () use ($suppliers, $suppliers_stakeholder) {
             Supplier::upsert($suppliers->toArray(), ['source_id'], ['name']);
             StakeHolder::upsert(
                 $suppliers_stakeholder->toArray(),
                 [
                     'stakeholdable_id',
-                    'stakeholdable_type'
+                    'stakeholdable_type',
                 ],
                 ['name']
             );

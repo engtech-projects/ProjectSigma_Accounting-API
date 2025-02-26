@@ -24,6 +24,8 @@ use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\VoucherController;
+use App\Http\Controllers\WithHoldingTaxController;
+use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +46,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('form-types', function (Request $request) {
         return response()->json(['forms' => FormType::cases()], 200);
     });
-
+    Route::get('get-all-withholding-tax', function (Request $request) {
+        return response()->json(['data' => WithHoldingTax::pluck('wtax_name', 'id')], 200);
+    });
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
 
@@ -58,8 +62,9 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);
-    Route::resource('term', TermController::class);
+    Route::resource('terms', TermController::class);
     Route::resource('report-group', ReportGroupController::class);
+    Route::resource('withholding-tax', WithHoldingTaxController::class);
 
     //JOURNAL ENTRY ROUTES
     Route::prefix('journal-entry')->group(function () {
@@ -69,10 +74,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('open-entries', [JournalEntryController::class, 'openEntries']);
         Route::get('void-entries', [JournalEntryController::class, 'voidEntries']);
         Route::get('disbursement-entries', [JournalEntryController::class, 'disbursementEntries']);
-        Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEnrtries']);
-        Route::get('cash-entries', [JournalEntryController::class, 'CashEntries']);
+        Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEntries']);
+        Route::get('cash-entries', [JournalEntryController::class, 'cashEntries']);
+        Route::get('get-accounts-vat-tax', [JournalEntryController::class, 'getAccountsVatTax']);
 
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
+        Route::post('generate-journal-details', [JournalEntryController::class, 'generateJournalDetails']);
         Route::get('for-voucher-entries-disbursement', [JournalEntryController::class, 'forVoucherEntriesListDisbursement']);
         Route::get('for-voucher-entries-cash', [JournalEntryController::class, 'forVoucherEntriesListCash']);
         Route::resource('resource', JournalEntryController::class)->names('journal-entries');
@@ -93,9 +100,6 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
-        Route::get('my-requests', [PayrollRequestController::class, 'myRequest']);
-        Route::get('my-approvals', [PayrollRequestController::class, 'myApprovals']);
-        Route::get('generate-payroll-no', [PayrollRequestController::class, 'generatePayrollNo']);
     });
 
     //VOUCHERS ROUTES
@@ -155,7 +159,11 @@ Route::middleware('auth:api')->group(function () {
 // SECRET API KEY ROUTES
 Route::middleware('secret_api')->group(function () {
     // SIGMA SERVICES ROUTES
-    Route::prefix('sigma')->group(function () {});
+    Route::prefix('sigma')->group(function () {
+        Route::prefix('payroll')->group(function () {
+            Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
+        });
+    });
 });
 
 //SEARCH ROUTES

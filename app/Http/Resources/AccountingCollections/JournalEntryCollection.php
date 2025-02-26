@@ -19,10 +19,11 @@ class JournalEntryCollection extends JsonResource
             ...parent::toArray($request),
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : null),
+            'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : ($this->status === JournalStatus::FOR_PAYMENT->value ? 'For Payment' : null)),
             'status' => ucfirst($this->status),
             'balance' => $this->details->sum('debit') - $this->details->sum('credit'),
             'net_amount' => $this->details->sum('debit'),
+            'total_amount_formatted' => number_format($this->paymentRequest->total, 2, '.', ','),
             'details' => $this->details->map(function ($detail) {
                 return [
                     'account_id' => $detail->account_id,

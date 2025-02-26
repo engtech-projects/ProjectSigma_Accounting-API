@@ -38,7 +38,7 @@ class Voucher extends Model
         'received_by',
         'received_date',
         'receipt_no',
-        'attach_file'
+        'attach_file',
     ];
 
     protected $casts = [
@@ -99,7 +99,10 @@ class Voucher extends Model
 
     public function scopeWithDetails($query)
     {
-        return $query->with(['details.account']);
+        return $query->with([
+            'details.account',
+            'details.stakeholder',
+        ]);
     }
 
     public function scopeClearedVoucherCash($query)

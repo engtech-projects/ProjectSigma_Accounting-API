@@ -11,7 +11,6 @@ use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
-use App\Http\Resources\PaymentRequestResource;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use App\Notifications\RequestPaymentForApprovalNotification;
@@ -31,18 +30,18 @@ class PaymentRequestController extends Controller
         ], 200);
     }
 
-    public function myRequest()
+    public function myRequest(PaymentRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment My Requests Successfully Retrieved.',
-            'data' => PaymentServices::myRequests(),
+            'data' => PaymentServices::myRequests($request->validated()),
         ], 200);
     }
 
-    public function myApprovals()
+    public function myApprovals(PaymentRequestFilter $request)
     {
-        $myApprovals = PaymentServices::myApprovals();
+        $myApprovals = PaymentServices::myApprovals($request->validated());
 
         return new JsonResponse([
             'success' => true,

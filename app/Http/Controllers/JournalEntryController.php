@@ -6,8 +6,8 @@ use App\Enums\JournalStatus;
 use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
 use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
+use App\Http\Requests\JournalEntryDetailsRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
-use App\Http\Resources\JournalEntryResource;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
 use App\Models\Period;
@@ -69,7 +69,7 @@ class JournalEntryController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',
-                'data' => new JournalEntryResource($journalEntry->load('details')),
+                'data' => new JournalEntryCollection($journalEntry->load('details')),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -80,17 +80,6 @@ class JournalEntryController extends Controller
                 'data' => null,
             ], 500);
         }
-    }
-
-    public function show(JournalEntry $journalEntry)
-    {
-        $journalEntry = $journalEntry->with(['details'])->paginate(config('service.pagination.limit'));
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Journal Entry Successfully Retrieved.',
-            'data' => JournalEntryResource::collection($journalEntry)->response()->getData(true),
-        ]);
     }
 
     public function update(JournalEntryRequestUpdate $request)
@@ -108,15 +97,19 @@ class JournalEntryController extends Controller
         $toDelete = array_diff($existingIds, $incomingIds);
         $journalEntry->details()->whereIn('id', $toDelete)->delete();
 
-        return response()->json(new JournalEntryResource($journalEntry->load(['details'])), 201);
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entry Successfully Updated.',
+            'data' => new JournalEntryCollection($journalEntry->load('details')),
+        ], 200);
     }
 
-    public function openEntries()
+    public function openEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Open Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::OpenEntries())->response()->getData(true),
+            'data' => JournalEntryService::OpenEntries($request->validated()),
         ], 200);
     }
 
@@ -129,67 +122,66 @@ class JournalEntryController extends Controller
         ], 200);
     }
 
-    public function postedEntries()
+    public function postedEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Posted Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::postedEntries())->response()->getData(true),
+            'data' => JournalEntryService::postedEntries($request->validated()),
         ], 200);
     }
 
-    public function unpostedEntries()
+    public function unpostedEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Unposted Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::unpostedEntries())->response()->getData(true),
+            'data' => JournalEntryService::unpostedEntries($request->validated()),
         ], 200);
     }
 
-    public function disbursementEntries()
+    public function disbursementEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Disbursement Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::disbursementEntries())->response()->getData(true),
+            'data' => JournalEntryService::disbursementEntries($request->validated()),
         ], 200);
     }
 
-    public function forPaymentEnrtries()
+    public function forPaymentEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Payment Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forPaymentEnrtries())->response()->getData(true),
+            'data' => JournalEntryService::forPaymentEntries($request->validated()),
         ], 200);
     }
 
-    public function CashEntries()
+    public function CashEntries(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Cash Journal Entries Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::CashEntries())->response()->getData(true),
+            'data' => JournalEntryService::CashEntries($request->validated()),
         ], 200);
     }
 
-
-    public function forVoucherEntriesListDisbursement()
+    public function forVoucherEntriesListDisbursement(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListDisbursement())->response()->getData(true),
+            'data' => JournalEntryService::forVoucherEntriesListDisbursement($request->validated()),
         ], 200);
     }
 
-    public function forVoucherEntriesListCash()
+    public function forVoucherEntriesListCash(JournalEntryRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entries for Voucher Successfully Retrieved.',
-            'data' => JournalEntryCollection::collection(JournalEntryService::forVoucherEntriesListCash())->response()->getData(true),
+            'data' => JournalEntryService::forVoucherEntriesListCash($request->validated()),
         ], 200);
     }
 
@@ -199,6 +191,27 @@ class JournalEntryController extends Controller
             'success' => true,
             'message' => 'Journal Number Successfully Generated.',
             'data' => JournalEntryService::generateJournalNumber(),
+        ], 200);
+    }
+
+    public function getAccountsVatTax()
+    {
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts VAT Tax Successfully Retrieved.',
+            'data' => JournalEntryService::getAccountsVatTax(),
+        ], 200);
+    }
+
+    public function generateJournalDetails(JournalEntryDetailsRequest $request)
+    {
+        $validatedData = $request->validated();
+        $journalData = $request->all();
+        $journalData['details'] = JournalEntryService::generateJournalDetails($validatedData['details']);
+
+        return new JsonResponse([
+            'message' => 'success',
+            'data' => $journalData,
         ], 200);
     }
 }
