@@ -25,7 +25,7 @@ class ParticularGroupController extends Controller
     {
         $query = ParticularGroup::query();
         if ($request->has('key')) {
-            $query->where('name', 'like', '%' . $request->key . '%');
+            $query->where('name', 'like', '%'.$request->key.'%');
         }
 
         return new JsonResponse([
