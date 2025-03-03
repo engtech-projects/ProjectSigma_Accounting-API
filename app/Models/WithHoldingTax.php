@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class WithHoldingTax extends Model
@@ -19,8 +20,20 @@ class WithHoldingTax extends Model
         'wtax_percentage',
     ];
 
+    protected $appends = ['wtax_percentage_formatter'];
+
+    public function getWtaxPercentageFormatterAttribute()
+    {
+        return $this->wtax_percentage.'%';
+    }
+
     public function account()
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function paymentRequest(): HasMany
+    {
+        return $this->hasMany(PaymentRequest::class);
     }
 }

@@ -16,7 +16,7 @@ class WithHoldingTaxController extends Controller
     {
         $validatedData = $request->validated();
 
-        return new WithHoldingTaxCollection (WithHoldingTaxService::getPaginated($validatedData));
+        return new WithHoldingTaxCollection(WithHoldingTaxService::getPaginated($validatedData));
     }
 
     public function store(StoreWithHoldingTaxRequest $request)
@@ -27,7 +27,7 @@ class WithHoldingTaxController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Created.',
-            'data' => new WithHoldingTaxCollection ($withHoldingTax),
+            'data' => new WithHoldingTaxCollection($withHoldingTax),
         ], 200);
     }
 
@@ -36,7 +36,7 @@ class WithHoldingTaxController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Created.',
-            'data' => new WithHoldingTaxCollection ($withHoldingTax),
+            'data' => new WithHoldingTaxCollection($withHoldingTax),
         ], 200);
     }
 
@@ -44,18 +44,28 @@ class WithHoldingTaxController extends Controller
     {
         $validatedData = $request->validated();
         $withholdingTax = WithHoldingTax::find($validatedData['id']);
-        if($withholdingTax) {
+        if ($withholdingTax) {
             $withholdingTax->update($validatedData);
         }
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Withholding Tax Successfully Updated.',
         ], 200);
     }
 
-    public function destroy(WithHoldingTax $withHoldingTax)
+    public function destroy($id)
     {
-        $withHoldingTax->delete();
+        $withHoldingTax = WithHoldingTax::with('paymentRequest')->find($id);
+        if ($withHoldingTax->paymentRequest->isNotEmpty()) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Withholding Tax cannot be deleted as it is associated with a payment request.',
+            ], 400);
+        }
+        if ($withHoldingTax) {
+            $withHoldingTax->delete();
+        }
 
         return new JsonResponse([
             'success' => true,

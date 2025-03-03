@@ -2,13 +2,13 @@
 
 namespace App\Enums;
 
+use App\Enums\Traits\EnumHelper;
+
 enum PostingPeriodStatusType: string
 {
+    use EnumHelper;
+
     case OPEN = 'open';
     case CLOSED = 'closed';
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

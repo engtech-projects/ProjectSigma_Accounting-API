@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
-use App\Enums\VoucherType;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Models\Account;
 use App\Models\AccountType;
@@ -79,7 +78,7 @@ class JournalEntryService
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
-            })
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
@@ -103,11 +102,11 @@ class JournalEntryService
 
     public static function forVoucherEntriesListDisbursement(array $validatedData)
     {
-        $jounalRequest = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
+        $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
-                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
-            });
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
         })
             ->withPaymentRequest()
             ->withAccounts()
@@ -121,11 +120,12 @@ class JournalEntryService
 
     public static function forVoucherEntriesListCash(array $validatedData)
     {
-        $jounalRequest = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
+
+        $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-            ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
-                $query->where('name', 'LIKE', "%{$validatedData['key']}%");
-            });
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
         })
             ->withPaymentRequest()
             ->withAccounts()
@@ -139,12 +139,12 @@ class JournalEntryService
 
     public static function disbursementEntries(array $validatedData)
     {
-        $jounalRequest = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
+        $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
-            })
+        })
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
@@ -157,7 +157,7 @@ class JournalEntryService
 
     public static function forPaymentEntries(array $validatedData)
     {
-        $jounalRequest = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
+        $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
@@ -176,7 +176,7 @@ class JournalEntryService
 
     public static function CashEntries(array $validatedData)
     {
-        $jounalRequest = JournalEntry::when(isset($validatedData['key']), function($query, $key) use ($validatedData){
+        $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
