@@ -11,7 +11,7 @@ class AccountGroupService
     {
         $query = AccountGroup::query();
         if (isset($filters['key'])) {
-            $query->where('name', 'like', '%'.$filters['key'].'%');
+            $query->where('name', 'like', '%' . $filters['key'] . '%');
         }
 
         return $query->paginate(config('services.pagination.limit'));
