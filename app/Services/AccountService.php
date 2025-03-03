@@ -3,22 +3,19 @@
 namespace App\Services;
 
 use App\Enums\AccountVatType;
+use App\Http\Resources\AccountCollection;
 use App\Models\Account;
 
 class AccountService
 {
-    public static function getPaginated(array $filters = [])
+    public static function getPaginated(array $validatedData)
     {
-        $query = Account::query();
+        $queryAccountRequest = Account::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            $query->where('account_name', 'like', '%' . $validatedData['key'] . '%');
+        })
+            ->paginate(config('services.pagination.limit'));
 
-        if (isset($filters['name'])) {
-            $query->where('name', 'like', '%'.$filters['name'].'%');
-        }
-        if (isset($filters['account_type_id'])) {
-            $query->where('account_type_id', $filters['account_type_id']);
-        }
-
-        return $query->paginate(config('services.pagination.limit'));
+        return (AccountCollection::collection($queryAccountRequest))->response()->getData(true);
     }
 
     public static function getVatAccount()
