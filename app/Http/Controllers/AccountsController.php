@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\IsActiveType;
 use App\Http\Requests\Account\AccountRequestFilter;
-use App\Http\Requests\Account\AccountRequestSearch;
 use App\Http\Requests\Account\AccountRequestStore;
 use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
@@ -36,7 +35,7 @@ class AccountsController extends Controller
         }
     }
 
-    public function searchAccounts(AccountRequestSearch $request)
+    public function searchAccounts(AccountRequestFilter $request)
     {
         $query = Account::query();
         if ($request->has('key')) {
