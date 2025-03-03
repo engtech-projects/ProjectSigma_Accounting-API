@@ -2,15 +2,8 @@
 
 namespace App\Services;
 
-use App\Enums\BalanceType;
-use App\Enums\JournalStatus;
-use App\Enums\PaymentRequestType;
-use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Http\Resources\ParticularGroupCollection;
 use App\Models\ParticularGroup;
-use App\Models\PaymentRequest;
-use App\Models\Term;
-use Carbon\Carbon;
 
 class ParticularGroupService
 {
@@ -23,5 +16,4 @@ class ParticularGroupService
 
         return ParticularGroupCollection::collection($particularGroupRequest)->response()->getData(true);
     }
-
 }
