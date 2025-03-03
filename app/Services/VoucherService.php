@@ -97,7 +97,6 @@ class VoucherService
     public static function myRequestDisbursement(array $validatedData)
     {
         $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
-        $disbursementRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             $query->where('voucher_no', 'like', "%{$validatedData['key']}%")
                 ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'like', "%{$validatedData['key']}%");
