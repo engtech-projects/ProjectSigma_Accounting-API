@@ -23,8 +23,6 @@ class AccountRequestFilter extends FormRequest
     {
         return [
             'key' => 'nullable|string|max:255',
-            'account_name' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:255',
         ];
     }
 }
