@@ -2,17 +2,18 @@
 
 namespace App\Services;
 
+use App\Http\Resources\AccountTypeCollection;
 use App\Models\AccountType;
 
 class AccountTypeService
 {
-    public static function getPaginated(array $filters = [])
+    public static function getPaginated(array $validatedData)
     {
-        $query = AccountType::query();
-        if (isset($filters['account_type'])) {
-            $query->where('account_type', 'like', '%'.$filters['account_type'].'%');
-        }
+        $queryAccountTypeRequestFilter = AccountType::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            $query->where('account_type', 'like', '%'.$validatedData['key'].'%');
+        })
+            ->paginate(config('services.pagination.limit'));
 
-        return $query->paginate(config('services.pagination.limit'));
+        return (AccountTypeCollection::collection($queryAccountTypeRequestFilter)->response()->getData(true));
     }
 }
