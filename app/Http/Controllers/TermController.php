@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Terms\TermsRequestFilter;
 use App\Http\Requests\Terms\TermsRequestStore;
-use App\Http\Resources\TermsCollection;
 use App\Models\Term;
 use App\Services\TermsService;
 use DB;
