@@ -7,19 +7,17 @@ use App\Http\Requests\ParticularGroup\ParticularGroupRequestStore;
 use App\Http\Requests\ParticularGroup\ParticularGroupRequestUpdate;
 use App\Http\Resources\ParticularGroupCollection;
 use App\Models\ParticularGroup;
+use App\Services\ParticularGroupService;
 use Illuminate\Http\JsonResponse;
 
 class ParticularGroupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(ParticularGroupRequestFilter $request)
     {
         return new JsonResponse([
             'success' => true,
             'message' => 'Particular Group Successfully Retrieved.',
-            'data' => ParticularGroupCollection::collection(ParticularGroup::orderBy('name', 'asc')->paginate(config('app.pagination_limit')))->response()->getData(true),
+            'data' => (ParticularGroupService::getWithPagination($request->validated())),
         ], 200);
     }
 
@@ -27,7 +25,7 @@ class ParticularGroupController extends Controller
     {
         $query = ParticularGroup::query();
         if ($request->has('key')) {
-            $query->where('name', 'like', '%'.$request->key.'%');
+            $query->where('name', 'like', '%' . $request->key . '%');
         }
 
         return new JsonResponse([
