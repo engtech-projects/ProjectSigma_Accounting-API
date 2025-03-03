@@ -149,8 +149,8 @@ class VoucherService
     {
         $cashRequest = Voucher::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('voucher_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas("stakeholder", function ($query) use ($validatedData) {
-                    $query->where("name", "LIKE", "%{$validatedData['key']}%");
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
             ->myApprovals()
