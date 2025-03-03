@@ -39,9 +39,9 @@ class AccountsController extends Controller
     {
         $query = Account::query();
         if ($request->has('key')) {
-            $query->where('account_number', 'like', '%' . $request->key . '%')
-                ->orWhere('account_name', 'like', '%' . $request->key . '%')
-                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%' . $request->key . '%');
+            $query->where('account_number', 'like', '%'.$request->key.'%')
+                ->orWhere('account_name', 'like', '%'.$request->key.'%')
+                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%'.$request->key.'%');
         }
 
         return new JsonResponse([
