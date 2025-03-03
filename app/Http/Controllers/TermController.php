@@ -14,12 +14,10 @@ class TermController extends Controller
 {
     public function index(TermsRequestFilter $request)
     {
-        $terms = TermsService::getPaginated($request->validated());
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Terms fetched successfully',
-            'data' => new TermsCollection($terms),
+            'data' => (TermsService::getPaginated($request->validated())),
         ], 200);
     }
 
