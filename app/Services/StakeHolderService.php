@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\StakeholderResource;
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Payee;
 
@@ -9,22 +10,20 @@ class StakeHolderService
 {
     public static function searchStakeHolders(array $validatedData)
     {
-        return StakeHolder::where('name', 'like', '%'.strtolower($validatedData['key']).'%')
-            ->where('stakeholdable_type', "App\Models\Stakeholders\\".ucfirst($validatedData['type']))
+        return StakeHolder::where('name', 'like', '%' . strtolower($validatedData['key']) . '%')
+            ->where('stakeholdable_type', "App\Models\Stakeholders\\" . ucfirst($validatedData['type']))
             ->paginate(config('app.pagination_limit'));
     }
 
-    public static function getPaginated(array $filters = [])
+    public static function getPaginated(array $validateData)
     {
-        $query = StakeHolder::query();
-        if (isset($filters['name'])) {
-            $query->where('name', 'like', '%'.$filters['name'].'%');
-        }
-        if (isset($filters['type'])) {
-            $query->where('stakeholdable_type', "App\Models\Stakeholders\\".ucfirst($filters['type']));
-        }
+        $queryStakeholdersRequest = StakeHolder::when(isset($validateData['key']), function ($query, $key) use ($validateData) {
+            $query->where('name', 'like', '%' . $validateData['key'] . '%');
+        })
+            ->paginate(config('services.pagination.limit'))
+        ;
 
-        return $query->paginate(config('services.pagination.limit'));
+        return StakeholderResource::collection($queryStakeholdersRequest)->response()->getData(true);
     }
 
     public static function createPayee($data)
