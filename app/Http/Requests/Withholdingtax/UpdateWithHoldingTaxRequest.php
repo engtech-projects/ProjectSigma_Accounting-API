@@ -3,9 +3,7 @@
 namespace App\Http\Requests\Withholdingtax;
 
 use App\Enums\VatType;
-use App\Enums\WtaxType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateWithHoldingTaxRequest extends FormRequest
 {

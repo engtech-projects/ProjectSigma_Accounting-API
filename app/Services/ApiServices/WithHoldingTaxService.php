@@ -11,8 +11,18 @@ class WithHoldingTaxService
         $query = WithHoldingTax::query();
 
         $query->with(['account'])
-            ->orderByDesc('created_at');
+            ->orderBy('created_at', 'ASC');
 
         return $query->paginate(config('services.pagination.limit'));
+    }
+
+    public static function getWithHoldingTax($id)
+    {
+        $withholdingTax = WithHoldingTax::find($id);
+
+        return [
+            'id' => $withholdingTax->id,
+            'information' => $withholdingTax,
+        ];
     }
 }

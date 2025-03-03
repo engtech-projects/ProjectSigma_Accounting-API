@@ -2,13 +2,13 @@
 
 namespace App\Enums;
 
+use App\Enums\Traits\EnumHelper;
+
 enum BalanceType: string
 {
+    use EnumHelper;
+
     case DEBIT = 'debit';
     case CREDIT = 'credit';
 
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

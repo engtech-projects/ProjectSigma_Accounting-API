@@ -234,6 +234,7 @@ class VoucherController extends Controller
             'message' => 'Voucher created',
             'data' => $voucher,
         ], 201);
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -278,6 +279,7 @@ class VoucherController extends Controller
         ]);
 
         DB::commit();
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Updated',

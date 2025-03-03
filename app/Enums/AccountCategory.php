@@ -11,9 +11,4 @@ enum AccountCategory: string
     case LIABILITIES = 'liabilities';
     case REVENUE = 'revenue';
     case CAPITAL = 'capital';
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }

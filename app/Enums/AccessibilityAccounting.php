@@ -2,8 +2,11 @@
 
 namespace App\Enums;
 
+use App\Enums\Traits\EnumHelper;
+
 enum AccessibilityAccounting: string
 {
+    use EnumHelper;
     case ACCOUNTING_DASHBOARD = 'accounting:dashboard';
 
     //Accounting Setup
@@ -28,24 +31,4 @@ enum AccessibilityAccounting: string
 
     //Accounting Journal
     case ACCOUNTING_JOURNAL_ENTRY = 'accounting:journal_journal entry';
-
-    public static function toArray(): array
-    {
-        $array = [];
-        foreach (self::cases() as $case) {
-            $array[$case->name] = $case->value;
-        }
-
-        return $array;
-    }
-
-    public static function toArraySwapped(): array
-    {
-        $array = [];
-        foreach (self::cases() as $case) {
-            $array[$case->value] = $case->name;
-        }
-
-        return $array;
-    }
 }

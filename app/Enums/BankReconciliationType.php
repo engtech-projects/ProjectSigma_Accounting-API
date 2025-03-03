@@ -2,13 +2,12 @@
 
 namespace App\Enums;
 
+use App\Enums\Traits\EnumHelper;
+
 enum BankReconciliationType: string
 {
+    use EnumHelper;
+
     case YES = 'yes';
     case NO = 'no';
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
-    }
 }
