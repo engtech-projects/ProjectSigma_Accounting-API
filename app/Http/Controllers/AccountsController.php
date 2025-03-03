@@ -20,28 +20,20 @@ class AccountsController extends Controller
      */
     public function index(AccountRequestFilter $request)
     {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Accounts Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts Successfully Retrieved.',
+            'data' => (AccountService::getPaginated($request->validated())),
+        ], 200);
     }
 
     public function searchAccounts(AccountRequestFilter $request)
     {
         $query = Account::query();
         if ($request->has('key')) {
-            $query->where('account_number', 'like', '%'.$request->key.'%')
-                ->orWhere('account_name', 'like', '%'.$request->key.'%')
-                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%'.$request->key.'%');
+            $query->where('account_number', 'like', '%' . $request->key . '%')
+                ->orWhere('account_name', 'like', '%' . $request->key . '%')
+                ->orWhere(DB::raw("CONCAT(account_number, ' - ', account_name, ' (', (SELECT account_type FROM account_types WHERE id = accounts.account_type_id), ')')"), 'like', '%' . $request->key . '%');
         }
 
         return new JsonResponse([
