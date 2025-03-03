@@ -14,6 +14,6 @@ class AccountTypeService
         })
             ->paginate(config('services.pagination.limit'));
 
-        return (AccountTypeCollection::collection($queryAccountTypeRequestFilter)->response()->getData(true));
+        return AccountTypeCollection::collection($queryAccountTypeRequestFilter)->response()->getData(true);
     }
 }
