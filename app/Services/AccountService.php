@@ -10,14 +10,13 @@ class AccountService
 {
     public static function getPaginated(array $validatedData)
     {
-        $queryAccountRequestFilter = Account::when(isset($validatedData['name']), function ($query) use ($validatedData) {
-            $query->where('account_name', 'like', '%'.$validatedData['name'].'%');
-        })->when(isset($validatedData['account_type_id']), function ($query) use ($validatedData) {
-            $query->where('account_type_id', $validatedData['account_type_id']);
+        $queryAccountRequestFilter = Account::when(isset($validatedData['key']), function ($query) use ($validatedData) {
+            $query->where('account_name', 'like', '%' . $validatedData['key'] . '%')
+                ->orWhere('account_number', 'like', '%' . $validatedData['key'] . '%');
         })
-        ->paginate(config('services.pagination.limit'));
+            ->paginate(config('services.pagination.limit'));
 
-        return (AccountCollection::collection($queryAccountRequestFilter));
+        return (AccountCollection::collection($queryAccountRequestFilter)->response()->getData(true));
     }
 
     public static function getVatAccount()
