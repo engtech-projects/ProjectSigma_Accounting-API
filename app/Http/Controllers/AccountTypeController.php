@@ -57,7 +57,7 @@ class AccountTypeController extends Controller
     public function show($id)
     {
         $accountType = AccountType::find($id);
-        if (!$accountType) {
+        if (! $accountType) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Account Type Not Found.',
@@ -115,7 +115,7 @@ class AccountTypeController extends Controller
         DB::beginTransaction();
         try {
             $accountType = AccountType::find($id);
-            if (!$accountType) {
+            if (! $accountType) {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'Account Type Not Found.',

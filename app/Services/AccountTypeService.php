@@ -10,7 +10,7 @@ class AccountTypeService
     public static function getPaginated(array $validatedData)
     {
         $queryAccountTypeRequestFilter = AccountType::when(isset($validatedData['key']), function ($query) use ($validatedData) {
-            $query->where('account_type', 'like', '%' . $validatedData['key'] . '%');
+            $query->where('account_type', 'like', '%'.$validatedData['key'].'%');
         })
             ->paginate(config('services.pagination.limit'));
 
