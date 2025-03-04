@@ -18,20 +18,11 @@ class AccountTypeController extends Controller
      */
     public function index(AccountTypeRequestFilter $request)
     {
-        $validatedData = $request->validated();
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Account Types Successfully Retrieved.',
-                'data' => AccountTypeCollection::collection(AccountTypeService::getPaginated($validatedData))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Account Types Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Account Types Successfully Retrieved.',
+            'data' => (AccountTypeService::getPaginated($request->validated())),
+        ], 200);
     }
 
     /**
@@ -66,7 +57,7 @@ class AccountTypeController extends Controller
     public function show($id)
     {
         $accountType = AccountType::find($id);
-        if (! $accountType) {
+        if (!$accountType) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Account Type Not Found.',
@@ -124,7 +115,7 @@ class AccountTypeController extends Controller
         DB::beginTransaction();
         try {
             $accountType = AccountType::find($id);
-            if (! $accountType) {
+            if (!$accountType) {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'Account Type Not Found.',
