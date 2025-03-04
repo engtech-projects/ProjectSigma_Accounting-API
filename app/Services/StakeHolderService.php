@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\StakeholderResource;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Payee;
 
@@ -22,7 +22,7 @@ class StakeHolderService
         })
             ->paginate(config('services.pagination.limit'));
 
-        return StakeholderResource::collection($queryStakeholdersRequest)->response()->getData(true);
+        return StakeholderCollection::collection($queryStakeholdersRequest)->response()->getData(true);
     }
 
     public static function createPayee($data)

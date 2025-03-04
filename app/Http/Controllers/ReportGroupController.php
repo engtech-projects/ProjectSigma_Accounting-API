@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ReportGroup\ReportGroupSearchRequest;
 use App\Http\Requests\ReportGroup\ReportGroupStoreRequest;
-use App\Http\Resources\ReportGroupResorce;
+use App\Http\Resources\ReportGroupCollection;
 use App\Models\ReportGroup;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupResorce::collection(ReportGroup::all()),
+            'data' => ReportGroupCollection::collection(ReportGroup::all()),
         ], 200);
     }
 
@@ -30,7 +30,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupResorce::collection(ReportGroup::where('name', 'like', '%'.$validatedData['name'].'%')->limit(10)->get()),
+            'data' => ReportGroupCollection::collection(ReportGroup::where('name', 'like', '%'.$validatedData['name'].'%')->limit(10)->get()),
         ], 200);
     }
 
@@ -56,7 +56,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group fetched successfully',
-            'data' => ReportGroupResorce::collection(ReportGroup::find($id)),
+            'data' => ReportGroupCollection::collection(ReportGroup::find($id)),
         ], 200);
     }
 

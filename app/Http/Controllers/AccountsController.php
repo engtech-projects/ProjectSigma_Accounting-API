@@ -7,7 +7,6 @@ use App\Http\Requests\Account\AccountRequestFilter;
 use App\Http\Requests\Account\AccountRequestStore;
 use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
-use App\Http\Resources\AccountsResource;
 use App\Models\Account;
 use App\Services\AccountService;
 use DB;
@@ -24,7 +23,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
+                'data' => (AccountService::getPaginated($request->validated())),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -74,7 +73,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
-                'data' => new AccountsResource($account),
+                'data' => new AccountCollection($account),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -98,7 +97,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
-                'data' => AccountsResource::collection($account)->response()->getData(true),
+                'data' => AccountCollection::collection($account)->response()->getData(true),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -134,7 +133,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Updated.',
-                'data' => new AccountsResource($account),
+                'data' => new AccountCollection($account),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

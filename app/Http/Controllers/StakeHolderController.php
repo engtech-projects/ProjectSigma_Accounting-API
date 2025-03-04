@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Requests\Stakeholder\StakeholderRequestStore;
 use App\Http\Requests\Stakeholder\StakeholderRequestUpdate;
-use App\Http\Resources\StakeholderResource;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
@@ -72,7 +72,7 @@ class StakeHolderController extends Controller
      */
     public function show(StakeHolder $stakeholder)
     {
-        return response()->json(new StakeholderResource($stakeholder));
+        return response()->json(new StakeholderCollection($stakeholder));
     }
 
     /**
