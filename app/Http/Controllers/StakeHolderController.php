@@ -23,20 +23,11 @@ class StakeHolderController extends Controller
      */
     public function index(StakeholderRequestFilter $request)
     {
-        $validatedData = $request->validated();
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Payee Successfully Retrieve.',
-                'data' => StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Payee Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payee Successfully Retrieve.',
+            'data' => (StakeHolderService::getPaginated($request->validated())),
+        ], 200);
     }
 
     /**

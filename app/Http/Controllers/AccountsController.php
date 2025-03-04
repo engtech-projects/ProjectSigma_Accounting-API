@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Enums\IsActiveType;
 use App\Http\Requests\Account\AccountRequestFilter;
-use App\Http\Requests\Account\AccountRequestSearch;
 use App\Http\Requests\Account\AccountRequestStore;
 use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
@@ -21,22 +20,14 @@ class AccountsController extends Controller
      */
     public function index(AccountRequestFilter $request)
     {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Accounts Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts Successfully Retrieved.',
+            'data' => (AccountService::getPaginated($request->validated())),
+        ], 200);
     }
 
-    public function searchAccounts(AccountRequestSearch $request)
+    public function searchAccounts(AccountRequestFilter $request)
     {
         $query = Account::query();
         if ($request->has('key')) {
