@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AccountGroupResource extends JsonResource
+class PaymentRequestDetailsCollection extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,6 +17,7 @@ class AccountGroupResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
+            'stakeholder' => StakeholderCollection::make($this->whenLoaded('stakeholder')),
         ];
     }
 }

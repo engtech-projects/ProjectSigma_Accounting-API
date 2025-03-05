@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Services\HrmsServices;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PaymentRequestResource extends JsonResource
+class ApprovalAttributeCollection extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,8 +15,6 @@ class PaymentRequestResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            ...parent::toArray($request),
-        ];
+        return HrmsServices::formatApprovals($request->bearerToken(), $this->resource);
     }
 }

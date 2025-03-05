@@ -6,7 +6,6 @@ use App\Http\Requests\Book\BookRequestFilter;
 use App\Http\Requests\Book\BookRequestStore;
 use App\Http\Requests\Book\BookRequestUpdate;
 use App\Http\Resources\BookCollection;
-use App\Http\Resources\BookResource;
 use App\Models\Book;
 use App\Services\BookService;
 use DB;
@@ -41,7 +40,7 @@ class BookController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Book Successfully Created.',
-                'data' => new BookResource($book),
+                'data' => new BookCollection($book),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -62,7 +61,7 @@ class BookController extends Controller
                 return new JsonResponse([
                     'success' => true,
                     'message' => 'Book Successfully Retrieved.',
-                    'data' => new BookResource($book),
+                    'data' => new BookCollection($book),
                 ], 200);
             }
 
@@ -92,7 +91,7 @@ class BookController extends Controller
                 return new JsonResponse([
                     'success' => true,
                     'message' => 'Book Successfully Updated.',
-                    'data' => new BookResource($book),
+                    'data' => new BookCollection($book),
                 ], 200);
             }
             DB::rollBack();

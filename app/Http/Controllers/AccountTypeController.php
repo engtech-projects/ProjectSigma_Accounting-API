@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountType\AccountTypeRequestFilter;
 use App\Http\Requests\AccountType\AccountTypeRequestStore;
 use App\Http\Requests\AccountType\AccountTypeRequestUpdate;
-use App\Http\Resources\AccountTypeResource;
+
+use App\Http\Resources\AccountTypeCollection;
 use App\Models\AccountType;
 use App\Services\AccountTypeService;
 use DB;
@@ -40,7 +41,7 @@ class AccountTypeController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Type Successfully Created.',
-                'data' => new AccountTypeResource($accountType),
+                'data' => new AccountTypeCollection($accountType),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -70,7 +71,7 @@ class AccountTypeController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Account Type Successfully Retrieved.',
-            'data' => new AccountTypeResource($accountType),
+            'data' => new AccountTypeCollection($accountType),
         ], 200);
     }
 
@@ -96,7 +97,7 @@ class AccountTypeController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Type Successfully Updated.',
-                'data' => new AccountTypeResource($accountType),
+                'data' => new AccountTypeCollection($accountType),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -11,7 +11,7 @@ use App\Http\Requests\Voucher\CashVoucherRequestStore;
 use App\Http\Requests\Voucher\DisbursementVoucherRequestFilter;
 use App\Http\Requests\Voucher\DisbursementVoucherRequestStore;
 use App\Http\Requests\Voucher\VoucherFilter;
-use App\Http\Resources\VoucherResource;
+use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
 use App\Models\CashRequest;
 use App\Models\DisbursementRequest;
@@ -358,7 +358,7 @@ class VoucherController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Successfully Retrieved.',
-            'data' => new VoucherResource($voucher),
+            'data' => new VoucherCollection($voucher),
         ], 200);
     }
 }
