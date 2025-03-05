@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Http\Resources\CashVoucherCollection;
-use App\Http\Resources\CashVoucherResource;
 use App\Http\Resources\DisbursementVoucherCollection;
 use App\Http\Resources\PaymentRequestCollection;
 use App\Models\Book;
