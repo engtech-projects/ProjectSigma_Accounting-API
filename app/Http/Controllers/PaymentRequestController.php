@@ -8,7 +8,6 @@ use App\Enums\RequestStatuses;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
 use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
-use App\Http\Requests\PaymentRequestAttachmentStore;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
@@ -17,7 +16,6 @@ use App\Models\StakeHolder;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -63,12 +61,13 @@ class PaymentRequestController extends Controller
             'data' => StakeHolderService::searchStakeHolders($request->validated()),
         ], 200);
     }
+
     public function uploadAttachment(Request $request)
     {
         if ($request->attachment_file_name) {
-            Storage::delete('temp/' . $request->attachment_file_name);
+            Storage::delete('temp/'.$request->attachment_file_name);
         }
-        $encryptedFileName = Str::random(40) . '.' . $request->file('attachment_file')->getClientOriginalExtension();
+        $encryptedFileName = Str::random(40).'.'.$request->file('attachment_file')->getClientOriginalExtension();
         $request->file('attachment_file')->storeAs('temp/', $encryptedFileName);
 
         return new JsonResponse([
@@ -77,6 +76,7 @@ class PaymentRequestController extends Controller
             'data' => $encryptedFileName,
         ], 200);
     }
+
     public function store(PaymentRequestStore $request)
     {
         DB::beginTransaction();
@@ -104,8 +104,9 @@ class PaymentRequestController extends Controller
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
 
-            $path = "prf/".$paymentRequest->id . '/' . $request->attachment_file_name;
-            Storage::move('temp/' . $request->attachment_file_name, $path);
+            $path = 'prf/'.$paymentRequest->id.'/'.$request->attachment_file_name;
+            Storage::move('temp/'.$request->attachment_file_name, $path);
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Request Created Successfully',

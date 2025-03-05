@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources\AccountingCollections;
 
-use App\Http\Resources\ApprovalAttributeResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

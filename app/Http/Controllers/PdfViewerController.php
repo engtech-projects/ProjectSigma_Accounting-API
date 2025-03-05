@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\PaymentRequest;
 use Illuminate\Http\Request;
-use Storage;
 
 class PdfViewerController extends Controller
 {
@@ -25,17 +24,17 @@ class PdfViewerController extends Controller
                 $originalFilePath = "prf/$prfId/{$prf->attachment_url}";
                 $publicFilePath = "storage/prf/$prfId/{$prf->attachment_url}";
                 $publicDir = public_path("storage/prf/$prfId");
-                if (!file_exists($publicDir)) {
+                if (! file_exists($publicDir)) {
                     mkdir($publicDir, 0777, true);
                 }
-                if (!file_exists(public_path($publicFilePath))) {
+                if (! file_exists(public_path($publicFilePath))) {
                     copy(storage_path("app/$originalFilePath"), public_path($publicFilePath));
                 }
                 $pdfUrl = asset($publicFilePath);
 
                 return view('pdf-viewer', [
                     'pdfPath' => $pdfUrl,
-                    'fileType' => $fileType
+                    'fileType' => $fileType,
                 ]);
             }
 
@@ -44,6 +43,5 @@ class PdfViewerController extends Controller
             abort(404, $e->getMessage());
         }
 
-}
-
+    }
 }
