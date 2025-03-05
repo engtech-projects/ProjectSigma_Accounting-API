@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountType\AccountTypeRequestFilter;
 use App\Http\Requests\AccountType\AccountTypeRequestStore;
 use App\Http\Requests\AccountType\AccountTypeRequestUpdate;
+
 use App\Http\Resources\AccountTypeCollection;
 use App\Models\AccountType;
 use App\Services\AccountTypeService;
@@ -18,10 +19,12 @@ class AccountTypeController extends Controller
      */
     public function index(AccountTypeRequestFilter $request)
     {
+        $validatedData = $request->validated();
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Account Types Successfully Retrieved.',
-            'data' => (AccountTypeService::getPaginated($request->validated())),
+            'data' => AccountTypeService::getPaginated($validatedData),
         ], 200);
     }
 

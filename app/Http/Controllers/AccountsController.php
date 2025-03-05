@@ -18,20 +18,11 @@ class AccountsController extends Controller
      * Display a listing of the resource.
      */
     public function index(AccountRequestFilter $request)
-    {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Accounts Successfully Retrieved.',
-                'data' => (AccountService::getPaginated($request->validated())),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Accounts Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts Successfully Retrieved.',
+            'data' => (AccountService::getPaginated($request->validated())),
+        ], 200);
     }
 
     public function searchAccounts(AccountRequestFilter $request)

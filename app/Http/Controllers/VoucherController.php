@@ -234,20 +234,11 @@ class VoucherController extends Controller
             'message' => 'Voucher created',
             'data' => $voucher,
         ], 201);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Voucher creation failed',
-        //     ], 500);
-        // }
     }
 
     public function cashReceived(CashReceivedRequest $request)
     {
         DB::beginTransaction();
-        // try {
         $validatedData = $request->validated();
         $voucher = CashRequest::findOrFail($validatedData['voucher_id']);
         $voucher->update([
@@ -279,14 +270,6 @@ class VoucherController extends Controller
             'message' => 'Voucher Updated',
             'data' => $voucher,
         ], 201);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Voucher creation failed',
-        //     ], 500);
-        // }
     }
 
     public function createDisbursement(DisbursementVoucherRequestStore $request)

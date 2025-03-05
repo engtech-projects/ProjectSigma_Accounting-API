@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PdfViewerController;
 use App\Http\Controllers\PostingPeriodController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,7 @@ Route::get('/', function (Request $request) {
     return response()->json(['version' => app()->version()]);
 });
 Route::get('/create-posting-period', [PostingPeriodController::class, 'createPostingPeriod']);
+Route::get('pdf-viewer', [PdfViewerController::class, '__invoke']);
 Route::get('artisan-clear-optimization', function () {
     Artisan::call('optimize:clear');
 
