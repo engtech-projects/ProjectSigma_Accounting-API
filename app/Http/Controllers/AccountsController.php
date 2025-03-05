@@ -18,6 +18,7 @@ class AccountsController extends Controller
      * Display a listing of the resource.
      */
     public function index(AccountRequestFilter $request)
+    {
         return new JsonResponse([
             'success' => true,
             'message' => 'Accounts Successfully Retrieved.',

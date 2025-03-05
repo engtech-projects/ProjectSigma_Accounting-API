@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountType\AccountTypeRequestFilter;
 use App\Http\Requests\AccountType\AccountTypeRequestStore;
 use App\Http\Requests\AccountType\AccountTypeRequestUpdate;
-
 use App\Http\Resources\AccountTypeCollection;
 use App\Models\AccountType;
 use App\Services\AccountTypeService;
