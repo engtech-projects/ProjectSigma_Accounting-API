@@ -39,12 +39,12 @@ class PdfViewerController extends Controller
                 $pdfUrl = asset($publicFilePath);
 
                 return view('pdf-viewer', [
-                    'pdfPath' => $pdfUrl,
-                    'fileType' => $fileType,
+                    'title' => 'Sigma Payment Request Attachments',
+                    'publicFilePaths' => $publicFilePaths,
                 ]);
             }
 
-            throw new \Exception('PDF Not Found');
+            throw new \Exception('Attachments Not Found');
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -52,6 +52,6 @@ class PdfViewerController extends Controller
                 'data' => [],
             ], 404);
         }
-
     }
+
 }

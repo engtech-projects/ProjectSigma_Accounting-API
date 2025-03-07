@@ -64,16 +64,25 @@ class PaymentRequestController extends Controller
 
     public function uploadAttachment(Request $request)
     {
-        if ($request->attachment_file_name) {
-            Storage::delete('temp/'.$request->attachment_file_name);
+        $request->validate([
+            'attachment_files' => 'required|array',
+            'attachment_files.*' => 'file',
+        ]);
+
+        $encryptedFileNames = [];
+
+        if ($request->hasFile('attachment_files')) {
+            foreach ($request->file('attachment_files') as $file) {
+                $encryptedFileName = Str::random(40).'.'.$file->getClientOriginalExtension();
+                $file->storeAs('temp/', $encryptedFileName);
+                $encryptedFileNames[] = $encryptedFileName;
+            }
         }
-        $encryptedFileName = Str::random(40).'.'.$request->file('attachment_file')->getClientOriginalExtension();
-        $request->file('attachment_file')->storeAs('temp/', $encryptedFileName);
 
         return new JsonResponse([
             'success' => true,
             'message' => 'Attachment File Successfully Uploaded.',
-            'data' => $encryptedFileName,
+            'data' => $encryptedFileNames,
         ], 200);
     }
 
@@ -88,7 +97,7 @@ class PaymentRequestController extends Controller
             $validatedData['stakeholder_id'] = $validatedData['stakeholderInformation']['id'] ?? null;
             $validatedData['created_by'] = auth()->user()->id;
             $validatedData['request_status'] = RequestStatuses::PENDING->value;
-            $validatedData['attachment_url'] = $request->attachment_file_name;
+            $validatedData['attachment_url'] = json_encode($request->attachment_file_names);
             $paymentRequest = PaymentRequest::create($validatedData);
             foreach ($validatedData['details'] as $detail) {
                 $paymentRequest->details()->create([
@@ -104,8 +113,10 @@ class PaymentRequestController extends Controller
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
 
-            $path = 'prf/'.$paymentRequest->id.'/'.$request->attachment_file_name;
-            Storage::move('temp/'.$request->attachment_file_name, $path);
+            foreach ($request->attachment_file_names as $file) {
+                $path = 'prf/'.$paymentRequest->id.'/'.$file;
+                Storage::move('temp/'.$file, $path);
+            }
 
             return new JsonResponse([
                 'success' => true,
