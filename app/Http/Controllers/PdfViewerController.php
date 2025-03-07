@@ -18,7 +18,7 @@ class PdfViewerController extends Controller
         try {
             $prf = PaymentRequest::where('id', $prfId)->first();
 
-            if ($prf && !empty($prf->attachment_url)) {
+            if ($prf && ! empty($prf->attachment_url)) {
                 $attachmentUrls = is_array($prf->attachment_url) ? $prf->attachment_url : json_decode($prf->attachment_url, true); // Ensure array format
                 $publicFilePaths = [];
 
@@ -27,10 +27,10 @@ class PdfViewerController extends Controller
                     $publicFilePath = "storage/prf/$prfId/$attachmentUrl";
                     $publicDir = public_path("storage/prf/$prfId");
 
-                    if (!file_exists($publicDir)) {
+                    if (! file_exists($publicDir)) {
                         mkdir($publicDir, 0777, true);
                     }
-                    if (!file_exists(public_path($publicFilePath))) {
+                    if (! file_exists(public_path($publicFilePath))) {
                         copy(storage_path("app/$originalFilePath"), public_path($publicFilePath));
                     }
 
@@ -53,5 +53,4 @@ class PdfViewerController extends Controller
             ], 404);
         }
     }
-
 }
