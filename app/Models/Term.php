@@ -16,6 +16,7 @@ class Term extends Model
         'description',
         'account_id',
         'debit_credit',
+        'location',
         'type',
     ];
 

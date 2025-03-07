@@ -26,6 +26,7 @@ class TermsRequestStore extends FormRequest
             'description' => 'nullable|string',
             'debit_credit' => 'required|string',
             'account_id' => 'required|exists:accounts,id',
+            'location' => 'nullable|string',
         ];
     }
 }
