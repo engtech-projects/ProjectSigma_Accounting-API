@@ -13,7 +13,7 @@ class SubGroupSeeder extends Seeder
      */
     public function run(): void
     {
-        $accounts = [
+        $subGroups = [
             'CURRENT ASSETS',
             'NONCURRENT ASSETS',
             'CAPITAL OUTLAY',
@@ -47,7 +47,7 @@ class SubGroupSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now,
             ];
-        }, array_keys($accounts), $accounts);
+        }, array_keys($subGroups), $subGroups);
 
         DB::table('sub_groups')->insert($data);
 
