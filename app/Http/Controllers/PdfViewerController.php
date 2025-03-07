@@ -18,30 +18,39 @@ class PdfViewerController extends Controller
         try {
             $prf = PaymentRequest::where('id', $prfId)->first();
 
-            if ($prf) {
-                $fileExtension = pathinfo($prf->attachment_url, PATHINFO_EXTENSION);
-                $fileType = in_array($fileExtension, ['jpeg', 'png', 'jpg']) ? 'image' : 'pdf';
-                $originalFilePath = "prf/$prfId/{$prf->attachment_url}";
-                $publicFilePath = "storage/prf/$prfId/{$prf->attachment_url}";
-                $publicDir = public_path("storage/prf/$prfId");
-                if (! file_exists($publicDir)) {
-                    mkdir($publicDir, 0777, true);
+            if ($prf && !empty($prf->attachment_url)) {
+                $attachmentUrls = is_array($prf->attachment_url) ? $prf->attachment_url : json_decode($prf->attachment_url, true); // Ensure array format
+                $publicFilePaths = [];
+
+                foreach ($attachmentUrls as $attachmentUrl) {
+                    $originalFilePath = "prf/$prfId/$attachmentUrl";
+                    $publicFilePath = "storage/prf/$prfId/$attachmentUrl";
+                    $publicDir = public_path("storage/prf/$prfId");
+
+                    if (!file_exists($publicDir)) {
+                        mkdir($publicDir, 0777, true);
+                    }
+                    if (!file_exists(public_path($publicFilePath))) {
+                        copy(storage_path("app/$originalFilePath"), public_path($publicFilePath));
+                    }
+
+                    $publicFilePaths[] = asset($publicFilePath);
                 }
-                if (! file_exists(public_path($publicFilePath))) {
-                    copy(storage_path("app/$originalFilePath"), public_path($publicFilePath));
-                }
-                $pdfUrl = asset($publicFilePath);
 
                 return view('pdf-viewer', [
-                    'pdfPath' => $pdfUrl,
-                    'fileType' => $fileType,
+                    'title' => 'Sigma Payment Request Attachments',
+                    'publicFilePaths' => $publicFilePaths,
                 ]);
             }
 
-            throw new \Exception('PDF Not Found');
+            throw new \Exception('Attachments Not Found');
         } catch (\Exception $e) {
-            abort(404, $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+                'data' => []
+            ], 404);
         }
-
     }
+
 }
