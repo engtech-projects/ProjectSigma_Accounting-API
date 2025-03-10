@@ -12,8 +12,8 @@ class TermsService
         $queryTermsRequest = Term::when(isset($validateData['key']), function ($query, $key) use ($validateData) {
             $query->where('name', 'like', '%'.$validateData['key'].'%');
         })
-        ->with('account')
-        ->paginate(config('services.pagination.limit'));
+            ->with('account')
+            ->paginate(config('services.pagination.limit'));
 
         return TermsCollection::collection($queryTermsRequest)->response()->getData(true);
     }

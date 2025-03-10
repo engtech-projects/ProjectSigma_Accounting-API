@@ -8,6 +8,6 @@ enum LocationType: string
 {
     use EnumHelper;
 
-    case DEPARTMENT = "OFFICE";
-    case PROJECT = "PROJECT";
+    case DEPARTMENT = 'OFFICE';
+    case PROJECT = 'PROJECT';
 }
