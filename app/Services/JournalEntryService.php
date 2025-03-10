@@ -25,8 +25,8 @@ class JournalEntryService
     {
         $journalRequest = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
 
@@ -55,8 +55,8 @@ class JournalEntryService
     {
         $journalRequest = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
 
@@ -75,8 +75,8 @@ class JournalEntryService
     {
         $journalRequest = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
             ->withPaymentRequest()
@@ -120,6 +120,25 @@ class JournalEntryService
 
     public static function forVoucherEntriesListCash(array $validatedData)
     {
+
+        $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
+            ->withPaymentRequest()
+            ->withAccounts()
+            ->withDetails()
+            ->withVoucher()
+            ->orderByDesc('created_at')
+            ->paginate(config('services.pagination.limit'));
+
+        return JournalEntryCollection::collection($journalEntries)->response()->getData(true);
+    }
+
+    public static function disbursementEntries(array $validatedData)
+    {
         $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
@@ -136,30 +155,12 @@ class JournalEntryService
         return JournalEntryCollection::collection($jounalEntries)->response()->getData(true);
     }
 
-    public static function disbursementEntries(array $validatedData)
-    {
-        $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
-            return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
-                });
-        })
-            ->withPaymentRequest()
-            ->withAccounts()
-            ->withDetails()
-            ->withVoucher()
-            ->orderByDesc('created_at')
-            ->paginate(config('services.pagination.limit'));
-
-        return JournalEntryCollection::collection($jounalEntries)->response()->getData(true);
-    }
-
     public static function forPaymentEntries(array $validatedData)
     {
         $jounalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
 
@@ -177,8 +178,8 @@ class JournalEntryService
     {
         $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
-                ->orWhereHas('paymentRequest', function ($query) use ($validatedData) {
-                    $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
+                ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
 

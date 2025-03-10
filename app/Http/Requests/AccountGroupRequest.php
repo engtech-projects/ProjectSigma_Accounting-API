@@ -22,7 +22,7 @@ class AccountGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
+            'key' => 'nullable|string|max:255',
         ];
     }
 }

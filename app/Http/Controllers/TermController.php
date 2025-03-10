@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Terms\TermsRequestFilter;
 use App\Http\Requests\Terms\TermsRequestStore;
-use App\Http\Resources\TermsCollection;
 use App\Models\Term;
 use App\Services\TermsService;
 use DB;
@@ -14,12 +13,10 @@ class TermController extends Controller
 {
     public function index(TermsRequestFilter $request)
     {
-        $terms = TermsService::getPaginated($request->validated());
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Terms fetched successfully',
-            'data' => new TermsCollection($terms),
+            'data' => (TermsService::getPaginated($request->validated())),
         ], 200);
     }
 

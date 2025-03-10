@@ -11,7 +11,7 @@ use App\Http\Requests\Voucher\CashVoucherRequestStore;
 use App\Http\Requests\Voucher\DisbursementVoucherRequestFilter;
 use App\Http\Requests\Voucher\DisbursementVoucherRequestStore;
 use App\Http\Requests\Voucher\VoucherFilter;
-use App\Http\Resources\VoucherResource;
+use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
 use App\Models\CashRequest;
 use App\Models\DisbursementRequest;
@@ -234,26 +234,11 @@ class VoucherController extends Controller
             'message' => 'Voucher created',
             'data' => $voucher,
         ], 201);
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Voucher created',
-            'data' => $voucher,
-        ], 201);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Voucher creation failed',
-        //     ], 500);
-        // }
     }
 
     public function cashReceived(CashReceivedRequest $request)
     {
         DB::beginTransaction();
-        // try {
         $validatedData = $request->validated();
         $voucher = CashRequest::findOrFail($validatedData['voucher_id']);
         $voucher->update([
@@ -285,14 +270,6 @@ class VoucherController extends Controller
             'message' => 'Voucher Updated',
             'data' => $voucher,
         ], 201);
-        // } catch (\Exception $e) {
-        //     DB::rollBack();
-
-        //     return new JsonResponse([
-        //         'success' => false,
-        //         'message' => 'Voucher creation failed',
-        //     ], 500);
-        // }
     }
 
     public function createDisbursement(DisbursementVoucherRequestStore $request)
@@ -381,7 +358,7 @@ class VoucherController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Successfully Retrieved.',
-            'data' => new VoucherResource($voucher),
+            'data' => new VoucherCollection($voucher),
         ], 200);
     }
 }

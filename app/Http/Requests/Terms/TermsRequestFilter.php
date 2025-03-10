@@ -22,6 +22,7 @@ class TermsRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
+            'key' => 'nullable|string|max:255',
             'id' => 'nullable|numeric',
             'name' => 'nullable|string',
             'debit_credit' => 'nullable|string',

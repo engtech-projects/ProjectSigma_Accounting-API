@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\AccountingCollections;
 
-use App\Http\Resources\ApprovalAttributeResource;
+use App\Http\Resources\ApprovalAttributeCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -32,7 +32,7 @@ class PayrollRequestCollection extends JsonResource
         return array_merge(parent::toArray($request), [
             'date_filed' => $this->created_at_human,
             'created_by_user' => $this->created_by_user_name,
-            'approvals' => new ApprovalAttributeResource(['approvals' => $this?->approvals]),
+            'approvals' => new ApprovalAttributeCollection(['approvals' => $this?->approvals]),
             'details' => $details,
             'total_amount_money_form' => number_format($this->total, 2, '.', ','),
         ]);

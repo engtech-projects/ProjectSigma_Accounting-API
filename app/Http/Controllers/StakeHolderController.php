@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Requests\Stakeholder\StakeholderRequestStore;
 use App\Http\Requests\Stakeholder\StakeholderRequestUpdate;
-use App\Http\Resources\StakeholderResource;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
@@ -23,20 +23,11 @@ class StakeHolderController extends Controller
      */
     public function index(StakeholderRequestFilter $request)
     {
-        $validatedData = $request->validated();
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Payee Successfully Retrieve.',
-                'data' => StakeholderResource::collection(StakeHolderService::getPaginated($validatedData))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Payee Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payee Successfully Retrieve.',
+            'data' => (StakeHolderService::getPaginated($request->validated())),
+        ], 200);
     }
 
     /**
@@ -81,7 +72,7 @@ class StakeHolderController extends Controller
      */
     public function show(StakeHolder $stakeholder)
     {
-        return response()->json(new StakeholderResource($stakeholder));
+        return response()->json(new StakeholderCollection($stakeholder));
     }
 
     /**

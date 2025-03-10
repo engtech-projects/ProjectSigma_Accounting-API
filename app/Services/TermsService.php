@@ -2,19 +2,19 @@
 
 namespace App\Services;
 
+use App\Http\Resources\TermsCollection;
 use App\Models\Term;
 
 class TermsService
 {
-    public static function getPaginated(array $filters = [])
+    public static function getPaginated(array $validateData)
     {
-        $query = Term::query();
+        $queryTermsRequest = Term::when(isset($validateData['key']), function ($query, $key) use ($validateData) {
+            $query->where('name', 'like', '%'.$validateData['key'].'%');
+        })
+            ->with('account')
+            ->paginate(config('services.pagination.limit'));
 
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
-        $query->with(['account']);
-
-        return $query->paginate(config('services.pagination.limit'));
+        return TermsCollection::collection($queryTermsRequest)->response()->getData(true);
     }
 }

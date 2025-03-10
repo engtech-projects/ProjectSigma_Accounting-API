@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountGroupRequest;
-use App\Http\Resources\AccountGroupResource;
 use App\Http\Resources\AccountingCollections\AccountGroupCollection;
 use App\Models\AccountGroup;
 use App\Services\AccountGroupService;
@@ -44,7 +43,7 @@ class AccountGroupController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Group Successfully Created.',
-                'data' => new AccountGroupResource($accountGroup),
+                'data' => new AccountGroupCollection($accountGroup),
             ], 201);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -64,7 +63,7 @@ class AccountGroupController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Group Successfully Retrieved.',
-                'data' => new AccountGroupResource($accountGroup),
+                'data' => new AccountGroupCollection($accountGroup),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
@@ -100,7 +99,7 @@ class AccountGroupController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Group Successfully Updated.',
-                'data' => new AccountGroupResource($accountGroup),
+                'data' => new AccountGroupCollection($accountGroup),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

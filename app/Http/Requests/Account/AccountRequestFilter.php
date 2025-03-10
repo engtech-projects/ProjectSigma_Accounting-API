@@ -22,8 +22,7 @@ class AccountRequestFilter extends FormRequest
     public function rules(): array
     {
         return [
-            'account_name' => 'nullable|string|max:255',
-            'account_number' => 'nullable|string|max:255',
+            'key' => 'nullable|string|max:255',
         ];
     }
 }

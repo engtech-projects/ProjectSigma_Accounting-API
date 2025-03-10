@@ -94,6 +94,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals', [PaymentRequestController::class, 'myApprovals']);
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
+        Route::post('upload-attachment', [PaymentRequestController::class, 'uploadAttachment']);
     });
 
     //PAYROLL ROUTES

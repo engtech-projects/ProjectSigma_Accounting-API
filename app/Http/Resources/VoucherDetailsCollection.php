@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Services\HrmsServices;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ApprovalAttributeResource extends JsonResource
+class VoucherDetailsCollection extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,6 +15,9 @@ class ApprovalAttributeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return HrmsServices::formatApprovals($request->bearerToken(), $this->resource);
+        return [
+            ...parent::toArray($request),
+            'stakeholder' => StakeholderCollection::make($this->whenLoaded('stakeholder')),
+        ];
     }
 }

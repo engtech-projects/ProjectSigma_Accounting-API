@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\IsActiveType;
 use App\Http\Requests\Account\AccountRequestFilter;
-use App\Http\Requests\Account\AccountRequestSearch;
 use App\Http\Requests\Account\AccountRequestStore;
 use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
-use App\Http\Resources\AccountsResource;
 use App\Models\Account;
 use App\Services\AccountService;
 use DB;
@@ -21,22 +19,14 @@ class AccountsController extends Controller
      */
     public function index(AccountRequestFilter $request)
     {
-        try {
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Accounts Successfully Retrieved.',
-                'data' => AccountCollection::collection(AccountService::getPaginated($request->validated()))->response()->getData(true),
-            ], 200);
-        } catch (\Exception $e) {
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Accounts Failed to Retrieve.',
-                'data' => null,
-            ], 500);
-        }
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Accounts Successfully Retrieved.',
+            'data' => (AccountService::getPaginated($request->validated())),
+        ], 200);
     }
 
-    public function searchAccounts(AccountRequestSearch $request)
+    public function searchAccounts(AccountRequestFilter $request)
     {
         $query = Account::query();
         if ($request->has('key')) {
@@ -75,7 +65,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
-                'data' => new AccountsResource($account),
+                'data' => new AccountCollection($account),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -99,7 +89,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Created.',
-                'data' => AccountsResource::collection($account)->response()->getData(true),
+                'data' => AccountCollection::collection($account)->response()->getData(true),
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -135,7 +125,7 @@ class AccountsController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Account Successfully Updated.',
-                'data' => new AccountsResource($account),
+                'data' => new AccountCollection($account),
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
