@@ -37,7 +37,7 @@ class PdfViewerController extends Controller
                     $publicFilePaths[] = asset($publicFilePath);
                 }
 
-                return view('pdf-viewer', [
+                return view('document-viewer', [
                     'title' => 'Sigma Payment Request Attachments',
                     'publicFilePaths' => $publicFilePaths,
                 ]);
