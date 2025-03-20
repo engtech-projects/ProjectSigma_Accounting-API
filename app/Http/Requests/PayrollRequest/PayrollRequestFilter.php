@@ -24,6 +24,7 @@ class PayrollRequestFilter extends FormRequest
         return [
             'prf_no' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
+            'key' => 'nullable|string|max:255',
         ];
     }
 }

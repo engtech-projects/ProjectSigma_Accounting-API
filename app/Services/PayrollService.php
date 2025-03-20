@@ -10,9 +10,12 @@ class PayrollService
     public static function withPagination($filter)
     {
         $query = PaymentRequest::query();
-        if (isset($filter['status'])) {
-            $query->formStatus($filter['status']);
-        }
+        $query = PaymentRequest::when(isset($filter['key']), function ($query) use ($filter) {
+            return $query->where('prf_no', 'LIKE', "%{$filter['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($filter) {
+                    $query->where('name', 'LIKE', "%{$filter['key']}%");
+                });
+        });
         $payrollRequest = $query->withStakeholder()
             ->payroll()
             ->withPaymentRequestDetails()
