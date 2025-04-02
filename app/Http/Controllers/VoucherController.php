@@ -203,23 +203,6 @@ class VoucherController extends Controller
         DB::commit();
         $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
         $validatedData['created_by'] = auth()->user()->id;
-        $voucher = CashRequest::create($validatedData);
-        foreach ($validatedData['details'] as $detail) {
-            $voucher->details()->create([
-                'account_id' => $detail['account_id'],
-                'stakeholder_id' => $detail['stakeholder_id'] ?? null,
-                'description' => $detail['description'] ?? null,
-                'debit' => $detail['debit'] ?? null,
-                'credit' => $detail['credit'] ?? null,
-            ]);
-            $journalEntry->details()->create([
-                'account_id' => $detail['account_id'],
-                'stakeholder_id' => $detail['stakeholder_id'] ?? null,
-                'description' => $detail['description'] ?? null,
-                'debit' => $detail['debit'] ?? null,
-                'credit' => $detail['credit'] ?? null,
-            ]);
-        }
         $voucher->journalEntry()->update([
             'entry_date' => $validatedData['voucher_date'],
         ]);
