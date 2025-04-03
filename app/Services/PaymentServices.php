@@ -89,7 +89,11 @@ class PaymentServices
 
         $paymentRequest->map(function ($paymentRequest) {
             $paymentRequest->details->map(function ($detail) {
-                $detail->debit = floatval($detail->amount);
+                if ($detail->total_vat_amount > 0) {
+                    $detail->debit = floatval($detail->cost);
+                } else {
+                    $detail->debit = floatval($detail->amount);
+                }
                 $detail->credit = 0;
             });
             if (floatval($paymentRequest->total_vat_amount) > 0) {
@@ -100,8 +104,8 @@ class PaymentServices
                     'amount' => floatval($paymentRequest->total_vat_amount),
                     'cost' => floatval($paymentRequest->total_vat_amount),
                     'particulars' => 'INPUT VAT',
-                    'debit' => 0,
-                    'credit' => floatval($paymentRequest->total_vat_amount),
+                    'debit' => floatval($paymentRequest->total_vat_amount),
+                    'credit' => 0,
                 ];
             }
             if ($paymentRequest->with_holding_tax_id) {
@@ -143,7 +147,7 @@ class PaymentServices
                     'amount' => null,
                     'cost' => null,
                     'debit' => null,
-                    'credit' => null,
+                    'credit' => $paymentRequest->total,
                 ];
             }
 
