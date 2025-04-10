@@ -25,6 +25,7 @@ return new class extends Migration {
     {
         //
         Schema::table('accounts', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('account_type_id')->after('id')->change();
             $table->string('account_number')->after('account_type_id')->change();
             $table->string('account_name')->after('account_number')->change();
