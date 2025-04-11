@@ -13,9 +13,9 @@ return new class extends Migration
     {
         //Change columns order in book table
         Schema::table('book', function (Blueprint $table) {
-            $table->string('created_at')->after('account_group_id')->change();
-            $table->string('updated_at')->nullable()->after('created_at')->change();
-            $table->string('deleted_at')->nullable()->after('updated_at')->change();
+            $table->timestamp('created_at')->nullable()->after('account_group_id')->change();
+            $table->timestamp('updated_at')->nullable()->after('created_at')->change();
+            $table->timestamp('deleted_at')->nullable()->after('updated_at')->change();
         });
     }
 
@@ -30,9 +30,9 @@ return new class extends Migration
             $table->string('name')->after('id')->change();
             $table->string('code')->after('name')->change();
             $table->bigInteger('account_group_id')->after('code')->change();
-            $table->string('created_at')->after('account_group_id')->change();
-            $table->string('updated_at')->nullable()->after('created_at')->change();
-            $table->string('deleted_at')->nullable()->after('updated_at')->change();
+            $table->timestamp('created_at')->nullable()->after('account_group_id')->change();
+            $table->timestamp('updated_at')->nullable()->after('created_at')->change();
+            $table->timestamp('deleted_at')->nullable()->after('updated_at')->change();
         });
     }
 };
