@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -12,9 +13,9 @@ return new class extends Migration {
     {
         //
         Schema::table('accounts', function (Blueprint $table) {
-            $table->string('created_at')->after('sub_group_id')->change();
-            $table->string('updated_at')->nullable()->after('created_at')->change();
-            $table->string('deleted_at')->nullable()->after('updated_at')->change();
+            $table->timestamp('created_at')->nullable()->after('sub_group_id')->change();
+            $table->timestamp('updated_at')->nullable()->after('created_at')->change();
+            $table->timestamp('deleted_at')->nullable()->after('updated_at')->change();
         });
     }
 
@@ -35,9 +36,9 @@ return new class extends Migration {
             $table->string('statement')->nullable()->after('is_active')->change();
             $table->bigInteger('report_group_id')->nullable()->after('statement')->change();
             $table->bigInteger('sub_group_id')->nullable()->after('report_group_id')->change();
-            $table->string('created_at')->after('sub_group_id')->change();
-            $table->string('updated_at')->nullable()->after('created_at')->change();
-            $table->string('deleted_at')->nullable()->after('updated_at')->change();
+            $table->timestamp('created_at')->nullable()->after('sub_group_id')->change();
+            $table->timestamp('updated_at')->nullable()->after('created_at')->change();
+            $table->timestamp('deleted_at')->nullable()->after('updated_at')->change();
         });
     }
 };
