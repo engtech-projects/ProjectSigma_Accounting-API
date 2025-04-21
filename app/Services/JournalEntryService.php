@@ -118,6 +118,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forDisbursementJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -154,6 +155,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forDisbursementJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -168,7 +170,6 @@ class JournalEntryService
                     $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
@@ -193,6 +194,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forPaymentJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
