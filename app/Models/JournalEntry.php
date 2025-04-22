@@ -111,4 +111,8 @@ class JournalEntry extends Model
     {
         return $query->where('status', JournalStatus::FOR_PAYMENT->value);
     }
+    public function scopeForDisbursementJournals($query)
+    {
+        return $query->where('status', JournalStatus::POSTED->value)->orWhere('status', JournalStatus::UNPOSTED->value);
+    }
 }
