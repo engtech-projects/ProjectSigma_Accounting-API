@@ -34,6 +34,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->openJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -47,6 +48,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->voidJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
@@ -64,6 +66,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->postedJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -83,6 +86,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->unpostedJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -96,6 +100,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->draftedJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
     }
@@ -112,6 +117,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forDisbursementJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -149,6 +155,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forDisbursementJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -163,11 +170,11 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forPaymentJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
@@ -187,6 +194,7 @@ class JournalEntryService
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
+            ->forPaymentJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
