@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VoucherType;
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Http\Resources\CashVoucherCollection;
 use App\Http\Resources\DisbursementVoucherCollection;
@@ -19,16 +20,12 @@ class VoucherService
         $prefix = Str::upper($prefix);
         $currentYearMonth = Carbon::now()->format('Ym');
         // Find the highest series number based on the prefix:DV/CV
-        $lastVoucher = Voucher::where('voucher_no', 'like', "{$prefix}-{$currentYearMonth}-%")
-            ->orderBy('voucher_no', 'desc')
+        $lastVoucher = Voucher::whereNull('deleted_at')
+            ->where('type', $prefix == 'DV' ? VoucherType::DISBURSEMENT->value : VoucherType::CASH->value)
+            ->orderBy('id', 'desc')
             ->first();
-        // Extract the last series number if a previous voucher exists
-        if ($lastVoucher) {
-            $lastSeries = (int) substr($lastVoucher->voucher_no, -4);
-            $nextSeries = $lastSeries + 1;
-        } else {
-            $nextSeries = 1; // Start at 0001 if no previous voucher
-        }
+        $lastSeries = (int) substr($lastVoucher->voucher_no, -4);
+        $nextSeries = $lastSeries + 1;
         // Format the series number to be 4 digits (e.g., 0001)
         $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
         // Construct the new reference number
