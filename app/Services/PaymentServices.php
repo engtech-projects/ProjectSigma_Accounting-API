@@ -160,19 +160,13 @@ class PaymentServices
     public static function generatePrfNo($prefix)
     {
         $prefix = strtoupper($prefix);
-        $currentYearMonth = Carbon::now()->format('Y-m');
+        $currentYearMonth = Carbon::now()->format('Ym');
         // Find the highest series
-        $lastPaymentRequest = PaymentRequest::where('prf_no', 'like', "{$prefix}-{$currentYearMonth}-%")
-            ->whereNull('deleted_at')
-            ->orderBy('prf_no', 'desc')
+        $lastPaymentRequest = PaymentRequest::whereNull('deleted_at')
+            ->orderBy('id', 'desc')
             ->first();
-        // Extract the last series number if a previous request exists
-        if ($lastPaymentRequest) {
-            $lastSeries = (int) substr($lastPaymentRequest->prf_no, -4); // Get last 4 digits
-            $nextSeries = $lastSeries + 1;
-        } else {
-            $nextSeries = 1; // Start at 0001 if no previous voucher
-        }
+        $lastSeries = (int) substr($lastPaymentRequest->prf_no, -4); // Get last 4 digits
+        $nextSeries = $lastSeries + 1;
         // Format the series number to be 4 digits (e.g., 0001)
         $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
         // Construct the new reference number
