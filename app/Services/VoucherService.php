@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\VoucherType;
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Http\Resources\CashVoucherCollection;
 use App\Http\Resources\DisbursementVoucherCollection;
@@ -20,6 +21,7 @@ class VoucherService
         $currentYearMonth = Carbon::now()->format('Ym');
         // Find the highest series number based on the prefix:DV/CV
         $lastVoucher = Voucher::whereNull('deleted_at')
+            ->where('type', $prefix == 'DV' ? VoucherType::DISBURSEMENT->value : VoucherType::CASH->value)
             ->orderBy('id', 'desc')
             ->first();
         $lastSeries = (int) substr($lastVoucher->voucher_no, -4);
