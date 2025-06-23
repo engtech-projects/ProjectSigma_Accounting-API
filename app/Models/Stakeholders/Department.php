@@ -31,8 +31,8 @@ class Department extends Model
         return $this->morphMany(PaymentRequestDetails::class, 'chargeable');
     }
 
-    public static function getByCode($code)
+    public static function getByCode($name)
     {
-        return self::where('name', trim($code))->first()->code;
+        return self::where('name', trim($name))->first()->code;
     }
 }

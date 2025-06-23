@@ -47,7 +47,7 @@ class AuthTokenGuard implements Guard
             $this->user->accessibilities = $response->json()['accessibilities'];
             $this->user->accessibilities_name = $response->json()['accessibility_names'];
             $this->user->employee = $response->json()['employee'];
-            $this->user->department_code = Department::getByCode(trim(explode(", ", $this->user->employee['current_position'])[1] ?? ''));
+            $this->user->department_code = Department::getByCode($response->json()['employee']['current_department']);
         }
 
         return $this->user;
