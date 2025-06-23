@@ -18,6 +18,7 @@ class Department extends Model
         'id',
         'source_id',
         'name',
+        'code',
     ];
 
     public function stakeholder()
@@ -28,5 +29,10 @@ class Department extends Model
     public function paymentRequestDetails()
     {
         return $this->morphMany(PaymentRequestDetails::class, 'chargeable');
+    }
+
+    public static function getByCode($name)
+    {
+        return self::where('name', trim($name))->first()->code;
     }
 }
