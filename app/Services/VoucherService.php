@@ -24,12 +24,16 @@ class VoucherService
             ->where('type', $prefix == 'DV' ? VoucherType::DISBURSEMENT->value : VoucherType::CASH->value)
             ->orderBy('id', 'desc')
             ->first();
-        $lastSeries = (int) substr($lastVoucher->voucher_no, -4);
-        $nextSeries = $lastSeries + 1;
-        // Format the series number to be 4 digits (e.g., 0001)
-        $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
-        // Construct the new reference number
-        $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+        if ($lastVoucher) {
+            $lastSeries = (int) substr($lastVoucher->voucher_no, -4);
+            $nextSeries = $lastSeries + 1;
+            // Format the series number to be 4 digits (e.g., 0001)
+            $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
+            // Construct the new reference number
+            $voucherNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+        } else {
+            $voucherNo = "{$prefix}-{$currentYearMonth}-0001";
+        }
 
         return $voucherNo;
     }

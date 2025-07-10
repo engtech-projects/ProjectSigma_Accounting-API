@@ -228,12 +228,16 @@ class JournalEntryService
         $lastJournal = JournalEntry::whereNull('deleted_at')
             ->orderBy('id', 'desc')
             ->first();
-        $lastSeries = (int) substr($lastJournal->journal_no, -4); // Get last 4 digits
-        $nextSeries = $lastSeries + 1;
-        // Format the series number to be 4 digits (e.g., 0001)
-        $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
-        // Construct the new reference number
-        $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+        if ($lastJournal) {
+            $lastSeries = (int) substr($lastJournal->journal_no, -4); // Get last 4 digits
+            $nextSeries = $lastSeries + 1;
+            // Format the series number to be 4 digits (e.g., 0001)
+            $paddedSeries = str_pad($nextSeries, 4, '0', STR_PAD_LEFT);
+            // Construct the new reference number
+            $journalNo = "{$prefix}-{$currentYearMonth}-{$paddedSeries}";
+        } else {
+            $journalNo = "{$prefix}-{$currentYearMonth}-0001";
+        }
 
         return $journalNo;
     }
