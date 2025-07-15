@@ -113,12 +113,10 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-            ->unpostedJournals()
+            ->openJournals()
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
-            ->withVoucher()
-            ->forDisbursementJournals()
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
 
