@@ -53,6 +53,17 @@ class PaymentRequestController extends Controller
         ], 200);
     }
 
+    public function myDeniedRequests(PaymentRequestFilter $request)
+    {
+        $myDeniedRequests = PaymentServices::myDeniedRequests($request->validated());
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Payment My Denied Requests Successfully Retrieved.',
+            'data' => $myDeniedRequests,
+        ], 200);
+    }
+
     public function searchStakeHolders(StakeholderRequestFilter $request)
     {
         return new JsonResponse([
@@ -91,7 +102,7 @@ class PaymentRequestController extends Controller
         DB::beginTransaction();
         try {
             $validatedData = $request->validated();
-            $prfNo = PaymentServices::generatePrfNo('PRF-'. auth()->user()->department_code);
+            $prfNo = PaymentServices::generatePrfNo('PRF-'.auth()->user()->department_code);
             $validatedData['prf_no'] = $prfNo;
             $validatedData['type'] = PaymentRequestType::PRF->value;
             $validatedData['stakeholder_id'] = $validatedData['stakeholderInformation']['id'] ?? null;
@@ -224,7 +235,7 @@ class PaymentRequestController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Payment Request No Successfully Generated.',
-            'data' => PaymentServices::generatePrfNo('PRF-'. auth()->user()->department_code),
+            'data' => PaymentServices::generatePrfNo('PRF-'.auth()->user()->department_code),
         ], 200);
     }
 }

@@ -38,10 +38,10 @@ class AuthServiceProvider extends ServiceProvider
         );
 
         Scramble::configure()
-        ->withDocumentTransformers(function (OpenApi $openApi) {
-            $openApi->secure(
-                SecurityScheme::http('bearer')
-            );
-        });
+            ->withDocumentTransformers(function (OpenApi $openApi) {
+                $openApi->secure(
+                    SecurityScheme::http('bearer')
+                );
+            });
     }
 }
