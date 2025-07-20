@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PaymentRequestType;
+use App\Enums\RequestStatuses;
 use App\Http\Traits\HasApproval;
 use App\Http\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -136,6 +137,12 @@ class PaymentRequest extends Model
     public function scopeWithJournalEntryVouchers($query)
     {
         return $query->with('journalEntry.voucher');
+    }
+
+    public function scopeMyDeniedRequest($query)
+    {
+        return $query->where('request_status', RequestStatuses::DENIED->value)
+            ->where('created_by', auth()->user()->id);
     }
 
     public function getTaxableAmountAttribute()
