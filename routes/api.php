@@ -93,6 +93,7 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
         Route::get('my-approvals', [PaymentRequestController::class, 'myApprovals']);
+        Route::get('my-denied-requests', [PaymentRequestController::class, 'myDeniedRequests']);
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
         Route::post('upload-attachment', [PaymentRequestController::class, 'uploadAttachment']);
     });

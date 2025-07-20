@@ -72,6 +72,23 @@ class PaymentServices
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
     }
 
+    public static function myDeniedRequests(array $validatedData)
+    {
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
+            ->myDeniedRequest()
+            ->withStakeholder()
+            ->orderByDesc('created_at')
+            ->withPaymentRequestDetails()
+            ->paginate(config('services.pagination.limit'));
+
+        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+    }
+
     public static function journalPaymentRequestEntries()
     {
         $paymentRequest = PaymentRequest::isApproved()

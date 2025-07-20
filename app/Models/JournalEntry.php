@@ -87,30 +87,37 @@ class JournalEntry extends Model
     {
         return $query->orderBy('created_at', 'desc');
     }
+
     public function scopeOpenJournals($query)
     {
         return $query->where('status', JournalStatus::OPEN->value);
     }
+
     public function scopeVoidJournals($query)
     {
         return $query->where('status', JournalStatus::VOID->value);
     }
+
     public function scopeDraftedJournals($query)
     {
         return $query->where('status', JournalStatus::DRAFTED->value);
     }
+
     public function scopePostedJournals($query)
     {
         return $query->where('status', JournalStatus::POSTED->value);
     }
+
     public function scopeUnpostedJournals($query)
     {
         return $query->where('status', JournalStatus::UNPOSTED->value);
     }
+
     public function scopeForPaymentJournals($query)
     {
         return $query->where('status', JournalStatus::FOR_PAYMENT->value);
     }
+
     public function scopeForDisbursementJournals($query)
     {
         return $query->where('status', JournalStatus::POSTED->value)->orWhere('status', JournalStatus::UNPOSTED->value);
