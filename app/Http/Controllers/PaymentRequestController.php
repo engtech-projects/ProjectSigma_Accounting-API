@@ -55,6 +55,7 @@ class PaymentRequestController extends Controller
 
     public function myDeniedRequests(PaymentRequestFilter $request)
     {
+        $validatedData = $request->validated();
         $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
