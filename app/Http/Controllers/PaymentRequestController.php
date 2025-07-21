@@ -57,11 +57,7 @@ class PaymentRequestController extends Controller
     {
         $myDeniedRequests = PaymentServices::myDeniedRequests($request->validated());
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Payment My Denied Requests Successfully Retrieved.',
-            'data' => $myDeniedRequests,
-        ], 200);
+        return $myDeniedRequests;
     }
 
     public function searchStakeHolders(StakeholderRequestFilter $request)

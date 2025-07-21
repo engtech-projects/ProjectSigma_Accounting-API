@@ -86,7 +86,11 @@ class PaymentServices
             ->withPaymentRequestDetails()
             ->paginate(config('services.pagination.limit'));
 
-        return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
+        return PaymentRequestCollection::collection($paymentRequest)
+            ->additional([
+                'success' => true,
+                'message' => 'Payment My Denied Requests Successfully Retrieved.',
+            ]);;
     }
 
     public static function journalPaymentRequestEntries()
