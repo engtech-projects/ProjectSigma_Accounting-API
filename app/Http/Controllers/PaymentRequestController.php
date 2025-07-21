@@ -55,9 +55,23 @@ class PaymentRequestController extends Controller
 
     public function myDeniedRequests(PaymentRequestFilter $request)
     {
-        $myDeniedRequests = PaymentServices::myDeniedRequests($request->validated());
+        $paymentRequest = PaymentRequest::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+            return $query->where('prf_no', 'LIKE', "%{$validatedData['key']}%")
+                ->orWhereHas('stakeholder', function ($query) use ($validatedData) {
+                    $query->where('name', 'LIKE', "%{$validatedData['key']}%");
+                });
+        })
+            ->myDeniedRequest()
+            ->withStakeholder()
+            ->orderByDesc('created_at')
+            ->withPaymentRequestDetails()
+            ->paginate(config('services.pagination.limit'));
 
-        return $myDeniedRequests;
+        return PaymentRequestCollection::collection($paymentRequest)
+            ->additional([
+                'success' => true,
+                'message' => 'Payment My Denied Requests Successfully Retrieved.',
+            ]);
     }
 
     public function searchStakeHolders(StakeholderRequestFilter $request)
