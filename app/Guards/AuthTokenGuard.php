@@ -2,6 +2,7 @@
 
 namespace App\Guards;
 
+use App\Enums\UserType;
 use App\Models\Stakeholders\Department;
 use App\Models\User;
 use Illuminate\Auth\GuardHelpers;
@@ -47,7 +48,7 @@ class AuthTokenGuard implements Guard
             $this->user->token = $token;
             $this->user->accessibilities = $response->json()['accessibilities'];
             $this->user->accessibilities_name = $response->json()['accessibility_names'];
-            if ($this->user->type == 'employee') {
+            if ($this->user->type === UserType::EMPLOYEE->value) {
                 $this->user->employee = $response->json()['employee'];
                 $this->user->department_code = Department::getByCode($response->json()['employee']['current_department']);
             } else {
