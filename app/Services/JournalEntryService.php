@@ -132,12 +132,13 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
+            ->where('status', JournalStatus::UNPOSTED->value)
             ->withPaymentRequest()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
-            ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
+
 
         return JournalEntryCollection::collection($journalEntries)->response()->getData(true);
     }
