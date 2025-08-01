@@ -14,6 +14,6 @@ class BookService
             $query->where('name', 'like', "%{$filters['key']}%");
         }
 
-        return $query->paginate(config('app.pagination_limit'));
+        return $query->paginate(config('app.pagination.limit'));
     }
 }

@@ -31,7 +31,7 @@ class ParticularGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Particular Group Successfully Retrieved.',
-            'data' => ParticularGroupCollection::collection($query->orderBy('name', 'asc')->paginate(config('app.pagination_limit'))),
+            'data' => ParticularGroupCollection::collection($query->orderBy('name', 'asc')->paginate(config('app.pagination.limit'))),
         ], 200);
     }
 

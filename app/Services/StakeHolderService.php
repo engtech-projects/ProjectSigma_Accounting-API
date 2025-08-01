@@ -12,7 +12,7 @@ class StakeHolderService
     {
         return StakeHolder::where('name', 'like', '%'.strtolower($validatedData['key']).'%')
             ->where('stakeholdable_type', "App\Models\Stakeholders\\".ucfirst($validatedData['type']))
-            ->paginate(config('app.pagination_limit'));
+            ->paginate(config('app.pagination.limit'));
     }
 
     public static function getPaginated(array $validateData)

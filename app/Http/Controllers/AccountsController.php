@@ -38,7 +38,7 @@ class AccountsController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Accounts Successfully Retrieved.',
-            'data' => AccountCollection::collection($query->orderBy('account_number', 'asc')->with(['accountType'])->paginate(config('app.pagination_limit')))->response()->getData(true),
+            'data' => AccountCollection::collection($query->orderBy('account_number', 'asc')->with(['accountType'])->paginate(config('app.pagination.limit')))->response()->getData(true),
         ], 200);
     }
 
