@@ -139,7 +139,6 @@ class JournalEntryService
             ->withVoucher()
             ->paginate(config('services.pagination.limit'));
 
-
         return JournalEntryCollection::collection($journalEntries)->response()->getData(true);
     }
 
