@@ -15,22 +15,11 @@ class TransactionFlowModelSeeder extends Seeder
     public function run(): void
     {
         TransactionFlowModel::updateOrCreate([
-            'name' => 'Request',
-            'unique_name' => 'request',
-            'description' => 'Request',
-            'status' => TransactionFlowStatus::PENDING,
-            'priority' => '1',
-        ], [
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
-
-        TransactionFlowModel::updateOrCreate([
             'name' => 'Create Payment Request',
             'unique_name' => 'create_payment_request',
             'description' => 'Create Payment Request',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '2',
+            'priority' => '1',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -41,7 +30,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'create_payment_request_received',
             'description' => 'Create Payment Request Received',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '3',
+            'priority' => '2',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -52,7 +41,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'check_documents',
             'description' => 'Check Documents',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '4',
+            'priority' => '3',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -63,7 +52,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'check_and_sign_disbursement_check_list',
             'description' => 'Check and sign Disbursement Check List',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '5',
+            'priority' => '4',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -74,7 +63,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'check_request_budget',
             'description' => 'Check Request Budget',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '6',
+            'priority' => '5',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -85,7 +74,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'prf_approval',
             'description' => 'PRF Approval',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '7',
+            'priority' => '6',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -96,7 +85,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'create_journal_entry',
             'description' => 'Create Journal Entry',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '8',
+            'priority' => '7',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -107,7 +96,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'generate_disbursement_voucher',
             'description' => 'Generate Disbursement Voucher',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '9',
+            'priority' => '8',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -118,7 +107,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'check_and_review_disbursement_voucher',
             'description' => 'Check and Review Disbursement Voucher',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '10',
+            'priority' => '9',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -129,7 +118,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'disbursement_voucher_approval',
             'description' => 'Disbursement Voucher Approval',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '11',
+            'priority' => '10',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -140,7 +129,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'generate_cash_voucher',
             'description' => 'Generate Cash Voucher',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '12',
+            'priority' => '11',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -151,7 +140,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'cash_voucher_approvals',
             'description' => 'Cash Voucher Approvals',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '13',
+            'priority' => '12',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
@@ -162,7 +151,7 @@ class TransactionFlowModelSeeder extends Seeder
             'unique_name' => 'payments',
             'description' => 'Payments',
             'status' => TransactionFlowStatus::PENDING,
-            'priority' => '14',
+            'priority' => '13',
         ], [
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

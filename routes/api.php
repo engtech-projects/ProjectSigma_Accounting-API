@@ -23,6 +23,7 @@ use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Models\WithHoldingTax;
@@ -49,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('get-all-withholding-tax', function (Request $request) {
         return response()->json(['data' => WithHoldingTax::pluck('wtax_name', 'id')], 200);
     });
+    Route::get('get-all-transaction-flow-models', [TransactionFLowModelController::class, 'index']);
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
 

@@ -42,6 +42,11 @@ class PaymentRequest extends Model
         'taxableAmount',
     ];
 
+    public function transactionFlow(): HasMany
+    {
+        return $this->hasMany(TransactionFlow::class);
+    }
+
     public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);
