@@ -27,6 +27,7 @@ class PaymentServices
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->withHoldingTax()
+            ->withTransactionFlow()
             ->with('created_by_user')
             ->paginate(config('services.pagination.limit'));
 
@@ -47,6 +48,7 @@ class PaymentServices
             ->withPaymentRequestDetails()
             ->myApprovals()
             ->orderByDesc('created_at')
+            ->withTransactionFlow()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -67,6 +69,7 @@ class PaymentServices
             ->withPaymentRequestDetails()
             ->withJournalEntryVouchers()
             ->myRequests()
+            ->withTransactionFlow()
             ->paginate(config('services.pagination.limit'));
 
         return PaymentRequestCollection::collection($paymentRequest)->response()->getData(true);
@@ -85,6 +88,7 @@ class PaymentServices
             ->withJournalEntryVouchers()
             ->withPaymentRequestDetails()
             ->orderByDesc('created_at')
+            ->withTransactionFlow()
             ->paginate(config('services.pagination.limit'));
 
         $paymentRequest->map(function ($paymentRequest) {

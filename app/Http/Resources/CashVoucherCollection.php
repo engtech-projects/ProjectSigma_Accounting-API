@@ -28,20 +28,6 @@ class CashVoucherCollection extends JsonResource
             'next_approval' => $this->getNextPendingApproval(),
             'journal_entry' => JournalEntryCollection::make($this->whenLoaded('journalEntry')),
             'payment_request' => PaymentRequestCollection::make($this->journalEntry->paymentRequest),
-            'step_approval' => [
-                'payment_request' => [
-                    'title' => 'Payment Request Approval',
-                    'data' => $this->journalEntry->paymentRequest()?->first()->approvals ?? [],
-                ],
-                'disbursement_voucher' => [
-                    'title' => 'Disbursement Voucher Approval',
-                    'data' => $this->journalEntry?->voucher()?->first()->approvals ?? [],
-                ],
-                'cash_voucher' => [
-                    'title' => 'Cash Voucher Approval',
-                    'data' => $this->approvals ?? [],
-                ],
-            ],
         ];
     }
 }

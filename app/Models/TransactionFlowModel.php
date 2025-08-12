@@ -14,6 +14,7 @@ class TransactionFlowModel extends Model
         'name',
         'unique_name',
         'description',
+        'category',
         'status',
         'priority',
     ];

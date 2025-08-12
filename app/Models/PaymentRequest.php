@@ -143,6 +143,10 @@ class PaymentRequest extends Model
     {
         return $query->with('journalEntry.voucher');
     }
+    public function scopeWithTransactionFlow($query)
+    {
+        return $query->with('transactionFlow');
+    }
 
     public function scopeMyDeniedRequest($query)
     {
