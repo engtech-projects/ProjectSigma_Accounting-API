@@ -20,7 +20,6 @@ use App\Models\TransactionLog;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -145,6 +144,8 @@ class PaymentRequestController extends Controller
                     'payment_request_id' => $paymentRequest->id,
                     'unique_name' => $template->unique_name,
                     'name' => $template->name,
+                    'user_id' => $template->user_id,
+                    'user_name' => $template->usern_name,
                     'description' => $template->description,
                     'status' => $template->status ?? 'pending',
                     'priority' => $template->priority,

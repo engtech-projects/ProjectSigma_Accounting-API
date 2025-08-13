@@ -13,7 +13,7 @@ class TransactionFlowService
             ->where('name', $transactionFlowName)
             ->first();
 
-        if (!$currentFlow) {
+        if (! $currentFlow) {
             throw new \Exception('Transaction flow not found');
         }
 
@@ -24,7 +24,7 @@ class TransactionFlowService
                 ->where('priority_number', $previousPriority)
                 ->first();
 
-            if (!$previousFlow) {
+            if (! $previousFlow) {
                 throw new \Exception("Previous priority flow (priority {$previousPriority}) not found");
             }
 
@@ -46,7 +46,7 @@ class TransactionFlowService
             ->where('name', $transactionFlowName)
             ->first();
 
-        if (!$currentFlow) {
+        if (! $currentFlow) {
             return false;
         }
 
@@ -57,7 +57,7 @@ class TransactionFlowService
                 ->where('priority_number', $previousPriority)
                 ->first();
 
-            if (!$previousFlow || $previousFlow->status !== TransactionFlowStatus::DONE->value) {
+            if (! $previousFlow || $previousFlow->status !== TransactionFlowStatus::DONE->value) {
                 return false;
             }
         }
@@ -77,7 +77,7 @@ class TransactionFlowService
             ->where('name', $transactionFlowName)
             ->first();
 
-        if (!$currentFlow) {
+        if (! $currentFlow) {
             throw new \Exception('Transaction flow not found');
         }
 

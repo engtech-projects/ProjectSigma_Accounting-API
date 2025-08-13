@@ -10,12 +10,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TransactionFlow extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $table = 'transaction_flow';
+
     protected $fillable = [
         'id',
         'payment_request_id',
         'unique_name',
         'name',
+        'user_id',
+        'user_name',
         'description',
         'category',
         'status',

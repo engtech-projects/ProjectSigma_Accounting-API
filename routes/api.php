@@ -50,9 +50,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('get-all-withholding-tax', function (Request $request) {
         return response()->json(['data' => WithHoldingTax::pluck('wtax_name', 'id')], 200);
     });
-    Route::get('get-all-transaction-flow-models', [TransactionFLowModelController::class, 'index']);
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
+    Route::resource('transaction-flow-model', TransactionFLowModelController::class);
 
     //RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);

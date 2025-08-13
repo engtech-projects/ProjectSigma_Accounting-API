@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TransactionLog extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $table = 'transaction_log';
+
     protected $fillable = [
         'type',
         'transaction_code',
         'description',
         'created_by',
     ];
-
 }
