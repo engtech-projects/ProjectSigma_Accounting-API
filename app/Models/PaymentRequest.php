@@ -146,7 +146,9 @@ class PaymentRequest extends Model
 
     public function scopeWithTransactionFlow($query)
     {
-        return $query->with('transactionFlow');
+        return $query->with(['transactionFlow' => function ($query) {
+            $query->orderBy('priority', 'asc');
+        }]);
     }
 
     public function scopeMyDeniedRequest($query)

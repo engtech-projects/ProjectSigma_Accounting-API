@@ -13,6 +13,8 @@ class TransactionFlow extends Model
 
     protected $table = 'transaction_flow';
 
+    public $timestamps = true;
+
     protected $fillable = [
         'id',
         'payment_request_id',

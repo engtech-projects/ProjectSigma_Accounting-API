@@ -10,6 +10,8 @@ class TransactionFlowModel extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public $timestamps = true;
+
     protected $table = 'transaction_flow_model';
 
     protected $fillable = [

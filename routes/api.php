@@ -53,6 +53,7 @@ Route::middleware('auth:api')->group(function () {
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
     Route::resource('transaction-flow-model', TransactionFLowModelController::class);
+    Route::post('update-transaction-flow', [TransactionFLowModelController::class, 'update']);
 
     //RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);

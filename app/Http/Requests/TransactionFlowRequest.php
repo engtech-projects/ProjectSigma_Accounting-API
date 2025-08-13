@@ -22,7 +22,9 @@ class TransactionFlowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
+            'user_id' => 'nullable|integer',
+            'update_type' => 'nullable|string',
+            'flow_id' => 'nullable|integer',
         ];
     }
 }

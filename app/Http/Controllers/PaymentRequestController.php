@@ -137,21 +137,24 @@ class PaymentRequestController extends Controller
                 ]);
             }
             $transactionFlowTemplates = TransactionFlowModel::orderBy('priority')->get();
-
             $transactionFlowData = $transactionFlowTemplates->map(function ($template) use ($paymentRequest) {
+                $status = 'pending';
+                if ($template->priority == 1) {
+                    $status = 'done';
+                } elseif ($template->priority == 2) {
+                    $status = 'in_progress';
+                }
                 return [
-                    'id' => $template->id,
                     'payment_request_id' => $paymentRequest->id,
                     'unique_name' => $template->unique_name,
                     'name' => $template->name,
                     'user_id' => $template->user_id,
-                    'user_name' => $template->usern_name,
+                    'user_name' => $template->user_name,
                     'description' => $template->description,
-                    'status' => $template->status ?? 'pending',
+                    'status' => $status,
                     'priority' => $template->priority,
                 ];
             })->toArray();
-
             TransactionFlow::insert($transactionFlowData);
             TransactionLog::create([
                 'type' => TransactionLogStatus::REQUEST->value,
@@ -161,19 +164,16 @@ class PaymentRequestController extends Controller
             ]);
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
-
             foreach ($request->attachment_file_names as $file) {
                 $path = 'prf/'.$paymentRequest->id.'/'.$file;
                 Storage::move('temp/'.$file, $path);
             }
-
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Request Created Successfully',
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payment Request Creation Failed',
