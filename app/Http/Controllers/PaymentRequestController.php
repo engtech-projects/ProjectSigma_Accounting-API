@@ -150,6 +150,7 @@ class PaymentRequestController extends Controller
                     'name' => $template->name,
                     'user_id' => $template->user_id,
                     'user_name' => $template->user_name,
+                    'category' => $template->category,
                     'description' => $template->description,
                     'status' => $status,
                     'priority' => $template->priority,
