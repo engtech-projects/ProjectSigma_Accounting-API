@@ -42,6 +42,11 @@ class PaymentRequest extends Model
         'taxableAmount',
     ];
 
+    public function transactionFlow(): HasMany
+    {
+        return $this->hasMany(TransactionFlow::class);
+    }
+
     public function details(): HasMany
     {
         return $this->hasMany(PaymentRequestDetails::class);
@@ -137,6 +142,13 @@ class PaymentRequest extends Model
     public function scopeWithJournalEntryVouchers($query)
     {
         return $query->with('journalEntry.voucher');
+    }
+
+    public function scopeWithTransactionFlow($query)
+    {
+        return $query->with(['transactionFlow' => function ($query) {
+            $query->orderBy('priority', 'asc');
+        }]);
     }
 
     public function scopeMyDeniedRequest($query)

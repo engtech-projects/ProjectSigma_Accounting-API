@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
+use App\Enums\TransactionLogStatus;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
 use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
@@ -13,6 +14,9 @@ use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
+use App\Models\TransactionFlow;
+use App\Models\TransactionFlowModel;
+use App\Models\TransactionLog;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
@@ -132,21 +136,45 @@ class PaymentRequestController extends Controller
                     'total_vat_amount' => $detail['total_vat_amount'] ?? null,
                 ]);
             }
+            $transactionFlowTemplates = TransactionFlowModel::orderBy('priority')->get();
+            $transactionFlowData = $transactionFlowTemplates->map(function ($template) use ($paymentRequest) {
+                $status = 'pending';
+                if ($template->priority == 1) {
+                    $status = 'done';
+                } elseif ($template->priority == 2) {
+                    $status = 'in_progress';
+                }
+                return [
+                    'payment_request_id' => $paymentRequest->id,
+                    'unique_name' => $template->unique_name,
+                    'name' => $template->name,
+                    'user_id' => $template->user_id,
+                    'user_name' => $template->user_name,
+                    'category' => $template->category,
+                    'description' => $template->description,
+                    'status' => $status,
+                    'priority' => $template->priority,
+                ];
+            })->toArray();
+            TransactionFlow::insert($transactionFlowData);
+            TransactionLog::create([
+                'type' => TransactionLogStatus::REQUEST->value,
+                'transaction_code' => $paymentRequest->prf_no,
+                'description' => 'Payment Request Created',
+                'created_by' => auth()->user()->id,
+            ]);
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
-
             foreach ($request->attachment_file_names as $file) {
                 $path = 'prf/'.$paymentRequest->id.'/'.$file;
                 Storage::move('temp/'.$file, $path);
             }
-
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Request Created Successfully',
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payment Request Creation Failed',
