@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\JournalStatus;
+use App\Enums\TransactionFlowName;
 use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
 use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
@@ -13,6 +14,7 @@ use App\Models\PaymentRequest;
 use App\Models\Period;
 use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
+use App\Services\TransactionFlowService;
 use DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -64,8 +66,8 @@ class JournalEntryController extends Controller
                     'credit' => $detail['credit'] ?? null,
                 ]);
             }
+            TransactionFlowService::updateTransactionFlow($validatedData['payment_request_id'], TransactionFlowName::CREATE_JOURNAL_ENTRY->value);
             DB::commit();
-
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',

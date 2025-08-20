@@ -23,5 +23,6 @@ class TransactionFlowModel extends Model
         'user_name',
         'status',
         'priority',
+        'is_assignable',
     ];
 }

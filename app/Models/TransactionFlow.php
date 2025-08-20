@@ -26,6 +26,7 @@ class TransactionFlow extends Model
         'category',
         'status',
         'priority',
+        'is_assignable',
     ];
 
     public function paymentRequest(): BelongsTo
