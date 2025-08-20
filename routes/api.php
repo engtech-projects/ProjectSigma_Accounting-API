@@ -23,6 +23,7 @@ use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
+use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Models\WithHoldingTax;
@@ -51,6 +52,8 @@ Route::middleware('auth:api')->group(function () {
     });
     //CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
+    Route::resource('transaction-flow-model', TransactionFLowModelController::class);
+    Route::post('update-transaction-flow', [TransactionFLowModelController::class, 'update']);
 
     //RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
