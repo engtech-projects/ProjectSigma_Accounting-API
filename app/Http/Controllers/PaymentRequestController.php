@@ -137,13 +137,19 @@ class PaymentRequestController extends Controller
                     'total_vat_amount' => $detail['total_vat_amount'] ?? null,
                 ]);
             }
-            $transactionFlowData = TransactionFlowService::getTransactionFlow(PaymentRequestType::PRF->value, $paymentRequest->id);
-            TransactionFlow::insert($transactionFlowData);
-            TransactionLog::create([
-                'type' => TransactionLogStatus::REQUEST->value,
+            $transactionFlowData = TransactionFlowService::getTransactionFlow(
+                PaymentRequestType::PRF->value,
+                $paymentRequest->id
+            );
+            if (!empty($transactionFlowData)) {
+                // Uses the HasMany relation so timestamps and observers apply
+                $paymentRequest->transactionFlow()->createMany($transactionFlowData);
+            }
+            TransactionLog::query()->create([
+                'type'             => TransactionLogStatus::REQUEST->value,
                 'transaction_code' => $paymentRequest->prf_no,
-                'description' => 'Payment Request Created',
-                'created_by' => auth()->user()->id,
+                'description'      => 'Payment Request Created',
+                'created_by'       => auth()->user()->id,
             ]);
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();

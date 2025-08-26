@@ -69,13 +69,19 @@ class PayrollRequestController extends Controller
                 'attachment_url' => null,
             ]);
             $paymentRequest->details()->createMany($details->toArray());
-            $transactionFlowData = TransactionFlowService::getTransactionFlow(PaymentRequestType::PAYROLL->value, $paymentRequest->id);
-            TransactionFlow::insert($transactionFlowData);
-            TransactionLog::create([
-                'type' => TransactionLogStatus::REQUEST->value,
+            $transactionFlowData = TransactionFlowService::getTransactionFlow(
+                PaymentRequestType::PAYROLL->value,
+                $paymentRequest->id
+            );
+            if (!empty($transactionFlowData)) {
+                // Uses the HasMany relation so timestamps and observers apply
+                $paymentRequest->transactionFlow()->createMany($transactionFlowData);
+            }
+            TransactionLog::query()->create([
+                'type'             => TransactionLogStatus::REQUEST->value,
                 'transaction_code' => $paymentRequest->prf_no,
-                'description' => 'Payment Request Created',
-                'created_by' => auth()->user()->id,
+                'description'      => 'Payment Request Created',
+                'created_by'       => auth()->user()->id,
             ]);
         });
 

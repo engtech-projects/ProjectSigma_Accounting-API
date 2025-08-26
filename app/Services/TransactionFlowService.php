@@ -65,11 +65,11 @@ class TransactionFlowService
             ],
             default => []
         };
-        $transactionFlowTemplates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
+        $templates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
             ->orderBy('priority')
             ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority']);
 
-        return $transactionFlowTemplates->map(function ($template) use ($paymentRequestId) {
+        return $templates->map(function ($template) use ($paymentRequestId) {
             return [
                 'payment_request_id' => $paymentRequestId,
                 'unique_name' => $template->unique_name,
