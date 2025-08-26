@@ -122,4 +122,12 @@ class JournalEntry extends Model
     {
         return $query->where('status', JournalStatus::POSTED->value)->orWhere('status', JournalStatus::UNPOSTED->value);
     }
+    public function scopeWithPaymentRequestDetails($query)
+    {
+        return $query->with([
+            'paymentRequest.details.stakeholder',
+            'paymentRequest.stakeholder',
+            'paymentRequest.transactionFlow',
+        ]);
+    }
 }

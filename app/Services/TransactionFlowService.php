@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Enums\PaymentRequestType;
 use App\Enums\TransactionFlowStatus;
 use App\Models\TransactionFlow;
+use App\Models\TransactionFlowModel;
 
 class TransactionFlowService
 {
@@ -44,5 +46,45 @@ class TransactionFlowService
             ->update([
                 'status' => TransactionFlowStatus::DONE->value,
             ]);
+    }
+
+    public static function getTransactionFlow($type, $paymentRequestId)
+    {
+        $excludedCategories = match ($type) {
+            PaymentRequestType::PRF->value => [
+                PaymentRequestType::PAYROLL->value,
+                PaymentRequestType::PO->value
+            ],
+            PaymentRequestType::PAYROLL->value => [
+                PaymentRequestType::PRF->value,
+                PaymentRequestType::PO->value
+            ],
+            PaymentRequestType::PO->value => [
+                PaymentRequestType::PRF->value,
+                PaymentRequestType::PAYROLL->value
+            ],
+            default => []
+        };
+        $transactionFlowTemplates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
+            ->orderBy('priority')
+            ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority']);
+
+        return $transactionFlowTemplates->map(function ($template) use ($paymentRequestId) {
+            return [
+                'payment_request_id' => $paymentRequestId,
+                'unique_name' => $template->unique_name,
+                'name' => $template->name,
+                'user_id' => $template->user_id,
+                'user_name' => $template->user_name,
+                'category' => $template->category,
+                'description' => $template->description,
+                'status' => match ($template->priority) {
+                    1 => 'done',
+                    2 => 'in_progress',
+                    default => 'pending'
+                },
+                'priority' => $template->priority,
+            ];
+        })->toArray();
     }
 }

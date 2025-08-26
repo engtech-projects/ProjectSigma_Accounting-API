@@ -20,6 +20,7 @@ use App\Models\TransactionLog;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
+use App\Services\TransactionFlowService;
 use DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -136,26 +137,7 @@ class PaymentRequestController extends Controller
                     'total_vat_amount' => $detail['total_vat_amount'] ?? null,
                 ]);
             }
-            $transactionFlowTemplates = TransactionFlowModel::orderBy('priority')->get();
-            $transactionFlowData = $transactionFlowTemplates->map(function ($template) use ($paymentRequest) {
-                $status = 'pending';
-                if ($template->priority == 1) {
-                    $status = 'done';
-                } elseif ($template->priority == 2) {
-                    $status = 'in_progress';
-                }
-                return [
-                    'payment_request_id' => $paymentRequest->id,
-                    'unique_name' => $template->unique_name,
-                    'name' => $template->name,
-                    'user_id' => $template->user_id,
-                    'user_name' => $template->user_name,
-                    'category' => $template->category,
-                    'description' => $template->description,
-                    'status' => $status,
-                    'priority' => $template->priority,
-                ];
-            })->toArray();
+            $transactionFlowData = TransactionFlowService::getTransactionFlow(PaymentRequestType::PRF->value, $paymentRequest->id);
             TransactionFlow::insert($transactionFlowData);
             TransactionLog::create([
                 'type' => TransactionLogStatus::REQUEST->value,

@@ -120,6 +120,7 @@ class Voucher extends Model
         return $query->with([
             'journalEntry.paymentRequest.details.stakeholder',
             'journalEntry.paymentRequest.stakeholder',
+            'journalEntry.paymentRequest.transactionFlow',
             'journalEntry.details.account.accountType',
             'journalEntry.details.account.reportGroup',
             'journalEntry.details.stakeholder',

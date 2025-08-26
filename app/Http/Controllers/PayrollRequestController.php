@@ -6,13 +6,17 @@ use App\Enums\ApprovalPayementRequestType;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
+use App\Enums\TransactionLogStatus;
 use App\Http\Requests\CreatePayrollRequest;
 use App\Http\Requests\PayrollRequest\PayrollRequestFilter;
 use App\Models\PaymentRequest;
+use App\Models\TransactionFlow;
+use App\Models\TransactionLog;
 use App\Services\ApiServices\HrmsService;
 use App\Services\PaymentServices;
 use App\Services\PayrollService;
 use App\Services\StakeHolderService;
+use App\Services\TransactionFlowService;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -65,6 +69,14 @@ class PayrollRequestController extends Controller
                 'attachment_url' => null,
             ]);
             $paymentRequest->details()->createMany($details->toArray());
+            $transactionFlowData = TransactionFlowService::getTransactionFlow(PaymentRequestType::PAYROLL->value, $paymentRequest->id);
+            TransactionFlow::insert($transactionFlowData);
+            TransactionLog::create([
+                'type' => TransactionLogStatus::REQUEST->value,
+                'transaction_code' => $paymentRequest->prf_no,
+                'description' => 'Payment Request Created',
+                'created_by' => auth()->user()->id,
+            ]);
         });
 
         return new JsonResponse([
