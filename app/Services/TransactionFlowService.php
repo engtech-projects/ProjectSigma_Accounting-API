@@ -42,7 +42,22 @@ class TransactionFlowService
                 'status' => TransactionFlowStatus::DONE->value,
             ]);
     }
-
+    /**
+     * @param string $paymentRequestType PaymentRequestType::*->value
+     * @param int|string $paymentRequestId
+     * @return array<int, array{
+     *   payment_request_id:int|string,
+     *   unique_name:string,
+     *   name:string,
+     *   user_id:int|string|null,
+     *   user_name:string|null,
+     *   category:string,
+     *   description:string|null,
+     *   status:string,
+     *   priority:int,
+     *   is_assignable:bool
+     * }>
+     */
     public static function getTransactionFlow($paymentRequestType, $paymentRequestId)
     {
         $excludedCategories = match ($paymentRequestType) {
@@ -62,7 +77,8 @@ class TransactionFlowService
         };
         $templates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
             ->orderBy('priority')
-            ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority']);
+            ->orderBy('id')
+            ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority', 'is_assignable']);
         return $templates->map(function ($template) use ($paymentRequestId) {
             return [
                 'payment_request_id' => $paymentRequestId,
