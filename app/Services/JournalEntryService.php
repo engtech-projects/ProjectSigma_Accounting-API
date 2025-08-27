@@ -30,7 +30,7 @@ class JournalEntryService
                 });
         })
 
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -44,7 +44,7 @@ class JournalEntryService
     public static function voidEntries()
     {
         return JournalEntry::where('status', JournalStatus::VOID->value)
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -62,7 +62,7 @@ class JournalEntryService
                 });
         })
 
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -82,7 +82,7 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -96,7 +96,7 @@ class JournalEntryService
     public static function draftedEntries()
     {
         return JournalEntry::where('status', JournalStatus::DRAFTED->value)
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -114,7 +114,7 @@ class JournalEntryService
                 });
         })
             ->openJournals()
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->orderByDesc('created_at')
@@ -133,7 +133,7 @@ class JournalEntryService
                 });
         })
             ->where('status', JournalStatus::UNPOSTED->value)
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -150,7 +150,7 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -169,7 +169,7 @@ class JournalEntryService
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
@@ -189,7 +189,7 @@ class JournalEntryService
                 });
         })
 
-            ->withPaymentRequest()
+            ->withPaymentRequestDetails()
             ->withAccounts()
             ->withDetails()
             ->withVoucher()
