@@ -18,18 +18,14 @@ class TransactionFlowService
         if (! $currentFlow) {
             throw new \Exception('Transaction flow not found');
         }
-
         if ($currentFlow->priority > 1) {
             $previousPriority = $currentFlow->priority - 1;
-
             $previousFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('priority', $previousPriority)
                 ->first();
-
             if (! $previousFlow) {
                 throw new \Exception("Previous priority flow (priority {$previousPriority}) not found");
             }
-
             if ($previousFlow->status !== TransactionFlowStatus::DONE->value) {
                 throw new \Exception("Cannot update priority {$currentFlow->priority}. Previous priority {$previousPriority} must be completed first.");
             }
@@ -40,7 +36,6 @@ class TransactionFlowService
                 $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
             }
         }
-
         TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
             ->update([
@@ -48,9 +43,9 @@ class TransactionFlowService
             ]);
     }
 
-    public static function getTransactionFlow($type, $paymentRequestId)
+    public static function getTransactionFlow($paymentRequestType, $paymentRequestId)
     {
-        $excludedCategories = match ($type) {
+        $excludedCategories = match ($paymentRequestType) {
             PaymentRequestType::PRF->value => [
                 PaymentRequestType::PAYROLL->value,
                 PaymentRequestType::PO->value
@@ -68,7 +63,6 @@ class TransactionFlowService
         $templates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
             ->orderBy('priority')
             ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority']);
-
         return $templates->map(function ($template) use ($paymentRequestId) {
             return [
                 'payment_request_id' => $paymentRequestId,
@@ -79,9 +73,9 @@ class TransactionFlowService
                 'category' => $template->category,
                 'description' => $template->description,
                 'status' => match ($template->priority) {
-                    1 => 'done',
-                    2 => 'in_progress',
-                    default => 'pending'
+                    1 => TransactionFlowStatus::DONE->value,
+                    2 => TransactionFlowStatus::IN_PROGRESS->value,
+                    default => TransactionFlowStatus::PENDING->value
                 },
                 'priority' => $template->priority,
             ];
