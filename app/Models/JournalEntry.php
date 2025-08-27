@@ -122,6 +122,13 @@ class JournalEntry extends Model
     {
         return $query->where('status', JournalStatus::POSTED->value)->orWhere('status', JournalStatus::UNPOSTED->value);
     }
+
+    /**
+     * Eager-load paymentRequest relations for journal listing/detail screens:
+     * - paymentRequest.stakeholder
+     * - paymentRequest.details.stakeholder, paymentRequest.details.particularGroup
+     * - paymentRequest.transactionFlow ordered by priority then id
+     */
     public function scopeWithPaymentRequestDetails($query)
     {
         return $query->with([
