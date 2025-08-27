@@ -82,19 +82,19 @@ class TransactionFlowService
         return $templates->map(function ($template) use ($paymentRequestId) {
             return [
                 'payment_request_id' => $paymentRequestId,
-                'unique_name' => $template->unique_name,
-                'name' => $template->name,
-                'user_id' => $template->user_id,
-                'user_name' => $template->user_name,
-                'category' => $template->category,
-                'description' => $template->description,
-                'status' => match ($template->priority) {
-                    1 => TransactionFlowStatus::DONE->value,
-                    2 => TransactionFlowStatus::IN_PROGRESS->value,
-                    default => TransactionFlowStatus::PENDING->value
-                },
-                'priority' => $template->priority,
+                'unique_name'         => $template->unique_name,
+                'name'                => $template->name,
+                'user_id'             => $template->user_id,
+                'user_name'           => $template->user_name,
+                'category'            => $template->category,
+                'description'         => $template->description,
+                'status'              => match ($template->priority) {
+                                            1 => TransactionFlowStatus::DONE->value,
+                                            2 => TransactionFlowStatus::IN_PROGRESS->value,
+                                            default => TransactionFlowStatus::PENDING->value,
+                                        },
+                'priority'            => $template->priority,
+                'is_assignable'       => (bool) $template->is_assignable,
             ];
         })->toArray();
-    }
 }
