@@ -1,5 +1,4 @@
 <?php
-
 use App\Enums\PaymentRequestType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,7 +11,6 @@ return new class extends Migration
         Schema::table('payment_request', function (Blueprint $table) {
             $table->dropColumn('type');
         });
-
         Schema::table('payment_request', function (Blueprint $table) {
             $table->enum('type', [
                 PaymentRequestType::PRF->value,
@@ -21,13 +19,11 @@ return new class extends Migration
             ])->default(PaymentRequestType::PRF->value);
         });
     }
-
     public function down(): void
     {
         Schema::table('payment_request', function (Blueprint $table) {
             $table->dropColumn('type');
         });
-
         Schema::table('payment_request', function (Blueprint $table) {
             $table->enum('type', PaymentRequestType::toArray())
                 ->default(PaymentRequestType::PRF->value);
