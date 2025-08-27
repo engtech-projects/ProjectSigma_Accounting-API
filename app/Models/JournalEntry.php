@@ -129,7 +129,8 @@ class JournalEntry extends Model
             'paymentRequest.details.particularGroup',
             'paymentRequest.stakeholder',
             'paymentRequest.transactionFlow' => function ($q) {
-                $q->orderBy('priority', 'asc');
+                $q->orderBy('priority', 'asc')
+                ->orderBy('id', 'asc');
             },
         ]);
     }
