@@ -14,20 +14,20 @@ class TransactionFlowService
         $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
             ->first();
-
-        if (! $currentFlow) {
+        if (!$currentFlow) {
             throw new \Exception('Transaction flow not found');
         }
         if ($currentFlow->priority > 1) {
-            $previousPriority = $currentFlow->priority - 1;
-            $previousFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('priority', $previousPriority)
-                ->first();
-            if (! $previousFlow) {
-                throw new \Exception("Previous priority flow (priority {$previousPriority}) not found");
-            }
-            if ($previousFlow->status !== TransactionFlowStatus::DONE->value) {
-                throw new \Exception("Cannot update priority {$currentFlow->priority}. Previous priority {$previousPriority} must be completed first.");
+            $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
+                ->where('priority', '<', $currentFlow->priority)
+                ->get();
+            $pendingFlows = $previousFlows->filter(function ($flow) {
+                return $flow->status !== TransactionFlowStatus::DONE->value;
+            });
+            if ($pendingFlows->isNotEmpty()) {
+                $pendingCount = $pendingFlows->count();
+                $pendingPriorities = $pendingFlows->pluck('priority')->implode(', ');
+                throw new \Exception("Cannot update priority {$currentFlow->priority}. There are {$pendingCount} pending flows (priorities: {$pendingPriorities}) that must be completed first.");
             }
             $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('priority', $currentFlow->priority + 1)
