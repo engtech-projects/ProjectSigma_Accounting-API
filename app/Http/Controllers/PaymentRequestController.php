@@ -137,7 +137,7 @@ class PaymentRequestController extends Controller
                     'total_vat_amount' => $detail['total_vat_amount'] ?? null,
                 ]);
             }
-            $transactionFlowData = TransactionFlowService::getTransactionFlow(
+            $transactionFlowData = app(TransactionFlowService::class)->getTransactionFlow(
                 PaymentRequestType::PRF->value,
                 $paymentRequest->id
             );

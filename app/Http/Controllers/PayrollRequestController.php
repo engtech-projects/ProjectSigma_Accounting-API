@@ -69,7 +69,7 @@ class PayrollRequestController extends Controller
                 'attachment_url' => null,
             ]);
             $paymentRequest->details()->createMany($details->toArray());
-            $transactionFlowData = TransactionFlowService::getTransactionFlow(
+            $transactionFlowData = app(TransactionFlowService::class)->getTransactionFlow(
                 PaymentRequestType::PAYROLL->value,
                 $paymentRequest->id
             );
