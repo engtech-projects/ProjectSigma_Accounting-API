@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\PostingPeriodStatusType;
 
 class PostingPeriod extends Model
 {
@@ -55,10 +56,11 @@ class PostingPeriod extends Model
             $query->orderBy('created_at', 'desc');
         }]);
     }
-    public function scopeCheckIfStatusIsOpenYearly($query, $currentMonth = null)
+
+    public function scopeCheckIfStatusIsOpenYearly($currentMonth = null)
     {
-        if ($query->where('status', PostingPeriodStatusType::OPEN->value)->exists()) {
-            $subPeriodsQuery = $query->periods();
+        if ($this->status === PostingPeriodStatusType::OPEN->value) {
+            $subPeriodsQuery = $this->periods();
             if ($currentMonth) {
                 $subPeriodsQuery->where('start_date', '!=', $currentMonth->startOfMonth());
             }
@@ -66,11 +68,11 @@ class PostingPeriod extends Model
             if ($subPeriodsQuery->where('status', PostingPeriodStatusType::OPEN->value)->exists()) {
                 return true;
             } else {
-                $query->update([
+                $this->update([
                     'status' => PostingPeriodStatusType::CLOSED,
                 ]);
                 return false;
-            }
+            } 
         }
         return false;
     }
