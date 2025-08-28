@@ -18,6 +18,7 @@ class Account extends Model
         'report_group_id',
         'account_number',
         'account_name',
+        'taxable',
         'account_description',
         'bank_reconciliation',
         'is_active',
@@ -67,4 +68,10 @@ class Account extends Model
     {
         return $query->where('account_name', $accountName)->first()->id;
     }
+
+    public function scopeTaxable($query)
+    {
+        return $query->where('taxable', true);
+    }
+
 }
