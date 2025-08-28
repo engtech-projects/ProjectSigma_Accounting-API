@@ -36,46 +36,6 @@ class PostingPeriodController extends Controller
         }
     }
 
-    public function createPostingPeriod()
-    {
-        $currentDate = Carbon::now();
-        $postingPeriod = PostingPeriod::orderBy('period_end', 'desc')->first();
-        if (! $postingPeriod || $currentDate > $postingPeriod->period_end) {
-            PostingPeriod::query()->update([
-                'status' => PostingPeriodStatusType::CLOSED,
-            ]);
-            Period::query()->update([
-                'status' => PostingPeriodStatusType::CLOSED,
-            ]);
-            $postingPeriod = PostingPeriod::create([
-                'period_start' => $currentDate->copy()->startOfYear(),
-                'period_end' => $currentDate->copy()->endOfYear(),
-            ]);
-        }
-
-        $lastPeriod = $postingPeriod->periods()->orderBy('end_date', 'desc')->first();
-
-        if (! $lastPeriod || $currentDate > $lastPeriod->end_date) {
-            $startOfMonth = $currentDate->copy()->startOfMonth();
-            $endOfMonth = $currentDate->copy()->endOfMonth();
-
-            if (! $postingPeriod->periods()->where('start_date', $startOfMonth)->exists()) {
-                $period = $postingPeriod->periods()->create([
-                    'start_date' => $startOfMonth,
-                    'end_date' => $endOfMonth,
-                ]);
-            }
-        }
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Posting Period Successfully Created',
-            'data' => [
-                'posting_period' => $postingPeriod,
-                'period' => $period ?? null,
-            ],
-        ], 201);
-    }
 
     /**
      * Store a newly created resource in storage.

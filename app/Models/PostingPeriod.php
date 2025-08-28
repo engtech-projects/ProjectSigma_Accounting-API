@@ -55,4 +55,23 @@ class PostingPeriod extends Model
             $query->orderBy('created_at', 'desc');
         }]);
     }
+    public function scopeCheckIfStatusIsOpenYearly($query, $currentMonth = null)
+    {
+        if ($query->where('status', PostingPeriodStatusType::OPEN->value)->exists()) {
+            $subPeriodsQuery = $query->periods();
+            if ($currentMonth) {
+                $subPeriodsQuery->where('start_date', '!=', $currentMonth->startOfMonth());
+            }
+    
+            if ($subPeriodsQuery->where('status', PostingPeriodStatusType::OPEN->value)->exists()) {
+                return true;
+            } else {
+                $query->update([
+                    'status' => PostingPeriodStatusType::CLOSED,
+                ]);
+                return false;
+            }
+        }
+        return false;
+    }
 }
