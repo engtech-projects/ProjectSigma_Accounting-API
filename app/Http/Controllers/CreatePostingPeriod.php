@@ -1,14 +1,14 @@
 <?php
 namespace App\Http\Controllers;
+
 use App\Enums\PostingPeriodStatusType;
 use Carbon\Carbon;
-use DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\PostingPeriod;
 use App\Models\Period;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
 
 class CreatePostingPeriod extends Controller
 {
@@ -16,7 +16,7 @@ class CreatePostingPeriod extends Controller
      * Handle the incoming request.
      * Create posting period for the NEXT month
      */
-    public function __invoke(?Request $request = null): JsonResponse
+    public function __invoke(): JsonResponse
     {
         $currentDate = Carbon::now();
         $nextMonth = $currentDate->copy()->addMonth();
@@ -48,6 +48,17 @@ class CreatePostingPeriod extends Controller
                 ],
             ], 201); 
             
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            Log::error('Database error while creating posting period', [
+                'error' => $e->getMessage(),
+                'sql' => $e->getSql(),
+            ]);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Database error occurred',
+                'data' => null,
+            ], 500);
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Posting Period Failed to Create: ', [
@@ -114,7 +125,8 @@ class CreatePostingPeriod extends Controller
             ->first();
             
         if (!$postingPeriod) {
-            if (PostingPeriod::scopeCheckIfStatusIsOpenYearly()) {
+            $hasOpenPeriods = PostingPeriod::where('status', PostingPeriodStatusType::OPEN->value)->exists();
+            if (!$lastOpenPeriod || !$lastOpenPeriod->checkIfStatusIsOpenYearly()) {
                 $postingPeriod = PostingPeriod::create([
                     'period_start' => $targetDate->copy()->startOfYear(),
                     'period_end' => $targetDate->copy()->endOfYear(),
@@ -141,7 +153,14 @@ class CreatePostingPeriod extends Controller
         $startOfNextMonth = $nextMonth->copy()->startOfMonth();
         $endOfNextMonth = $nextMonth->copy()->endOfMonth();
         
-        if (Period::CheckIfStatusIsOpenMonthly($postingPeriod)) {
+        $closedPeriods = $postingPeriod->periods()
+            ->where('status', PostingPeriodStatusType::OPEN->value)
+            ->where('start_date', '<', $nextMonth->startOfMonth())
+            ->update([
+                'status' => PostingPeriodStatusType::CLOSED->value,
+            ]);
+
+        if (true) {
             $existingPeriod = $postingPeriod->periods()
                 ->where('start_date', $startOfNextMonth)
                 ->first();
@@ -176,7 +195,7 @@ class CreatePostingPeriod extends Controller
      * Legacy method for backward compatibility
      * Redirects to the main invoke method
      */
-    public function CreatePostingPeriod(?Request $request = null): JsonResponse
+    public function createPostingPeriod(?Request $request = null): JsonResponse
     {
         return $this->__invoke($request);
     }
