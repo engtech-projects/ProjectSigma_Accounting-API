@@ -25,6 +25,10 @@ class Account extends Model
         'statement',
     ];
 
+    protected $casts = [
+        'taxable' => 'boolean',
+    ];
+
     public $timestamps = true;
 
     public function accountType(): BelongsTo

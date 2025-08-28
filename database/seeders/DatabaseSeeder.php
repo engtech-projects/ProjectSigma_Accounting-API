@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ReportGroupSeeder::class,
             UpdateAccountsReportGroupSeeder::class,
             TransactionFlowModelSeeder::class,
+            UpdateAccountsTaxableSeeder::class,
         ]);
     }
 }
