@@ -13,7 +13,7 @@ return new class extends Migration
     {
         //Change columns order in opening_balances table
         Schema::table('opening_balances', function (Blueprint $table) {
-            $table->timestamp('created_at')->nullable()->after('period_id')->change();
+            $table->timestamp('created_at')->nullable()->after('posting_period_id')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
             $table->timestamp('deleted_at')->nullable()->after('updated_at')->change();
         });

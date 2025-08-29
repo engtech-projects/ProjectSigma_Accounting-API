@@ -18,10 +18,15 @@ class Account extends Model
         'report_group_id',
         'account_number',
         'account_name',
+        'taxable',
         'account_description',
         'bank_reconciliation',
         'is_active',
         'statement',
+    ];
+
+    protected $casts = [
+        'taxable' => 'boolean',
     ];
 
     public $timestamps = true;
@@ -67,4 +72,11 @@ class Account extends Model
     {
         return $query->where('account_name', $accountName)->first()->id;
     }
+
+    public function scopeTaxable($query, bool $state = true)
+    {
+        return $query->where('taxable', $state);
+    }
+
+
 }
