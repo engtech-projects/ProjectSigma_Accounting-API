@@ -78,8 +78,5 @@ class Account extends Model
         return $query->where('taxable', $state);
     }
 
-    public function scopeNonTaxable($query)
-    {
-        return $query->where('taxable', false);
-    }
+
 }
