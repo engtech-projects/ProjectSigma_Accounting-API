@@ -17,7 +17,9 @@ class TransactionFlowModelSeeder extends Seeder
         TransactionFlowModel::truncate();
         $flows = [
             ['name' => 'Create Payment Request', 'unique_name' => 'create_payment_request', 'category' => 'prf', 'is_assignable' => false, 'priority' => 1],
-            ['name' => 'Check Documents', 'unique_name' => 'check_documents', 'category' => 'prf', 'is_assignable' => true, 'priority' => 2],
+            ['name' => 'Check Documents (PRF)', 'unique_name' => 'check_documents_prf', 'category' => 'prf', 'is_assignable' => true, 'priority' => 2],
+            ['name' => 'Check Documents (PO)', 'unique_name' => 'check_documents_po', 'category' => 'po', 'is_assignable' => true, 'priority' => 2],
+            ['name' => 'Check Documents (Payroll)', 'unique_name' => 'check_documents_payroll', 'category' => 'payroll', 'is_assignable' => true, 'priority' => 2],
             ['name' => 'Check and sign Disbursement Check List', 'unique_name' => 'check_and_sign_disbursement_check_list', 'category' => 'prf', 'is_assignable' => true, 'priority' => 3],
             ['name' => 'Check Request Budget', 'unique_name' => 'check_request_budget', 'category' => 'prf', 'is_assignable' => true, 'priority' => 4],
             ['name' => 'PRF Approval', 'unique_name' => 'prf_approval', 'category' => 'prf', 'is_assignable' => false, 'priority' => 5],

@@ -16,7 +16,6 @@ class TransactionFlow extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'id',
         'payment_request_id',
         'unique_name',
         'name',
