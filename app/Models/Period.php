@@ -37,4 +37,17 @@ class Period extends Model
             ->where('end_date', '>=', $currentDate->toDateString())
             ->where('status', PostingPeriodStatusType::OPEN->value);
     }
+
+    public function scopeCheckIfStatusIsOpenMonthly($query)
+    {
+        $openPeriods = $query->where('status', PostingPeriodStatusType::OPEN->value);
+
+        if($openPeriods->exists()){
+            $openPeriods->update([
+                'status' => PostingPeriodStatusType::CLOSED->value,
+            ]);
+            return true;
+        }
+        return false;
+    }
 }
