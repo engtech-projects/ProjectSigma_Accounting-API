@@ -36,5 +36,13 @@ class AccountSeeder extends Seeder
         }
         $ids = range(311, 388);
         Account::whereIn('id', $ids)->delete();
+        
+        $taxableAccountsNumbers = [
+            '200010', '200011', '200030', '200031', '200032', '200033', 
+            '200034', '200035', '200036', '200037', '200038', '200039',
+        ];
+
+        Account::whereIn('account_number', $taxableAccountsNumbers)
+        ->update(['taxable' => true]);
     }
 }

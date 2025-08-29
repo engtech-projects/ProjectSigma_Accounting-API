@@ -73,9 +73,9 @@ class Account extends Model
         return $query->where('account_name', $accountName)->first()->id;
     }
 
-    public function scopeTaxable($query)
+    public function scopeTaxable($query, bool $state = true)
     {
-        return $query->where('taxable', true);
+        return $query->where('taxable', $state);
     }
 
 }
