@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Period;
+use App\Models\PostingPeriod;
 
 class PeriodService
 {
     public static function getPaginated(array $filters = [])
     {
-        $query = Period::query();
+        $query = PostingPeriod::query();
 
         if (isset($filters['search'])) {
             $search = $filters['search'];

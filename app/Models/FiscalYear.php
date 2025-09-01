@@ -5,37 +5,36 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\PostingPeriodStatusType;
 
-class PostingPeriod extends Model
+class FiscalYear extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'posting_periods';
+    protected $table = 'fiscal_year';
 
     public $timestamps = true;
 
     protected $fillable = [
-        'fiscal_year_id',
-        'start_date',
-        'end_date',
+        'period_start',
+        'period_end',
         'status',
     ];
 
-    public function fiscalYear(): BelongsTo
+    public function postingPeriods(): HasMany
     {
-        return $this->belongsTo(FiscalYear::class, 'fiscal_year_id');
+        return $this->hasMany(PostingPeriod::class);
     }
 
     public function scopeCurrent($query)
     {
         $currentDate = Carbon::now();
 
-        return $query->whereHas('posting_period', function ($subQuery) use ($currentDate) {
-            $subQuery->where('start_date', '<=', $currentDate)
-                ->where('end_date', '>=', $currentDate);
+        return $query->whereHas('postingPeriods', function ($subQuery) use ($currentDate) {
+            $subQuery->where('period_start', '<=', $currentDate)
+                ->where('period_end', '>=', $currentDate);
         });
     }
 
@@ -46,14 +45,14 @@ class PostingPeriod extends Model
 
     public function scopeHasJournalEntries($query)
     {
-        return $query->whereHas('posting_periods', function ($subQuery) {
+        return $query->whereHas('postingPeriods', function ($subQuery) {
             $subQuery->whereHas('journalEntries');
         });
     }
 
     public function scopeWithDetails($query)
     {
-        return $query->with(['fiscalYear' => function ($query) {
+        return $query->with(['postingPeriods' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }]);
     }

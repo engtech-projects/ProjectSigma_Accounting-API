@@ -3,7 +3,10 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\Services\PostingPeriodService;
+use App\Models\PostingPeriod;
 
 class CreatePostingPeriodCommand extends Command
 {
@@ -13,7 +16,7 @@ class CreatePostingPeriodCommand extends Command
     public function handle(PostingPeriodService $service): int
     {
         try {
-            $result = $service->createNextMonthPeriod();
+            $result = $service->createPostingPeriod();
             $this->info('Posting period created successfully');
             return Command::SUCCESS;
         } catch (\Exception $e) {
