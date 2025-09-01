@@ -32,6 +32,7 @@ class Account extends Model
     {
         return [
             'taxable' => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 
