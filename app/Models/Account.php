@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
 {
@@ -26,9 +28,12 @@ class Account extends Model
         'statement',
     ];
 
-    protected $casts = [
-        'taxable' => 'boolean',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'taxable' => 'boolean',
+        ];
+    }
 
     public $timestamps = true;
 
@@ -47,7 +52,7 @@ class Account extends Model
         return $this->belongsTo(ReportGroup::class);
     }
 
-    public function journalEntryDetails(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function journalEntryDetails(): HasMany
     {
         return $this->hasMany(JournalDetails::class);
     }
@@ -69,12 +74,12 @@ class Account extends Model
         return "{$this->account_number} - {$this->account_name} $reportGroup";
     }
 
-    public function scopeAccountName(\Illuminate\Database\Eloquent\Builder $query, string $accountName): \Illuminate\Database\Eloquent\Builder
+    public function scopeAccountName(Builder $query, string $accountName): Builder
     {
         return $query->where('account_name', $accountName);
     }
 
-    public function scopeTaxable(\Illuminate\Database\Eloquent\Builder $query, bool $state = true): \Illuminate\Database\Eloquent\Builder
+    public function scopeTaxable(Builder $query, bool $state = true): Builder
     {
         return $query->where('taxable', $state);
     }
