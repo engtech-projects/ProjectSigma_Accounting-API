@@ -97,4 +97,5 @@ class TransactionFlowService
                 'is_assignable'       => (bool) $template->is_assignable,
             ];
         })->toArray();
+    }
 }
