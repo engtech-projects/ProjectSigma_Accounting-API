@@ -23,14 +23,9 @@ class CreatePostingPeriod extends Controller
     public function __invoke(): JsonResponse
     {
         try {
-            DB::beginTransaction();
-            $this->postingPeriodService->ensureCurrentMonthAndClosePrevious();
-            $currentDate = Carbon::now();
-            $nextMonth = $currentDate->copy()->addMonth();
-            $fiscalYear = $this->postingPeriodService->ensureFiscalYear($nextMonth);
-            $postingPeriod = $this->postingPeriodService->createPostingPeriod();
 
-            DB::commit();
+            ['fiscalYear' => $fiscalYear, 'posting_period' => $postingPeriod] =
+                $this->postingPeriodService->createPostingPeriod();
 
             Log::info('Posting Period Created via API: ', [
                 'fiscal_year_id' => $fiscalYear->id,
@@ -59,14 +54,5 @@ class CreatePostingPeriod extends Controller
                 'data' => null,
             ], 500);
         }
-    }
-
-    /**
-     * Legacy method for backward compatibility
-     * Redirects to the main invoke method
-     */
-    public function createPostingPeriod(): JsonResponse
-    {
-        return $this->__invoke();
     }
 }
