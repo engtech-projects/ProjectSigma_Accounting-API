@@ -31,7 +31,7 @@ class AccountSeeder extends Seeder
                     'bank_reconciliation' => $record['bank_reconciliation'],
                     'is_active' => $record['is_active'],
                     'statement' => $record['statement'],
-                    'taxable' => $record['taxable'],
+                    'taxable' => $record['taxable'] ,
                 ]
             );
         }
@@ -43,7 +43,6 @@ class AccountSeeder extends Seeder
             '200034', '200035', '200036', '200037', '200038', '200039',
         ];
 
-        Account::whereIn('account_number', $taxableAccountNumbers)
-        ->update(['taxable' => true]);
+        Account::whereIn('account_number', $taxableAccountNumbers);
     }
 }
