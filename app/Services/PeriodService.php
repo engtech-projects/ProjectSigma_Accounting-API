@@ -8,7 +8,7 @@ class PeriodService
 {
     public static function getPaginated(array $filters = [])
     {
-        $query = PostingPeriod::query();
+        $query = ( new PostingPeriod() )->newQuery();
 
         if (isset($filters['search'])) {
             $search = $filters['search'];

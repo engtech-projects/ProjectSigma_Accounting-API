@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\CreatePostingPeriodCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -13,7 +12,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->command('posting-period:create')->monthly();
+        $schedule->command('posting-period:create')
+            ->monthlyOn(1, '00:05')
+            ->timezone(config('app.timezone'))
+            ->onOneServer()
+            ->withoutOverlapping()
+            ->runInBackground();
+
     }
 
     /**

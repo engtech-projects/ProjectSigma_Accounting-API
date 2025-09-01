@@ -32,10 +32,9 @@ class FiscalYear extends Model
     {
         $currentDate = Carbon::now();
 
-        return $query->whereHas('postingPeriods', function ($subQuery) use ($currentDate) {
-            $subQuery->where('period_start', '<=', $currentDate)
-                ->where('period_end', '>=', $currentDate);
-        });
+        return $query
+            ->where('period_start', '<=', $currentDate)
+            ->where('period_end', '>=', $currentDate);
     }
 
     public static function currentPostingPeriod()

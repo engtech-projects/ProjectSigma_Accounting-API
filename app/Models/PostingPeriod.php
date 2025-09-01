@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\PostingPeriodStatusType;
+use App\Models\JournalEntry;
 
 class PostingPeriod extends Model
 {
@@ -33,10 +34,9 @@ class PostingPeriod extends Model
     {
         $currentDate = Carbon::now();
 
-        return $query->whereHas('posting_period', function ($subQuery) use ($currentDate) {
-            $subQuery->where('start_date', '<=', $currentDate)
-                ->where('end_date', '>=', $currentDate);
-        });
+        return $query
+            ->where('start_date', '<=', $currentDate)
+            ->where('end_date', '>=', $currentDate);
     }
 
     public static function currentPostingPeriod()
@@ -53,9 +53,13 @@ class PostingPeriod extends Model
 
     public function scopeWithDetails($query)
     {
-        return $query->with(['fiscalYear' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }]);
+        return $query->with('fiscalYear')
+            ->orderBy('created_at');
+    }
+
+    public function journalEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JournalEntry::class);
     }
 
 }
