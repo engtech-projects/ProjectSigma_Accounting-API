@@ -38,8 +38,10 @@ return new class extends Migration
             $table->renameColumn('posting_period_id', 'period_id');
 
             // Reverse Step 1: Re-add old foreign keys with original names
-            $table->foreign('posting_period_id', 'journal_entry_posting_period_id_foreign')->references('id')->on('posting_periods');
-            $table->foreign('period_id', 'journal_entry_period_id_foreign')->references('id')->on('periods')->onDelete('cascade');
+            $table->foreign('posting_period_id', 'journal_entry_posting_period_id_foreign')
+            ->references('id')->on('posting_periods')->onDelete('cascade');
+             $table->foreign('period_id', 'journal_entry_period_id_foreign')
+            ->references('id')->on('periods')->onDelete('cascade');
         });
     }
 };

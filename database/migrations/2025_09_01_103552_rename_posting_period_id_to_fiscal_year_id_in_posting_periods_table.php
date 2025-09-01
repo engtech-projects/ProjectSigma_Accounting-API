@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('posting_periods', function (Blueprint $table) {
             // Rename the column
-            $table->renameColumn('fiscal_year_id', 'fiscal_year_id');
+            $table->renameColumn('posting_period_id', 'fiscal_year_id');
         });
         
         // Add foreign key constraint after renaming
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreign('fiscal_year_id')->references('id')->on('fiscal_year')->onDelete('cascade');
             
             // Add index for better performance
-            $table->index(['fiscal_year_id', 'start_date']);
+            $table->unique(['fiscal_year_id', 'start_date'], 'posting_periods_fy_start_unique');
         });
     }
 
@@ -33,7 +33,7 @@ return new class extends Migration
         Schema::table('posting_periods', function (Blueprint $table) {
             // Drop constraints first
             $table->dropForeign(['fiscal_year_id']);
-            $table->dropIndex(['fiscal_year_id', 'start_date']);
+            $table->dropUnique('posting_periods_fy_start_unique');
         });
         
         Schema::table('posting_periods', function (Blueprint $table) {
