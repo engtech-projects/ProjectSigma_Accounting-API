@@ -11,6 +11,7 @@ class Account extends Model
 {
     use HasFactory, SoftDeletes;
 
+
     protected $table = 'accounts';
 
     protected $fillable = [
@@ -68,12 +69,12 @@ class Account extends Model
         return "{$this->account_number} - {$this->account_name} $reportGroup";
     }
 
-    public function scopeWithAccountName($query, $accountName)
+    public function scopeAccountName(\Illuminate\Database\Eloquent\Builder $query, string $accountName): \Illuminate\Database\Eloquent\Builder
     {
-        return $query->where('account_name', $accountName)->first()->id;
+        return $query->where('account_name', $accountName);
     }
 
-    public function scopeTaxable($query, bool $state = true)
+    public function scopeTaxable(\Illuminate\Database\Eloquent\Builder $query, bool $state = true): \Illuminate\Database\Eloquent\Builder
     {
         return $query->where('taxable', $state);
     }
