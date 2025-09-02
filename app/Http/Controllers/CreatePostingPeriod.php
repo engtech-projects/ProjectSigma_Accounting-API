@@ -22,13 +22,13 @@ class CreatePostingPeriod extends Controller
     public function __invoke(): JsonResponse
     {
         try {
-
             ['fiscalYear' => $fiscalYear, 'posting_period' => $postingPeriod] =
                 $this->postingPeriodService->createPostingPeriod();
-
-            Log::info('Posting Period Created via API: ', [
+            Log::channel('posting-period')->info('Posting Period Created via API: ', [
                 'fiscal_year_id' => $fiscalYear->id,
                 'posting_period_id' => $postingPeriod->id,
+                'executed_by' => 'console',
+                'timestamp' => now(),
             ]);
 
             return new JsonResponse([
@@ -40,9 +40,11 @@ class CreatePostingPeriod extends Controller
                 ],
             ], 201);
         } catch (\Exception $e) {
-            Log::error('Posting Period Failed to Create via API: ', [
+            Log::channel('posting-period')->error('Posting Period Failed to Create via API: ', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'executed_by' => 'console',
+                'timestamp' => now(),
             ]);
 
             return new JsonResponse([

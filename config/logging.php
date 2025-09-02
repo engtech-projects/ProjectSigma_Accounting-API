@@ -72,6 +72,13 @@ return [
             'days' => 14,
             'replace_placeholders' => true,
         ],
+        'posting-period' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/posting-period.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'days' => 14,
+            'replace_placeholders' => true,
+        ],
 
         'slack' => [
             'driver' => 'slack',

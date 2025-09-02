@@ -67,7 +67,6 @@ class PostingPeriodService
         return DB::transaction(function () {
             $currentDate = Carbon::now();
             $nextMonth = $currentDate->copy()->addMonth();
-
             $this->ensureCurrentMonthAndClosePrevious($currentDate);
             $fiscalYear = $this->ensureFiscalYear($nextMonth);
             $postingPeriod = $this->createNextMonthPostingPeriod($fiscalYear, $nextMonth);
@@ -80,11 +79,9 @@ class PostingPeriodService
     {
         $currentMonthStart = $currentDate->copy()->startOfMonth();
         $fiscalYear = $this->ensureFiscalYear($currentDate);
-
         $currentMonthPeriod = $fiscalYear->postingPeriods()
             ->whereDate('start_date', $currentMonthStart)
             ->first();
-
         if (! $currentMonthPeriod) {
             $currentMonthPeriod = $fiscalYear->postingPeriods()->firstOrCreate([
                 'start_date' => $currentMonthStart],
@@ -93,25 +90,20 @@ class PostingPeriodService
                     'status' => PostingPeriodStatusType::OPEN,
                 ]
             );
-
-            Log::info('Created current month posting period', [
+            Log::channel('posting-period')->info('Created current month posting period', [
                 'fiscal_year_id' => $fiscalYear->id,
                 'start_date' => $currentMonthStart->toDateString(),
                 'posting_period_id' => $currentMonthPeriod->id,
             ]);
         }
-
-        // Use enum values for database queries
         $openStatus = PostingPeriodStatusType::OPEN->value;
         $closedStatus = PostingPeriodStatusType::CLOSED->value;
-
         $affectedRows = $fiscalYear->postingPeriods()
             ->where('start_date', '<', $currentMonthStart)
             ->where('status', $openStatus)
             ->update(['status' => $closedStatus]);
-
         if ($affectedRows > 0) {
-            Log::info('Closed previous posting periods', [
+            Log::channel('posting-period')->info('Closed previous posting periods', [
                 'fiscal_year_id' => $fiscalYear->id,
                 'closed_count' => $affectedRows,
                 'before_date' => $currentMonthStart->toDateString(),
@@ -127,7 +119,6 @@ class PostingPeriodService
         if ($fiscalYear) {
             return $fiscalYear;
         }
-
         $lastOpenFiscalYear = FiscalYear::where('status', PostingPeriodStatusType::OPEN->value)
             ->latest('period_end')
             ->first();
@@ -146,11 +137,9 @@ class PostingPeriodService
     {
         $startOfNextMonth = $nextMonth->copy()->startOfMonth();
         $endOfNextMonth = $nextMonth->copy()->endOfMonth();
-
         $existingPeriod = $fiscalYear->postingPeriods()
             ->where('start_date', $startOfNextMonth)
             ->first();
-
         if ($existingPeriod) {
             return $existingPeriod;
         }
