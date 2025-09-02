@@ -14,8 +14,6 @@ use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
-use App\Models\TransactionFlow;
-use App\Models\TransactionFlowModel;
 use App\Models\TransactionLog;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Services\PaymentServices;
@@ -141,15 +139,15 @@ class PaymentRequestController extends Controller
                 PaymentRequestType::PRF->value,
                 $paymentRequest->id
             );
-            if (!empty($transactionFlowData)) {
+            if (! empty($transactionFlowData)) {
                 // Uses the HasMany relation so timestamps and observers apply
                 $paymentRequest->transactionFlow()->createMany($transactionFlowData);
             }
             TransactionLog::query()->create([
-                'type'             => TransactionLogStatus::REQUEST->value,
+                'type' => TransactionLogStatus::REQUEST->value,
                 'transaction_code' => $paymentRequest->prf_no,
-                'description'      => 'Payment Request Created',
-                'created_by'       => auth()->user()->id,
+                'description' => 'Payment Request Created',
+                'created_by' => auth()->user()->id,
             ]);
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
@@ -157,12 +155,14 @@ class PaymentRequestController extends Controller
                 $path = 'prf/'.$paymentRequest->id.'/'.$file;
                 Storage::move('temp/'.$file, $path);
             }
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Payment Request Created Successfully',
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
+
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Payment Request Creation Failed',

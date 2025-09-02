@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in sub_groups table
+        // Change columns order in sub_groups table
         Schema::table('sub_groups', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('description')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in sub_groups table
+        // Restore default columns order in sub_groups table
         Schema::table('sub_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name')->after('id')->change();

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TransactionFlowStatus;
-use App\Enums\TransactionFlowType;
 use App\Http\Requests\TransactionFlowRequest;
 use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
@@ -22,31 +21,31 @@ class TransactionFLowModelController extends Controller
             $validatedData = $request->validated();
             $transactionFlowModel = null;
             $transactionFlow = null;
-            if (!isset($validatedData['flow_id'])) {
+            if (! isset($validatedData['flow_id'])) {
                 return response()->json(['error' => 'Flow ID is required'], 400);
             }
             if (isset($validatedData['update_type']) && $validatedData['update_type'] == 'user') {
                 $transactionFlowModel = TransactionFlowModel::find($validatedData['flow_id']);
-                if (!$transactionFlowModel) {
+                if (! $transactionFlowModel) {
                     return response()->json(['error' => 'Transaction flow not found'], 404);
                 }
-                if (!isset($validatedData['user_id'])) {
+                if (! isset($validatedData['user_id'])) {
                     return response()->json(['error' => 'User ID is required for user update'], 400);
                 }
                 $employee = User::where('source_id', $validatedData['user_id'])->first();
-                if (!$employee) {
+                if (! $employee) {
                     return response()->json(['error' => 'Employee not found'], 404);
                 }
                 $validatedData['user_name'] = $employee->name;
                 $validatedData['user_id'] = $employee->source_id;
                 $updateResult = $transactionFlowModel->update($validatedData);
-                if (!$updateResult) {
+                if (! $updateResult) {
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
                 }
             }
             if (isset($validatedData['update_type']) && $validatedData['update_type'] == 'status') {
                 $transactionFlow = TransactionFlow::find($validatedData['flow_id']);
-                if (!$transactionFlow) {
+                if (! $transactionFlow) {
                     return response()->json(['error' => 'Transaction flow not found'], 404);
                 }
                 $authorizedUserId = $validatedData['user_id'] ?? $transactionFlow->user_id;
@@ -56,7 +55,7 @@ class TransactionFLowModelController extends Controller
                     return response()->json(['error' => 'You are not authorized to update this transaction flow'], 403);
                 }
                 $updateResult = $transactionFlow->update($validatedData);
-                if (!$updateResult) {
+                if (! $updateResult) {
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
                 }
                 $nextFlow = TransactionFlow::where('payment_request_id', $transactionFlow->payment_request_id)
@@ -67,11 +66,12 @@ class TransactionFLowModelController extends Controller
                 }
                 $transactionFlow->refresh();
             }
+
             return response()->json([
-                'message' => 'Transaction Flow Updated Successfully'
+                'message' => 'Transaction Flow Updated Successfully',
             ], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Update failed: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Update failed: '.$e->getMessage()], 500);
         }
     }
 }
