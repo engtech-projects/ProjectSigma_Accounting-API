@@ -16,10 +16,10 @@ use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
 use App\Models\CashRequest;
 use App\Models\DisbursementRequest;
+use App\Models\PostingPeriod;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
-use App\Models\Period;
-use App\Models\PostingPeriod;
+use App\Models\FiscalYear;
 use App\Models\Voucher;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
 use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
@@ -139,14 +139,15 @@ class VoucherController extends Controller
                 'entry_date' => Carbon::now(),
                 'journal_date' => Carbon::now(),
                 'status' => JournalStatus::FOR_PAYMENT->value,
-                'posting_period_id' => PostingPeriod::currentPostingPeriod(),
-                'period_id' => Period::current()->pluck('id')->first(),
+                'id' => FiscalYear::currentPostingPeriod(),
+                'fiscal_year_id' => PostingPeriod::current()->pluck('id')->first(),
                 'reference_no' => $validatedData['reference_no'],
                 'payment_request_id' => $paymentRequestId,
                 'remarks' => $validatedData['particulars'],
                 'created_by' => auth()->user()->id,
             ]
         );
+
         $validatedData['type'] = VoucherType::CASH->value;
         $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
         $validatedData['date_encoded'] = Carbon::now();

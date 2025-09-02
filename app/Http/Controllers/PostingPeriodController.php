@@ -6,7 +6,7 @@ use App\Enums\PostingPeriodStatusType;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestFilter;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
 use App\Http\Resources\PostingPeriodCollection;
-use App\Models\Period;
+use App\Models\FiscalYear;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
 use Carbon\Carbon;
