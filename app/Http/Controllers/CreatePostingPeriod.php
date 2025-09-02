@@ -1,11 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Services\PostingPeriodService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
 
 class CreatePostingPeriod extends Controller
 {
@@ -40,9 +39,7 @@ class CreatePostingPeriod extends Controller
                     'posting_period' => $postingPeriod,
                 ],
             ], 201);
-
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('Posting Period Failed to Create via API: ', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -50,7 +47,7 @@ class CreatePostingPeriod extends Controller
 
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Posting Period Failed to Create: ' . $e->getMessage(),
+                'message' => 'Posting Period Failed to Create: '.$e->getMessage(),
                 'data' => null,
             ], 500);
         }
