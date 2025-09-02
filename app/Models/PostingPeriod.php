@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostingPeriod extends Model
@@ -44,7 +45,7 @@ class PostingPeriod extends Model
 
     public function scopeHasJournalEntries($query)
     {
-        return $query->whereHas('posting_periods', function ($subQuery) {
+        return $query->whereHas('fiscalYear', function ($subQuery) {
             $subQuery->whereHas('journalEntries');
         });
     }
@@ -55,7 +56,7 @@ class PostingPeriod extends Model
             ->orderBy('created_at');
     }
 
-    public function journalEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function journalEntries(): HasMany
     {
         return $this->hasMany(JournalEntry::class);
     }
