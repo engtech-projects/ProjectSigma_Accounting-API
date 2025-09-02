@@ -68,6 +68,7 @@ class JournalEntryController extends Controller
             }
             TransactionFlowService::updateTransactionFlow($validatedData['payment_request_id'], TransactionFlowName::CREATE_JOURNAL_ENTRY->value);
             DB::commit();
+
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Journal Entry Successfully Created.',

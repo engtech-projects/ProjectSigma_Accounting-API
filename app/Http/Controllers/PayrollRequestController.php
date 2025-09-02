@@ -10,7 +10,6 @@ use App\Enums\TransactionLogStatus;
 use App\Http\Requests\CreatePayrollRequest;
 use App\Http\Requests\PayrollRequest\PayrollRequestFilter;
 use App\Models\PaymentRequest;
-use App\Models\TransactionFlow;
 use App\Models\TransactionLog;
 use App\Services\ApiServices\HrmsService;
 use App\Services\PaymentServices;
@@ -73,15 +72,15 @@ class PayrollRequestController extends Controller
                 PaymentRequestType::PAYROLL->value,
                 $paymentRequest->id
             );
-            if (!empty($transactionFlowData)) {
+            if (! empty($transactionFlowData)) {
                 // Uses the HasMany relation so timestamps and observers apply
                 $paymentRequest->transactionFlow()->createMany($transactionFlowData);
             }
             TransactionLog::query()->create([
-                'type'             => TransactionLogStatus::REQUEST->value,
+                'type' => TransactionLogStatus::REQUEST->value,
                 'transaction_code' => $paymentRequest->prf_no,
-                'description'      => 'Payment Request Created',
-                'created_by'       => auth()->user()->id,
+                'description' => 'Payment Request Created',
+                'created_by' => auth()->user()->id,
             ]);
         });
 

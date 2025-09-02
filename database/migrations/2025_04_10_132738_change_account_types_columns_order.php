@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in account_types table
+        // Change columns order in account_types table
         Schema::table('account_types', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('notation')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in account_types table
+        // Restore default columns order in account_types table
         Schema::table('account_types', function (Blueprint $table) {
             $table->id();
             $table->string('account_type')->after('id')->change();

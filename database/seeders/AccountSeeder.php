@@ -31,6 +31,7 @@ class AccountSeeder extends Seeder
                     'bank_reconciliation' => $record['bank_reconciliation'],
                     'is_active' => $record['is_active'],
                     'statement' => $record['statement'],
+                    'taxable' => filter_var($record['taxable'], FILTER_VALIDATE_BOOLEAN),
                 ]
             );
         }

@@ -137,7 +137,7 @@ class JournalEntry extends Model
             'paymentRequest.stakeholder',
             'paymentRequest.transactionFlow' => function ($q) {
                 $q->orderBy('priority', 'asc')
-                ->orderBy('id', 'asc');
+                    ->orderBy('id', 'asc');
             },
         ]);
     }

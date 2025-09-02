@@ -17,11 +17,10 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             AccountGroupSeeder::class,
             BookSeeder::class,
-            //PostingPeriodSeeder::class,
-            //StakeHolderSeeder::class,
+            // PostingPeriodSeeder::class,
+            // StakeHolderSeeder::class,
             TermsSeeder::class,
             ReportGroupSeeder::class,
-            UpdateAccountsReportGroupSeeder::class,
             TransactionFlowModelSeeder::class,
         ]);
     }

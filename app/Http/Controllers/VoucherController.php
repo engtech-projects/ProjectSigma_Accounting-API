@@ -244,6 +244,7 @@ class VoucherController extends Controller
         TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
+
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',

@@ -9,7 +9,7 @@ enum AccessibilityAccounting: string
     use EnumHelper;
     case ACCOUNTING_DASHBOARD = 'accounting:dashboard';
 
-    //Accounting Setup
+    // Accounting Setup
     case ACCOUNTING_SETUP_APPROVALS = 'accounting:setup_approvals';
     case ACCOUNTING_SETUP_ACCOUNTS = 'accounting:setup_accounts';
     case ACCOUNTING_SETUP_BOOK_OF_ACCOUNTS = 'accounting:setup_book of accounts';
@@ -20,15 +20,15 @@ enum AccessibilityAccounting: string
     case ACCOUNTING_SETUP_STAKEHOLDERS = 'accounting:setup_stakeholders';
     case ACCOUNTING_SETUP_SYNCHRONIZATION = 'accounting:setup_synchronization';
 
-    //Accounting Request
+    // Accounting Request
     case ACCOUNTING_REQUEST_PURCHASE_ORDER = 'accounting:request_purchase order';
     case ACCOUNTING_REQUEST_NON_PURCHASE_ORDER = 'accounting:request_non purchase order';
     case ACCOUNTING_REQUEST_PRE_PAYROLL_AUDIT = 'accounting:request_pre payroll audit';
 
-    //Accounting Voucher
+    // Accounting Voucher
     case ACCOUNTING_VOUCHER_DISBURSEMENT = 'accounting:voucher_disbursement';
     case ACCOUNTING_VOUCHER_CASH = 'accounting:voucher_cash';
 
-    //Accounting Journal
+    // Accounting Journal
     case ACCOUNTING_JOURNAL_ENTRY = 'accounting:journal_journal entry';
 }

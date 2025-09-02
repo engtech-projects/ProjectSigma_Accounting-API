@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in payment_request table
+        // Change columns order in payment_request table
         Schema::table('payment_request', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('with_holding_tax_id')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in payment_request table
+        // Restore default columns order in payment_request table
         Schema::table('payment_request', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('stakeholder_id')->after('id')->change();

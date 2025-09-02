@@ -33,9 +33,9 @@ class Department extends Model
 
     public static function getByCode($name)
     {
-        if (!$name) {
+        if (! $name) {
             return 'ACS';
-        }else {
+        } else {
             return self::where('name', trim($name))->first()->code;
         }
     }
