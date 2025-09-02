@@ -27,7 +27,7 @@ class PostingPeriod extends Model
 
     public function fiscalYear(): BelongsTo
     {
-        return $this->belongsTo(FiscalYear::class, 'fiscal_year_id');
+        return $this->belongsTo(FiscalYear::class, 'id');
     }
 
     public function scopeCurrent($query)
