@@ -147,15 +147,11 @@ class VoucherController extends Controller
                 'created_by' => auth()->user()->id,
             ]
         );
-
         $validatedData['type'] = VoucherType::CASH->value;
         $validatedData['book_id'] = Book::where('code', VoucherType::CASH_CODE->value)->first()->id;
         $validatedData['date_encoded'] = Carbon::now();
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
-
-        // ID of the newly created cash journal entry
         $validatedData['journal_entry_id'] = $journalEntry->id;
-
         $validatedData['created_by'] = auth()->user()->id;
         $voucher = CashRequest::create($validatedData);
         foreach ($validatedData['details'] as $detail) {
@@ -183,7 +179,6 @@ class VoucherController extends Controller
         TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_CASH_VOUCHER->value);
         DB::commit();
         $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -223,9 +218,7 @@ class VoucherController extends Controller
         $validatedData['date_encoded'] = Carbon::now();
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
         $validatedData['created_by'] = auth()->user()->id;
-
         $voucher = DisbursementRequest::create($validatedData);
-
         foreach ($validatedData['details'] as $detail) {
             $voucher->details()->create([
                 'account_id' => $detail['account_id'],
@@ -235,7 +228,6 @@ class VoucherController extends Controller
                 'credit' => $detail['credit'] ?? null,
             ]);
         }
-
         $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
         $journalEntry->update([
             'entry_date' => $validatedData['voucher_date'],
@@ -245,7 +237,6 @@ class VoucherController extends Controller
         TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value);
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',

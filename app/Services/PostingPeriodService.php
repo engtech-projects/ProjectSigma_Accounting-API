@@ -18,7 +18,6 @@ class PostingPeriodService
     public static function getPaginated(array $filters = [])
     {
         $query = PostingPeriod::query();
-
         if (isset($filters['search'])) {
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
@@ -26,19 +25,15 @@ class PostingPeriodService
                     ->orWhere('description', 'like', "%{$search}%");
             });
         }
-
         if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
         }
-
         if (isset($filters['start_date'])) {
             $query->where('start_date', '>=', $filters['start_date']);
         }
-
         if (isset($filters['end_date'])) {
             $query->where('end_date', '<=', $filters['end_date']);
         }
-
         return $query->withDetails()->orderByDesc('created_at')->paginate(config('services.pagination.limit'));
     }
 
@@ -70,7 +65,6 @@ class PostingPeriodService
             $this->ensureCurrentMonthAndClosePrevious($currentDate);
             $fiscalYear = $this->ensureFiscalYear($nextMonth);
             $postingPeriod = $this->createNextMonthPostingPeriod($fiscalYear, $nextMonth);
-
             return compact('fiscalYear', 'postingPeriod');
         });
     }
@@ -125,7 +119,6 @@ class PostingPeriodService
         if ($lastOpenFiscalYear) {
             throw new \DomainException('Cannot create new fiscal year - a previous fiscal year is still open.');
         }
-
         return FiscalYear::create([
             'period_start' => $targetDate->copy()->startOfYear(),
             'period_end' => $targetDate->copy()->endOfYear(),
@@ -143,7 +136,6 @@ class PostingPeriodService
         if ($existingPeriod) {
             return $existingPeriod;
         }
-
         return $fiscalYear->postingPeriods()->create([
             'start_date' => $startOfNextMonth,
             'end_date' => $endOfNextMonth,

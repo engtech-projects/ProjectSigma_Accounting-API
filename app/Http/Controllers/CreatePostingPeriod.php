@@ -30,7 +30,6 @@ class CreatePostingPeriod extends Controller
                 'executed_by' => 'console',
                 'timestamp' => now(),
             ]);
-
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Posting Period Successfully Created',
@@ -46,7 +45,6 @@ class CreatePostingPeriod extends Controller
                 'executed_by' => 'console',
                 'timestamp' => now(),
             ]);
-
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Posting Period Failed to Create: '.$e->getMessage(),
