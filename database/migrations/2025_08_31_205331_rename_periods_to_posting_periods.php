@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -15,7 +14,7 @@ return new class extends Migration
             Schema::rename('periods', 'posting_periods');
         }
     }
-    
+
     public function down(): void
     {
         if (Schema::hasTable('posting_periods') && ! Schema::hasTable('periods')) {

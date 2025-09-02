@@ -48,10 +48,10 @@ return new class extends Migration
         // Reverse Step 1: Re-add old foreign keys with original names
         Schema::table('journal_entry', function (Blueprint $table) {
             $table->foreign('posting_period_id', 'journal_entry_posting_period_id_foreign')
-                  ->references('id')->on('posting_periods')->onDelete('cascade');
-                  
+                ->references('id')->on('posting_periods')->onDelete('cascade');
+
             $table->foreign('period_id', 'journal_entry_period_id_foreign')
-                  ->references('id')->on('periods')->onDelete('cascade');
+                ->references('id')->on('periods')->onDelete('cascade');
         });
     }
 };

@@ -6,16 +6,15 @@ use App\Enums\PostingPeriodStatusType;
 use App\Models\FiscalYear;
 use App\Models\PostingPeriod;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Exception;
-
+use Illuminate\Support\Facades\Log;
 
 class PostingPeriodService
 {
     protected $casts = [
         'status' => PostingPeriodStatusType::class,
     ];
+
     public static function getPaginated(array $filters = [])
     {
         $query = PostingPeriod::query();
@@ -81,12 +80,12 @@ class PostingPeriodService
     {
         $currentMonthStart = $currentDate->copy()->startOfMonth();
         $fiscalYear = $this->ensureFiscalYear($currentDate);
-    
+
         $currentMonthPeriod = $fiscalYear->postingPeriods()
             ->whereDate('start_date', $currentMonthStart)
             ->first();
-    
-        if (!$currentMonthPeriod) {
+
+        if (! $currentMonthPeriod) {
             $currentMonthPeriod = $fiscalYear->postingPeriods()->firstOrCreate([
                 'start_date' => $currentMonthStart],
                 [
@@ -94,23 +93,23 @@ class PostingPeriodService
                     'status' => PostingPeriodStatusType::OPEN,
                 ]
             );
-            
+
             Log::info('Created current month posting period', [
                 'fiscal_year_id' => $fiscalYear->id,
                 'start_date' => $currentMonthStart->toDateString(),
                 'posting_period_id' => $currentMonthPeriod->id,
             ]);
         }
-    
+
         // Use enum values for database queries
         $openStatus = PostingPeriodStatusType::OPEN->value;
         $closedStatus = PostingPeriodStatusType::CLOSED->value;
-        
+
         $affectedRows = $fiscalYear->postingPeriods()
             ->where('start_date', '<', $currentMonthStart)
             ->where('status', $openStatus)
             ->update(['status' => $closedStatus]);
-        
+
         if ($affectedRows > 0) {
             Log::info('Closed previous posting periods', [
                 'fiscal_year_id' => $fiscalYear->id,
@@ -133,12 +132,13 @@ class PostingPeriodService
             ->latest('period_end')
             ->first();
         if ($lastOpenFiscalYear) {
-            throw new \DomainException('Cannot create new fiscal year - a previous fiscal year is still open.');        }
+            throw new \DomainException('Cannot create new fiscal year - a previous fiscal year is still open.');
+        }
 
         return FiscalYear::create([
             'period_start' => $targetDate->copy()->startOfYear(),
-            'period_end'   => $targetDate->copy()->endOfYear(),
-            'status'       => PostingPeriodStatusType::OPEN,
+            'period_end' => $targetDate->copy()->endOfYear(),
+            'status' => PostingPeriodStatusType::OPEN,
         ]);
     }
 

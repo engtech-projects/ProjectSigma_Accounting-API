@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\PostingPeriodStatusType;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestFilter;
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
 use App\Http\Resources\PostingPeriodCollection;
-use App\Models\FiscalYear;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
-use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
 
@@ -35,7 +32,6 @@ class PostingPeriodController extends Controller
             ], 500);
         }
     }
-
 
     /**
      * Store a newly created resource in storage.
