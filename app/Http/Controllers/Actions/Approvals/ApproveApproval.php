@@ -88,7 +88,7 @@ class ApproveApproval extends Controller
             } catch (\Exception $e) {
                 return new JsonResponse([
                     'success' => false,
-                    'message' => 'Transaction flow update failed: ' . $e->getMessage()
+                    'message' => 'Transaction flow update failed: '.$e->getMessage(),
                 ], 422);
             }
         }

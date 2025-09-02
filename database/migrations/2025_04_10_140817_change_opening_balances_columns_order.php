@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in opening_balances table
+        // Change columns order in opening_balances table
         Schema::table('opening_balances', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('posting_period_id')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in opening_balances table
+        // Restore default columns order in opening_balances table
         Schema::table('opening_balances', function (Blueprint $table) {
             $table->id();
             $table->decimal('opening_balance', 10, 2)->after('id')->change();

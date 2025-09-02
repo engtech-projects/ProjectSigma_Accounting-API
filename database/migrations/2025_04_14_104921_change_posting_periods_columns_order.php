@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in posting_periods table
+        // Change columns order in posting_periods table
         Schema::table('posting_periods', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('status')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in posting_periods table
+        // Restore default columns order in posting_periods table
         Schema::table('posting_periods', function (Blueprint $table) {
             $table->id();
             $table->date('period_start')->after('id')->change();

@@ -31,7 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
-    //RAW RESPONSE ROUTES BASED ON ENUMS
+    // RAW RESPONSE ROUTES BASED ON ENUMS
     Route::get('vat-value', function (Request $request) {
         return response()->json(['vat' => config('services.vat.value')], 200);
     });
@@ -50,12 +50,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('get-all-withholding-tax', function (Request $request) {
         return response()->json(['data' => WithHoldingTax::pluck('wtax_name', 'id')], 200);
     });
-    //CUSTOM ROUTES
+    // CUSTOM ROUTES
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
     Route::resource('transaction-flow-model', TransactionFLowModelController::class);
     Route::post('update-transaction-flow', [TransactionFLowModelController::class, 'update']);
 
-    //RESORCE ROUTES
+    // RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
     Route::resource('account-type', AccountTypeController::class);
     Route::resource('account-group', AccountGroupController::class);
@@ -69,7 +69,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('report-group', ReportGroupController::class);
     Route::resource('withholding-tax', WithHoldingTaxController::class);
 
-    //JOURNAL ENTRY ROUTES
+    // JOURNAL ENTRY ROUTES
     Route::prefix('journal-entry')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
         Route::get('unposted-entries', [JournalEntryController::class, 'unpostedEntries']);
@@ -91,7 +91,7 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 
-    //NON-PURCHASE ORDER ROUTES
+    // NON-PURCHASE ORDER ROUTES
     Route::prefix('npo')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
         Route::get('my-requests', [PaymentRequestController::class, 'myRequest']);
@@ -101,13 +101,13 @@ Route::middleware('auth:api')->group(function () {
         Route::post('upload-attachment', [PaymentRequestController::class, 'uploadAttachment']);
     });
 
-    //PAYROLL ROUTES
+    // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
     });
 
-    //VOUCHERS ROUTES
+    // VOUCHERS ROUTES
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');
@@ -135,7 +135,7 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 
-    //SYNCHRONIZATION ROUTES
+    // SYNCHRONIZATION ROUTES
     Route::prefix('sync')->group(function () {
         Route::prefix('hrms')->group(function () {
             Route::post('/all', [APiSyncController::class, 'syncAll']);
@@ -153,7 +153,7 @@ Route::middleware('auth:api')->group(function () {
         });
     });
 
-    //APPROVALS ROUTES
+    // APPROVALS ROUTES
     Route::prefix('approvals')->group(function () {
         Route::post('approve/{modelName}/{model}', ApproveApproval::class);
         Route::post('disapprove/{modelName}/{model}', DisapproveApproval::class);
@@ -171,7 +171,7 @@ Route::middleware('secret_api')->group(function () {
     });
 });
 
-//SEARCH ROUTES
+// SEARCH ROUTES
 Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStakeHolders']);
 Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
 Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);

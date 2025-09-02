@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //Change columns order in voucher table
+        // Change columns order in voucher table
         Schema::table('voucher', function (Blueprint $table) {
             $table->timestamp('created_at')->nullable()->after('receipt_no')->change();
             $table->timestamp('updated_at')->nullable()->after('created_at')->change();
@@ -24,7 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //Restore default columns order in voucher table
+        // Restore default columns order in voucher table
         Schema::table('voucher', function (Blueprint $table) {
             $table->id();
             $table->string('check_no')->nullable()->after('id')->change();
