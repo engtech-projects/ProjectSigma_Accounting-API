@@ -11,11 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posting_periods', function (Blueprint $table) {
-            // Rename the column
-            $table->renameColumn('posting_period_id', 'fiscal_year_id');
-        });
-        
         // Add foreign key constraint after renaming
         Schema::table('posting_periods', function (Blueprint $table) {
             $table->foreign('fiscal_year_id')->references('id')->on('fiscal_year')->onDelete('cascade');
