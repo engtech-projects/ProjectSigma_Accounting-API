@@ -14,7 +14,7 @@ return new class extends Migration
         // Add foreign key constraint after renaming
         Schema::table('posting_periods', function (Blueprint $table) {
             $table->foreign('fiscal_year_id')->references('id')->on('fiscal_year')->onDelete('cascade');
-            
+
             // Add index for better performance
             $table->unique(['fiscal_year_id', 'start_date'], 'posting_periods_fy_start_unique');
         });
@@ -29,11 +29,6 @@ return new class extends Migration
             // Drop constraints first
             $table->dropForeign(['fiscal_year_id']);
             $table->dropUnique('posting_periods_fy_start_unique');
-        });
-        
-        Schema::table('posting_periods', function (Blueprint $table) {
-            // Rename back
-            $table->renameColumn('fiscal_year_id', 'posting_period_id');
         });
     }
 };
