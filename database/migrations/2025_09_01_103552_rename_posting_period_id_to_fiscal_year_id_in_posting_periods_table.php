@@ -8,16 +8,14 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('posting_periods', function (Blueprint $table) {
-            $table->foreign('fiscal_year_id')->references('id')->on('fiscal_year')->onDelete('cascade');
-            $table->unique(['fiscal_year_id', 'start_date'], 'posting_periods_fy_start_unique');
+            $table->renameColumn('posting_period_id', 'fiscal_year_id');
         });
     }
 
     public function down(): void
     {
         Schema::table('posting_periods', function (Blueprint $table) {
-            $table->dropForeign(['fiscal_year_id']);
-            $table->dropUnique('posting_periods_fy_start_unique');
+            $table->renameColumn('fiscal_year_id', 'posting_period_id');
         });
     }
 };
