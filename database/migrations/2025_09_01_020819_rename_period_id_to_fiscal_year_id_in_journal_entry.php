@@ -17,9 +17,11 @@ return new class () extends Migration {
 
     public function down(): void
     {
+        Schema::useNativeSchemaOperationsIfPossible();
         Schema::table('journal_entry', function (Blueprint $table) {
             $table->renameColumn('fiscal_year_id', 'posting_period_id');
             $table->renameColumn('posting_period_id', 'period_id');
         });
+        Schema::useNativeSchemaOperationsIfPossible(false);
     }
 };
