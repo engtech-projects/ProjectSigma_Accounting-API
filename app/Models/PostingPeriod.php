@@ -32,7 +32,6 @@ class PostingPeriod extends Model
     public function scopeCurrent($query)
     {
         $currentDate = Carbon::now();
-
         return $query
             ->where('start_date', '<=', $currentDate)
             ->where('end_date', '>=', $currentDate);

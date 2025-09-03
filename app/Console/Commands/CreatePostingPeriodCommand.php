@@ -22,7 +22,6 @@ class CreatePostingPeriodCommand extends Command
                 'executed_by' => 'console',
                 'timestamp' => now(),
             ]);
-
             return Command::SUCCESS;
         } catch (\Exception $e) {
             report($e);
@@ -33,7 +32,6 @@ class CreatePostingPeriodCommand extends Command
                 'executed_by' => 'console',
                 'timestamp' => now(),
             ]);
-
             return Command::FAILURE;
         }
     }

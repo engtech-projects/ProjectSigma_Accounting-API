@@ -30,7 +30,6 @@ class FiscalYear extends Model
     public function scopeCurrent($query)
     {
         $currentDate = Carbon::now();
-
         return $query
             ->where('period_start', '<=', $currentDate)
             ->where('period_end', '>=', $currentDate);
