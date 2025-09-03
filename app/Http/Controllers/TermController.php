@@ -63,7 +63,6 @@ class TermController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
-
     }
 
     public function destroy($id)

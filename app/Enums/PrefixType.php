@@ -9,5 +9,4 @@ enum PrefixType: string
     use EnumHelper;
     case PRF_ACS = 'PRF-ACS';
     case PRF_PAYROLL = 'PRF-PAYROLL';
-
 }

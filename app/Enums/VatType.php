@@ -10,5 +10,4 @@ enum VatType: string
 
     case VAT = 'VAT';
     case NON_VAT = 'NON-VAT';
-
 }

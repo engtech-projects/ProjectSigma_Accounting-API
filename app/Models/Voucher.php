@@ -15,7 +15,12 @@ use Illuminate\Notifications\Notifiable;
 
 class Voucher extends Model
 {
-    use HasApproval, HasFactory, HasTransitions, ModelHelpers, Notifiable, SoftDeletes;
+    use HasApproval;
+    use HasFactory;
+    use HasTransitions;
+    use ModelHelpers;
+    use Notifiable;
+    use SoftDeletes;
 
     protected $table = 'voucher';
 

@@ -9,5 +9,4 @@ enum NotationType: string
     use EnumHelper;
     case POSITIVE = '+';
     case NEGATIVE = '-';
-
 }

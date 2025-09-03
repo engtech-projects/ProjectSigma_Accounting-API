@@ -10,5 +10,4 @@ enum UserType: string
 
     case EMPLOYEE = 'Employee';
     case ADMIN = 'Admin';
-
 }
