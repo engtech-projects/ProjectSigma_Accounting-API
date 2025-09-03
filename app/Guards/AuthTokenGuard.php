@@ -39,7 +39,7 @@ class AuthTokenGuard implements Guard
         }
 
         if ($response->json()) {
-            $this->user = new User;
+            $this->user = new User();
             $this->user->id = $response->json()['id'];
             $this->user->name = $response->json()['name'];
             $this->user->email = $response->json()['email'];
@@ -64,5 +64,7 @@ class AuthTokenGuard implements Guard
         return $this->user;
     }
 
-    public function validate(array $credentials = []) {}
+    public function validate(array $credentials = [])
+    {
+    }
 }

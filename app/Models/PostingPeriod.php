@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostingPeriod extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'posting_periods';
 

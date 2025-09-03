@@ -15,7 +15,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JournalEntry extends Model
 {
-    use HasApproval, HasFactory, HasTransitions, ModelHelpers, SoftDeletes;
+    use HasApproval;
+    use HasFactory;
+    use HasTransitions;
+    use ModelHelpers;
+    use SoftDeletes;
 
     protected $table = 'journal_entry';
 

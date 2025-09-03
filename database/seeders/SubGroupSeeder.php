@@ -50,6 +50,5 @@ class SubGroupSeeder extends Seeder
         }, array_keys($subGroups), $subGroups);
 
         DB::table('sub_groups')->insert($data);
-
     }
 }

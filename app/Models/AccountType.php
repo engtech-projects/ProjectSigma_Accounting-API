@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AccountType extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'account_types';
 

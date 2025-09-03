@@ -10,7 +10,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FiscalYear extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'fiscal_year';
 

@@ -13,5 +13,4 @@ enum RequestStatuses: string
     case DENIED = 'Denied';
     case CANCELLED = 'Cancelled';
     case VOIDED = 'Voided';
-
 }

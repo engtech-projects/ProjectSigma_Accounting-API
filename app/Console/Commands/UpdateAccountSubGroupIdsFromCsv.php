@@ -84,7 +84,6 @@ class UpdateAccountSubgroupIdsFromCsv extends Command
             fclose($file);
 
             return 0;
-
         } catch (\Exception $e) {
             DB::rollBack();
             $this->error('An error occurred: '.$e->getMessage());

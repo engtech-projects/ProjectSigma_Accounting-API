@@ -77,7 +77,8 @@ class PostingPeriodService
             ->whereDate('start_date', $currentMonthStart)
             ->first();
         if (! $currentMonthPeriod) {
-            $currentMonthPeriod = $fiscalYear->postingPeriods()->firstOrCreate([
+            $currentMonthPeriod = $fiscalYear->postingPeriods()->firstOrCreate(
+                [
                 'start_date' => $currentMonthStart],
                 [
                     'end_date' => $currentMonthStart->copy()->endOfMonth(),

@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentRequestDetails extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'payment_request_details';
 
