@@ -6,11 +6,11 @@ use Illuminate\Support\Facades\DB;
 return new class () extends Migration {
     public function up(): void
     {
-        DB::statement('ALTER TABLE posting_periods RENAME COLUMN posting_period_id TO fiscal_year_id');
+        DB::statement('ALTER TABLE `posting_periods` CHANGE COLUMN `posting_period_id` `fiscal_year_id` BIGINT UNSIGNED NOT NULL');
     }
 
     public function down(): void
     {
-        DB::statement('ALTER TABLE posting_periods RENAME COLUMN fiscal_year_id TO posting_period_id');
+        DB::statement('ALTER TABLE `posting_periods` CHANGE COLUMN `fiscal_year_id` `posting_period_id` BIGINT UNSIGNED NOT NULL');
     }
 };
