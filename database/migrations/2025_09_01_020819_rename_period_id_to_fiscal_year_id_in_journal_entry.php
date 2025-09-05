@@ -1,27 +1,18 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class () extends Migration {
     public function up(): void
     {
-        Schema::useNativeSchemaOperationsIfPossible();
-        Schema::table('journal_entry', function (Blueprint $table) {
-            $table->renameColumn('posting_period_id', 'fiscal_year_id');
-            $table->renameColumn('period_id', 'posting_period_id');
-        });
-        Schema::useNativeSchemaOperationsIfPossible(false);
+        DB::statement('ALTER TABLE `journal_entry` CHANGE `posting_period_id` `fiscal_year_id` BIGINT UNSIGNED NOT NULL');
+        DB::statement('ALTER TABLE `journal_entry` CHANGE `period_id` `posting_period_id` BIGINT UNSIGNED NOT NULL');
     }
 
     public function down(): void
     {
-        Schema::useNativeSchemaOperationsIfPossible();
-        Schema::table('journal_entry', function (Blueprint $table) {
-            $table->renameColumn('fiscal_year_id', 'posting_period_id');
-            $table->renameColumn('posting_period_id', 'period_id');
-        });
-        Schema::useNativeSchemaOperationsIfPossible(false);
+        DB::statement('ALTER TABLE `journal_entry` CHANGE `posting_period_id` `period_id` BIGINT UNSIGNED NOT NULL');
+        DB::statement('ALTER TABLE `journal_entry` CHANGE `fiscal_year_id` `posting_period_id` BIGINT UNSIGNED NOT NULL');
     }
 };
