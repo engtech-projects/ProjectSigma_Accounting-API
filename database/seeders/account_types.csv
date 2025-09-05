@@ -1,0 +1,160 @@
+"id","account_type","account_category","balance_type","notation","deleted_at","created_at","updated_at"
+"1","Revolving Fund","asset","debit","+",,,
+"2","Petty Cash Fund","asset","debit","+",,,
+"3","Cash in Bank","asset","debit","+",,,
+"4","Trade and Other Receivables","asset","debit","+",,,
+"5","Other Current Assets","asset","debit","+",,,
+"6","Accounts Receivable","asset","debit","+",,,
+"7","Inventories","asset","debit","+",,,
+"8","Transportation Equipment","asset","debit","+",,,
+"9","Property Plant and Equipment","asset","debit","+",,,
+"10","Machinery and Equipment","asset","debit","+",,,
+"11","Furnitures, Fixtures , ICT and Office Equipment","asset","debit","+",,,
+"12","Land and Building","asset","debit","+",,,
+"13","Other Assets","asset","debit","+",,,
+"14","UKC Withdrawal","capital","credit","-",,,
+"15","RAJ Withdrawal","capital","credit","-",,,
+"16","Direct Materials","expenses","credit","-",,,
+"17","Construction Cost- Subcontractors","expenses","credit","-",,,
+"18","Direct Labor","expenses","credit","-",,,
+"19","Personal Services","expenses","credit","-",,,
+"20","Direct Equipment Rental","expenses","credit","-",,,
+"21","Direct Fuel and oil","expenses","credit","-",,,
+"22","Subcontracted Services","expenses","credit","-",,,
+"23","Salaries and Wages","expenses","credit","-",,,
+"24","Personnel Benefit Contributions","expenses","credit","-",,,
+"25","Promotion & Advertising","expenses","credit","-",,,
+"26","Personnel Development, Training and Scholarship Ex","expenses","credit","-",,,
+"27","Professional Services","expenses","credit","-",,,
+"28","General Services","expenses","credit","-",,,
+"29","Depreciation and Amortization","expenses","credit","-",,,
+"30","Other Maintenance and Operating Expenses","expenses","credit","-",,,
+"31","Testing of Materials","expenses","credit","-",,,
+"32","Facilities for Engineers","expenses","credit","-",,,
+"33","Construction Cost- Direct Overhead","expenses","credit","-",,,
+"34","Rent Expenses","expenses","credit","-",,,
+"35","Association Dues","expenses","credit","-",,,
+"36","Utilities Expense: Light and Water","expenses","credit","-",,,
+"37","Communication Expenses","expenses","credit","-",,,
+"38","Communication Expense","expenses","credit","-",,,
+"39","Transportation & Traveling Expenses","expenses","credit","-",,,
+"40","Shipment, Freight and Handling Expenses","expenses","credit","-",,,
+"41","Supplies and Materials Expenses","expenses","credit","-",,,
+"42","Community Safety Cost","expenses","credit","-",,,
+"43","Notarial Services","expenses","credit","-",,,
+"44","Repairs and Maintenance","expenses","credit","-",,,
+"45","Solicitation and Donation","expenses","credit","-",,,
+"46","Meeting Expense","expenses","credit","-",,,
+"47","Representation and Entertainment","expenses","credit","-",,,
+"48","Insurance Expense","expenses","credit","-",,,
+"49","Miscellaneous Expenses","expenses","credit","-",,,
+"50","Miscellaneous Expense","expenses","credit","-",,,
+"51","Health and Safety","expenses","credit","-",,,
+"52","Sub-Construction Expense","expenses","credit","-",,,
+"53","Other Facilities Expense: Tool and Other Equipment","expenses","credit","-",,,
+"54","Accident and Emergency Expenses","expenses","credit","-",,,
+"55","Other Facilities Expense: ICT and Office Equipment","expenses","credit","-",,,
+"56","ECDC Activities Expense","expenses","credit","-",,,
+"57","Taxes, Licenses and Other Fees","expenses","credit","-",,,
+"58","Marketing Expense","expenses","credit","-",,,
+"59","Taxes, Licenses and Permits","expenses","credit","-",,,
+"60","General and Administrative Expenses","expenses","credit","-",,,
+"61","Construction Cost- Taxes, Licenses and Registration","expenses","credit","-",,,
+"62","Financial Expenses","expenses","credit","-",,,
+"63","Provision for Income Tax
+","expenses","credit","-",,,
+"64","Trade and Other Payables","liabilities","credit","-",,,
+"65","Contributions & Loans Payable","liabilities","credit","-",,,
+"66","Due to BIR","liabilities","credit","-",,,
+"67","Deferred Tax Liabilities","liabilities","credit","-",,,
+"68","Other Current Liabilities","liabilities","credit","-",,,
+"69","Long Term Payables","liabilities","credit","-",,,
+"70","Construction Revenue","revenue","credit","-",,,
+"71","Other Revenue","revenue","credit","-",,,
+"72","Account Receivable","asset","debit","+",,"8/8/2024 03:01:24","8/8/2024 03:01:24"
+"73","Equity","equity","credit","-",,"8/8/2024 03:01:24","8/8/2024 03:01:24"
+"74","Account Receivable","asset","debit","+",,"19/8/2024 00:53:24","19/8/2024 00:53:24"
+"75","Equity","equity","credit","-",,"19/8/2024 00:53:25","19/8/2024 00:53:25"
+"76","Account Receivable","asset","debit","+",,"19/8/2024 00:57:15","19/8/2024 00:57:15"
+"77","Equity","equity","credit","-",,"19/8/2024 00:57:15","19/8/2024 00:57:15"
+"78","Account Receivable","asset","debit","+",,"19/8/2024 00:58:12","19/8/2024 00:58:12"
+"79","Equity","equity","credit","-",,"19/8/2024 00:58:13","19/8/2024 00:58:13"
+"80","Account Receivable","asset","debit","+",,"19/8/2024 01:00:55","19/8/2024 01:00:55"
+"81","Equity","equity","credit","-",,"19/8/2024 01:00:55","19/8/2024 01:00:55"
+"82","Account Receivable","asset","debit","+",,"19/8/2024 01:02:47","19/8/2024 01:02:47"
+"83","Equity","equity","credit","-",,"19/8/2024 01:02:47","19/8/2024 01:02:47"
+"84","Account Receivable","asset","debit","+",,"19/8/2024 01:04:21","19/8/2024 01:04:21"
+"85","Equity","equity","credit","-",,"19/8/2024 01:04:22","19/8/2024 01:04:22"
+"86","Account Receivable","asset","debit","+",,"19/8/2024 01:06:09","19/8/2024 01:06:09"
+"87","Equity","equity","credit","-",,"19/8/2024 01:06:09","19/8/2024 01:06:09"
+"88","Other Expense","expenses","debit","+",,"19/8/2024 01:06:09","19/8/2024 01:06:09"
+"89","Income","income","credit","-",,"19/8/2024 01:06:09","19/8/2024 01:06:09"
+"90","Account Receivable","asset","debit","+",,"19/8/2024 01:07:02","19/8/2024 01:07:02"
+"91","Equity","equity","credit","-",,"19/8/2024 01:07:02","19/8/2024 01:07:02"
+"92","Other Expense","expenses","debit","+",,"19/8/2024 01:07:02","19/8/2024 01:07:02"
+"93","Income","income","credit","-",,"19/8/2024 01:07:03","19/8/2024 01:07:03"
+"94","Account Receivable","asset","debit","+",,"19/8/2024 01:10:29","19/8/2024 01:10:29"
+"95","Equity","equity","credit","-",,"19/8/2024 01:10:30","19/8/2024 01:10:30"
+"96","Other Expense","expenses","debit","+",,"19/8/2024 01:10:30","19/8/2024 01:10:30"
+"97","Income","income","credit","-",,"19/8/2024 01:10:30","19/8/2024 01:10:30"
+"98","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:10:30","19/8/2024 01:10:30"
+"99","Account Receivable","asset","debit","+",,"19/8/2024 01:11:01","19/8/2024 01:11:01"
+"100","Equity","equity","credit","-",,"19/8/2024 01:11:01","19/8/2024 01:11:01"
+"101","Other Expense","expenses","debit","+",,"19/8/2024 01:11:01","19/8/2024 01:11:01"
+"102","Income","income","credit","-",,"19/8/2024 01:11:01","19/8/2024 01:11:01"
+"103","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:11:01","19/8/2024 01:11:01"
+"104","Account Receivable","asset","debit","+",,"19/8/2024 01:13:06","19/8/2024 01:13:06"
+"105","Equity","equity","credit","-",,"19/8/2024 01:13:07","19/8/2024 01:13:07"
+"106","Other Expense","expenses","debit","+",,"19/8/2024 01:13:07","19/8/2024 01:13:07"
+"107","Income","income","credit","-",,"19/8/2024 01:13:07","19/8/2024 01:13:07"
+"108","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:13:07","19/8/2024 01:13:07"
+"109","Account Receivable","asset","debit","+",,"19/8/2024 01:13:41","19/8/2024 01:13:41"
+"110","Equity","equity","credit","-",,"19/8/2024 01:13:42","19/8/2024 01:13:42"
+"111","Other Expense","expenses","debit","+",,"19/8/2024 01:13:42","19/8/2024 01:13:42"
+"112","Income","income","credit","-",,"19/8/2024 01:13:42","19/8/2024 01:13:42"
+"113","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:13:42","19/8/2024 01:13:42"
+"114","Account Receivable","asset","debit","+",,"19/8/2024 01:16:19","19/8/2024 01:16:19"
+"115","Equity","equity","credit","-",,"19/8/2024 01:16:20","19/8/2024 01:16:20"
+"116","Other Expense","expenses","debit","+",,"19/8/2024 01:16:20","19/8/2024 01:16:20"
+"117","Income","income","credit","-",,"19/8/2024 01:16:20","19/8/2024 01:16:20"
+"118","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:16:20","19/8/2024 01:16:20"
+"119","Account Receivable","asset","debit","+",,"19/8/2024 01:18:13","19/8/2024 01:18:13"
+"120","Equity","equity","credit","-",,"19/8/2024 01:18:14","19/8/2024 01:18:14"
+"121","Other Expense","expenses","debit","+",,"19/8/2024 01:18:14","19/8/2024 01:18:14"
+"122","Income","income","credit","-",,"19/8/2024 01:18:14","19/8/2024 01:18:14"
+"123","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:18:14","19/8/2024 01:18:14"
+"124","Account Receivable","asset","debit","+",,"19/8/2024 01:18:45","19/8/2024 01:18:45"
+"125","Equity","equity","credit","-",,"19/8/2024 01:18:45","19/8/2024 01:18:45"
+"126","Other Expense","expenses","debit","+",,"19/8/2024 01:18:45","19/8/2024 01:18:45"
+"127","Income","income","credit","-",,"19/8/2024 01:18:46","19/8/2024 01:18:46"
+"128","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:18:46","19/8/2024 01:18:46"
+"129","Account Receivable","asset","debit","+",,"19/8/2024 01:22:04","19/8/2024 01:22:04"
+"130","Equity","equity","credit","-",,"19/8/2024 01:22:04","19/8/2024 01:22:04"
+"131","Other Expense","expenses","debit","+",,"19/8/2024 01:22:04","19/8/2024 01:22:04"
+"132","Income","income","credit","-",,"19/8/2024 01:22:05","19/8/2024 01:22:05"
+"133","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:22:05","19/8/2024 01:22:05"
+"134","Account Receivable","asset","debit","+",,"19/8/2024 01:25:01","19/8/2024 01:25:01"
+"135","Equity","equity","credit","-",,"19/8/2024 01:25:01","19/8/2024 01:25:01"
+"136","Other Expense","expenses","debit","+",,"19/8/2024 01:25:01","19/8/2024 01:25:01"
+"137","Income","income","credit","-",,"19/8/2024 01:25:02","19/8/2024 01:25:02"
+"138","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:25:02","19/8/2024 01:25:02"
+"139","Account Receivable","asset","debit","+",,"19/8/2024 01:27:04","19/8/2024 01:27:04"
+"140","Equity","equity","credit","-",,"19/8/2024 01:27:05","19/8/2024 01:27:05"
+"141","Other Expense","expenses","debit","+",,"19/8/2024 01:27:05","19/8/2024 01:27:05"
+"142","Income","income","credit","-",,"19/8/2024 01:27:05","19/8/2024 01:27:05"
+"143","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:27:05","19/8/2024 01:27:05"
+"144","Account Receivable","asset","debit","+",,"19/8/2024 01:28:21","19/8/2024 01:28:21"
+"145","Equity","equity","credit","-",,"19/8/2024 01:28:21","19/8/2024 01:28:21"
+"146","Other Expense","expenses","debit","+",,"19/8/2024 01:28:21","19/8/2024 01:28:21"
+"147","Income","income","credit","-",,"19/8/2024 01:28:21","19/8/2024 01:28:21"
+"148","Other Current Liabilty","liabilities","credit","-",,"19/8/2024 01:28:22","19/8/2024 01:28:22"
+"149","Account Receivable","asset","debit","+",,"26/9/2024 05:21:46","26/9/2024 05:21:46"
+"150","Equity","equity","credit","-",,"26/9/2024 05:21:46","26/9/2024 05:21:46"
+"151","Other Expense","expenses","debit","+",,"26/9/2024 05:21:46","26/9/2024 05:21:46"
+"152","Income","income","credit","-",,"26/9/2024 05:21:46","26/9/2024 05:21:46"
+"153","Other Current Liabilty","liabilities","credit","-",,"26/9/2024 05:21:46","26/9/2024 05:21:46"
+"154","Account Receivable","asset","debit","+",,"26/9/2024 05:22:38","26/9/2024 05:22:38"
+"155","Equity","equity","credit","-",,"26/9/2024 05:22:38","26/9/2024 05:22:38"
+"156","Other Expense","expenses","debit","+",,"26/9/2024 05:22:38","26/9/2024 05:22:38"
+"157","Income","income","credit","-",,"26/9/2024 05:22:38","26/9/2024 05:22:38"
+"158","Other Current Liabilty","liabilities","credit","-",,"26/9/2024 05:22:38","26/9/2024 05:22:38"
