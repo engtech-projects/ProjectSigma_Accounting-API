@@ -2,12 +2,10 @@
 
 namespace App\Http\Resources\AccountingCollections;
 
+use App\Enums\PaymentRequestType;
 use App\Http\Resources\ApprovalAttributeCollection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
-// use App\Http\Resources\StakeholderResource;
-// use App\Http\Resources\FormResource;
 
 class PaymentRequestCollection extends JsonResource
 {
@@ -25,6 +23,10 @@ class PaymentRequestCollection extends JsonResource
             'next_approval' => $this->getNextPendingApproval(),
             'total_amount_formatted' => number_format($this->total, 2, '.', ','),
             'transaction_flow' => $this->transactionFlow,
+            'stakeholder_name' => $this->when($this->type != PaymentRequestType::PAYROLL->value, function () {
+                $firstDetail = $this->details->first();
+                return $firstDetail && $firstDetail->stakeholder ? $firstDetail->stakeholder->name : null;
+            }),
         ]);
     }
 }
