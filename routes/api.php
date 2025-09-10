@@ -57,6 +57,7 @@ Route::middleware('auth:api')->group(function () {
 
     // RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
+    Route::get('/account-type/all', [AccountTypeController::class, 'all']);
     Route::resource('account-type', AccountTypeController::class);
     Route::resource('account-group', AccountGroupController::class);
     Route::resource('books', BookController::class);
