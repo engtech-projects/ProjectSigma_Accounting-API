@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionLogStatus;
 use App\Enums\VoucherType;
 use App\Http\Requests\CashReceivedRequest;
 use App\Http\Requests\Voucher\CashVoucherRequestFilter;
@@ -20,6 +21,7 @@ use App\Models\FiscalYear;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
 use App\Models\PostingPeriod;
+use App\Models\TransactionLog;
 use App\Models\Voucher;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
 use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
@@ -199,6 +201,13 @@ class VoucherController extends Controller
         ]);
         JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
             'status' => JournalStatus::POSTED->value,
+        ]);
+        TransactionFlowService::updateTransactionFlow($voucher->journalEntry->payment_request_id, TransactionFlowName::PAYMENTS->value);
+        TransactionLog::query()->create([
+            'type' => TransactionLogStatus::PAYMENT->value,
+            'transaction_code' => $voucher->voucher_no,
+            'description' => 'Payment Received',
+            'created_by' => auth()->user()->id,
         ]);
         DB::commit();
 
