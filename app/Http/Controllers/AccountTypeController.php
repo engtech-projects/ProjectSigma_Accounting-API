@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AccountType\AccountTypeRequestFilter;
 use App\Http\Requests\AccountType\AccountTypeRequestStore;
 use App\Http\Requests\AccountType\AccountTypeRequestUpdate;
-use App\Http\Resources\DataResource;
+use App\Http\Resources\AccountTypeResource;
 use App\Models\AccountType;
 use App\Services\AccountTypeService;
 use DB;
@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 class AccountTypeController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * (paginated) Display a listing of the resource.
      */
     public function index(AccountTypeRequestFilter $request)
     {
@@ -25,13 +25,17 @@ class AccountTypeController extends Controller
             'data' => AccountTypeService::getPaginated($validatedData),
         ], 200);
     }
+
+    /**
+     * (non-paginated) Display a listing of the resource.
+     */
     public function nopaginate(AccountTypeRequestFilter $request)
     {
         $datas = $request->validated();
         $accountTypes = AccountType::where($datas)->get();
-        return DataResource::collection($accountTypes)->additional([
+        return AccountTypeResource::collection($accountTypes)->additional([
             'success' => true,
-            'message' => 'Account Types Successfully Retrieved.',
+            'message' => 'Account Types List Successfully Retrieved.',
         ]);
     }
 
