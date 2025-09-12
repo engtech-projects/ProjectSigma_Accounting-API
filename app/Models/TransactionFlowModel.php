@@ -24,6 +24,7 @@ class TransactionFlowModel extends Model
         'user_name',
         'status',
         'priority',
+        'is_passable',
         'is_assignable',
     ];
 }

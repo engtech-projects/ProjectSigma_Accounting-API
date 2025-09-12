@@ -25,6 +25,7 @@ class TransactionFlowRequest extends FormRequest
             'user_id' => 'nullable|integer',
             'update_type' => 'nullable|string',
             'flow_id' => 'nullable|integer',
+            'status' => 'nullable|string',
         ];
     }
 }
