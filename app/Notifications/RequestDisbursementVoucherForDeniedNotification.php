@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyCreatorChannel;
+use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\DisbursementRequest;
 use Illuminate\Bus\Queueable;
@@ -32,7 +32,7 @@ class RequestDisbursementVoucherForDeniedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyCreatorChannel::class];
+        return [HrmsNotifyUserChannel::class];
     }
 
     public function getToken()

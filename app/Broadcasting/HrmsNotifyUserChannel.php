@@ -5,11 +5,11 @@ namespace App\Broadcasting;
 use App\Services\HrmsServices;
 use Notification;
 
-class HrmsNotifyCreatorChannel
+class HrmsNotifyUserChannel
 {
-    public function send($notifiable, Notification $notification)
+    public function send($notifiable, Notification $notification): void
     {
-        $userId = $notifiable->created_by;
+        $userId = $notifiable->id;
         $notif = $notification->toArray($notifiable);
         HrmsServices::setNotification($notification->getToken(), $userId, $notif);
     }
