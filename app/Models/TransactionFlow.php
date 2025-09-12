@@ -26,6 +26,7 @@ class TransactionFlow extends Model
         'category',
         'status',
         'priority',
+        'is_passable',
         'is_assignable',
     ];
 
