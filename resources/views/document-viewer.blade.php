@@ -39,10 +39,12 @@
             border-radius: 5px;
             margin-top: 5px;
             background: #f9f9f9;
+            height: 100vh;
+            overflow-y: auto;
         }
         iframe {
             width: 100%;
-            height: 500px;
+            height: 100vh;
             border: none;
             margin-top: 10px;
         }
