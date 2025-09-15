@@ -12,7 +12,6 @@ class BookSeeder extends Seeder
      */
     public function run(): void
     {
-
         Book::updateOrCreate([
             'name' => 'disbursement',
             'code' => 'DV',

@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionFlowModel extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     public $timestamps = true;
 
@@ -23,6 +24,7 @@ class TransactionFlowModel extends Model
         'user_name',
         'status',
         'priority',
+        'is_passable',
         'is_assignable',
     ];
 }

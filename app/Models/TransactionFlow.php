@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionFlow extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'transaction_flow';
 
@@ -25,6 +26,7 @@ class TransactionFlow extends Model
         'category',
         'status',
         'priority',
+        'is_passable',
         'is_assignable',
     ];
 

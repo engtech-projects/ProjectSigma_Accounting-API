@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsFilter;
 use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsStore;
-use App\Models\Period;
+use App\Models\PostingPeriod;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\JsonResponse;
@@ -36,7 +36,7 @@ class PostingPeriodDetailsController extends Controller
                     'data' => null,
                 ], 500);
             }
-            $postingPeriodDetails = Period::create($validatedData);
+            $postingPeriodDetails = PostingPeriod::create($validatedData);
             DB::commit();
 
             return new JsonResponse([

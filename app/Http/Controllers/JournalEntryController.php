@@ -9,9 +9,9 @@ use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
 use App\Http\Requests\JournalEntryDetailsRequest;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
+use App\Models\FiscalYear;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
-use App\Models\Period;
 use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
@@ -44,11 +44,11 @@ class JournalEntryController extends Controller
         try {
             DB::beginTransaction();
             $validatedData = $request->validated();
-            $validatedData['posting_period_id'] = PostingPeriod::currentPostingPeriod();
+            $validatedData['id'] = FiscalYear::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::OPEN->value;
-            $validatedData['period_id'] = Period::current()->pluck('id')->first();
+            $validatedData['fiscal_year_id'] = PostingPeriod::current()->pluck('id')->first();
             $validatedData['journal_date'] = PaymentRequest::find($validatedData['payment_request_id'])->request_date;
-            if ($validatedData['period_id'] == null) {
+            if ($validatedData['fiscal_year_id'] == null) {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'No open period found. Please create a new period. current period',

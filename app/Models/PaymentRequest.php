@@ -16,7 +16,11 @@ use Illuminate\Notifications\Notifiable;
 
 class PaymentRequest extends Model
 {
-    use HasApproval, HasFactory, ModelHelpers, Notifiable, SoftDeletes;
+    use HasApproval;
+    use HasFactory;
+    use ModelHelpers;
+    use Notifiable;
+    use SoftDeletes;
 
     protected $table = 'payment_request';
 

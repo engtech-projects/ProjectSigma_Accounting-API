@@ -5,36 +5,37 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PostingPeriod extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $table = 'posting_periods';
 
     public $timestamps = true;
 
     protected $fillable = [
-        'period_start',
-        'period_end',
+        'fiscal_year_id',
+        'start_date',
+        'end_date',
         'status',
     ];
 
-    public function periods(): HasMany
+    public function fiscalYear(): BelongsTo
     {
-        return $this->hasMany(Period::class);
+        return $this->belongsTo(FiscalYear::class, 'id');
     }
 
     public function scopeCurrent($query)
     {
         $currentDate = Carbon::now();
-
-        return $query->whereHas('periods', function ($subQuery) use ($currentDate) {
-            $subQuery->where('period_start', '<=', $currentDate)
-                ->where('period_end', '>=', $currentDate);
-        });
+        return $query
+            ->where('start_date', '<=', $currentDate)
+            ->where('end_date', '>=', $currentDate);
     }
 
     public static function currentPostingPeriod()
@@ -44,15 +45,19 @@ class PostingPeriod extends Model
 
     public function scopeHasJournalEntries($query)
     {
-        return $query->whereHas('periods', function ($subQuery) {
+        return $query->whereHas('fiscalYear', function ($subQuery) {
             $subQuery->whereHas('journalEntries');
         });
     }
 
     public function scopeWithDetails($query)
     {
-        return $query->with(['periods' => function ($query) {
-            $query->orderBy('created_at', 'desc');
-        }]);
+        return $query->with('fiscalYear')
+            ->orderBy('created_at');
+    }
+
+    public function journalEntries(): HasMany
+    {
+        return $this->hasMany(JournalEntry::class);
     }
 }

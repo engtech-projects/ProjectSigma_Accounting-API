@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyCreatorChannel;
+use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\CashRequest;
 use Illuminate\Bus\Queueable;
@@ -23,7 +23,6 @@ class RequestCashVoucherForDeniedNotification extends Notification
     {
         $this->token = $token;
         $this->model = $model;
-
     }
 
     /**
@@ -33,7 +32,7 @@ class RequestCashVoucherForDeniedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyCreatorChannel::class];
+        return [HrmsNotifyUserChannel::class];
     }
 
     public function getToken()
@@ -46,7 +45,7 @@ class RequestCashVoucherForDeniedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
+        return (new MailMessage())
             ->line('The introduction to the notification.')
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');

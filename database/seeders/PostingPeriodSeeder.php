@@ -21,16 +21,13 @@ class PostingPeriodSeeder extends Seeder
         ]);
 
         for ($month = 1; $month <= 12; $month++) {
-
             $startOfMonth = Carbon::createFromDate($currentDate->year, $month, 1);
             $endOfMonth = $startOfMonth->copy()->endOfMonth();
 
-            $postingPeriod->periods()->updateOrCreate([
-
+            $postingPeriod->fiscalYear()->updateOrCreate([
                 'start_date' => $startOfMonth,
                 'end_date' => $endOfMonth,
             ]);
         }
-
     }
 }

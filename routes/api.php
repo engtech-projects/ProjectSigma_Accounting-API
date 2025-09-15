@@ -57,11 +57,12 @@ Route::middleware('auth:api')->group(function () {
 
     // RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
+    Route::get('account-type-list', [AccountTypeController::class, 'nopaginate']);
     Route::resource('account-type', AccountTypeController::class);
     Route::resource('account-group', AccountGroupController::class);
     Route::resource('books', BookController::class);
-    Route::resource('posting-period', PostingPeriodController::class);
-    Route::resource('periods', PostingPeriodDetailsController::class);
+    Route::resource('fiscalYear', PostingPeriodController::class);
+    Route::resource('posting-period', PostingPeriodDetailsController::class);
     Route::resource('stakeholders', StakeHolderController::class);
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);

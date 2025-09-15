@@ -71,7 +71,6 @@ class JournalEntryService
             ->paginate(config('services.pagination.limit'));
 
         return JournalEntryCollection::collection($journalRequest)->response()->getData(true);
-
     }
 
     public static function unpostedEntries(array $validatedData)
@@ -125,7 +124,6 @@ class JournalEntryService
 
     public static function forVoucherEntriesListCash(array $validatedData)
     {
-
         $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Traits;
 
+use App\Enums\AccessibilitySigma;
 use App\Enums\RequestStatuses;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -108,15 +109,30 @@ trait HasApproval
         $this->refresh();
     }
 
-    public function setRequestStatus(?string $newStatus) {}
+    public function setRequestStatus(?string $newStatus)
+    {
+    }
 
     public function requestStatusCompleted(): bool
     {
+        if ($this->request_status == RequestStatuses::APPROVED->value) {
+            return true;
+        }
         return false;
     }
 
     public function requestStatusEnded(): bool
     {
+        if (in_array(
+            $this->request_status,
+            [
+                RequestStatuses::APPROVED->value,
+                RequestStatuses::DENIED->value,
+                RequestStatuses::VOIDED->value
+            ]
+        )) {
+            return true;
+        }
         return false;
     }
 
@@ -145,7 +161,9 @@ trait HasApproval
                 $approval['status'] = RequestStatuses::APPROVED;
                 $approval['date_approved'] = Carbon::now()->format('F j, Y h:i A');
             }
-
+            if ($this->checkUserAccess([AccessibilitySigma::SUPERADMIN->value])) {
+                $approval["remarks"] = "Approved by Super Admin";
+            }
             return $approval;
         });
         $this->save();
@@ -218,5 +236,26 @@ trait HasApproval
             'status_code' => JsonResponse::HTTP_OK,
             'message' => $data['status'] === RequestStatuses::APPROVED->value ? 'Successfully approved.' : 'Successfully denied.',
         ];
+    }
+    public function voidRequestStatus()
+    {
+        $this->request_status = RequestStatuses::VOIDED;
+        $this->save();
+    }
+
+    public function notifyNextApprover($notificationModel)
+    {
+        $nextApproval = $this->getNextPendingApproval();
+        if ($nextApproval) {
+            $user = User::find($nextApproval['user_id']);
+            if ($user) {
+                $user->notify(new $notificationModel(request()->bearerToken(), $this));
+            }
+        }
+    }
+
+    public function notifyCreator($notificationModel)
+    {
+        $this->created_by_user->notify(new $notificationModel(request()->bearerToken(), $this));
     }
 }

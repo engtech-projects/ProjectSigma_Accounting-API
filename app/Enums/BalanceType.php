@@ -10,5 +10,4 @@ enum BalanceType: string
 
     case DEBIT = 'debit';
     case CREDIT = 'credit';
-
 }
