@@ -9,5 +9,5 @@ enum UserType: string
     use EnumHelper;
 
     case EMPLOYEE = 'Employee';
-    case ADMIN = 'Admin';
+    case ADMINISTRATOR = 'Administrator';
 }
