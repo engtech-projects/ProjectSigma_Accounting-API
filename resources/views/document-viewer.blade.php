@@ -42,11 +42,37 @@
             height: 100vh;
             overflow-y: auto;
         }
-        iframe {
+        .file-row {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 8px;
+        }
+        .file-row a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+        .file-row a:hover {
+            text-decoration: underline;
+        }
+        .file-link {
+            display: block;
+            padding: 8px 12px;
+            margin: 0;
+            background: #f8f9fa;
+            border-radius: 4px 4px 0 0;
+            color: #212529;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .file-link:hover {
+            background: #e9ecef;
+            transform: translateX(2px);
+        }
+        .image-display {
             width: 100%;
             height: 100vh;
             border: none;
-            margin-top: 10px;
         }
     </style>
 </head>
@@ -58,7 +84,7 @@
     @if ($publicFilePaths)
         @php
             $grouped = collect($publicFilePaths)->groupBy(function ($item) {
-                return strtoupper(substr(strrchr($item, '.'), 1)); // Extracts file extension and converts it to uppercase
+                return strtoupper(substr(strrchr($item, '.'), 1));
             });
         @endphp
 
@@ -66,11 +92,13 @@
             <button class="collapsible">{{ $type }} Files ({{ count($files) }})</button>
             <div class="content">
                 @foreach ($files as $file)
-                    @if (in_array($type, ['PDF', 'JPEG', 'JPG', 'PNG']))
-                        <iframe src="{{ $file }}"></iframe>
-                    @else
-                        <p><a href="{{ $file }}" target="_blank">{{ basename($file) }}</a></p>
-                    @endif
+                    <div class="file-row">
+                        @if (in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpeg', 'jpg', 'png']))
+                            <iframe src="{{ $file }}" class="image-display"></iframe>
+                        @else
+                            <a href="{{ $file }}" target="_blank" class="file-link">{{ basename($file) }}</a>
+                        @endif
+                    </div>
                 @endforeach
             </div>
         @endforeach
