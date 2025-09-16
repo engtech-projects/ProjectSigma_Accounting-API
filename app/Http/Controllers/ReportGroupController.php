@@ -6,8 +6,8 @@ use App\Http\Requests\ReportGroup\ReportGroupSearchRequest;
 use App\Http\Requests\ReportGroup\ReportGroupStoreRequest;
 use App\Http\Resources\ReportGroupCollection;
 use App\Models\ReportGroup;
+use DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ReportGroupController extends Controller
 {
@@ -26,7 +26,6 @@ class ReportGroupController extends Controller
     public function searchReportGroups(ReportGroupSearchRequest $request)
     {
         $validatedData = $request->validated();
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
@@ -40,12 +39,23 @@ class ReportGroupController extends Controller
     public function store(ReportGroupStoreRequest $request)
     {
         $validatedData = $request->validated();
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Report Group created successfully',
-            'data' => ReportGroup::create($validatedData),
-        ], 201);
+        try {
+            DB::beginTransaction();
+            $reportGroup = ReportGroup::create($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Report Group created successfully',
+                'data' => $reportGroup,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Report Group Failed to Create.',
+                'data' => null,
+            ], 500);
+        }
     }
 
     /**
@@ -56,7 +66,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group fetched successfully',
-            'data' => ReportGroupCollection::collection(ReportGroup::find($id)),
+            'data' => ReportGroup::find($id),
         ], 200);
     }
 
@@ -65,15 +75,32 @@ class ReportGroupController extends Controller
      */
     public function edit(string $id)
     {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ReportGroupStoreRequest $request, string $id)
     {
-        //
+        $validatedData = $request->validated();
+        try {
+            DB::beginTransaction();
+            $reportGroup = ReportGroup::findOrFail($id);
+            $reportGroup->update($validatedData);
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Report Group Successfully Updated.',
+                'data' => $reportGroup,
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Report Group Failed to Update.',
+                'data' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -81,21 +108,31 @@ class ReportGroupController extends Controller
      */
     public function destroy(string $id)
     {
-        $reportGroup = ReportGroup::find($id)->whereHas('accounts')->first();
-        if ($reportGroup) {
+        $reportGroup = ReportGroup::find($id);
+        if (!$reportGroup) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Report Group Already Exists',
+                'message' => 'Report Group Not Found',
                 'data' => null,
             ], 404);
         }
 
-        $reportGroup->delete();
-
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Report Group deleted successfully',
-            'data' => null,
-        ], 200);
+        try {
+            DB::beginTransaction();
+            $reportGroup->delete();
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Report Group deleted successfully',
+                'data' => null,
+            ], 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Report Group Failed to Delete.',
+                'data' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
