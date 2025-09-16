@@ -39,7 +39,7 @@
             border-radius: 5px;
             margin-top: 5px;
             background: #f9f9f9;
-            height: 100vh;
+            max-height: 100vh;
             overflow-y: auto;
         }
         .file-row {
@@ -72,7 +72,15 @@
         .image-display {
             width: 100%;
             height: 100vh;
+            max-width: 100%;
+            object-fit: contain;
             border: none;
+            overflow: auto;
+        }
+        @media (max-width: 768px) {
+            .image-display {
+                height: 80vh;
+            }
         }
     </style>
 </head>
