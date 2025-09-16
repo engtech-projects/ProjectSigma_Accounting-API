@@ -52,7 +52,6 @@ class TransactionFLowModelController extends Controller
                 if (Auth()->user()->id != $authorizedUserId) {
                     return response()->json(['error' => 'You are not authorized to update this transaction flow'], 403);
                 }
-                $validatedData['status'] = TransactionFlowStatus::DONE->value;
                 $updateResult = $transactionFlow->update($validatedData);
                 if (! $updateResult) {
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
