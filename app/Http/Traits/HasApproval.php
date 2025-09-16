@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 trait HasApproval
 {
+    use CheckAccessibility;
     /**
      * ==================================================
      * MODEL RELATIONSHIPS
