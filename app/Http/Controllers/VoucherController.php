@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Enums\VoucherType;
 use App\Http\Requests\CashReceivedRequest;
 use App\Http\Requests\Voucher\CashVoucherRequestFilter;
@@ -179,7 +180,11 @@ class VoucherController extends Controller
         JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
             'status' => JournalStatus::FOR_PAYMENT->value,
         ]);
-        TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_CASH_VOUCHER->value);
+        TransactionFlowService::updateTransactionFlow(
+            $paymentRequestId,
+            TransactionFlowName::GENERATE_CASH_VOUCHER->value,
+            TransactionFlowStatus::DONE->value
+        );
         DB::commit();
         $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
@@ -237,7 +242,11 @@ class VoucherController extends Controller
             'status' => JournalStatus::FOR_PAYMENT->value,
         ]);
         $paymentRequestId = $journalEntry->payment_request_id;
-        TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value);
+        TransactionFlowService::updateTransactionFlow(
+            $paymentRequestId,
+            TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value,
+            TransactionFlowStatus::DONE->value
+        );
         $nextFlow = TransactionFlow::where('unique_name', TransactionFlowName::CHECK_AND_REVIEW_DISBURSEMENT_VOUCHER->value)->first();
         if ($nextFlow->user_id) {
             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
