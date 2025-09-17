@@ -6,7 +6,6 @@ use App\Broadcasting\HrmsNotifyNextApproverChannel;
 use App\Enums\ApprovalModels;
 use App\Models\DisbursementRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
 
 class RequestDisbursementVoucherForApprovalNotification extends Notification

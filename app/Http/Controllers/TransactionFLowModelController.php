@@ -60,7 +60,6 @@ class TransactionFLowModelController extends Controller
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
                 }
                 if ($transactionFlow->status == TransactionFlowStatus::DONE->value) {
-
                 }
                 $nextFlow = TransactionFlow::where('payment_request_id', $transactionFlow->payment_request_id)
                     ->where('priority', $transactionFlow->priority + 1)
@@ -71,7 +70,7 @@ class TransactionFLowModelController extends Controller
                         if ($nextFlow->user_id) {
                             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
                         }
-                    }else if ($validatedData['status'] == TransactionFlowStatus::REJECTED->value) {
+                    } elseif ($validatedData['status'] == TransactionFlowStatus::REJECTED->value) {
                         $paymentRequest = PaymentRequest::find($transactionFlow->payment_request_id);
                         $paymentRequest->update([
                             'request_status' => RequestApprovalStatus::DENIED,
