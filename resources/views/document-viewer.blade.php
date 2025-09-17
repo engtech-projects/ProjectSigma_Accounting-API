@@ -39,8 +39,8 @@
             border-radius: 5px;
             margin-top: 5px;
             background: #f9f9f9;
-            max-height: 100vh;
-            overflow-y: auto;
+            max-height: 90dvh;
+            overscroll-behavior: contain;
         }
         .file-row {
             padding: 10px;
@@ -64,22 +64,23 @@
             text-decoration: none;
             transition: all 0.2s ease;
             border-bottom: 1px solid #dee2e6;
+            word-break: break-word;
+            overflow-wrap: anywhere;
         }
         .file-link:hover {
             background: #e9ecef;
             transform: translateX(2px);
         }
         .image-display {
-            width: 100%;
-            height: 100vh;
+            display: block;
             max-width: 100%;
+            height: auto;
+            max-height: 85dvh;
             object-fit: contain;
-            border: none;
-            overflow: auto;
         }
         @media (max-width: 768px) {
             .image-display {
-                height: 80vh;
+                height: 70dvh;
             }
         }
     </style>
@@ -92,7 +93,9 @@
     @if ($publicFilePaths)
         @php
             $grouped = collect($publicFilePaths)->groupBy(function ($item) {
-                return strtoupper(substr(strrchr($item, '.'), 1));
+                $path = parse_url($item, PHP_URL_PATH) ?? '';
+                $ext  = pathinfo($path, PATHINFO_EXTENSION) ?: '';
+                return $ext !== '' ? strtoupper($ext) : 'OTHER';
             });
         @endphp
 
@@ -100,11 +103,25 @@
             <button class="collapsible">{{ $type }} Files ({{ count($files) }})</button>
             <div class="content">
                 @foreach ($files as $file)
+                    @php
+                        $path   = parse_url($file, PHP_URL_PATH) ?? '';
+                        $scheme = parse_url($file, PHP_URL_SCHEME) ?? null;
+                        $ext    = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                        $name   = basename($path);
+                    @endphp
+                    @continue($scheme && !in_array($scheme, ['http','https']))
                     <div class="file-row">
-                        @if (in_array(strtolower(pathinfo($file, PATHINFO_EXTENSION)), ['jpeg', 'jpg', 'png']))
-                            <iframe src="{{ $file }}" class="image-display"></iframe>
+                        @if (in_array($ext, ['jpeg', 'jpg', 'png', 'webp', 'gif']))
+                            <img
+                                src="{{ $file }}"
+                                alt="{{ $name }}"
+                                class="image-display"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                            />
                         @else
-                            <a href="{{ $file }}" target="_blank" class="file-link">{{ basename($file) }}</a>
+                            <a href="{{ $file }}" target="_blank" rel="noopener noreferrer" class="file-link">{{ $name }}</a>
                         @endif
                     </div>
                 @endforeach
