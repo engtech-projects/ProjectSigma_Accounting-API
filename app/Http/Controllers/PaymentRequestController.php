@@ -15,7 +15,9 @@ use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use App\Models\TransactionLog;
+use App\Models\User;
 use App\Notifications\RequestPaymentForApprovalNotification;
+use App\Notifications\RequestTransactionNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
 use App\Services\TransactionFlowService;
@@ -140,8 +142,11 @@ class PaymentRequestController extends Controller
                 $paymentRequest->id
             );
             if (! empty($transactionFlowData)) {
-                // Uses the HasMany relation so timestamps and observers apply
                 $paymentRequest->transactionFlow()->createMany($transactionFlowData);
+                $nextFlow = $paymentRequest->transactionFlow()->where('priority', 2)->first();
+                if ($nextFlow->user_id) {
+                    User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                }
             }
             TransactionLog::query()->create([
                 'type' => TransactionLogStatus::REQUEST->value,
