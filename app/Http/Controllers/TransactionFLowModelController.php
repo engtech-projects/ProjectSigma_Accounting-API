@@ -65,7 +65,7 @@ class TransactionFLowModelController extends Controller
                     ->where('priority', $transactionFlow->priority + 1)
                     ->first();
                 if ($nextFlow) {
-                    if ($validatedData['status'] == TransactionFlowStatus::DONE->value) {
+                    if ($validatedData['status'] == TransactionFlowStatus::DONE->value && $validatedData['status'] == TransactionFlowStatus::SKIPPED->value) {
                         $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
                         if ($nextFlow->user_id) {
                             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
