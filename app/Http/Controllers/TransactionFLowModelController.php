@@ -7,6 +7,7 @@ use App\Http\Requests\TransactionFlowRequest;
 use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
 use App\Models\User;
+use App\Notifications\RequestTransactionNotification;
 
 class TransactionFLowModelController extends Controller
 {
@@ -61,6 +62,9 @@ class TransactionFLowModelController extends Controller
                     ->first();
                 if ($nextFlow) {
                     $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+                    if ($nextFlow->user_id) {
+                        User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                    }
                 }
                 $transactionFlow->refresh();
             }

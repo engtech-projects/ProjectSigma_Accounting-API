@@ -11,6 +11,8 @@ use App\Http\Requests\CreatePayrollRequest;
 use App\Http\Requests\PayrollRequest\PayrollRequestFilter;
 use App\Models\PaymentRequest;
 use App\Models\TransactionLog;
+use App\Models\User;
+use App\Notifications\RequestTransactionNotification;
 use App\Services\ApiServices\HrmsService;
 use App\Services\PaymentServices;
 use App\Services\PayrollService;
@@ -73,8 +75,11 @@ class PayrollRequestController extends Controller
                 $paymentRequest->id
             );
             if (! empty($transactionFlowData)) {
-                // Uses the HasMany relation so timestamps and observers apply
                 $paymentRequest->transactionFlow()->createMany($transactionFlowData);
+                $nextFlow = $paymentRequest->transactionFlow()->where('priority', 2)->first();
+                if ($nextFlow->user_id) {
+                    User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                }
             }
             TransactionLog::query()->create([
                 'type' => TransactionLogStatus::REQUEST->value,
