@@ -247,7 +247,9 @@ class VoucherController extends Controller
             TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value,
             TransactionFlowStatus::DONE->value
         );
-        $nextFlow = TransactionFlow::where('unique_name', TransactionFlowName::CHECK_AND_REVIEW_DISBURSEMENT_VOUCHER->value)->first();
+        $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
+            ->where('unique_name', TransactionFlowName::CHECK_AND_REVIEW_DISBURSEMENT_VOUCHER->value)
+            ->first();
         if ($nextFlow->user_id) {
             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
         }

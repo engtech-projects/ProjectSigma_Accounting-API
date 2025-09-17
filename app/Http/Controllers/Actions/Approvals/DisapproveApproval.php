@@ -51,7 +51,7 @@ class DisapproveApproval extends Controller
                 ]);
                 $model->notify(new RequestDisbursementVoucherForDeniedNotification(auth()->user()->token, $model));
                 TransactionFlowService::updateTransactionFlow(
-                    $model->journalEntry->paymentRequest->id,
+                    $model->id,
                     TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
                     TransactionFlowStatus::REJECTED->value
                 );

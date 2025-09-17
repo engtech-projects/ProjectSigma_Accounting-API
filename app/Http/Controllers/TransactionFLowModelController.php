@@ -59,8 +59,6 @@ class TransactionFLowModelController extends Controller
                 if (! $updateResult) {
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
                 }
-                if ($transactionFlow->status == TransactionFlowStatus::DONE->value) {
-                }
                 $nextFlow = TransactionFlow::where('payment_request_id', $transactionFlow->payment_request_id)
                     ->where('priority', $transactionFlow->priority + 1)
                     ->first();
