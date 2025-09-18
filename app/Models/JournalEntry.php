@@ -30,7 +30,7 @@ class JournalEntry extends Model
         'remarks',
         'posting_period_id',
         'payment_request_id',
-        'period_id',
+        'fiscal_year_id',
         'entry_date',
         'reference_no',
         'created_by',

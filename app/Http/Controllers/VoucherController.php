@@ -143,8 +143,8 @@ class VoucherController extends Controller
                 'entry_date' => Carbon::now(),
                 'journal_date' => Carbon::now(),
                 'status' => JournalStatus::FOR_PAYMENT->value,
-                'posting_period_id' => FiscalYear::currentPostingPeriod(),
-                'period_id' => PostingPeriod::current()->pluck('id')->first(),
+                'fiscal_year_id' => FiscalYear::currentPostingPeriod(),
+                'posting_period_id' => PostingPeriod::current()->pluck('id')->first(),
                 'reference_no' => $validatedData['reference_no'],
                 'payment_request_id' => $paymentRequestId,
                 'remarks' => $validatedData['particulars'],
@@ -209,7 +209,11 @@ class VoucherController extends Controller
             'status' => JournalStatus::POSTED->value,
         ]);
         DB::commit();
-
+        TransactionFlowService::updateTransactionFlow(
+            $voucher->journalEntry->payment_request_id,
+            TransactionFlowName::PAYMENTS->value,
+            TransactionFlowStatus::DONE->value
+        );
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Updated',

@@ -65,25 +65,25 @@ class ApproveApproval extends Controller
                         $model->notify(new RequestPaymentForApprovedNotification(auth()->user()->token, $model));
                         break;
                     case ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name:
-                        $model->journalEntry()->update([
-                            'status' => JournalStatus::UNPOSTED->value,
-                        ]);
                         $this->transactionFlowService->updateTransactionFlow(
                             $model->journalEntry->paymentRequest->id,
                             TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
                             TransactionFlowStatus::DONE->value
                         );
-                        $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
-                        break;
-                    case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
                         $model->journalEntry()->update([
                             'status' => JournalStatus::UNPOSTED->value,
                         ]);
+                        $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
+                        break;
+                    case ApprovalModels::ACCOUNTING_CASH_REQUEST->name:
                         $this->transactionFlowService->updateTransactionFlow(
                             $model->journalEntry->paymentRequest->id,
                             TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
                             TransactionFlowStatus::DONE->value
                         );
+                        $model->journalEntry()->update([
+                            'status' => JournalStatus::UNPOSTED->value,
+                        ]);
                         $model->notify(new RequestCashVoucherForApprovedNotification(auth()->user()->token, $model));
                         break;
                     default:

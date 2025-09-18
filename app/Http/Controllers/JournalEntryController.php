@@ -42,52 +42,53 @@ class JournalEntryController extends Controller
 
     public function store(JournalEntryRequestStore $request)
     {
-        try {
-            DB::beginTransaction();
-            $validatedData = $request->validated();
-            $validatedData['id'] = FiscalYear::currentPostingPeriod();
-            $validatedData['status'] = JournalStatus::OPEN->value;
-            $validatedData['fiscal_year_id'] = PostingPeriod::current()->pluck('id')->first();
-            $validatedData['journal_date'] = PaymentRequest::find($validatedData['payment_request_id'])->request_date;
-            if ($validatedData['fiscal_year_id'] == null) {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'No open period found. Please create a new period. current period',
-                    'data' => null,
-                ], 400);
-            }
-            $validatedData['created_by'] = auth()->user()->id;
-            $journalEntry = JournalEntry::create($validatedData);
-            foreach ($validatedData['details'] as $detail) {
-                $journalEntry->details()->create([
-                    'account_id' => $detail['journalAccountInfo']['id'] ?? null,
-                    'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
-                    'description' => $detail['description'] ?? null,
-                    'debit' => $detail['debit'] ?? null,
-                    'credit' => $detail['credit'] ?? null,
-                ]);
-            }
-            TransactionFlowService::updateTransactionFlow(
-                $validatedData['payment_request_id'],
-                TransactionFlowName::CREATE_JOURNAL_ENTRY->value,
-                TransactionFlowStatus::DONE->value
-            );
-            DB::commit();
-
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Journal Entry Successfully Created.',
-                'data' => new JournalEntryCollection($journalEntry->load('details')),
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
+        // try {
+        DB::beginTransaction();
+        $validatedData = $request->validated();
+        $validatedData['id'] = FiscalYear::currentPostingPeriod();
+        $validatedData['status'] = JournalStatus::OPEN->value;
+        $validatedData['fiscal_year_id'] = FiscalYear::current()->pluck('id')->first();
+        $validatedData['posting_period_id'] = PostingPeriod::where('fiscal_year_id', $validatedData['fiscal_year_id'])->pluck('id')->last();
+        $validatedData['journal_date'] = PaymentRequest::find($validatedData['payment_request_id'])->request_date;
+        if ($validatedData['fiscal_year_id'] == null) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Error creating journal entry.',
+                'message' => 'No open period found. Please create a new period. current period',
                 'data' => null,
-            ], 500);
+            ], 400);
         }
+        $validatedData['created_by'] = auth()->user()->id;
+        $journalEntry = JournalEntry::create($validatedData);
+        foreach ($validatedData['details'] as $detail) {
+            $journalEntry->details()->create([
+                'account_id' => $detail['journalAccountInfo']['id'] ?? null,
+                'stakeholder_id' => $detail['stakeholderInformation']['id'] ?? null,
+                'description' => $detail['description'] ?? null,
+                'debit' => $detail['debit'] ?? null,
+                'credit' => $detail['credit'] ?? null,
+            ]);
+        }
+        TransactionFlowService::updateTransactionFlow(
+            $validatedData['payment_request_id'],
+            TransactionFlowName::CREATE_JOURNAL_ENTRY->value,
+            TransactionFlowStatus::DONE->value
+        );
+        DB::commit();
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entry Successfully Created.',
+            'data' => new JournalEntryCollection($journalEntry->load('details')),
+        ], 201);
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+
+        //     return new JsonResponse([
+        //         'success' => false,
+        //         'message' => 'Error creating journal entry.',
+        //         'data' => null,
+        //     ], 500);
+        // }
     }
 
     public function update(JournalEntryRequestUpdate $request)
