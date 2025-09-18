@@ -11,7 +11,7 @@ use App\Notifications\RequestTransactionNotification;
 
 class TransactionFlowService
 {
-    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName)
+    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
         $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
@@ -44,7 +44,7 @@ class TransactionFlowService
         TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
             ->update([
-                'status' => TransactionFlowStatus::DONE->value,
+                'status' => $transactionStatus,
             ]);
     }
 

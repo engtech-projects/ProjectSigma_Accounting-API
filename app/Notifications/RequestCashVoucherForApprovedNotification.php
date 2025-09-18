@@ -6,7 +6,6 @@ use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\CashRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
 
 class RequestCashVoucherForApprovedNotification extends Notification

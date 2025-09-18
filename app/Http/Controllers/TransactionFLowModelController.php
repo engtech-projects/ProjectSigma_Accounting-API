@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\RequestApprovalStatus;
 use App\Enums\TransactionFlowStatus;
 use App\Http\Requests\TransactionFlowRequest;
+use App\Models\PaymentRequest;
 use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
 use App\Models\User;
@@ -61,16 +63,23 @@ class TransactionFLowModelController extends Controller
                     ->where('priority', $transactionFlow->priority + 1)
                     ->first();
                 if ($nextFlow) {
-                    $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
-                    if ($nextFlow->user_id) {
-                        User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                    if ($validatedData['status'] == TransactionFlowStatus::DONE->value || $validatedData['status'] == TransactionFlowStatus::SKIPPED->value) {
+                        $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+                        if ($nextFlow->user_id) {
+                            User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                        }
+                    } elseif ($validatedData['status'] == TransactionFlowStatus::REJECTED->value) {
+                        $paymentRequest = PaymentRequest::find($transactionFlow->payment_request_id);
+                        $paymentRequest->update([
+                            'request_status' => RequestApprovalStatus::DENIED,
+                        ]);
                     }
                 }
                 $transactionFlow->refresh();
             }
 
             return response()->json([
-                'message' => 'Transaction Flow Updated Successfully',
+                'message' => 'Transaction Flow Successfully '.ucfirst($validatedData['status']),
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Update failed: '.$e->getMessage()], 500);
