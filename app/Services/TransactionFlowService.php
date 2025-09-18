@@ -44,13 +44,13 @@ class TransactionFlowService
                     }
                 }
             }
-                TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('unique_name', $transactionFlowName)
-                ->update([
-                    'status' => $transactionStatus,
+            TransactionFlow::where('payment_request_id', $paymentRequestId)
+            ->where('unique_name', $transactionFlowName)
+            ->update([
+                'status' => $transactionStatus,
             ]);
             DB::Commit();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
         }
