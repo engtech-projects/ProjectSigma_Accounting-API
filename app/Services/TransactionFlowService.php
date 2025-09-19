@@ -27,7 +27,7 @@ class TransactionFlowService
                     ->where('priority', '<', $currentFlow->priority)
                     ->get();
                 $pendingFlows = $previousFlows->filter(function ($flow) {
-                    return $flow->status !== TransactionFlowStatus::DONE->value;
+                    return $flow->status === TransactionFlowStatus::PENDING->value;
                 });
                 if ($pendingFlows->isNotEmpty()) {
                     $pendingCount = $pendingFlows->count();

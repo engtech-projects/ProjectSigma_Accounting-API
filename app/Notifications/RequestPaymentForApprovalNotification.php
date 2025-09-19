@@ -11,11 +11,8 @@ use Notification;
 class RequestPaymentForApprovalNotification extends Notification
 {
     use Queueable;
-
     private $token;
-
     private $model;
-
     public $id;
 
     public function __construct($token, PaymentRequest $model)
