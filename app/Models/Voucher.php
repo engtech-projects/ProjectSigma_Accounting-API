@@ -2,10 +2,16 @@
 
 namespace App\Models;
 
+use App\Enums\JournalStatus;
+use App\Enums\RequestApprovalStatus;
+use App\Enums\RequestStatuses;
+use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Enums\VoucherType;
 use App\Http\Traits\HasApproval;
 use App\Http\Traits\HasTransitions;
 use App\Http\Traits\ModelHelpers;
+use App\Services\TransactionFlowService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -133,5 +139,71 @@ class Voucher extends Model
             'journalEntry.details.account.reportGroup',
             'journalEntry.details.stakeholder',
         ]);
+    }
+
+    public function completeRequestStatus()
+    {
+        $this->request_status = RequestStatuses::APPROVED->value;
+        $this->save();
+        $this->refresh();
+        if ($this->type === VoucherType::DISBURSEMENT->value) {
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
+                TransactionFlowStatus::DONE->value
+            );
+            $this->journalEntry()->update([
+                'status' => JournalStatus::UNPOSTED->value,
+            ]);
+        } else {
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
+                TransactionFlowStatus::DONE->value
+            );
+            $this->journalEntry()->update([
+                'status' => JournalStatus::UNPOSTED->value,
+            ]);
+        }
+    }
+    public function denyRequestStatus()
+    {
+        $this->request_status = RequestStatuses::DENIED->value;
+        $this->save();
+        $this->refresh();
+        if ($this->type === VoucherType::DISBURSEMENT->value) {
+            //journal entry
+            $this->journalEntry()->update([
+                'status' => JournalStatus::VOID->value,
+            ]);
+            // payment request
+            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // voucher request
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
+                TransactionFlowStatus::REJECTED->value
+            );
+        } else {
+            // disbursement voucher
+            $disbursement = $this->disbursementVoucher;
+            $disbursement->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // payment request
+            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // voucher request
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
+                TransactionFlowStatus::REJECTED->value
+            );
+        }
     }
 }

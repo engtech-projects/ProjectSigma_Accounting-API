@@ -11,13 +11,9 @@ use Notification;
 class RequestCashVoucherForApprovalNotification extends Notification
 {
     use Queueable;
-
     private $token;
-
     private $model;
-
     public $id;
-
     public function __construct($token, CashRequest $model)
     {
         $this->token = $token;
