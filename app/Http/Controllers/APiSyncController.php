@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\ApiServices\HrmsService;
 use App\Services\ApiServices\InventoryService;
 use App\Services\ApiServices\ProjectMonitoringService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class APiSyncController extends Controller

@@ -31,7 +31,7 @@ use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
 use App\Services\VoucherService;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class VoucherController extends Controller

@@ -13,7 +13,7 @@ use App\Models\Stakeholders\Payee;
 use App\Models\Stakeholders\Project;
 use App\Models\Stakeholders\Supplier;
 use App\Services\StakeHolderService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class StakeHolderController extends Controller

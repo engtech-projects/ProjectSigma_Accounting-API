@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\JournalStatus;
+use App\Enums\RequestApprovalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
 use App\Enums\TransactionFlowStatus;
@@ -163,6 +164,46 @@ class Voucher extends Model
             $this->journalEntry()->update([
                 'status' => JournalStatus::UNPOSTED->value,
             ]);
+        }
+    }
+    public function denyRequestStatus()
+    {
+        $this->request_status = RequestStatuses::DENIED->value;
+        $this->save();
+        $this->refresh();
+        if ($this->type === VoucherType::DISBURSEMENT->value) {
+            //journal entry
+            $this->journalEntry()->update([
+                'status' => JournalStatus::VOID->value,
+            ]);
+            // payment request
+            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // voucher request
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
+                TransactionFlowStatus::REJECTED->value
+            );
+        } else {
+            // disbursement voucher
+            $disbursement = $this->disbursementVoucher;
+            $disbursement->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // payment request
+            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest->update([
+                'request_status' => RequestApprovalStatus::DENIED,
+            ]);
+            // voucher request
+            TransactionFlowService::updateTransactionFlow(
+                $this->id,
+                TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
+                TransactionFlowStatus::REJECTED->value
+            );
         }
     }
 }

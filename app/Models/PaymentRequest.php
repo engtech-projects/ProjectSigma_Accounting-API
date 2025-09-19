@@ -179,4 +179,15 @@ class PaymentRequest extends Model
             TransactionFlowStatus::DONE->value
         );
     }
+    public function denyRequestStatus()
+    {
+        $this->request_status = RequestStatuses::DENIED->value;
+        $this->save();
+        $this->refresh();
+        TransactionFlowService::updateTransactionFlow(
+            $this->id,
+            TransactionFlowName::PRF_APPROVAL->value,
+            TransactionFlowStatus::REJECTED->value
+        );
+    }
 }

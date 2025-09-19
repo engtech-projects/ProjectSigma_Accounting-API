@@ -6,7 +6,7 @@ use App\Models\StakeHolder;
 use App\Models\Stakeholders\Department;
 use App\Models\Stakeholders\Employee;
 use App\Models\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Http;
 
 class HrmsService

@@ -8,14 +8,13 @@ use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
 use App\Models\User;
 use App\Notifications\RequestTransactionNotification;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class TransactionFlowService
 {
     public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
-        DB::beginTransaction();
-        try {
+        return DB::transaction(function () use ($paymentRequestId, $transactionFlowName, $transactionStatus) {
             $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('unique_name', $transactionFlowName)
                 ->first();
@@ -45,15 +44,11 @@ class TransactionFlowService
                 }
             }
             TransactionFlow::where('payment_request_id', $paymentRequestId)
-            ->where('unique_name', $transactionFlowName)
-            ->update([
-                'status' => $transactionStatus,
-            ]);
-            DB::Commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+                ->where('unique_name', $transactionFlowName)
+                ->update([
+                    'status' => $transactionStatus,
+                ]);
+        });
     }
 
     /**
