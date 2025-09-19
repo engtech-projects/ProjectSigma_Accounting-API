@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\JournalStatus;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
 use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
@@ -66,7 +67,11 @@ class JournalEntryController extends Controller
                     'credit' => $detail['credit'] ?? null,
                 ]);
             }
-            TransactionFlowService::updateTransactionFlow($validatedData['payment_request_id'], TransactionFlowName::CREATE_JOURNAL_ENTRY->value);
+            TransactionFlowService::updateTransactionFlow(
+                $validatedData['payment_request_id'],
+                TransactionFlowName::CREATE_JOURNAL_ENTRY->value,
+                TransactionFlowStatus::DONE->value
+            );
             DB::commit();
 
             return new JsonResponse([

@@ -6,6 +6,7 @@ use App\Enums\ApprovalModels;
 use App\Enums\JournalStatus;
 use App\Enums\RequestApprovalStatus;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Http\Controllers\Controller;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
 use App\Notifications\RequestCashVoucherForApprovedNotification;
@@ -58,7 +59,8 @@ class ApproveApproval extends Controller
                     case ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name:
                         $this->transactionFlowService->updateTransactionFlow(
                             $model->id,
-                            TransactionFlowName::PRF_APPROVAL->value
+                            TransactionFlowName::PRF_APPROVAL->value,
+                            TransactionFlowStatus::DONE->value
                         );
                         $model->notify(new RequestPaymentForApprovedNotification(auth()->user()->token, $model));
                         break;
@@ -68,7 +70,8 @@ class ApproveApproval extends Controller
                         ]);
                         $this->transactionFlowService->updateTransactionFlow(
                             $model->journalEntry->paymentRequest->id,
-                            TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value
+                            TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
+                            TransactionFlowStatus::DONE->value
                         );
                         $model->notify(new RequestDisbursementVoucherForApprovedNotification(auth()->user()->token, $model));
                         break;
@@ -78,7 +81,8 @@ class ApproveApproval extends Controller
                         ]);
                         $this->transactionFlowService->updateTransactionFlow(
                             $model->journalEntry->paymentRequest->id,
-                            TransactionFlowName::CASH_VOUCHER_APPROVALS->value
+                            TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
+                            TransactionFlowStatus::DONE->value
                         );
                         $model->notify(new RequestCashVoucherForApprovedNotification(auth()->user()->token, $model));
                         break;

@@ -39,14 +39,49 @@
             border-radius: 5px;
             margin-top: 5px;
             background: #f9f9f9;
-            height: 100vh;
-            overflow-y: auto;
+            max-height: 90dvh;
+            overscroll-behavior: contain;
         }
-        iframe {
-            width: 100%;
-            height: 100vh;
-            border: none;
-            margin-top: 10px;
+        .file-row {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 8px;
+        }
+        .file-row a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+        .file-row a:hover {
+            text-decoration: underline;
+        }
+        .file-link {
+            display: block;
+            padding: 8px 12px;
+            margin: 0;
+            background: #f8f9fa;
+            border-radius: 4px 4px 0 0;
+            color: #212529;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #dee2e6;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+        }
+        .file-link:hover {
+            background: #e9ecef;
+            transform: translateX(2px);
+        }
+        .image-display {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            max-height: 85dvh;
+            object-fit: contain;
+        }
+        @media (max-width: 768px) {
+            .image-display {
+                height: 70dvh;
+            }
         }
     </style>
 </head>
@@ -58,7 +93,9 @@
     @if ($publicFilePaths)
         @php
             $grouped = collect($publicFilePaths)->groupBy(function ($item) {
-                return strtoupper(substr(strrchr($item, '.'), 1)); // Extracts file extension and converts it to uppercase
+                $path = parse_url($item, PHP_URL_PATH) ?? '';
+                $ext  = pathinfo($path, PATHINFO_EXTENSION) ?: '';
+                return $ext !== '' ? strtoupper($ext) : 'OTHER';
             });
         @endphp
 
@@ -66,11 +103,27 @@
             <button class="collapsible">{{ $type }} Files ({{ count($files) }})</button>
             <div class="content">
                 @foreach ($files as $file)
-                    @if (in_array($type, ['PDF', 'JPEG', 'JPG', 'PNG']))
-                        <iframe src="{{ $file }}"></iframe>
-                    @else
-                        <p><a href="{{ $file }}" target="_blank">{{ basename($file) }}</a></p>
-                    @endif
+                    @php
+                        $path   = parse_url($file, PHP_URL_PATH) ?? '';
+                        $scheme = parse_url($file, PHP_URL_SCHEME) ?? null;
+                        $ext    = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                        $name   = basename($path);
+                    @endphp
+                    @continue($scheme && !in_array($scheme, ['http','https']))
+                    <div class="file-row">
+                        @if (in_array($ext, ['jpeg', 'jpg', 'png', 'webp', 'gif']))
+                            <img
+                                src="{{ $file }}"
+                                alt="{{ $name }}"
+                                class="image-display"
+                                loading="lazy"
+                                decoding="async"
+                                referrerpolicy="no-referrer"
+                            />
+                        @else
+                            <a href="{{ $file }}" target="_blank" rel="noopener noreferrer" class="file-link">{{ $name }}</a>
+                        @endif
+                    </div>
                 @endforeach
             </div>
         @endforeach

@@ -6,10 +6,12 @@ use App\Enums\PaymentRequestType;
 use App\Enums\TransactionFlowStatus;
 use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
+use App\Models\User;
+use App\Notifications\RequestTransactionNotification;
 
 class TransactionFlowService
 {
-    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName)
+    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
         $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
@@ -34,12 +36,15 @@ class TransactionFlowService
                 ->first();
             if ($nextFlow) {
                 $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+                if ($nextFlow->user_id) {
+                    User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                }
             }
         }
         TransactionFlow::where('payment_request_id', $paymentRequestId)
             ->where('unique_name', $transactionFlowName)
             ->update([
-                'status' => TransactionFlowStatus::DONE->value,
+                'status' => $transactionStatus,
             ]);
     }
 

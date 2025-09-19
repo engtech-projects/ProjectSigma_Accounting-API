@@ -4,11 +4,11 @@ namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
-use App\Models\PaymentRequest;
+use App\Models\TransactionFlow;
 use Illuminate\Bus\Queueable;
 use Notification;
 
-class RequestPaymentForDeniedNotification extends Notification
+class RequestTransactionNotification extends Notification
 {
     use Queueable;
 
@@ -18,7 +18,7 @@ class RequestPaymentForDeniedNotification extends Notification
 
     public $id;
 
-    public function __construct($token, PaymentRequest $model)
+    public function __construct($token, TransactionFlow $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -47,9 +47,9 @@ class RequestPaymentForDeniedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A Payment Request has been DENIED.',
+            'message' => 'A request for transaction that needs your approval.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
+            'request_type' => ApprovalModels::ACCOUNTING_TRANSACTION->name,
             'request_id' => $this->model->id,
             'action' => 'View',
         ];
