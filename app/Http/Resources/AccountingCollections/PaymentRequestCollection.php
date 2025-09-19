@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Resources\AccountingCollections;
+
+use App\Enums\PaymentRequestType;
+use App\Http\Resources\ApprovalAttributeCollection;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class PaymentRequestCollection extends JsonResource
+{
+    /**
+     * Transform the resource collection into an array.
+     *
+     * @return array<int|string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return array_merge(parent::toArray($request), [
+            'date_filed' => $this->created_at_human,
+            'created_by_user' => $this->created_by_user_name,
+            'approvals' => new ApprovalAttributeCollection(['approvals' => $this?->approvals]),
+            'next_approval' => $this->getNextPendingApproval(),
+            'total_amount_formatted' => number_format($this->total, 2, '.', ','),
+            'transaction_flow' => $this->transactionFlow,
+            'stakeholder_name' => $this->when($this->type != PaymentRequestType::PAYROLL->value, function () {
+                $firstDetail = $this->details->first();
+                return $firstDetail && $firstDetail->stakeholder ? $firstDetail->stakeholder->name : null;
+            }),
+        ]);
+    }
+}
