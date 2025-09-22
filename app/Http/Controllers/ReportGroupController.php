@@ -95,10 +95,9 @@ class ReportGroupController extends Controller
         $validatedData = $request->validated();
         try {
             $reportGroup = DB::transaction(function () use ($id, $validatedData) {
-                $rg = ReportGroup::findOrFail($id);
-                $rg->update($validatedData);
-                return $rg;
+                return ReportGroup::where('id', $id)->update($validatedData);
             });
+            $reportGroup = ReportGroup::findOrFail($id);
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Report Group successfully updated.',
