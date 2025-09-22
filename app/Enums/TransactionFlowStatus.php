@@ -12,4 +12,5 @@ enum TransactionFlowStatus: string
     case DONE = 'done';
     case IN_PROGRESS = 'in_progress';
     case REJECTED = 'rejected';
+    case SKIPPED = 'skipped';
 }

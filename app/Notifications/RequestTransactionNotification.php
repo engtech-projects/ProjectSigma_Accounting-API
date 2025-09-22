@@ -2,20 +2,20 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyNextApproverChannel;
+use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
-use App\Models\PaymentRequest;
+use App\Models\TransactionFlow;
 use Illuminate\Bus\Queueable;
 use Notification;
 
-class RequestPaymentForApprovalNotification extends Notification
+class RequestTransactionNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
     public $id;
 
-    public function __construct($token, PaymentRequest $model)
+    public function __construct($token, TransactionFlow $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -28,7 +28,7 @@ class RequestPaymentForApprovalNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyNextApproverChannel::class];
+        return [HrmsNotifyUserChannel::class];
     }
 
     public function getToken()
@@ -44,9 +44,9 @@ class RequestPaymentForApprovalNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A Payment Request that needs your approval.',
+            'message' => 'A request for transaction that needs your approval.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name,
+            'request_type' => ApprovalModels::ACCOUNTING_TRANSACTION->name,
             'request_id' => $this->model->id,
             'action' => 'View',
         ];

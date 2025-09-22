@@ -6,17 +6,13 @@ use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\CashRequest;
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\MailMessage;
 use Notification;
 
 class RequestCashVoucherForDeniedNotification extends Notification
 {
     use Queueable;
-
     private $token;
-
     private $model;
-
     public $id;
 
     public function __construct($token, CashRequest $model)
@@ -38,17 +34,6 @@ class RequestCashVoucherForDeniedNotification extends Notification
     public function getToken()
     {
         return $this->token;
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage())
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
     }
 
     /**

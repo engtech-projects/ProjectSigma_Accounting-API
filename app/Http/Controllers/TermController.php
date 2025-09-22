@@ -6,7 +6,7 @@ use App\Http\Requests\Terms\TermsRequestFilter;
 use App\Http\Requests\Terms\TermsRequestStore;
 use App\Models\Term;
 use App\Services\TermsService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class TermController extends Controller

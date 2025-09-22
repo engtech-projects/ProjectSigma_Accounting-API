@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Enums\VoucherType;
 use App\Http\Requests\CashReceivedRequest;
 use App\Http\Requests\Voucher\CashVoucherRequestFilter;
@@ -20,14 +21,17 @@ use App\Models\FiscalYear;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
 use App\Models\PostingPeriod;
+use App\Models\TransactionFlow;
+use App\Models\User;
 use App\Models\Voucher;
 use App\Notifications\RequestCashVoucherForApprovalNotification;
 use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
+use App\Notifications\RequestTransactionNotification;
 use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
 use App\Services\VoucherService;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class VoucherController extends Controller
@@ -139,8 +143,8 @@ class VoucherController extends Controller
                 'entry_date' => Carbon::now(),
                 'journal_date' => Carbon::now(),
                 'status' => JournalStatus::FOR_PAYMENT->value,
-                'posting_period_id' => FiscalYear::currentPostingPeriod(),
-                'period_id' => PostingPeriod::current()->pluck('id')->first(),
+                'fiscal_year_id' => FiscalYear::currentPostingPeriod(),
+                'posting_period_id' => PostingPeriod::current()->pluck('id')->first(),
                 'reference_no' => $validatedData['reference_no'],
                 'payment_request_id' => $paymentRequestId,
                 'remarks' => $validatedData['particulars'],
@@ -176,7 +180,11 @@ class VoucherController extends Controller
         JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
             'status' => JournalStatus::FOR_PAYMENT->value,
         ]);
-        TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_CASH_VOUCHER->value);
+        TransactionFlowService::updateTransactionFlow(
+            $paymentRequestId,
+            TransactionFlowName::GENERATE_CASH_VOUCHER->value,
+            TransactionFlowStatus::DONE->value
+        );
         DB::commit();
         $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
@@ -201,7 +209,11 @@ class VoucherController extends Controller
             'status' => JournalStatus::POSTED->value,
         ]);
         DB::commit();
-
+        TransactionFlowService::updateTransactionFlow(
+            $voucher->journalEntry->payment_request_id,
+            TransactionFlowName::PAYMENTS->value,
+            TransactionFlowStatus::DONE->value
+        );
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher Updated',
@@ -234,7 +246,17 @@ class VoucherController extends Controller
             'status' => JournalStatus::FOR_PAYMENT->value,
         ]);
         $paymentRequestId = $journalEntry->payment_request_id;
-        TransactionFlowService::updateTransactionFlow($paymentRequestId, TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value);
+        TransactionFlowService::updateTransactionFlow(
+            $paymentRequestId,
+            TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value,
+            TransactionFlowStatus::DONE->value
+        );
+        $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
+            ->where('unique_name', TransactionFlowName::CHECK_AND_REVIEW_DISBURSEMENT_VOUCHER->value)
+            ->first();
+        if ($nextFlow->user_id) {
+            User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+        }
         DB::commit();
         $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
         return new JsonResponse([

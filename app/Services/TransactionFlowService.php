@@ -6,41 +6,49 @@ use App\Enums\PaymentRequestType;
 use App\Enums\TransactionFlowStatus;
 use App\Models\TransactionFlow;
 use App\Models\TransactionFlowModel;
+use App\Models\User;
+use App\Notifications\RequestTransactionNotification;
+use Illuminate\Support\Facades\DB;
 
 class TransactionFlowService
 {
-    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName)
+    public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
-        $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
-            ->where('unique_name', $transactionFlowName)
-            ->first();
-        if (! $currentFlow) {
-            throw new \Exception('Transaction flow not found');
-        }
-        if ($currentFlow->priority > 1) {
-            $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('priority', '<', $currentFlow->priority)
-                ->get();
-            $pendingFlows = $previousFlows->filter(function ($flow) {
-                return $flow->status !== TransactionFlowStatus::DONE->value;
-            });
-            if ($pendingFlows->isNotEmpty()) {
-                $pendingCount = $pendingFlows->count();
-                $pendingPriorities = $pendingFlows->pluck('priority')->implode(', ');
-                throw new \Exception("Cannot update priority {$currentFlow->priority}. There are {$pendingCount} pending flows (priorities: {$pendingPriorities}) that must be completed first.");
-            }
-            $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('priority', $currentFlow->priority + 1)
+        return DB::transaction(function () use ($paymentRequestId, $transactionFlowName, $transactionStatus) {
+            $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
+                ->where('unique_name', $transactionFlowName)
                 ->first();
-            if ($nextFlow) {
-                $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+            if (! $currentFlow) {
+                throw new \Exception('Transaction flow not found');
             }
-        }
-        TransactionFlow::where('payment_request_id', $paymentRequestId)
-            ->where('unique_name', $transactionFlowName)
-            ->update([
-                'status' => TransactionFlowStatus::DONE->value,
-            ]);
+            if ($currentFlow->priority > 1) {
+                $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
+                    ->where('priority', '<', $currentFlow->priority)
+                    ->get();
+                $pendingFlows = $previousFlows->filter(function ($flow) {
+                    return $flow->status === TransactionFlowStatus::PENDING->value;
+                });
+                if ($pendingFlows->isNotEmpty()) {
+                    $pendingCount = $pendingFlows->count();
+                    $pendingPriorities = $pendingFlows->pluck('priority')->implode(', ');
+                    throw new \Exception("Cannot update priority {$currentFlow->priority}. There are {$pendingCount} pending flows (priorities: {$pendingPriorities}) that must be completed first.");
+                }
+                $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
+                    ->where('priority', $currentFlow->priority + 1)
+                    ->first();
+                if ($nextFlow) {
+                    $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+                    if ($nextFlow->user_id) {
+                        User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                    }
+                }
+            }
+            TransactionFlow::where('payment_request_id', $paymentRequestId)
+                ->where('unique_name', $transactionFlowName)
+                ->update([
+                    'status' => $transactionStatus,
+                ]);
+        });
     }
 
     /**

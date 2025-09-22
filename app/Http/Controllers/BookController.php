@@ -8,7 +8,7 @@ use App\Http\Requests\Book\BookRequestUpdate;
 use App\Http\Resources\BookCollection;
 use App\Models\Book;
 use App\Services\BookService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller

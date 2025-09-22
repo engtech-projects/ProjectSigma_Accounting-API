@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\JournalStatus;
 use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Http\Requests\JournalEntry\JournalEntryRequestFilter;
 use App\Http\Requests\JournalEntry\JournalEntryRequestStore;
 use App\Http\Requests\JournalEntry\JournalEntryRequestUpdate;
@@ -15,7 +16,7 @@ use App\Models\PaymentRequest;
 use App\Models\PostingPeriod;
 use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class JournalEntryController extends Controller
@@ -46,7 +47,8 @@ class JournalEntryController extends Controller
             $validatedData = $request->validated();
             $validatedData['id'] = FiscalYear::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::OPEN->value;
-            $validatedData['fiscal_year_id'] = PostingPeriod::current()->pluck('id')->first();
+            $validatedData['fiscal_year_id'] = FiscalYear::current()->pluck('id')->first();
+            $validatedData['posting_period_id'] = PostingPeriod::where('fiscal_year_id', $validatedData['fiscal_year_id'])->pluck('id')->last();
             $validatedData['journal_date'] = PaymentRequest::find($validatedData['payment_request_id'])->request_date;
             if ($validatedData['fiscal_year_id'] == null) {
                 return new JsonResponse([
@@ -66,7 +68,11 @@ class JournalEntryController extends Controller
                     'credit' => $detail['credit'] ?? null,
                 ]);
             }
-            TransactionFlowService::updateTransactionFlow($validatedData['payment_request_id'], TransactionFlowName::CREATE_JOURNAL_ENTRY->value);
+            TransactionFlowService::updateTransactionFlow(
+                $validatedData['payment_request_id'],
+                TransactionFlowName::CREATE_JOURNAL_ENTRY->value,
+                TransactionFlowStatus::DONE->value
+            );
             DB::commit();
 
             return new JsonResponse([
