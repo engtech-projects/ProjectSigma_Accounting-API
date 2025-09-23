@@ -45,6 +45,9 @@ class TransactionFLowModelController extends Controller
                 if (! $updateResult) {
                     return response()->json(['error' => 'Failed to update transaction flow'], 500);
                 }
+                return response()->json([
+                    'message' => 'Transaction Flow Successfully Updated',
+                ], 200);
             }
             if (isset($validatedData['update_type']) && $validatedData['update_type'] == 'status') {
                 $transactionFlow = TransactionFlow::find($validatedData['flow_id']);
@@ -76,13 +79,15 @@ class TransactionFLowModelController extends Controller
                     }
                 }
                 $transactionFlow->refresh();
+                return response()->json([
+                    'message' => 'Transaction Flow Successfully '.ucfirst($validatedData['status'] ?? ""),
+                ], 200);
             }
-
-            return response()->json([
-                'message' => 'Transaction Flow Successfully '.ucfirst($validatedData['status']),
-            ], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Update failed: '.$e->getMessage()], 500);
         }
+        return response()->json([
+            'message' => 'No Response',
+        ], 500);
     }
 }

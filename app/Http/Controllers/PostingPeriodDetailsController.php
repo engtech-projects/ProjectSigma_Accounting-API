@@ -6,7 +6,7 @@ use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsFilter;
 use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsStore;
 use App\Models\PostingPeriod;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

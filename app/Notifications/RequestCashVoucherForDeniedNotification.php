@@ -11,11 +11,8 @@ use Notification;
 class RequestCashVoucherForDeniedNotification extends Notification
 {
     use Queueable;
-
     private $token;
-
     private $model;
-
     public $id;
 
     public function __construct($token, CashRequest $model)

@@ -4,8 +4,11 @@ namespace App\Models;
 
 use App\Enums\PaymentRequestType;
 use App\Enums\RequestStatuses;
+use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 use App\Http\Traits\HasApproval;
 use App\Http\Traits\ModelHelpers;
+use App\Services\TransactionFlowService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -164,5 +167,27 @@ class PaymentRequest extends Model
     public function getTaxableAmountAttribute()
     {
         return floatval($this->total) - floatval($this->total_vat_amount);
+    }
+    public function completeRequestStatus()
+    {
+        $this->request_status = RequestStatuses::APPROVED->value;
+        $this->save();
+        $this->refresh();
+        TransactionFlowService::updateTransactionFlow(
+            $this->id,
+            TransactionFlowName::PRF_APPROVAL->value,
+            TransactionFlowStatus::DONE->value
+        );
+    }
+    public function denyRequestStatus()
+    {
+        $this->request_status = RequestStatuses::DENIED->value;
+        $this->save();
+        $this->refresh();
+        TransactionFlowService::updateTransactionFlow(
+            $this->id,
+            TransactionFlowName::PRF_APPROVAL->value,
+            TransactionFlowStatus::REJECTED->value
+        );
     }
 }

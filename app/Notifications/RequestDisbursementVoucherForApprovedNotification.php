@@ -11,13 +11,8 @@ use Notification;
 class RequestDisbursementVoucherForApprovedNotification extends Notification
 {
     use Queueable;
-
     private $token;
-
-    private $request;
-
     private $model;
-
     public $id;
 
     public function __construct($token, DisbursementRequest $model)

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class SubGroupSeeder extends Seeder

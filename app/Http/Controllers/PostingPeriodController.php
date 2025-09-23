@@ -7,7 +7,7 @@ use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
 use App\Http\Resources\PostingPeriodCollection;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class PostingPeriodController extends Controller

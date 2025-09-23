@@ -9,7 +9,7 @@ use App\Http\Requests\Account\AccountRequestUpdate;
 use App\Http\Resources\AccountCollection;
 use App\Models\Account;
 use App\Services\AccountService;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class AccountsController extends Controller

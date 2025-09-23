@@ -19,7 +19,7 @@ use App\Services\PayrollService;
 use App\Services\StakeHolderService;
 use App\Services\TransactionFlowService;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 
 class PayrollRequestController extends Controller
