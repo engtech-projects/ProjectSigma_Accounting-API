@@ -18,6 +18,12 @@ class Kernel extends ConsoleKernel
             ->onOneServer()
             ->withoutOverlapping()
             ->runInBackground();
+        $schedule->command('fiscal-year:create')
+            ->yearlyOn(12, 1, '00:10')
+            ->timezone(config('app.timezone'))
+            ->onOneServer()
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**
