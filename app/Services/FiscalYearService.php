@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Log;
 class FiscalYearService
 {
     /**
-     * Create a new fiscal year
-     */
-    public static function create(array $data): FiscalYear
-    {
-        return FiscalYear::create($data);
-    }
-
-    /**
      * Create fiscal year for the next year if needed
      */
     public static function createNextYearFiscalYear(): FiscalYear
