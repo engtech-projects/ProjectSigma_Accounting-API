@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Actions\Approvals;
 use App\Enums\ApprovalModels;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
-use App\Notifications\RequestCashVoucherForApprovalNotification;
-use App\Notifications\RequestCashVoucherForApprovedNotification;
-use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
-use App\Notifications\RequestDisbursementVoucherForApprovedNotification;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestPaymentForApprovedNotification;
+use App\Notifications\RequestVoucherForApprovalNotification;
+use App\Notifications\RequestVoucherForApprovedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,8 +38,8 @@ class ApproveApproval extends Controller
         if ($nextApproval) {
             $notificationMap = [
                 ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name => RequestPaymentForApprovalNotification::class,
-                ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestDisbursementVoucherForApprovalNotification::class,
-                ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestCashVoucherForApprovalNotification::class,
+                ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestVoucherForApprovalNotification::class,
+                ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestVoucherForApprovalNotification::class,
             ];
             if (isset($notificationMap[$modelType])) {
                 $model->notifyNextApprover($notificationMap[$modelType]);
@@ -49,8 +47,8 @@ class ApproveApproval extends Controller
         } else {
             $notificationMap = [
                 ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name => RequestPaymentForApprovedNotification::class,
-                ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestDisbursementVoucherForApprovedNotification::class,
-                ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestCashVoucherForApprovedNotification::class,
+                ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestVoucherForApprovedNotification::class,
+                ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestVoucherForApprovedNotification::class,
             ];
             if (isset($notificationMap[$modelType])) {
                 $model->notifyCreator($notificationMap[$modelType]);

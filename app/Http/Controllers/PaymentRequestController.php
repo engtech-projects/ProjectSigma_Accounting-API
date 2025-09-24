@@ -156,9 +156,11 @@ class PaymentRequestController extends Controller
             ]);
             $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
-            foreach ($request->attachment_file_names as $file) {
-                $path = 'prf/'.$paymentRequest->id.'/'.$file;
-                Storage::move('temp/'.$file, $path);
+            if ($request->attachment_file_names) {
+                foreach ($request->attachment_file_names as $file) {
+                    $path = 'prf/'.$paymentRequest->id.'/'.$file;
+                    Storage::move('temp/'.$file, $path);
+                }
             }
 
             return new JsonResponse([

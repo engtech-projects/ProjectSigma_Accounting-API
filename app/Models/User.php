@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Traits\HasApproval;
 use App\Models\Stakeholders\Employee;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -17,6 +18,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use Authorizable;
     use HasApiTokens;
+    use HasApproval;
     use HasFactory;
     use Notifiable;
     use SoftDeletes;
@@ -94,5 +96,10 @@ class User extends Authenticatable
     public function employee(): HasOne
     {
         return $this->hasOne(Employee::class, 'source_id');
+    }
+
+    public function receiveBroadcastNotification()
+    {
+        return 'users.' . $this->id;
     }
 }

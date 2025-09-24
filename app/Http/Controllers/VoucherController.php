@@ -15,8 +15,6 @@ use App\Http\Requests\Voucher\DisbursementVoucherRequestStore;
 use App\Http\Requests\Voucher\VoucherFilter;
 use App\Http\Resources\AccountingCollections\VoucherCollection;
 use App\Models\Book;
-use App\Models\CashRequest;
-use App\Models\DisbursementRequest;
 use App\Models\FiscalYear;
 use App\Models\JournalEntry;
 use App\Models\PaymentRequest;
@@ -24,9 +22,8 @@ use App\Models\PostingPeriod;
 use App\Models\TransactionFlow;
 use App\Models\User;
 use App\Models\Voucher;
-use App\Notifications\RequestCashVoucherForApprovalNotification;
-use App\Notifications\RequestDisbursementVoucherForApprovalNotification;
 use App\Notifications\RequestTransactionNotification;
+use App\Notifications\RequestVoucherForApprovalNotification;
 use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
 use App\Services\VoucherService;
@@ -157,7 +154,7 @@ class VoucherController extends Controller
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
         $validatedData['journal_entry_id'] = $journalEntry->id;
         $validatedData['created_by'] = auth()->user()->id;
-        $voucher = CashRequest::create($validatedData);
+        $voucher = Voucher::create($validatedData);
         foreach ($validatedData['details'] as $detail) {
             $voucher->details()->create([
                 'account_id' => $detail['account_id'],
@@ -186,7 +183,7 @@ class VoucherController extends Controller
             TransactionFlowStatus::DONE->value
         );
         DB::commit();
-        $voucher->notify(new RequestCashVoucherForApprovalNotification(auth()->user()->token, $voucher));
+        $voucher->notify(new RequestVoucherForApprovalNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -198,7 +195,7 @@ class VoucherController extends Controller
     {
         DB::beginTransaction();
         $validatedData = $request->validated();
-        $voucher = CashRequest::findOrFail($validatedData['voucher_id']);
+        $voucher = Voucher::findOrFail($validatedData['voucher_id']);
         $voucher->update([
             'received_by' => $validatedData['received_by'],
             'received_date' => $validatedData['received_date'],
@@ -230,7 +227,7 @@ class VoucherController extends Controller
         $validatedData['date_encoded'] = Carbon::now();
         $validatedData['request_status'] = RequestStatuses::PENDING->value;
         $validatedData['created_by'] = auth()->user()->id;
-        $voucher = DisbursementRequest::create($validatedData);
+        $voucher = Voucher::create($validatedData);
         foreach ($validatedData['details'] as $detail) {
             $voucher->details()->create([
                 'account_id' => $detail['account_id'],
@@ -243,7 +240,7 @@ class VoucherController extends Controller
         $journalEntry = JournalEntry::find($validatedData['journal_entry_id']);
         $journalEntry->update([
             'entry_date' => $validatedData['voucher_date'],
-            'status' => JournalStatus::FOR_PAYMENT->value,
+            'status' => JournalStatus::UNPOSTED->value,
         ]);
         $paymentRequestId = $journalEntry->payment_request_id;
         TransactionFlowService::updateTransactionFlow(
@@ -258,7 +255,7 @@ class VoucherController extends Controller
             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
         }
         DB::commit();
-        $voucher->notify(new RequestDisbursementVoucherForApprovalNotification(auth()->user()->token, $voucher));
+        $voucher->notify(new RequestVoucherForApprovalNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
