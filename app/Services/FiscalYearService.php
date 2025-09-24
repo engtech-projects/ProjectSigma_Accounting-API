@@ -26,7 +26,6 @@ class FiscalYearService
         return DB::transaction(function () {
             $currentDate = Carbon::now();
             $nextYear = $currentDate->copy()->addYear();
-
             $existingFiscalYear = FiscalYear::where('period_start', '<=', $nextYear->startOfYear())
                 ->where('period_end', '>=', $nextYear->endOfYear())
                 ->first();
@@ -88,29 +87,5 @@ class FiscalYearService
             $query->where('period_end', '<=', $filters['period_end']);
         }
         return $query->withDetails()->orderByDesc('created_at')->paginate(config('services.pagination.limit'));
-    }
-
-    /**
-     * Find fiscal year by ID
-     */
-    public static function findById(int $id): ?FiscalYear
-    {
-        return FiscalYear::find($id);
-    }
-
-    /**
-     * Update fiscal year
-     */
-    public static function update(FiscalYear $fiscalYear, array $data): bool
-    {
-        return $fiscalYear->update($data);
-    }
-
-    /**
-     * Delete fiscal year
-     */
-    public static function delete(FiscalYear $fiscalYear): bool
-    {
-        return $fiscalYear->delete();
     }
 }
