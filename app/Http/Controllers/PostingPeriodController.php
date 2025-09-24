@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostingPeriod\PostingPeriodRequestFilter;
-use App\Http\Requests\PostingPeriod\PostingPeriodRequestStore;
+use App\Http\Requests\PostingPeriodDetails\PostingPeriodDetailsFilter;
 use App\Http\Resources\PostingPeriodCollection;
 use App\Models\PostingPeriod;
 use App\Services\PostingPeriodService;
@@ -21,13 +21,13 @@ class PostingPeriodController extends Controller
         try {
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Posting Periods Successfully Retrieved.',
+                'message' => 'Fiscal Year Successfully Retrieved.',
                 'data' => PostingPeriodCollection::collection(PostingPeriodService::getPaginated($validatedData))->response()->getData(true),
             ], 200);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Account Groups Failed to Retrieve.',
+                'message' => 'Fiscal Year Failed to Retrieve.',
                 'data' => null,
             ], 500);
         }
@@ -36,7 +36,7 @@ class PostingPeriodController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PostingPeriodRequestStore $request)
+    public function store(PostingPeriodDetailsFilter $request)
     {
         $validatedData = $request->validated();
         try {
@@ -46,7 +46,7 @@ class PostingPeriodController extends Controller
 
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Posting Period Successfully Created.',
+                'message' => 'Fiscal Year Successfully Created.',
                 'data' => $postingPeriod,
             ], 200);
         } catch (\Exception $e) {
@@ -54,7 +54,7 @@ class PostingPeriodController extends Controller
 
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Posting Period Failed to Create.',
+                'message' => 'Fiscal Year Failed to Create.',
                 'data' => null,
             ], 500);
         }
@@ -66,7 +66,7 @@ class PostingPeriodController extends Controller
         if (! $postingPeriod) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Posting Period Not Found.',
+                'message' => 'Fiscal Year Not Found.',
                 'data' => null,
             ], 404);
         }

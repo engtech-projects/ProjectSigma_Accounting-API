@@ -22,7 +22,9 @@ class PostingPeriodDetailsFilter extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'fiscal_year_id' => 'required',
+            'period_start' => 'required|date',
+            'period_end' => 'required|date|after:period_start',
         ];
     }
 }
