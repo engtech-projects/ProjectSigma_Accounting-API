@@ -17,6 +17,7 @@ use App\Models\StakeHolder;
 use App\Models\TransactionLog;
 use App\Models\User;
 use App\Notifications\RequestPaymentForApprovalNotification;
+use App\Notifications\RequestPaymentForCreationNotification;
 use App\Notifications\RequestTransactionNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
@@ -154,7 +155,7 @@ class PaymentRequestController extends Controller
                 'description' => 'Payment Request Created',
                 'created_by' => auth()->user()->id,
             ]);
-            auth()->user()->notify(new RequestTransactionNotification(auth()->user()->token, $paymentRequest));
+            auth()->user()->notify(new RequestPaymentForCreationNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
             if ($request->attachment_file_names) {
                 foreach ($request->attachment_file_names as $file) {

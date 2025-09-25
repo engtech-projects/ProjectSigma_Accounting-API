@@ -22,8 +22,10 @@ use App\Models\PostingPeriod;
 use App\Models\TransactionFlow;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Notifications\RequestDisbursementTransactionNotification;
 use App\Notifications\RequestTransactionNotification;
 use App\Notifications\RequestVoucherForApprovalNotification;
+use App\Notifications\RequestVoucherTransactionNotification;
 use App\Services\JournalEntryService;
 use App\Services\TransactionFlowService;
 use App\Services\VoucherService;
@@ -183,7 +185,7 @@ class VoucherController extends Controller
             TransactionFlowStatus::DONE->value
         );
         DB::commit();
-        auth()->user()->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
+        auth()->user()->notify(new RequestVoucherTransactionNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -255,7 +257,7 @@ class VoucherController extends Controller
             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
         }
         DB::commit();
-        auth()->user()->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
+        auth()->user()->notify(new RequestVoucherTransactionNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
