@@ -154,7 +154,7 @@ class PaymentRequestController extends Controller
                 'description' => 'Payment Request Created',
                 'created_by' => auth()->user()->id,
             ]);
-            $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
+            User::find(auth()->user()->id)->notify(new RequestTransactionNotification(auth()->user()->token, $paymentRequest));
             DB::commit();
             if ($request->attachment_file_names) {
                 foreach ($request->attachment_file_names as $file) {

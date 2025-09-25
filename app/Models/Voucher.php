@@ -25,7 +25,6 @@ class Voucher extends Model
     use HasFactory;
     use HasTransitions;
     use ModelHelpers;
-    use Notifiable;
     use SoftDeletes;
 
     protected $table = 'voucher';

@@ -22,7 +22,6 @@ class PaymentRequest extends Model
     use HasApproval;
     use HasFactory;
     use ModelHelpers;
-    use Notifiable;
     use SoftDeletes;
 
     protected $table = 'payment_request';
