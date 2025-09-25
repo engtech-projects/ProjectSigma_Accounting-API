@@ -183,7 +183,7 @@ class VoucherController extends Controller
             TransactionFlowStatus::DONE->value
         );
         DB::commit();
-        User::find(auth()->user()->id)->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
+        auth()->user()->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
@@ -255,7 +255,7 @@ class VoucherController extends Controller
             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
         }
         DB::commit();
-        User::find(auth()->user()->id)->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
+        auth()->user()->notify(new RequestTransactionNotification(auth()->user()->token, $voucher));
         return new JsonResponse([
             'success' => true,
             'message' => 'Voucher created',
