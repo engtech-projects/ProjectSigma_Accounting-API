@@ -10,7 +10,9 @@ enum TransactionFlowName: string
 
     case CREATE_PAYMENT_REQUEST = 'create_payment_request';
     case CREATE_PAYMENT_REQUEST_RECEIVED = 'create_payment_request_received';
-    case CHECK_DOCUMENTS = 'check_documents';
+    case CHECK_DOCUMENTS_FOR_PAYMENT_REQUEST = 'check_documents_prf';
+    case CHECK_DOCUMENTS_FOR_PAYMENT_ORDER = 'check_documents_po';
+    case CHECK_DOCUMENTS_FOR_PAYROLL = 'check_documents_payroll';
     case CHECK_AND_SIGN_DISBURSEMENT_CHECK_LIST = 'check_and_sign_disbursement_check_list';
     case CHECK_REQUEST_BUDGET = 'check_request_budget';
     case PRF_APPROVAL = 'prf_approval';
