@@ -67,7 +67,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('particular-group', ParticularGroupController::class);
     Route::resource('payment-request', PaymentRequestController::class);
     Route::resource('terms', TermController::class);
-    Route::get('report-group-paginated', [ReportGroupController::class, 'paginated']);
+    Route::get('paginated-report-group', [ReportGroupController::class, 'paginated']);
     Route::resource('report-group', ReportGroupController::class);
     Route::resource('withholding-tax', WithHoldingTaxController::class);
 

@@ -2,35 +2,29 @@
 
 namespace App\Services;
 
-use App\Http\Resources\ReportGroupCollection;
 use App\Models\ReportGroup;
 
 class ReportGroupService
 {
-    public static function getPaginated(array $paginatedData)
+    public static function getPaginated(array $filters = [])
     {
         $query = ReportGroup::query();
-        
-        // Search by key (searches both name and description)
-        if (!empty($paginatedData['key'])) {
-            $query->where(function ($q) use ($paginatedData) {
-                $q->where('name', 'like', '%' . $paginatedData['key'] . '%')
-                  ->orWhere('description', 'like', '%' . $paginatedData['key'] . '%');
+
+        if (!empty($filters['key'])) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('name', 'like', '%' . $filters['key'] . '%')
+                    ->orWhere('description', 'like', '%' . $filters['key'] . '%');
             });
         }
-        
-        // Specific name filter
-        if (!empty($paginatedData['name'])) {
-            $query->where('name', 'like', '%' . $paginatedData['name'] . '%');
-        }
-        
-        // Specific description filter  
-        if (!empty($paginatedData['description'])) {
-            $query->where('description', 'like', '%' . $paginatedData['description'] . '%');
-        }
-        
-        $paginatedResults = $query->paginate(config('services.pagination.limit', 15));
 
-        return ReportGroupCollection::collection($paginatedResults)->response()->getData(true);
+        if (!empty($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        if (!empty($filters['description'])) {
+            $query->where('description', 'like', '%' . $filters['description'] . '%');
+        }
+
+        return $query->orderByDesc('created_at')->paginate(config('services.pagination.limit'));
     }
 }
