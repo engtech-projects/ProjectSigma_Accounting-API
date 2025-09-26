@@ -34,7 +34,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupCollection::collection( ReportGroupService::getPaginated($validatedData))->response()->getData(true),
+            'data' => ReportGroupCollection::collection(ReportGroupService::getPaginated($validatedData))->response()->getData(true),
         ], 200);
     }
 
@@ -89,40 +89,19 @@ class ReportGroupController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ReportGroup $reportGroup)
-    {
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Report Group fetched successfully',
-            'data' => $reportGroup,
-        ], 200);
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(ReportGroupStoreRequest $request, ReportGroup $reportGroup)
     {
         $validatedData = $request->validated();
-        try {
-            $reportGroup = DB::transaction(function () use ($reportGroup, $validatedData) {
-                return ReportGroup::where('id', $reportGroup->id)->update($validatedData);
-            });
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Report Group successfully updated.',
-                'data' => $reportGroup,
-            ], 200);
-        } catch (\Throwable $e) {
-            report($e);
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Report Group failed to update.',
-                'data' => null,
-            ], 500);
-        }
+        $reportGroup = DB::transaction(function () use ($reportGroup, $validatedData) {
+            return ReportGroup::where('id', $reportGroup->id)->update($validatedData);
+        });
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Report Group successfully updated.',
+            'data' => $reportGroup,
+        ], 200);
     }
 
     /**
@@ -130,11 +109,20 @@ class ReportGroupController extends Controller
      */
     public function destroy(ReportGroup $reportGroup)
     {
-        DB::transaction(fn () => $reportGroup->delete());
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Report Group deleted successfully',
-            'data' => null,
-        ], 200);
+        try {
+            DB::transaction(fn () => $reportGroup->delete());
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Report Group deleted successfully',
+                'data' => null,
+            ], 200);
+        } catch (\Throwable $e) {
+            report($e);
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Report Group failed to delete.',
+                'data' => null,
+            ], 500);
+        }
     }
 }
