@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyUserChannel;
-use App\Enums\ApprovalModels;
-use App\Models\DisbursementRequest;
 use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
 use Notification;

@@ -16,7 +16,6 @@ use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use App\Models\TransactionLog;
 use App\Models\User;
-use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestPaymentForCreationNotification;
 use App\Notifications\RequestTransactionNotification;
 use App\Services\PaymentServices;
