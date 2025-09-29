@@ -30,11 +30,9 @@ class ReportGroupController extends Controller
     public function paginated(ReportGroupRequestFilter $reportGroupRequestFilter)
     {
         $validatedData = $reportGroupRequestFilter->validated();
-
         $reportGroups = ReportGroup::filter($validatedData)
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
-
         return ReportGroupCollection::collection($reportGroups)
             ->additional([
                 'success' => true,
