@@ -30,15 +30,16 @@ class ReportGroupController extends Controller
     public function paginated(ReportGroupRequestFilter $reportGroupRequestFilter)
     {
         $validatedData = $reportGroupRequestFilter->validated();
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupCollection::collection(
-                ReportGroup::filter($validatedData)
-                    ->orderByDesc('created_at')
-                    ->paginate(config('services.pagination.limit'))
-            )->response()->getData(true),
-        ], 200);
+
+        $reportGroups = ReportGroup::filter($validatedData)
+            ->orderByDesc('created_at')
+            ->paginate(config('services.pagination.limit'));
+
+        return ReportGroupCollection::collection($reportGroups)
+            ->additional([
+                'success' => true,
+                'message' => 'Report Groups fetched successfully'
+            ]);
     }
 
     /**
@@ -47,15 +48,14 @@ class ReportGroupController extends Controller
     public function searchReportGroups(ReportGroupSearchRequest $request)
     {
         $validatedData = $request->validated();
-        return new JsonResponse([
+        return ReportGroupCollection::collection(
+            ReportGroup::searchByName($validatedData['name'])
+                ->limit(10)
+                ->get()
+        )->additional([
             'success' => true,
-            'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupCollection::collection(
-                ReportGroup::searchByName($validatedData['name'])
-                    ->limit(10)
-                    ->get()
-            ),
-        ], 200);
+            'message' => 'Report Groups fetched successfully'
+        ]);
     }
 
     /**
@@ -79,11 +79,10 @@ class ReportGroupController extends Controller
      */
     public function show(ReportGroup $reportGroup)
     {
-        return new JsonResponse([
+        return ReportGroupCollection::make($reportGroup)->additional([
             'success' => true,
             'message' => 'Report Group fetched successfully',
-            'data' => $reportGroup,
-        ], 200);
+        ]);
     }
 
     /**
@@ -95,11 +94,10 @@ class ReportGroupController extends Controller
         DB::transaction(function () use ($validatedData, $reportGroup) {
             $reportGroup->update($validatedData);
         });
-        return new JsonResponse([
+        return ReportGroupCollection::make($reportGroup)->additional([
             'success' => true,
             'message' => 'Report Group successfully updated.',
-            'data' => $reportGroup->fresh(),
-        ], 200);
+        ]);
     }
 
     /**
@@ -107,9 +105,16 @@ class ReportGroupController extends Controller
      */
     public function destroy(ReportGroup $reportGroup)
     {
-        DB::transaction(function () use ($reportGroup) {
-            $reportGroup->delete();
+        $deleted = DB::transaction(function () use ($reportGroup) {
+            return $reportGroup->delete();
         });
+        if (!$deleted) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Failed to delete Report Group',
+                'data' => null,
+            ], 500);
+        }
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group deleted successfully',
