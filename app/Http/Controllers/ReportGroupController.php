@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ReportGroup\ReportGroupRequestFilter;
 use App\Http\Requests\ReportGroup\ReportGroupSearchRequest;
 use App\Http\Requests\ReportGroup\ReportGroupStoreRequest;
+use App\Http\Resources\ReportGroupResource;
 use App\Http\Resources\ReportGroupCollection;
 use App\Models\ReportGroup;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +69,7 @@ class ReportGroupController extends Controller
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group created successfully',
-            'data' => $reportGroup,
+            'data' => new ReportGroupResource($reportGroup),
         ], 201);
     }
 
@@ -91,8 +92,9 @@ class ReportGroupController extends Controller
         $validatedData = $request->validated();
         DB::transaction(function () use ($validatedData, $reportGroup) {
             $reportGroup->update($validatedData);
+            return $reportGroup->refresh();
         });
-        return ReportGroupCollection::make($reportGroup)->additional([
+        return ReportGroupResource::make($reportGroup)->additional([
             'success' => true,
             'message' => 'Report Group successfully updated.',
         ]);
