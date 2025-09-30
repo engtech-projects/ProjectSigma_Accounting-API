@@ -19,6 +19,38 @@ class ReportGroup extends Model
         'description',
     ];
 
+    public function scopeSearchByKey($query, string $key)
+    {
+        return $query->where(function ($q) use ($key) {
+            $q->where('name', 'like', '%' . $key . '%')
+                ->orWhere('description', 'like', '%' . $key . '%');
+        });
+    }
+
+    public function scopeSearchByName($query, string $name)
+    {
+        return $query->where('name', 'like', '%' . $name . '%');
+    }
+
+    public function scopeSearchByDescription($query, string $description)
+    {
+        return $query->where('description', 'like', '%' . $description . '%');
+    }
+
+    public function scopeFilter($query, array $filters = [])
+    {
+        if (!empty($filters['key'])) {
+            $query->searchByKey($filters['key']);
+        }
+        if (!empty($filters['name'])) {
+            $query->searchByName($filters['name']);
+        }
+        if (!empty($filters['description'])) {
+            $query->searchByDescription($filters['description']);
+        }
+        return $query;
+    }
+
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
