@@ -13,7 +13,6 @@ class RequestPaymentForCreationNotification extends Notification
     use Queueable;
     private $token;
     private $model;
-    public $id;
     public function __construct($token, PaymentRequest $model)
     {
         $this->token = $token;
