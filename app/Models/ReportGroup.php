@@ -13,7 +13,6 @@ class ReportGroup extends Model
     use SoftDeletes;
 
     protected $table = 'report_groups';
-    public $timestamps = true;
 
     protected $fillable = [
         'name',

@@ -91,9 +91,8 @@ class ReportGroupController extends Controller
         $validatedData = $request->validated();
         DB::transaction(function () use ($validatedData, $reportGroup) {
             $reportGroup->update($validatedData);
-            return $reportGroup->refresh();
         });
-        return ReportGroupResource::make($reportGroup)->additional([
+        return ReportGroupResource::make($reportGroup->refresh())->additional([
             'success' => true,
             'message' => 'Report Group Updated Successfully.',
         ]);
