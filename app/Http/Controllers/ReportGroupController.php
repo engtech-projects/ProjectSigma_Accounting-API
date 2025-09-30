@@ -66,11 +66,10 @@ class ReportGroupController extends Controller
         $reportGroup = DB::transaction(function () use ($validatedData) {
             return ReportGroup::create($validatedData);
         });
-        return new JsonResponse([
+        return ReportGroupResource::make($reportGroup)->additional([
             'success' => true,
-            'message' => 'Report Group created successfully',
-            'data' => new ReportGroupResource($reportGroup),
-        ], 201);
+            'message' => 'Report Group Created Successfully',
+        ]);
     }
 
     /**
@@ -96,7 +95,7 @@ class ReportGroupController extends Controller
         });
         return ReportGroupResource::make($reportGroup)->additional([
             'success' => true,
-            'message' => 'Report Group successfully updated.',
+            'message' => 'Report Group Updated Successfully.',
         ]);
     }
 
