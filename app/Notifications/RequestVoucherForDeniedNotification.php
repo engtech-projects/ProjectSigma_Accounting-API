@@ -13,6 +13,7 @@ class RequestVoucherForDeniedNotification extends Notification
     use Queueable;
     private string $token;
     private Voucher $model;
+    public $id;
 
     public function __construct(string $token, Voucher $model)
     {
