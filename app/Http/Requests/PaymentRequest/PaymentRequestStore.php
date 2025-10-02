@@ -34,7 +34,7 @@ class PaymentRequestStore extends FormRequest
                 'numeric',
                 new IsTotalSameAsDetails($this->all()['details']),
             ],
-            'attachment_file_names' => 'required|array',
+            'attachment_file_names' => 'nullable|array',
             'attachment_file_names.*' => 'string',
             'withholding_tax_id' => 'nullable|numeric|exists:withholding_tax,id',
             'total_vat_amount' => 'required|numeric',

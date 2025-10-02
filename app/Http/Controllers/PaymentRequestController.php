@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
+use App\Enums\TransactionFlowName;
 use App\Enums\TransactionLogStatus;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
@@ -14,9 +15,9 @@ use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
+use App\Models\TransactionFlow;
 use App\Models\TransactionLog;
 use App\Models\User;
-use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestTransactionNotification;
 use App\Services\PaymentServices;
 use App\Services\StakeHolderService;
@@ -154,11 +155,18 @@ class PaymentRequestController extends Controller
                 'description' => 'Payment Request Created',
                 'created_by' => auth()->user()->id,
             ]);
-            $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
+            $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequest->id)
+                ->where('unique_name', TransactionFlowName::CHECK_DOCUMENTS_FOR_PAYMENT_REQUEST->value)
+                ->first();
+            if ($nextFlow->user_id) {
+                User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+            }
             DB::commit();
-            foreach ($request->attachment_file_names as $file) {
-                $path = 'prf/'.$paymentRequest->id.'/'.$file;
-                Storage::move('temp/'.$file, $path);
+            if ($request->attachment_file_names) {
+                foreach ($request->attachment_file_names as $file) {
+                    $path = 'prf/'.$paymentRequest->id.'/'.$file;
+                    Storage::move('temp/'.$file, $path);
+                }
             }
 
             return new JsonResponse([

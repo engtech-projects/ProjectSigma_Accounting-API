@@ -15,14 +15,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 
 class PaymentRequest extends Model
 {
     use HasApproval;
     use HasFactory;
     use ModelHelpers;
-    use Notifiable;
     use SoftDeletes;
 
     protected $table = 'payment_request';
