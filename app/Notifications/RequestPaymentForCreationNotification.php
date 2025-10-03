@@ -6,7 +6,7 @@ use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\PaymentRequest;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestPaymentForCreationNotification extends Notification
 {

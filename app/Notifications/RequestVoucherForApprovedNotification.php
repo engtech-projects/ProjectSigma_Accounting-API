@@ -5,7 +5,7 @@ namespace App\Notifications;
 use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestVoucherForApprovedNotification extends Notification
 {

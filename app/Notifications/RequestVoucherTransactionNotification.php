@@ -5,14 +5,13 @@ namespace App\Notifications;
 use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestVoucherTransactionNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
-    public $id;
     public function __construct($token, Voucher $model)
     {
         $this->token = $token;
