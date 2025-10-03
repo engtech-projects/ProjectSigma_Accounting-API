@@ -6,14 +6,13 @@ use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\TransactionFlow;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestTransactionNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
-    public $id;
 
     public function __construct($token, TransactionFlow $model)
     {

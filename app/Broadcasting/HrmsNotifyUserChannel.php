@@ -3,11 +3,10 @@
 namespace App\Broadcasting;
 
 use App\Services\HrmsServices;
-use Notification;
 
 class HrmsNotifyUserChannel
 {
-    public function send($notifiable, Notification $notification): void
+    public function send($notifiable, $notification): void
     {
         $userId = $notifiable->id;
         $notif = $notification->toArray($notifiable);
