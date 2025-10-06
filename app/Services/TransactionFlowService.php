@@ -64,7 +64,8 @@ class TransactionFlowService
      *   description:string|null,
      *   status:string,
      *   priority:int,
-     *   is_assignable:bool
+     *   is_assignable:bool,
+     *   is_passable:bool
      * }>
      */
     public static function getTransactionFlow($paymentRequestType, $paymentRequestId)
@@ -87,7 +88,7 @@ class TransactionFlowService
         $templates = TransactionFlowModel::whereNotIn('category', $excludedCategories)
             ->orderBy('priority')
             ->orderBy('id')
-            ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority', 'is_assignable']);
+            ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority', 'is_assignable', 'is_passable']);
 
         return $templates->map(function ($template) use ($paymentRequestId) {
             return [
@@ -105,6 +106,7 @@ class TransactionFlowService
                 },
                 'priority' => $template->priority,
                 'is_assignable' => (bool) $template->is_assignable,
+                'is_passable' => (bool) $template->is_passable,
             ];
         })->toArray();
     }

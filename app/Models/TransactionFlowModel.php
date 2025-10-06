@@ -15,6 +15,11 @@ class TransactionFlowModel extends Model
 
     protected $table = 'transaction_flow_model';
 
+    protected $casts = [
+        'is_passable' => 'boolean',
+        'is_assignable' => 'boolean',
+    ];
+
     protected $fillable = [
         'name',
         'unique_name',
