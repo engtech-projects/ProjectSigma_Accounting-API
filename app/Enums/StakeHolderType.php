@@ -14,7 +14,6 @@ enum StakeHolderType: string
     case DEPARTMENT = 'department';
     case PAYEE = 'payee';
 
-
     public function getModelClass(): string
     {
         return match($this) {
