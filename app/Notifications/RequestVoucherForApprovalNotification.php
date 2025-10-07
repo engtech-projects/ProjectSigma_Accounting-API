@@ -3,19 +3,16 @@
 namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyUserChannel;
-use App\Enums\ApprovalModels;
-use App\Models\DisbursementRequest;
+use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
-class RequestDisbursementVoucherForDeniedNotification extends Notification
+class RequestVoucherForApprovalNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
-    public $id;
-
-    public function __construct($token, DisbursementRequest $model)
+    public function __construct($token, Voucher $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -44,9 +41,9 @@ class RequestDisbursementVoucherForDeniedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for disbursement voucher has been DENIED.',
+            'message' => 'A request for '. ucfirst($this->model->type) .' voucher requires your approval.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name,
+            'request_type' =>  ucfirst($this->model->type),
             'request_id' => $this->model->id,
             'action' => 'View',
         ];

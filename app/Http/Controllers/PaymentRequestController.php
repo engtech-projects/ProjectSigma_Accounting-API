@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
+use App\Enums\StakeHolderType;
+use App\Enums\TransactionFlowName;
 use App\Enums\TransactionLogStatus;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
 use App\Http\Requests\PaymentRequest\PaymentRequestStore;
@@ -12,14 +14,14 @@ use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
+use App\Models\TransactionFlow;
 use App\Models\TransactionLog;
 use App\Models\User;
-use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestTransactionNotification;
 use App\Services\PaymentServices;
-use App\Services\StakeHolderService;
 use App\Services\TransactionFlowService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -82,11 +84,17 @@ class PaymentRequestController extends Controller
 
     public function searchStakeHolders(StakeholderRequestFilter $request)
     {
-        return new JsonResponse([
+        $validatedData = $request->validated();
+        $query = StakeHolder::where('name', 'like', '%'.strtolower($validatedData['key']).'%');
+        if (!empty($validatedData['type'])) {
+            $modelClass = StakeHolderType::from($validatedData['type'])->getModelClass();
+            $query->where('stakeholdable_type', $modelClass);
+        }
+        $stakeholder = $query->paginate(config('app.pagination.limit'));
+        return StakeholderCollection::collection($stakeholder)->additional([
             'success' => true,
             'message' => 'Stakeholders Successfully Retrieved.',
-            'data' => StakeHolderService::searchStakeHolders($request->validated()),
-        ], 200);
+        ]);
     }
 
     public function uploadAttachment(Request $request)
@@ -154,11 +162,18 @@ class PaymentRequestController extends Controller
                 'description' => 'Payment Request Created',
                 'created_by' => auth()->user()->id,
             ]);
-            $paymentRequest->notify(new RequestPaymentForApprovalNotification(auth()->user()->token, $paymentRequest));
+            $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequest->id)
+                ->where('unique_name', TransactionFlowName::CHECK_DOCUMENTS_FOR_PAYMENT_REQUEST->value)
+                ->first();
+            if ($nextFlow->user_id) {
+                User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+            }
             DB::commit();
-            foreach ($request->attachment_file_names as $file) {
-                $path = 'prf/'.$paymentRequest->id.'/'.$file;
-                Storage::move('temp/'.$file, $path);
+            if ($request->attachment_file_names) {
+                foreach ($request->attachment_file_names as $file) {
+                    $path = 'prf/'.$paymentRequest->id.'/'.$file;
+                    Storage::move('temp/'.$file, $path);
+                }
             }
 
             return new JsonResponse([

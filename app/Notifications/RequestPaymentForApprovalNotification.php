@@ -2,18 +2,17 @@
 
 namespace App\Notifications;
 
-use App\Broadcasting\HrmsNotifyNextApproverChannel;
+use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\PaymentRequest;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestPaymentForApprovalNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
-    public $id;
 
     public function __construct($token, PaymentRequest $model)
     {
@@ -28,7 +27,7 @@ class RequestPaymentForApprovalNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return [HrmsNotifyNextApproverChannel::class];
+        return [HrmsNotifyUserChannel::class];
     }
 
     public function getToken()

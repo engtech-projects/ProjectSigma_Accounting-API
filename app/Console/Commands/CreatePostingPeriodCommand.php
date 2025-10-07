@@ -4,17 +4,18 @@ namespace App\Console\Commands;
 
 use App\Services\PostingPeriodService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CreatePostingPeriodCommand extends Command
 {
     protected $signature = 'posting-period:create';
-
     protected $description = 'Create posting period for the next month';
-
     public function handle(PostingPeriodService $service): int
     {
         try {
-            $service->createPostingPeriod();
+            $result = $service->createPostingPeriod();
+            $fiscalYear = $result['fiscalYear'];
+            $postingPeriod = $result['postingPeriod'];
             $this->info('Posting period created successfully');
             Log::channel('posting-period')->info('Posting Period Created via Console: ', [
                 'fiscal_year_id' => $fiscalYear->id,

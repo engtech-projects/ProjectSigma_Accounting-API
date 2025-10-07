@@ -3,19 +3,17 @@
 namespace App\Notifications;
 
 use App\Broadcasting\HrmsNotifyUserChannel;
-use App\Enums\ApprovalModels;
-use App\Models\CashRequest;
+use App\Models\Voucher;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
-class RequestCashVoucherForDeniedNotification extends Notification
+class RequestVoucherForDeniedNotification extends Notification
 {
     use Queueable;
-    private $token;
-    private $model;
-    public $id;
+    private string $token;
+    private Voucher $model;
 
-    public function __construct($token, CashRequest $model)
+    public function __construct(string $token, Voucher $model)
     {
         $this->token = $token;
         $this->model = $model;
@@ -44,9 +42,9 @@ class RequestCashVoucherForDeniedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for cash voucher has been DENIED.',
+            'message' => 'A request for '. $this->model->type .' voucher has been DENIED.',
             'module' => 'Accounting',
-            'request_type' => ApprovalModels::ACCOUNTING_CASH_REQUEST->name,
+            'request_type' =>  $this->model->type,
             'request_id' => $this->model->id,
             'action' => 'View',
         ];

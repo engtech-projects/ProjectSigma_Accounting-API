@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notifiable;
 
 class Voucher extends Model
 {
@@ -25,7 +24,6 @@ class Voucher extends Model
     use HasFactory;
     use HasTransitions;
     use ModelHelpers;
-    use Notifiable;
     use SoftDeletes;
 
     protected $table = 'voucher';
@@ -146,44 +144,49 @@ class Voucher extends Model
         $this->request_status = RequestStatuses::APPROVED->value;
         $this->save();
         $this->refresh();
+        $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
+        $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
             TransactionFlowService::updateTransactionFlow(
-                $this->id,
+                $paymentRequestId,
                 TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
                 TransactionFlowStatus::DONE->value
             );
-            $this->journalEntry()->update([
+            $journalEntry->update([
                 'status' => JournalStatus::UNPOSTED->value,
             ]);
         } else {
             TransactionFlowService::updateTransactionFlow(
-                $this->id,
+                $paymentRequestId,
                 TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
                 TransactionFlowStatus::DONE->value
             );
-            $this->journalEntry()->update([
+            $journalEntry->update([
                 'status' => JournalStatus::UNPOSTED->value,
             ]);
         }
     }
+
     public function denyRequestStatus()
     {
         $this->request_status = RequestStatuses::DENIED->value;
         $this->save();
         $this->refresh();
+        $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
+        $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
             //journal entry
-            $this->journalEntry()->update([
+            $journalEntry->update([
                 'status' => JournalStatus::VOID->value,
             ]);
             // payment request
-            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
                 'request_status' => RequestApprovalStatus::DENIED,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(
-                $this->id,
+                $paymentRequestId,
                 TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
                 TransactionFlowStatus::REJECTED->value
             );
@@ -194,13 +197,13 @@ class Voucher extends Model
                 'request_status' => RequestApprovalStatus::DENIED,
             ]);
             // payment request
-            $paymentRequest = $this->journalEntry->paymentRequest;
+            $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
                 'request_status' => RequestApprovalStatus::DENIED,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(
-                $this->id,
+                $paymentRequestId,
                 TransactionFlowName::CASH_VOUCHER_APPROVALS->value,
                 TransactionFlowStatus::REJECTED->value
             );

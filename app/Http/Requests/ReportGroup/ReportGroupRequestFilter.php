@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\PostingPeriodDetails;
+namespace App\Http\Requests\ReportGroup;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PostingPeriodDetailsFilter extends FormRequest
+class ReportGroupRequestFilter extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,10 @@ class PostingPeriodDetailsFilter extends FormRequest
     public function rules(): array
     {
         return [
-            'fiscal_year_id' => 'required',
-            'period_start' => 'required|date',
-            'period_end' => 'required|date|after:period_start',
+            'key' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:255',
         ];
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ReportGroup\ReportGroupRequestFilter;
 use App\Http\Requests\ReportGroup\ReportGroupSearchRequest;
 use App\Http\Requests\ReportGroup\ReportGroupStoreRequest;
+use App\Http\Resources\ReportGroupResource;
 use App\Http\Resources\ReportGroupCollection;
 use App\Models\ReportGroup;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class ReportGroupController extends Controller
 {
@@ -23,15 +25,36 @@ class ReportGroupController extends Controller
         ], 200);
     }
 
+    /**
+     * Display a paginated listing of the resource.
+     */
+    public function paginated(ReportGroupRequestFilter $reportGroupRequestFilter)
+    {
+        $validatedData = $reportGroupRequestFilter->validated();
+        $reportGroups = ReportGroup::filter($validatedData)
+            ->orderByDesc('created_at')
+            ->paginate(config('services.pagination.limit'));
+        return ReportGroupCollection::collection($reportGroups)
+            ->additional([
+                'success' => true,
+                'message' => 'Report Groups fetched successfully'
+            ]);
+    }
+
+    /**
+     * Search for a specific resource.
+     */
     public function searchReportGroups(ReportGroupSearchRequest $request)
     {
         $validatedData = $request->validated();
-
-        return new JsonResponse([
+        return ReportGroupCollection::collection(
+            ReportGroup::searchByName($validatedData['name'])
+                ->limit(10)
+                ->get()
+        )->additional([
             'success' => true,
-            'message' => 'Report Groups fetched successfully',
-            'data' => ReportGroupCollection::collection(ReportGroup::where('name', 'like', '%'.$validatedData['name'].'%')->limit(10)->get()),
-        ], 200);
+            'message' => 'Report Groups fetched successfully'
+        ]);
     }
 
     /**
@@ -40,58 +63,56 @@ class ReportGroupController extends Controller
     public function store(ReportGroupStoreRequest $request)
     {
         $validatedData = $request->validated();
-
-        return new JsonResponse([
+        $reportGroup = DB::transaction(function () use ($validatedData) {
+            return ReportGroup::create($validatedData);
+        });
+        return ReportGroupResource::make($reportGroup)->additional([
             'success' => true,
-            'message' => 'Report Group created successfully',
-            'data' => ReportGroup::create($validatedData),
-        ], 201);
+            'message' => 'Report Group Created Successfully',
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(ReportGroup $reportGroup)
     {
-        return new JsonResponse([
+        return ReportGroupCollection::make($reportGroup)->additional([
             'success' => true,
             'message' => 'Report Group fetched successfully',
-            'data' => ReportGroupCollection::collection(ReportGroup::find($id)),
-        ], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ReportGroupStoreRequest $request, ReportGroup $reportGroup)
     {
-        //
+        $validatedData = $request->validated();
+        DB::transaction(function () use ($validatedData, $reportGroup) {
+            $reportGroup->update($validatedData);
+        });
+        return ReportGroupResource::make($reportGroup->refresh())->additional([
+            'success' => true,
+            'message' => 'Report Group Updated Successfully.',
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ReportGroup $reportGroup)
     {
-        $reportGroup = ReportGroup::find($id)->whereHas('accounts')->first();
-        if ($reportGroup) {
+        $deleted = DB::transaction(function () use ($reportGroup) {
+            return $reportGroup->delete();
+        });
+        if (!$deleted) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Report Group Already Exists',
+                'message' => 'Failed to delete Report Group',
                 'data' => null,
-            ], 404);
+            ], 500);
         }
-
-        $reportGroup->delete();
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Report Group deleted successfully',

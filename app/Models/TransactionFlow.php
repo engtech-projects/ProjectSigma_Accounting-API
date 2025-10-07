@@ -30,6 +30,11 @@ class TransactionFlow extends Model
         'is_assignable',
     ];
 
+    protected $casts = [
+        'is_passable' => 'boolean',
+        'is_assignable' => 'boolean',
+    ];
+
     public function paymentRequest(): BelongsTo
     {
         return $this->belongsTo(PaymentRequest::class);

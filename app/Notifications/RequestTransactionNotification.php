@@ -6,14 +6,13 @@ use App\Broadcasting\HrmsNotifyUserChannel;
 use App\Enums\ApprovalModels;
 use App\Models\TransactionFlow;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 
 class RequestTransactionNotification extends Notification
 {
     use Queueable;
     private $token;
     private $model;
-    public $id;
 
     public function __construct($token, TransactionFlow $model)
     {
@@ -44,7 +43,7 @@ class RequestTransactionNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for transaction that needs your approval.',
+            'message' => 'A request for '.ApprovalModels::ACCOUNTING_TRANSACTION->name.' that needs your approval.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_TRANSACTION->name,
             'request_id' => $this->model->id,

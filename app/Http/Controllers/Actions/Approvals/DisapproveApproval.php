@@ -6,9 +6,8 @@ use App\Enums\ApprovalModels;
 use App\Enums\RequestApprovalStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
-use App\Notifications\RequestCashVoucherForDeniedNotification;
-use App\Notifications\RequestDisbursementVoucherForDeniedNotification;
 use App\Notifications\RequestPaymentForDeniedNotification;
+use App\Notifications\RequestVoucherForDeniedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -38,12 +37,12 @@ class DisapproveApproval extends Controller
 
         $notificationMap = [
             ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name => RequestPaymentForDeniedNotification::class,
-            ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestDisbursementVoucherForDeniedNotification::class,
-            ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestCashVoucherForDeniedNotification::class,
+            ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestVoucherForDeniedNotification::class,
+            ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestVoucherForDeniedNotification::class,
         ];
 
         if (isset($notificationMap[$modelType])) {
-            $model->notify(new $notificationMap[$modelType](auth()->user()->token, $model));
+            $model->notifyCreator($notificationMap[$modelType]);
         }
 
         return new JsonResponse([
