@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StakeHolderType;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Requests\Stakeholder\StakeholderRequestStore;
 use App\Http\Requests\Stakeholder\StakeholderRequestUpdate;
@@ -23,11 +24,20 @@ class StakeHolderController extends Controller
      */
     public function index(StakeholderRequestFilter $request)
     {
-        return new JsonResponse([
+        $validatedData = $request->validated();
+        $query = StakeHolder::query();
+        if (!empty($validatedData['key'])) {
+            $query->where('name', 'like', '%'.strtolower($validatedData['key']).'%');
+        }
+        if (!empty($validatedData['type'])) {
+            $modelClass = StakeHolderType::from($validatedData['type'])->getModelClass();
+            $query->where('stakeholdable_type', $modelClass);
+        }
+        $stakeholder = $query->paginate(config('app.pagination.limit'));
+        return StakeholderCollection::collection($stakeholder)->additional([
             'success' => true,
-            'message' => 'Payee Successfully Retrieve.',
-            'data' => (StakeHolderService::getPaginated($request->validated())),
-        ], 200);
+            'message' => 'Stakeholders Successfully Retrieved.',
+        ]);
     }
 
     /**
