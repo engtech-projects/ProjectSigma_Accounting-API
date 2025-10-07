@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PaymentRequestType;
 use App\Enums\PrefixType;
 use App\Enums\RequestStatuses;
+use App\Enums\StakeHolderType;
 use App\Enums\TransactionFlowName;
 use App\Enums\TransactionLogStatus;
 use App\Http\Requests\PaymentRequest\PaymentRequestFilter;
@@ -13,6 +14,7 @@ use App\Http\Requests\PaymentRequest\PaymentRequestUpdate;
 use App\Http\Requests\PayrollPaymentRequest;
 use App\Http\Requests\Stakeholder\StakeholderRequestFilter;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
+use App\Http\Resources\AccountingCollections\StakeholderCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use App\Models\TransactionFlow;
@@ -83,11 +85,17 @@ class PaymentRequestController extends Controller
 
     public function searchStakeHolders(StakeholderRequestFilter $request)
     {
-        return new JsonResponse([
+        $validatedData = $request->validated();
+        $query = StakeHolder::where('name', 'like', '%'.strtolower($validatedData['key']).'%');
+        if (!empty($validatedData['type'])) {
+            $modelClass = StakeHolderType::from($validatedData['type'])->getModelClass();
+            $query->where('stakeholdable_type', $modelClass);
+        }
+        $stakeholder = $query->paginate(config('app.pagination.limit'));
+        return StakeholderCollection::collection($stakeholder)->additional([
             'success' => true,
             'message' => 'Stakeholders Successfully Retrieved.',
-            'data' => StakeHolderService::searchStakeHolders($request->validated()),
-        ], 200);
+        ]);
     }
 
     public function uploadAttachment(Request $request)
