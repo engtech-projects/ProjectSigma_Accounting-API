@@ -8,18 +8,6 @@ use App\Models\Stakeholders\Payee;
 
 class StakeHolderService
 {
-    public static function searchStakeHolders(array $validatedData)
-    {
-        $stakeholder = StakeHolder::where('name', 'like', '%'.strtolower($validatedData['key']).'%')
-            ->where('stakeholdable_type', "App\Models\Stakeholders\\".ucfirst($validatedData['type']))
-            ->paginate(config('app.pagination.limit'));
-
-        return StakeholderCollection::collection($stakeholder)->additional([
-            'success' => true,
-            'message' => 'Stakeholders Successfully Retrieved.',
-        ]);
-    }
-
     public static function getPaginated(array $validateData)
     {
         $queryStakeholdersRequest = StakeHolder::when(isset($validateData['key']), function ($query, $key) use ($validateData) {
