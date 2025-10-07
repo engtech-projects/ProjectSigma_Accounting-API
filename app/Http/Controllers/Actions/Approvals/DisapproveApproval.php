@@ -42,7 +42,7 @@ class DisapproveApproval extends Controller
         ];
 
         if (isset($notificationMap[$modelType])) {
-            $model->notify(new $notificationMap[$modelType](auth()->user()->token, $model));
+            $model->notifyCreator($notificationMap[$modelType]);
         }
 
         return new JsonResponse([

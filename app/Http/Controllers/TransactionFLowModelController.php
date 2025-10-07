@@ -72,6 +72,7 @@ class TransactionFLowModelController extends Controller
                             User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
                         }
                     } elseif ($validatedData['status'] == TransactionFlowStatus::REJECTED->value) {
+                        $nextFlow->update(['status' => TransactionFlowStatus::PENDING->value]);
                         $paymentRequest = PaymentRequest::find($transactionFlow->payment_request_id);
                         $paymentRequest->update([
                             'request_status' => RequestApprovalStatus::DENIED,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\JournalStatus;
 use App\Enums\RequestStatuses;
+use App\Enums\VoucherType;
 use App\Http\Traits\HasApproval;
 use App\Http\Traits\HasTransitions;
 use App\Http\Traits\ModelHelpers;
@@ -144,5 +145,18 @@ class JournalEntry extends Model
                     ->orderBy('id', 'asc');
             },
         ]);
+    }
+    public function scopeWithDisbursementVoucher($query)
+    {
+        return $query->with('voucher', function ($q) {
+            $q->where('type', VoucherType::DISBURSEMENT->value);
+        });
+    }
+
+    public function scopeWithCashVoucher($query)
+    {
+        return $query->with('voucher', function ($q) {
+            $q->where('type', VoucherType::CASH->value);
+        });
     }
 }
