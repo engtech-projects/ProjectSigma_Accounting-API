@@ -15,9 +15,11 @@ class TransactionFlowService
     public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
         return DB::transaction(function () use ($paymentRequestId, $transactionFlowName, $transactionStatus) {
+
             $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('unique_name', $transactionFlowName)
                 ->first();
+            self::updateForgotTransactionFlow($paymentRequestId, $currentFlow->priority);
             if (! $currentFlow) {
                 throw new \Exception('Transaction flow not found');
             }
@@ -26,7 +28,7 @@ class TransactionFlowService
                     ->where('priority', '<', $currentFlow->priority)
                     ->get();
                 $pendingFlows = $previousFlows->filter(function ($flow) {
-                    return $flow->status === TransactionFlowStatus::PENDING->value;
+                    return $flow->status === TransactionFlowStatus::PENDING->value || $flow->status === TransactionFlowStatus::IN_PROGRESS->value;
                 });
                 if ($pendingFlows->isNotEmpty()) {
                     $pendingCount = $pendingFlows->count();
@@ -109,5 +111,18 @@ class TransactionFlowService
                 'is_passable' => (bool) $template->is_passable,
             ];
         })->toArray();
+    }
+
+    public static function updateForgotTransactionFlow($paymentRequestId, $priority)
+    {
+        return DB::transaction(function () use ($paymentRequestId, $priority) {
+            TransactionFlow::where('payment_request_id', $paymentRequestId)
+                ->where('priority', '<', $priority)
+                ->where('status', TransactionFlowStatus::PENDING->value)
+                ->orWhere('status', TransactionFlowStatus::IN_PROGRESS->value)
+                ->update([
+                    'status' => TransactionFlowStatus::DONE->value,
+                ]);
+        });
     }
 }
