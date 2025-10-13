@@ -29,6 +29,10 @@ class JournalDetails extends Model
     {
         return $this->belongsTo(Account::class);
     }
+    public function journalEntry(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntry::class);
+    }
 
     public function stakeholder(): BelongsTo
     {

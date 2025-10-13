@@ -73,7 +73,6 @@ class JournalEntryController extends Controller
             TransactionFlowStatus::DONE->value
         );
         DB::commit();
-
         return new JsonResponse([
             'success' => true,
             'message' => 'Journal Entry Successfully Created.',

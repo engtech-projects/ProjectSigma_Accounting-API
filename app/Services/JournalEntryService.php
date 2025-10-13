@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\JournalStatus;
+use App\Enums\ParticularsType;
 use App\Http\Resources\AccountingCollections\JournalEntryCollection;
 use App\Models\Account;
 use App\Models\AccountType;
