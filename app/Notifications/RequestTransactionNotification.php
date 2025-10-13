@@ -43,7 +43,7 @@ class RequestTransactionNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for '.ApprovalModels::ACCOUNTING_TRANSACTION->name.' that needs your approval.',
+            'message' => 'Transaction flow: '.$this->model->name .' needs your attention.',
             'module' => 'Accounting',
             'request_type' => ApprovalModels::ACCOUNTING_TRANSACTION->name,
             'request_id' => $this->model->id,
