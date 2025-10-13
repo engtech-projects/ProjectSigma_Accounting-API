@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Enums\BalanceType;
 use App\Enums\JournalStatus;
-use App\Enums\Particulars;
 use App\Enums\ParticularsType;
 use App\Enums\PaymentRequestType;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;

@@ -15,7 +15,6 @@ class TransactionFlowService
     public static function updateTransactionFlow($paymentRequestId, $transactionFlowName, $transactionStatus)
     {
         return DB::transaction(function () use ($paymentRequestId, $transactionFlowName, $transactionStatus) {
-
             $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('unique_name', $transactionFlowName)
                 ->first();
@@ -39,9 +38,11 @@ class TransactionFlowService
                     ->where('priority', $currentFlow->priority + 1)
                     ->first();
                 if ($nextFlow) {
-                    $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
-                    if ($nextFlow->user_id) {
-                        User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                    if ($nextFlow->status === TransactionFlowStatus::PENDING->value) {
+                        $nextFlow->update(['status' => TransactionFlowStatus::IN_PROGRESS->value]);
+                        if ($nextFlow->user_id) {
+                            User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                        }
                     }
                 }
             }
