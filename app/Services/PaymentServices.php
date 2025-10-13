@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\BalanceType;
 use App\Enums\JournalStatus;
+use App\Enums\ParticularsType;
 use App\Enums\PaymentRequestType;
 use App\Http\Resources\AccountingCollections\PaymentRequestCollection;
 use App\Models\PaymentRequest;
@@ -147,7 +148,7 @@ class PaymentServices
                 $paymentRequest->details[] = [
                     'id' => null,
                     'journalAccountInfo' => null,
-                    'particulars' => 'CASH IN BANK',
+                    'particulars' => ParticularsType::ACCOUNTS_PAYABLE->value,
                     'amount' => null,
                     'cost' => null,
                     'debit' => null,

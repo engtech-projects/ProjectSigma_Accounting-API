@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\JournalStatus;
+use App\Enums\ParticularsType;
 use App\Enums\RequestStatuses;
 use App\Enums\VoucherType;
 use App\Http\Traits\HasApproval;
@@ -40,7 +41,6 @@ class JournalEntry extends Model
     protected $casts = [
         'journal_date' => 'date:Y-m-d',
     ];
-
     public function details(): HasMany
     {
         return $this->hasMany(JournalDetails::class);
