@@ -119,8 +119,10 @@ class TransactionFlowService
         return DB::transaction(function () use ($paymentRequestId, $priority) {
             TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('priority', '<', $priority)
-                ->where('status', TransactionFlowStatus::PENDING->value)
-                ->orWhere('status', TransactionFlowStatus::IN_PROGRESS->value)
+                ->whereIn('status', [
+                    TransactionFlowStatus::PENDING->value,
+                    TransactionFlowStatus::IN_PROGRESS->value,
+                ])
                 ->update([
                     'status' => TransactionFlowStatus::DONE->value,
                 ]);
