@@ -42,8 +42,7 @@ class JournalEntryController extends Controller
 
     public function store(JournalEntryRequestStore $request)
     {
-        try {
-            DB::beginTransaction();
+        DB::transaction(function () use ($request) {
             $validatedData = $request->validated();
             $validatedData['id'] = FiscalYear::currentPostingPeriod();
             $validatedData['status'] = JournalStatus::OPEN->value;
@@ -73,22 +72,11 @@ class JournalEntryController extends Controller
                 TransactionFlowName::CREATE_JOURNAL_ENTRY->value,
                 TransactionFlowStatus::DONE->value
             );
-            DB::commit();
-
-            return new JsonResponse([
-                'success' => true,
-                'message' => 'Journal Entry Successfully Created.',
-                'data' => new JournalEntryCollection($journalEntry->load('details')),
-            ], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return new JsonResponse([
-                'success' => false,
-                'message' => 'Error creating journal entry.',
-                'data' => null,
-            ], 500);
-        }
+        });
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Journal Entry Successfully Created.',
+        ], 201);
     }
 
     public function update(JournalEntryRequestUpdate $request)

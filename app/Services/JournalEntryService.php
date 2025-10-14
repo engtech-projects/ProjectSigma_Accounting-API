@@ -124,18 +124,18 @@ class JournalEntryService
 
     public static function forVoucherEntriesListCash(array $validatedData)
     {
-        $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query, $key) use ($validatedData) {
+        $journalEntries = JournalEntry::when(isset($validatedData['key']), function ($query) use ($validatedData) {
             return $query->where('journal_no', 'LIKE', "%{$validatedData['key']}%")
                 ->orWhereHas('paymentRequest.stakeholder', function ($query) use ($validatedData) {
                     $query->where('name', 'LIKE', "%{$validatedData['key']}%");
                 });
         })
-            ->where('status', JournalStatus::UNPOSTED->value)
-            ->withPaymentRequestDetails()
-            ->withAccounts()
-            ->withDetails()
-            ->withVoucher()
-            ->paginate(config('services.pagination.limit'));
+        ->where('status', JournalStatus::UNPOSTED->value)
+        ->withPaymentRequestDetails()
+        ->withAccounts()
+        ->withVoucher()
+        ->orderBy('created_at', 'desc')
+        ->paginate(config('services.pagination.limit'));
 
         return JournalEntryCollection::collection($journalEntries)->response()->getData(true);
     }
