@@ -42,7 +42,7 @@ class RequestVoucherForApprovedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => 'A request for '. ucfirst($this->model->type) .' voucher has been DENIED.',
+            'message' => 'A request for '. ucfirst($this->model->type) .' voucher has been APPROVED.',
             'module' => 'Accounting',
             'request_type' =>  ucfirst($this->model->type),
             'request_id' => $this->model->id,
