@@ -21,6 +21,7 @@ use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\ReportGroupController;
+use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
@@ -69,6 +70,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('terms', TermController::class);
     Route::get('paginated-report-group', [ReportGroupController::class, 'paginated']);
     Route::resource('report-group', ReportGroupController::class);
+    Route::resource('sub-group', SubGroupController::class);
     Route::resource('withholding-tax', WithHoldingTaxController::class);
 
     // JOURNAL ENTRY ROUTES
