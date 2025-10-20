@@ -9,7 +9,7 @@ use App\Models\SubGroup;
 use App\Http\Resources\SubGroupCollection;
 use App\Http\Resources\SubGroupResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+
 
 class SubGroupController extends Controller
 {
@@ -22,7 +22,7 @@ class SubGroupController extends Controller
         $subGroups = SubGroup::filter($validatedData)
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
-        return SubGroupCollection::collection($subGroups)
+        return (new SubGroupCollection($subGroups))
             ->additional([
                 'success' => true,
                 'message' => 'Sub Groups fetched successfully'
@@ -35,9 +35,7 @@ class SubGroupController extends Controller
     public function store(SubGroupStoreRequest $request)
     {
         $validatedData = $request->validated();
-        $subGroup = DB::transaction(function () use ($validatedData) {
-            return SubGroup::create($validatedData);
-        });
+        $subGroup = SubGroup::create($validatedData);
         return SubGroupResource::make($subGroup)->additional([
             'success' => true,
             'message' => 'Sub Group Created Successfully',
@@ -50,14 +48,15 @@ class SubGroupController extends Controller
     public function searchSubGroups(SubGroupSearchRequest $request)
     {
         $validatedData = $request->validated();
-        return SubGroupCollection::collection(
-            SubGroup::searchByName($validatedData['name'])
-                ->limit(10)
-                ->get()
-        )->additional([
-            'success' => true,
-            'message' => 'Sub Groups fetched successfully'
-        ]);
+        $limit = $validatedData['limit'] ?? config('services.search.limit', 10);
+        $subGroups = SubGroup::searchByName($validatedData['name'])
+            ->limit($limit)
+            ->get();
+        return (new SubGroupCollection($subGroups))
+            ->additional([
+                'success' => true,
+                'message' => 'Sub Groups fetched successfully'
+            ]);
     }
 
     /**
@@ -66,12 +65,21 @@ class SubGroupController extends Controller
     public function update(SubGroupStoreRequest $request, SubGroup $subGroup)
     {
         $validatedData = $request->validated();
-        DB::transaction(function () use ($validatedData, $subGroup) {
-            $subGroup->update($validatedData);
-        });
-        return SubGroupResource::make($subGroup->refresh())->additional([
+        $subGroup->update($validatedData);
+        return SubGroupResource::make($subGroup)->additional([
             'success' => true,
             'message' => 'Sub Group Updated Successfully',
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(SubGroup $subGroup)
+    {
+        return SubGroupResource::make($subGroup)->additional([
+            'success' => true,
+            'message' => 'Sub Group fetched successfully',
         ]);
     }
 
@@ -80,9 +88,7 @@ class SubGroupController extends Controller
      */
     public function destroy(SubGroup $subGroup)
     {
-        $deleted = DB::transaction(function () use ($subGroup) {
-            return $subGroup->delete();
-        });
+        $deleted = $subGroup->delete();
         if (!$deleted) {
             return new JsonResponse([
                 'success' => false,

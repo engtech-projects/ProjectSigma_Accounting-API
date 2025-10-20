@@ -180,6 +180,7 @@ Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStake
 Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
 Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);
 Route::get('search-report-groups', [ReportGroupController::class, 'searchReportGroups']);
+Route::get('search-sub-groups', [SubGroupController::class, 'searchSubGroups']);
 
 // SYSTEM SETUP ROUTES
 if (config()->get('app.artisan') == 'true') {

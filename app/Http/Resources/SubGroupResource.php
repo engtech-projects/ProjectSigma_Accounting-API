@@ -16,6 +16,7 @@ class SubGroupResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'key' => $this->key,
             'name' => $this->name,
             'description' => $this->description,
         ];

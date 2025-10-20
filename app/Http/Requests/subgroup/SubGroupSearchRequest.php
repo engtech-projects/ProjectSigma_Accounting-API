@@ -23,6 +23,7 @@ class SubGroupSearchRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
+            'limit' => 'sometimes|integer|min:1|max:100'
         ];
     }
 }

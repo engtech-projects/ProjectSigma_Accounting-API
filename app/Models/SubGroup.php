@@ -19,25 +19,25 @@ class SubGroup extends Model
         'description',
     ];
 
-    public function scopeSearchByKey($query, string $key)
+    public function scopeSearchByKey($query, string $key): void
     {
-        return $query->where(function ($q) use ($key) {
+        $query->where(function ($q) use ($key) {
             $q->where('name', 'like', '%' . $key . '%')
                 ->orWhere('description', 'like', '%' . $key . '%');
         });
     }
 
-    public function scopeSearchByName($query, string $name)
+    public function scopeSearchByName($query, string $name): void
     {
-        return $query->where('name', 'like', '%' . $name . '%');
+        $query->where('name', 'like', '%' . $name . '%');
     }
 
-    public function scopeSearchByDescription($query, string $description)
+    public function scopeSearchByDescription($query, string $description): void
     {
-        return $query->where('description', 'like', '%' . $description . '%');
+        $query->where('description', 'like', '%' . $description . '%');
     }
 
-    public function scopeFilter($query, array $filters = [])
+    public function scopeFilter($query, array $filters = []): void
     {
         if (!empty($filters['key'])) {
             $query->searchByKey($filters['key']);
@@ -48,7 +48,6 @@ class SubGroup extends Model
         if (!empty($filters['description'])) {
             $query->searchByDescription($filters['description']);
         }
-        return $query;
     }
 
     public function accounts(): HasMany

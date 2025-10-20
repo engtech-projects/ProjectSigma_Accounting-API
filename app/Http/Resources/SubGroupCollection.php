@@ -2,20 +2,20 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class SubGroupCollection extends JsonResource
+class SubGroupCollection extends ResourceCollection
 {
-    /**
-     * Transform the resource into an array.
+     /**
+     * The resource that this resource collects.
      *
-     * @return array<string, mixed>
+     * @var string
      */
-    public function toArray(Request $request): array
+    public $collects = SubGroupResource::class;
+    public function toArray($request)
     {
         return [
-            ...parent::toArray($request),
+            'data' =>$this->collection,
         ];
     }
 }
