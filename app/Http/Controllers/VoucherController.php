@@ -29,6 +29,7 @@ use App\Services\VoucherService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class VoucherController extends Controller
 {
@@ -198,11 +199,18 @@ class VoucherController extends Controller
             'received_by' => $validatedData['received_by'],
             'received_date' => $validatedData['received_date'],
             'receipt_no' => $validatedData['receipt_no'],
-            'attach_file' => $validatedData['attach_file'] ?? null,
+            'attach_file' => $validatedData['attachment_file_names'] ?? null,
         ]);
         JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
             'status' => JournalStatus::POSTED->value,
         ]);
+        if ($voucher->attach_file) {
+            foreach ($voucher->attach_file as $file) {
+                $path = 'cash_receipt/'.$voucher->id.'/'.$file;
+                Storage::move('temp/'.$file, $path);
+            }
+        }
+
         DB::commit();
         TransactionFlowService::updateTransactionFlow(
             $voucher->journalEntry->payment_request_id,

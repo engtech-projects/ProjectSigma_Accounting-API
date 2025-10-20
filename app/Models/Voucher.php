@@ -141,9 +141,6 @@ class Voucher extends Model
 
     public function completeRequestStatus()
     {
-        $this->request_status = RequestStatuses::APPROVED->value;
-        $this->save();
-        $this->refresh();
         $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
         $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
@@ -165,6 +162,9 @@ class Voucher extends Model
                 'status' => JournalStatus::UNPOSTED->value,
             ]);
         }
+        $this->request_status = RequestStatuses::APPROVED->value;
+        $this->save();
+        $this->refresh();
     }
 
     public function denyRequestStatus()
