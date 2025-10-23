@@ -42,6 +42,13 @@ class JournalEntryController extends Controller
 
     public function store(JournalEntryRequestStore $request)
     {
+        if (TransactionFlowService::checkPendingFlow($request->payment_request_id, TransactionFlowName::CREATE_JOURNAL_ENTRY->value)) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Transaction Flow is pending. Please complete the previous transaction flow first.',
+                'data' => null,
+            ], 400);
+        }
         DB::transaction(function () use ($request) {
             $validatedData = $request->validated();
             $validatedData['id'] = FiscalYear::currentPostingPeriod();
