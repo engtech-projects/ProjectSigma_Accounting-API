@@ -193,87 +193,93 @@ class VoucherController extends Controller
 
     public function cashReceived(CashReceivedRequest $request)
     {
-        $paid = false;
-        DB::beginTransaction();
-        $validatedData = $request->validated();
-        $voucher = Voucher::with('journalEntry.paymentRequest')->findOrFail($validatedData['voucher_id']);
+        try {
+            DB::beginTransaction();
+            $noBalance = false;
+            $validatedData = $request->validated();
 
-        $balance = $voucher->journalEntry->paymentRequest->load('journalEntry.voucher');
-        $voucherCollection = collect();
-        foreach ($balance->journalEntry as $entry) {
-            if ($entry->voucher) {
-                $voucherCollection = $voucherCollection->merge($entry->voucher);
+            $voucher = Voucher::with('journalEntry.paymentRequest')
+                ->findOrFail($validatedData['voucher_id']);
+
+            $totalPayments = Voucher::where('type', VoucherType::CASH->value)
+                ->where('journal_entry_id', $voucher->journalEntry->id)
+                ->sum('amount');
+
+            $balance = ($voucher->journalEntry->paymentRequest->total - $totalPayments);
+            if ($balance <= $validatedData['amount']) {
+                $validatedData['amount'] = $balance;
+                $noBalance = true;
+            }else {
+                $noBalance = false;
             }
-        }
 
-        if ($voucherCollection->count() > 0) {
-            $balance = $voucherCollection->sum('total');
-        } else {
-            $balance = 0;
-        }
-
-        if ($balance < $validatedData['amount']) {
-            $validatedData['amount'] = $balance;
-            $paid = true;
-        }
-
-        $voucher->update([
-            'received_by' => $validatedData['received_by'],
-            'received_date' => $validatedData['received_date'],
-            'receipt_no' => $validatedData['receipt_no'],
-            'attach_file' => $validatedData['attach_file'] ?? null,
-            'amount' => $validatedData['amount'],
-        ]);
-
-        if ($paid) {
-            TransactionFlowService::updateTransactionFlow(
-                $voucher->journalEntry->payment_request_id,
-                TransactionFlowName::PAYMENTS->value,
-                TransactionFlowStatus::DONE->value
-            );
-        } else {
-            $now = Carbon::now();
-            $journalEntry = JournalEntry::create([
-                'journal_no' => JournalEntryService::generateJournalNumber(),
-                'entry_date' => $now,
-                'journal_date' => $now,
-                'status' => JournalStatus::UNPOSTED->value,
-                'fiscal_year_id' => FiscalYear::currentPostingPeriod(),
-                'posting_period_id' => PostingPeriod::current()->pluck('id')->first(),
-                'reference_no' => $voucher->journalEntry->paymentRequest->prf_no,
-                'payment_request_id' => $voucher->journalEntry->payment_request_id,
-                'remarks' => 'BALANCE:'.$validatedData['amount'].' PRF NO: '.$voucher->journalEntry->paymentRequest->prf_no,
-                'created_by' => auth()->user()->id,
+            $voucher->update([
+                'received_by' => $validatedData['received_by'],
+                'received_date' => $validatedData['received_date'],
+                'receipt_no' => $validatedData['receipt_no'],
+                'attach_file' => $validatedData['attach_file'] ?? null,
+                'amount' => $validatedData['amount'],
             ]);
-            $accountId = Account::where('code', ParticularsType::ACCOUNTS_PAYABLE->value)->first()->id;
-            $journalEntry->details()->create([
-                'account_id' => $accountId,
-                'description' => ParticularsType::ACCOUNTS_PAYABLE->value,
-                'debit' => $validatedData['amount'],
-                'credit' => 0,
-            ]);
-            $currentPriority = TransactionFlow::where('payment_request_id', $voucher->journalEntry->payment_request_id)
-                ->where('unique_name', TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value)->first();
-            $currentPriority->update([
-                'status' => TransactionFlowStatus::IN_PROGRESS->value,
-            ]);
-            TransactionFlow::where('payment_request_id', $voucher->journalEntry->payment_request_id)
-                ->where('priority', '>', $currentPriority->priority)->update([
-                'status' => TransactionFlowStatus::PENDING->value,
-            ]);
-        }
-        JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)->update([
-            'status' => JournalStatus::POSTED->value,
-        ]);
-        DB::commit();
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => 'Voucher Updated',
-            'data' => $voucher,
-        ], 201);
+            if ($noBalance) {
+                TransactionFlowService::updateTransactionFlow(
+                    $voucher->journalEntry->payment_request_id,
+                    TransactionFlowName::PAYMENTS->value,
+                    TransactionFlowStatus::DONE->value
+                );
+            } else {
+                $now = Carbon::now();
+                JournalEntry::where('payment_request_id', $voucher->journalEntry->payment_request_id)
+                    ->update(['status' => JournalStatus::POSTED->value]);
+                $journalEntry = JournalEntry::create([
+                    'journal_no' => JournalEntryService::generateJournalNumber(),
+                    'entry_date' => $now,
+                    'journal_date' => $now,
+                    'status' => JournalStatus::OPEN->value,
+                    'fiscal_year_id' => FiscalYear::currentPostingPeriod(),
+                    'posting_period_id' => PostingPeriod::current()->pluck('id')->first(),
+                    'reference_no' => $voucher->journalEntry->paymentRequest->prf_no,
+                    'payment_request_id' => $voucher->journalEntry->payment_request_id,
+                    'remarks' => 'BALANCE:'.$validatedData['amount'].' PRF NO: '.$voucher->journalEntry->paymentRequest->prf_no,
+                    'created_by' => auth()->user()->id,
+                ]);
+
+                $accountId = Account::where('account_name', ParticularsType::ACCOUNTS_PAYABLE->value)->first()->id;
+
+                $journalEntry->details()->create([
+                    'account_id' => $accountId,
+                    'description' => ParticularsType::ACCOUNTS_PAYABLE->value,
+                    'debit' => $balance - $validatedData['amount'],
+                    'credit' => 0,
+                ]);
+
+                $currentPriority = TransactionFlow::where('payment_request_id', $voucher->journalEntry->payment_request_id)
+                    ->where('unique_name', TransactionFlowName::GENERATE_DISBURSEMENT_VOUCHER->value)
+                    ->first();
+
+                $currentPriority->update([
+                    'status' => TransactionFlowStatus::IN_PROGRESS->value,
+                ]);
+
+                TransactionFlow::where('payment_request_id', $voucher->journalEntry->payment_request_id)
+                    ->where('priority', '>', $currentPriority->priority)
+                    ->update(['status' => TransactionFlowStatus::PENDING->value]);
+            }
+
+            DB::commit();
+            return new JsonResponse([
+                'success' => true,
+                'message' => 'Voucher Updated',
+                'data' => $voucher,
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Error updating voucher: ' . $e->getMessage(),
+            ], 500);
+        }
     }
-
     public function createDisbursement(DisbursementVoucherRequestStore $request)
     {
         DB::beginTransaction();
