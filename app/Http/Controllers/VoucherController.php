@@ -209,7 +209,7 @@ class VoucherController extends Controller
             if ($balance <= $validatedData['amount']) {
                 $validatedData['amount'] = $balance;
                 $noBalance = true;
-            }else {
+            } else {
                 $noBalance = false;
             }
 
