@@ -6,7 +6,6 @@ use App\Http\Requests\SubGroup\SubGroupRequestFilter;
 use App\Http\Requests\SubGroup\SubGroupStoreRequest;
 use App\Http\Requests\SubGroup\SubGroupSearchRequest;
 use App\Models\SubGroup;
-use App\Http\Resources\SubGroupCollection;
 use App\Http\Resources\SubGroupResource;
 use Illuminate\Http\JsonResponse;
 
@@ -21,7 +20,7 @@ class SubGroupController extends Controller
         $subGroups = SubGroup::filter($validatedData)
             ->orderByDesc('created_at')
             ->paginate(config('services.pagination.limit'));
-        return SubGroupCollection::collection($subGroups)
+        return SubGroupResource::collection($subGroups)
             ->additional([
                 'success' => true,
                 'message' => 'Sub Groups fetched successfully'
@@ -51,7 +50,7 @@ class SubGroupController extends Controller
         $subGroups = SubGroup::searchByName($validatedData['name'])
             ->limit($limit)
             ->get();
-        return SubGroupCollection::collection($subGroups)
+        return SubGroupResource::collection($subGroups)
             ->additional([
                 'success' => true,
                 'message' => 'Sub Groups fetched successfully'
