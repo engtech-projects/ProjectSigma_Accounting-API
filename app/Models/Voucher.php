@@ -141,12 +141,20 @@ class Voucher extends Model
 
     public function completeRequestStatus()
     {
-        $this->request_status = RequestStatuses::APPROVED->value;
-        $this->save();
-        $this->refresh();
         $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
         $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
+            $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
+                ->where('priority', '<', $this->priority)
+                ->get();
+            $pendingFlows = $previousFlows->filter(function ($flow) {
+                return $flow->status === TransactionFlowStatus::PENDING->value;
+            });
+            if ($pendingFlows->isNotEmpty()) {
+                $pendingCount = $pendingFlows->count();
+                $pendingNames = $pendingFlows->pluck('name')->implode(', ');
+                throw new \Exception("Unable to accept request for approval. There are {$pendingCount} pending transaction steps that must be completed first: {$pendingNames}");
+            }
             TransactionFlowService::updateTransactionFlow(
                 $paymentRequestId,
                 TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value,
@@ -165,13 +173,13 @@ class Voucher extends Model
                 'status' => JournalStatus::UNPOSTED->value,
             ]);
         }
+        $this->request_status = RequestStatuses::APPROVED->value;
+        $this->save();
+        $this->refresh();
     }
 
     public function denyRequestStatus()
     {
-        $this->request_status = RequestStatuses::DENIED->value;
-        $this->save();
-        $this->refresh();
         $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
         $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
@@ -208,5 +216,8 @@ class Voucher extends Model
                 TransactionFlowStatus::REJECTED->value
             );
         }
+        $this->request_status = RequestStatuses::DENIED->value;
+        $this->save();
+        $this->refresh();
     }
 }
