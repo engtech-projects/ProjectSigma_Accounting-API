@@ -150,7 +150,7 @@ class PaymentServices
                     'journalAccountInfo' => null,
                     'particulars' => ParticularsType::ACCOUNTS_PAYABLE->value,
                     'amount' => null,
-                    'cost' => null,
+                    'cost' => $paymentRequest->total,
                     'debit' => null,
                     'credit' => $paymentRequest->total,
                 ];

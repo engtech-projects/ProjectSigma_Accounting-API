@@ -48,12 +48,14 @@ class Voucher extends Model
         'received_date',
         'receipt_no',
         'attach_file',
+        'amount',
     ];
 
     protected $casts = [
         'date_encoded' => 'date:Y-m-d',
         'voucher_date' => 'date:Y-m-d',
         'approvals' => 'array',
+        'amount' => 'decimal:2',
     ];
 
     public function account(): BelongsTo
