@@ -18,21 +18,12 @@ class TransactionFlowService
             $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                 ->where('unique_name', $transactionFlowName)
                 ->first();
-            self::updateForgotTransactionFlow($paymentRequestId, $currentFlow->priority);
             if (! $currentFlow) {
                 throw new \Exception('Transaction flow not found');
             }
             if ($currentFlow->priority > 1) {
-                $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                    ->where('priority', '<', $currentFlow->priority)
-                    ->get();
-                $pendingFlows = $previousFlows->filter(function ($flow) {
-                    return $flow->status === TransactionFlowStatus::PENDING->value || $flow->status === TransactionFlowStatus::IN_PROGRESS->value;
-                });
-                if ($pendingFlows->isNotEmpty()) {
-                    $pendingCount = $pendingFlows->count();
-                    $pendingPriorities = $pendingFlows->pluck('priority')->implode(', ');
-                    throw new \Exception("Cannot update priority {$currentFlow->priority}. There are {$pendingCount} pending flows (priorities: {$pendingPriorities}) that must be completed first.");
+                if (self::checkPendingFlow($paymentRequestId, $transactionFlowName)) {
+                    throw new \Exception('Transaction Flow is pending. Please complete the previous transaction flow first.');
                 }
                 $nextFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
                     ->where('priority', $currentFlow->priority + 1)
@@ -113,6 +104,22 @@ class TransactionFlowService
             ];
         })->toArray();
     }
+
+    public static function checkPendingFlow($paymentRequestId, $uniqueName)
+    {
+        $currentFlow = TransactionFlow::where('payment_request_id', $paymentRequestId)
+            ->where('unique_name', $uniqueName)
+            ->first();
+        if (!$currentFlow) {
+            throw new \Exception('Transaction flow not found');
+        }
+        $pendingFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
+            ->where('priority', '<', $currentFlow->priority)
+            ->where('status', TransactionFlowStatus::PENDING->value)
+            ->get();
+        return $pendingFlows->isNotEmpty();
+    }
+
 
     public static function updateForgotTransactionFlow($paymentRequestId, $priority)
     {
