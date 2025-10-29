@@ -120,7 +120,6 @@ class TransactionFlowService
         return $pendingFlows->isNotEmpty();
     }
 
-
     public static function updateForgotTransactionFlow($paymentRequestId, $priority)
     {
         return DB::transaction(function () use ($paymentRequestId, $priority) {
