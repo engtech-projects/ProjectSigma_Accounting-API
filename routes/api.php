@@ -13,6 +13,7 @@ use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
 use App\Http\Controllers\APiSyncController;
+use App\Http\Controllers\AttachmentViewerController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
@@ -107,6 +108,9 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
+    });
+    Route::prefix('attachments')->group(function () {
+        Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
 
     // VOUCHERS ROUTES

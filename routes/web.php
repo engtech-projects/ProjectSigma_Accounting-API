@@ -14,13 +14,11 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+Route::get('document-viewer/{cacheKey}', [AttachmentViewerController::class, 'showDocumentViewer'])->name('web.document.viewer');
 Route::get('/', function (Request $request) {
     return response()->json(['version' => app()->version()]);
 });
-Route::get('document-viewer', [AttachmentViewerController::class, '__invoke']);
 Route::get('artisan-clear-optimization', function () {
     Artisan::call('optimize:clear');
-
     return 'success';
 });
