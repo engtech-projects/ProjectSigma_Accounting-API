@@ -2,7 +2,7 @@
 
 namespace App\Broadcasting;
 
-use App\Services\HrmsServices;
+use App\Services\ApiServices\HrmsService;
 use Illuminate\Notifications\Notification;
 
 class HrmsNotifyUserChannel
@@ -11,6 +11,6 @@ class HrmsNotifyUserChannel
     {
         $userId = $notifiable->id;
         $notif = $notification->toArray($notifiable);
-        HrmsServices::setNotification($notification->getToken(), $userId, $notif);
+        HrmsService::setNotification($notification->getToken(), $userId, $notif);
     }
 }

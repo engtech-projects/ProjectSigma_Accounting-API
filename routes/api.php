@@ -139,19 +139,28 @@ Route::middleware('auth:api')->group(function () {
 
     // SYNCHRONIZATION ROUTES
     Route::prefix('sync')->group(function () {
+        // Sync all services
+        Route::post('/all', [APiSyncController::class, 'syncAll']);
+        
+        // HRMS sync routes
         Route::prefix('hrms')->group(function () {
-            Route::post('/all', [APiSyncController::class, 'syncAll']);
-            Route::post('/employee', [APiSyncController::class, 'syncEmployees']);
-            Route::post('/department', [APiSyncController::class, 'syncDepartments']);
+            Route::post('/all', [APiSyncController::class, 'syncAllHrms']);
+            Route::post('/employees', [APiSyncController::class, 'syncEmployees']);
+            Route::post('/departments', [APiSyncController::class, 'syncDepartments']);
             Route::post('/users', [APiSyncController::class, 'syncUsers']);
+            Route::post('/accessibilities', [APiSyncController::class, 'syncAccessibilities']);
         });
+        
+        // Project Monitoring sync routes
         Route::prefix('project')->group(function () {
-            Route::post('/all', [APiSyncController::class, 'syncAll']);
-            Route::post('/project', [APiSyncController::class, 'syncProjects']);
+            Route::post('/all', [APiSyncController::class, 'syncAllProjectMonitoring']);
+            Route::post('/projects', [APiSyncController::class, 'syncProjects']);
         });
+        
+        // Inventory sync routes
         Route::prefix('inventory')->group(function () {
-            Route::post('/all', [APiSyncController::class, 'syncAll']);
-            Route::post('/supplier', [APiSyncController::class, 'syncSuppliers']);
+            Route::post('/all', [APiSyncController::class, 'syncAllInventory']);
+            Route::post('/suppliers', [APiSyncController::class, 'syncSuppliers']);
         });
     });
 

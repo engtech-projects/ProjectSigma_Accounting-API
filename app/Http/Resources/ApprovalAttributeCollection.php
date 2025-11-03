@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-use App\Services\HrmsServices;
+use App\Services\ApiServices\HrmsService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,6 +15,6 @@ class ApprovalAttributeCollection extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return HrmsServices::formatApprovals($request->bearerToken(), $this->resource);
+        return HrmsService::formatApprovals($request->bearerToken(), $this->resource);
     }
 }
