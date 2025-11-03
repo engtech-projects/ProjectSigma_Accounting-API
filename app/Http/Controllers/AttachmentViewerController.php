@@ -54,7 +54,7 @@ class AttachmentViewerController extends Controller
         ]);
     }
 
-    public function getDocumentViewerLink(Request $request )
+    public function getDocumentViewerLink(Request $request)
     {
         $this->validate($request, [
             'type' => 'required',
