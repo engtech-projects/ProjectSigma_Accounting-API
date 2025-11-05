@@ -31,7 +31,6 @@ use App\Services\VoucherService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
 
 class VoucherController extends Controller
 {

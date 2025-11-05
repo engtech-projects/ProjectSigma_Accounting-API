@@ -146,8 +146,11 @@ class Voucher extends Model
         $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
         $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
+            $currentTransactionFlow = TransactionFlow::where('payment_request_id', $journalEntry->paymentRequest->id)
+                ->where('unique_name', TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value)
+                ->first();
             $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('priority', '<', $this->priority)
+                ->where('priority', '<', $currentTransactionFlow->priority)
                 ->get();
             $pendingFlows = $previousFlows->filter(function ($flow) {
                 return $flow->status === TransactionFlowStatus::PENDING->value;
