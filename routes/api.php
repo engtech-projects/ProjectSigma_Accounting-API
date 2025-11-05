@@ -13,6 +13,7 @@ use App\Http\Controllers\Actions\Approvals\ApproveApproval;
 use App\Http\Controllers\Actions\Approvals\DisapproveApproval;
 use App\Http\Controllers\Actions\Approvals\VoidApproval;
 use App\Http\Controllers\APiSyncController;
+use App\Http\Controllers\AttachmentViewerController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\ParticularGroupController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\ReportGroupController;
+use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
@@ -69,6 +71,7 @@ Route::middleware('auth:api')->group(function () {
     Route::resource('terms', TermController::class);
     Route::get('paginated-report-group', [ReportGroupController::class, 'paginated']);
     Route::resource('report-group', ReportGroupController::class);
+    Route::resource('sub-group', SubGroupController::class);
     Route::resource('withholding-tax', WithHoldingTaxController::class);
 
     // JOURNAL ENTRY ROUTES
@@ -107,6 +110,9 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
+    });
+    Route::prefix('attachments')->group(function () {
+        Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
 
     // VOUCHERS ROUTES
@@ -178,6 +184,7 @@ Route::get('search-stakeholders', [PaymentRequestController::class, 'searchStake
 Route::get('search-particular-groups', [ParticularGroupController::class, 'searchParticularGroups']);
 Route::get('search-journal-accounts', [AccountsController::class, 'searchAccounts']);
 Route::get('search-report-groups', [ReportGroupController::class, 'searchReportGroups']);
+Route::get('search-sub-groups', [SubGroupController::class, 'searchSubGroups']);
 
 // SYSTEM SETUP ROUTES
 if (config()->get('app.artisan') == 'true') {
