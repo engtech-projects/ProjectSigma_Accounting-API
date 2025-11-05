@@ -3,6 +3,7 @@
 namespace App\Http\Services\ApiServices;
 
 use Illuminate\Support\Facades\Http;
+use InvalidArgumentException;
 
 class InventoryService
 {
@@ -14,7 +15,7 @@ class InventoryService
         $this->authToken = $authToken;
         $this->apiUrl = config('services.url.inventory_api');
         if (empty($this->apiUrl)) {
-            throw new \InvalidArgumentException('Inventory API URL is not configured');
+            throw new InvalidArgumentException('Inventory API URL is not configured');
         }
     }
 

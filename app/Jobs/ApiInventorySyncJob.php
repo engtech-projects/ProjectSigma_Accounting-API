@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Services\ApiServices\InventoryService;
 use Illuminate\Bus\Queueable;
+use App\Services\ApiServices\InventoryService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -44,6 +44,7 @@ class ApiInventorySyncJob implements ShouldQueue
             Log::info("ApiInventorySyncJob successfully synced with [{$this->method}]");
         } catch (\Throwable $e) {
             Log::error("ApiInventorySyncJob failed [{$this->method}]: " . $e->getMessage());
+            throw $e;
         }
     }
 }

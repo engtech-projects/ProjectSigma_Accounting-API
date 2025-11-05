@@ -141,7 +141,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('sync')->group(function () {
         // Sync all services
         Route::post('/all', [APiSyncController::class, 'syncAll']);
-        
+
         // HRMS sync routes
         Route::prefix('hrms')->group(function () {
             Route::post('/all', [APiSyncController::class, 'syncAllHrms']);
@@ -150,13 +150,13 @@ Route::middleware('auth:api')->group(function () {
             Route::post('/users', [APiSyncController::class, 'syncUsers']);
             Route::post('/accessibilities', [APiSyncController::class, 'syncAccessibilities']);
         });
-        
+
         // Project Monitoring sync routes
         Route::prefix('project')->group(function () {
             Route::post('/all', [APiSyncController::class, 'syncAllProjectMonitoring']);
             Route::post('/projects', [APiSyncController::class, 'syncProjects']);
         });
-        
+
         // Inventory sync routes
         Route::prefix('inventory')->group(function () {
             Route::post('/all', [APiSyncController::class, 'syncAllInventory']);

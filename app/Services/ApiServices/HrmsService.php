@@ -25,7 +25,7 @@ class HrmsService
         }
         $response = Http::withToken(token: $token)
             ->acceptJson()
-            ->withBody($notificationData)
+            ->withBody($notificationData, 'application/json')
             ->post(config('services.url.hrms_api_url') . "/api/notifications/services-notify/{$userid}");
         if (!$response->successful()) {
             return false;

@@ -45,6 +45,7 @@ class ApiProjectsSyncJob implements ShouldQueue
             Log::info("ApiProjectsSyncJob successfully synced with [{$this->method}]");
         } catch (\Throwable $e) {
             Log::error("ApiProjectsSyncJob failed [{$this->method}]: " . $e->getMessage());
+            throw $e;
         }
     }
 }

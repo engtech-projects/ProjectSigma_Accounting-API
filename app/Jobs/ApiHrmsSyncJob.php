@@ -45,6 +45,7 @@ class ApiHrmsSyncJob implements ShouldQueue
             Log::info("ApiHrmsSyncJob successfully synced with [{$this->method}]");
         } catch (\Throwable $e) {
             Log::error("ApiHrmsSyncJob failed [{$this->method}]: " . $e->getMessage());
+            throw $e;
         }
     }
 }

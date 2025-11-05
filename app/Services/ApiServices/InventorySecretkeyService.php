@@ -26,9 +26,12 @@ class InventorySecretkeyService
         return $syncData;
     }
 
-    public function syncSuppliers()
+  public function syncSuppliers()
     {
         $suppliers = $this->getSuppliers();
+        if ($suppliers === false) {
+            return false;
+        }
         $suppliers = collect($suppliers)->map(function ($supplier) {
             return [
                 'id' => $supplier['id'],
@@ -54,7 +57,6 @@ class InventorySecretkeyService
                 ['name']
             );
         });
-
         return true;
     }
     public function getSuppliers()
@@ -65,8 +67,6 @@ class InventorySecretkeyService
         if (! $response->successful()) {
             return false;
         }
-
         return $response->json();
     }
 }
-

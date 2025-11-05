@@ -68,7 +68,7 @@ class ProjectMonitoringSecretKeyService
                 'body' => $response->body(),
                 'url' => $this->apiUrl.'/api/sigma/sync-list/projects'
             ]);
-            return [];
+            throw new \RuntimeException('Project Monitoring API sync failed');
         }
         return $response->json()["data"];
     }

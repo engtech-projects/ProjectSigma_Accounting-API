@@ -15,10 +15,4 @@ class Project extends Model
         'project_code',
         'status'
     ];
-
-    protected $casts = [
-        'project_code' => 'string',
-        'created_at' => 'datetime:Y-m-d'
-    ];
-
 }

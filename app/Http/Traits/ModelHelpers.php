@@ -23,6 +23,9 @@ trait ModelHelpers
      */
     public function getCreatedAtHumanAttribute()
     {
+        if (!$this->created_at) {
+            return null;
+        }
         return Carbon::parse($this->created_at)->format('F j, Y h:i A');
     }
 
