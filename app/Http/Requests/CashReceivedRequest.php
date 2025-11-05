@@ -26,7 +26,8 @@ class CashReceivedRequest extends FormRequest
             'received_by' => 'required|string',
             'received_date' => 'required|date|date_format:Y-m-d',
             'receipt_no' => 'required|string',
-            'attachment_file_names' => 'nullable|array',
+            'attach_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'amount' => 'required|numeric',
         ];
     }
 }
