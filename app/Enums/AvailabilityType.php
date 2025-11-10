@@ -8,7 +8,9 @@ enum AvailabilityType: string
 {
     use EnumHelper;
 
-    case PICK_UP = 'PICK_UP';
-    case DELIVER_ON_SITE = 'DELIVER_ON_SITE';
-    case FOR_SHIPMENT = 'FOR_SHIPMENT';
+    case AVAILABLE = 'AVAILABLE';
+    case UNAVAILABLE = 'UNAVAILABLE';
+    case ORDER_BASIS_7_DAYS = 'ORDER_BASIS_7_DAYS';
+    case ORDER_BASIS_15_DAYS = 'ORDER_BASIS_15_DAYS';
+    case ORDER_BASIS_30_DAYS = 'ORDER_BASIS_30_DAYS';
 }

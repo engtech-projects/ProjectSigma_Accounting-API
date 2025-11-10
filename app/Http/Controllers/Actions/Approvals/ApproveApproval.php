@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Actions\Approvals;
 
 use App\Enums\ApprovalModels;
-use App\Enums\RequestApprovalStatus;
+use App\Enums\RequestStatuses;
 use App\Http\Controllers\Controller;
 use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestPaymentForApprovedNotification;
@@ -31,7 +31,7 @@ class ApproveApproval extends Controller
     public function approve($modelType, $model, Request $request)
     {
         $result = $model->updateApproval([
-            'status' => RequestApprovalStatus::APPROVED,
+            'status' => RequestStatuses::APPROVED->value,
             'date_approved' => Carbon::now(),
         ]);
         $nextApproval = $model->getNextPendingApproval();

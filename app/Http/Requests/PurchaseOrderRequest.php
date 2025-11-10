@@ -26,7 +26,10 @@ class PurchaseOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stakeholder_id' => 'nullable',
+            'supplier' => [
+                'required',
+                Rule::exists('stakeholder', 'name'),
+            ],
             'prf_no' => 'required',
             'request_date' => 'nullable',
             'description' => 'nullable',
@@ -44,7 +47,6 @@ class PurchaseOrderRequest extends FormRequest
             'details.*.amount' => 'nullable|numeric',
             'details.*.total_vat_amount' => 'nullable|numeric',
             'details.*.stakeholder_id' => 'nullable|numeric',
-            'details.*.particular_group_id' => 'nullable|numeric',
         ];
     }
 }
