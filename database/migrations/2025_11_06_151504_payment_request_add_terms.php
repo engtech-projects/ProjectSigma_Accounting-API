@@ -17,14 +17,6 @@ return new class () extends Migration {
                     'FOR_SHIPMENT',
                 ])->after('with_holding_tax_id')
                 ->nullable();
-            $table->enum('availability', [
-                    'AVAILABLE',
-                    'UNAVAILABLE',
-                    'ORDER_BASIS_7_DAYS',
-                    'ORDER_BASIS_15_DAYS',
-                    'ORDER_BASIS_30_DAYS',
-                ])->after('payment_terms')
-                ->nullable();
             $table->enum('payment_terms', [
                     'PRE_PAYMENT_IN_FULL',
                     'CREDIT_7_DAYS',
@@ -32,6 +24,14 @@ return new class () extends Migration {
                     'CREDIT_30_DAYS',
                     'PROGRESS_BILLING',
                 ])->after('delivery_terms')
+                ->nullable();
+            $table->enum('availability', [
+                    'AVAILABLE',
+                    'UNAVAILABLE',
+                    'ORDER_BASIS_7_DAYS',
+                    'ORDER_BASIS_15_DAYS',
+                    'ORDER_BASIS_30_DAYS',
+                ])->after('payment_terms')
                 ->nullable();
         });
     }
