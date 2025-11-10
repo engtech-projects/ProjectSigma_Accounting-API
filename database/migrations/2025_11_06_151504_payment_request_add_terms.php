@@ -33,7 +33,6 @@ return new class () extends Migration {
                     'PROGRESS_BILLING',
                 ])->after('delivery_terms')
                 ->nullable();
-
         });
     }
 
