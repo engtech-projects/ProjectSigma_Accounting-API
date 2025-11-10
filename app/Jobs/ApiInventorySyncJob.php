@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use App\Services\ApiServices\InventoryService;
+use App\Services\ApiServices\InventorySecretkeyService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,7 +33,7 @@ class ApiInventorySyncJob implements ShouldQueue
     public function handle(): void
     {
         try {
-            $service = app(InventoryService::class);
+            $service = app(InventorySecretkeyService::class);
             if (!method_exists($service, $this->method)) {
                 Log::warning("ApiInventorySyncJob: Method {$this->method} does not exist.");
                 return;

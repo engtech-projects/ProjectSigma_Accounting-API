@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\ApiServices;
+namespace App\Services\ApiServices;
 
 use App\Models\Project;
 use DateTime;
@@ -15,7 +15,7 @@ class ProjectMonitoringSecretKeyService
     public function __construct()
     {
         $this->authToken = config('services.sigma.secret_key');
-        $this->apiUrl = config('services.url.projects_api');
+        $this->apiUrl = config('services.url.project_api');
     }
 
     public function syncAll()

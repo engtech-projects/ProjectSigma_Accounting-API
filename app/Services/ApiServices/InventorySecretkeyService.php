@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\ApiServices;
+namespace App\Services\ApiServices;
 
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Supplier;

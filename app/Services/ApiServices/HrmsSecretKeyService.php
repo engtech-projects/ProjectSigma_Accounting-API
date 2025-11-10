@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Services\ApiServices;
+namespace App\Services\ApiServices;
 
 use App\Models\SetupAccessibilities;
-use App\Models\SetupDepartments;
-use App\Models\SetupEmployess;
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use App\Models\SetupDepartments;
+use App\Models\SetupEmployees;
+use App\Models\User;
 use Illuminate\Support\Facades\Log;
 
 class HrmsSecretKeyService
@@ -16,171 +16,148 @@ class HrmsSecretKeyService
 
     public function __construct()
     {
-        $this->apiUrl = config('services.url.hrms_api_url');
+        $this->apiUrl = config('services.url.hrms_api');
         $this->authToken = config('services.sigma.secret_key');
         if (empty($this->authToken)) {
-            throw new \InvalidArgumentException('HRMS secret key is not configured');
+            throw new \InvalidArgumentException('SECRET KEY is not configured');
         }
         if (empty($this->apiUrl)) {
-            throw new \InvalidArgumentException('HRMS API URL is not configured');
+            throw new \InvalidArgumentException('Projects API URL is not configured');
         }
     }
 
     public function syncAll()
     {
         $syncEmployees = $this->syncEmployees();
-        if (!$syncEmployees) {
-            throw new \Exception("Employee sync failed.");
-        }
         $syncUsers = $this->syncUsers();
-        if (!$syncUsers) {
-            throw new \Exception("User sync failed.");
-        }
         $syncDepartments = $this->syncDepartments();
-        if (!$syncDepartments) {
-            throw new \Exception("Department sync failed.");
-        }
         $syncAccessibilities = $this->syncAccessibilities();
-        if (!$syncAccessibilities) {
-            throw new \Exception("Accessibility sync failed.");
-        }
-        return true;
+        return $syncEmployees && $syncUsers && $syncDepartments && $syncAccessibilities;
     }
 
     public function syncEmployees()
     {
         $employees = $this->getAllEmployees();
-        $employees = collect($employees)->map(fn ($e) => collect($e)->only([
-            'id',
-            'first_name',
-            'middle_name',
-            'family_name',
-            'nick_name',
-            'current_position',
-            'digital_signature',
-            'created_at',
-            'updated_at',
-            'deleted_at',
-        ])->toArray())->toArray();
-        try {
-            SetupEmployess::upsert(
-                $employees,
-                ['id'],
-                [
-                    'first_name',
-                    'middle_name',
-                    'family_name',
-                    'nick_name',
-                    'current_position',
-                    'digital_signature',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ]
-            );
-        } catch (\Exception $e) {
-            Log::error('Failed to sync employees', ['error' => $e->getMessage()]);
-            throw new \Exception("Employee sync failed: " . $e->getMessage());
-        }
+
+        SetupEmployees::upsert(
+            $employees,
+            ['id'],
+            [
+                'first_name',
+                'middle_name',
+                'family_name',
+                'name_suffix',
+                'nick_name',
+                'gender',
+                'date_of_birth',
+                'place_of_birth',
+                'citizenship',
+                'blood_type',
+                'civil_status',
+                'date_of_marriage',
+                'telephone_number',
+                'mobile_number',
+                'email',
+                'religion',
+                'weight',
+                'height',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ]
+        );
         return true;
     }
 
     public function syncUsers()
     {
         $users = $this->getAllUsers();
-        try {
-            User::upsert(
-                $users,
-                ['id'],
-                [
-                    "name",
-                    "email",
-                    "email_verified_at",
-                    "password",
-                    "remember_token",
-                    "type",
-                    "accessibilities",
-                    "employee_id",
-                    "created_at",
-                    "updated_at",
-                    "deleted_at",
-                ]
-            );
-        } catch (\Exception $e) {
-            Log::error('Failed to sync users', ['error' => $e->getMessage()]);
-            throw new \Exception("User sync failed: " . $e->getMessage());
-        }
+        User::upsert(
+            $users,
+            [
+                'id',
+            ],
+            [
+                "name",
+                "email",
+                "email_verified_at",
+                "password",
+                "remember_token",
+                "type",
+                "accessibilities",
+                "employee_id",
+                "created_at",
+                "updated_at",
+                "deleted_at",
+            ]
+        );
         return true;
     }
 
     public function syncDepartments()
     {
         $departments = $this->getAllDepartments();
-        try {
-            SetupDepartments::upsert(
-                $departments,
-                ['id'],
-                [
-                    'code',
-                    'department_name',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ]
-            );
-        } catch (\Exception $e) {
-            Log::error('Failed to sync departments', ['error' => $e->getMessage()]);
-            throw new \Exception("Department sync failed: " . $e->getMessage());
-        }
+        $departments = array_map(fn ($department) => [
+            "id" => $department['id'],
+            "code" => $department['code'],
+            "department_name" => $department['department_name'],
+            "created_at" => $department['created_at'],
+            "updated_at" => $department['updated_at'],
+            "deleted_at" => $department['deleted_at'],
+        ], $departments);
+        SetupDepartments::upsert(
+            $departments,
+            [
+                'id',
+            ],
+            [
+                'code',
+                'department_name',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ]
+        );
         return true;
     }
-
     public function syncAccessibilities()
     {
         $accessibilities = $this->getAllAccessibilities();
-        try {
-            SetupAccessibilities::upsert(
-                $accessibilities,
-                ['id'],
-                [
-                    'accessibilities_name',
-                    'created_at',
-                    'updated_at',
-                    'deleted_at',
-                ]
-            );
-        } catch (\Exception $e) {
-            Log::error('Failed to sync accessibilities', ['error' => $e->getMessage()]);
-            throw new \Exception("Accessibility sync failed: " . $e->getMessage());
-        }
+        SetupAccessibilities::upsert(
+            $accessibilities,
+            [
+                'id',
+            ],
+            [
+                'accessibilities_name',
+                'created_at',
+                'updated_at',
+                'deleted_at',
+            ]
+        );
         return true;
     }
 
     public function getAllEmployees()
     {
         $response = Http::withToken($this->authToken)
-            ->timeout(30)
             ->withUrlParameters([
                 'paginate' => false,
                 'sort' => 'asc',
             ])
             ->acceptJson()
             ->get($this->apiUrl . '/api/sigma/sync-list/employee');
+
         if (!$response->successful()) {
-            Log::warning('HRMS API request failed', [
-                'endpoint' => 'employee',
-                'status' => $response->status(),
-                'error' => $response->body()
-            ]);
             return [];
         }
+
         return $response->json("data") ?: [];
     }
 
     public function getAllUsers()
     {
         $response = Http::withToken($this->authToken)
-            ->timeout(30)
             ->withUrlParameters([
                 "paginate" => false,
                 "sort" => "asc"
@@ -188,20 +165,27 @@ class HrmsSecretKeyService
             ->acceptJson()
             ->get($this->apiUrl . '/api/sigma/sync-list/user');
         if (!$response->successful()) {
-            Log::warning('HRMS API request failed', [
-                'endpoint' => 'user',
+            Log::channel("HrmsService")->error('Failed to fetch users from monitoring API', [
                 'status' => $response->status(),
-                'error' => $response->body()
+                'body'   => $response->body(),
             ]);
             return [];
         }
-        return $response->json("data") ?: [];
+        Log::channel("HrmsService")->error('Failed to fetch users from monitoring API', [
+            'status' => $response->status(),
+            'body'   => $response->body(),
+        ]);
+        $data = $response->json();
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            Log::channel("HrmsService")->warning('Unexpected response format from users API', ['response' => $data]);
+            return [];
+        }
+        return $data['data'];
     }
 
     public function getAllDepartments()
     {
         $response = Http::withToken($this->authToken)
-            ->timeout(30)
             ->withUrlParameters([
                 "paginate" => false,
                 "sort" => "asc"
@@ -209,30 +193,36 @@ class HrmsSecretKeyService
             ->acceptJson()
             ->get($this->apiUrl . '/api/sigma/sync-list/department');
         if (!$response->successful()) {
-            Log::warning('HRMS API request failed', [
-                'endpoint' => 'department',
+            Log::channel("HrmsService")->error('Failed to fetch departments from monitoring API', [
                 'status' => $response->status(),
-                'error' => $response->body()
+                'body'   => $response->body(),
             ]);
             return [];
         }
-        return $response->json("data") ?: [];
+        $data = $response->json();
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            Log::channel("HrmsService")->warning('Unexpected response format from departments API', ['response' => $data]);
+            return [];
+        }
+        return $data['data'];
     }
-
     public function getAllAccessibilities()
     {
         $response = Http::withToken($this->authToken)
-            ->timeout(30)
             ->acceptJson()
             ->get($this->apiUrl . '/api/sigma/sync-list/accessibilities');
         if (!$response->successful()) {
-            Log::warning('HRMS API request failed', [
-                'endpoint' => 'accessibilities',
+            Log::channel("HrmsService")->error('Failed to fetch accessibilities from monitoring API', [
                 'status' => $response->status(),
-                'error' => $response->body()
+                'body'   => $response->body(),
             ]);
             return [];
         }
-        return $response->json("data") ?: [];
+        $data = $response->json();
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            Log::channel("HrmsService")->warning('Unexpected response format from accessibilities API', ['response' => $data]);
+            return [];
+        }
+        return $data['data'];
     }
 }

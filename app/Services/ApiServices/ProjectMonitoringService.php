@@ -12,7 +12,7 @@ class ProjectService
     public function __construct($authToken)
     {
         $this->authToken = $authToken;
-        $this->apiUrl = config('services.url.projects_api');
+        $this->apiUrl = config('services.url.project_api');
         if (empty($this->apiUrl)) {
             throw new \InvalidArgumentException('Projects API URL is not configured');
         }

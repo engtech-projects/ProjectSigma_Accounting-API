@@ -3,40 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Jobs\ApiHrmsSyncJob;
 use App\Jobs\ApiInventorySyncJob;
-use App\Jobs\ApiProjectsSyncJob;
-use App\Http\Services\ApiServices\ProjectMonitoringSecretKeyService;
-use App\Http\Services\ApiServices\InventorySecretkeyService;
-use App\Http\Services\ApiServices\HrmsSecretKeyService;
+use App\Jobs\ApiProjectsSyncJobs;
 
 class ApiSyncController extends Controller
 {
     public function syncAll(Request $request)
     {
-        DB::transaction(function () {
-            $projectService = new ProjectMonitoringSecretKeyService();
-            $inventoryService = new InventorySecretkeyService();
-            $hrmsService = new HrmsSecretKeyService();
-
-            $errorServices = [];
-            if (!$projectService->syncAll()) {
-                $errorServices[] = "Project Monitoring";
-            }
-            if (!$hrmsService->syncAll()) {
-                $errorServices[] = "HRMS";
-            }
-            if (!$inventoryService->syncAll()) {
-                $errorServices[] = "Inventory";
-            }
-            if (!empty($errorServices)) {
-                throw new \Exception('Sync with ' . implode(', ', $errorServices) .' failed while trying to sync with all API Services');
-            }
-        });
+        try {
+            ApiHrmsSyncJob::dispatch('syncAll');
+            ApiInventorySyncJob::dispatch('syncAll');
+            ApiProjectsSyncJobs::dispatch('syncAll');
+        } catch (\Exception $e) {
+            Log::error('Failed to dispatch HRMS and IMS sync job', ['error' => $e->getMessage()]);
+            throw new \Exception("HRMSand IMS sync failed: " . $e->getMessage());
+        }
         return response()->json([
-            'message' => 'Successfully synced with all API services.',
+            'message' => 'Successfully synced all HRMS and IMS.',
             'success' => true,
         ]);
     }
@@ -137,12 +122,12 @@ class ApiSyncController extends Controller
     // PROJECT MONITORING
     public function syncAllProjectMonitoring(Request $request)
     {
-        DB::transaction(function () {
-            $projectService = new ProjectMonitoringSecretKeyService();
-            if (!$projectService->syncAll()) {
-                throw new \Exception("Project monitoring sync failed.");
-            }
-        });
+        try {
+            ApiProjectsSyncJobs::dispatch('syncAll');
+        } catch (\Exception $e) {
+            Log::error('Failed to dispatch Project Monitoring sync job', ['error' => $e->getMessage()]);
+            throw new \Exception("Project Monitoring sync failed: " . $e->getMessage());
+        }
         return response()->json([
             'message' => 'Successfully synced with Project Monitoring api service.',
             'success' => true,
@@ -151,7 +136,7 @@ class ApiSyncController extends Controller
     public function syncProjects(Request $request)
     {
         try {
-            ApiProjectsSyncJob::dispatch('syncProjects');
+            ApiProjectsSyncJobs::dispatch('syncProjects');
         } catch (\Exception $e) {
             Log::error('Failed to dispatch Project sync job', ['error' => $e->getMessage()]);
             throw new \Exception("Project sync failed: " . $e->getMessage());

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Http\Services\ApiServices\HrmsSecretKeyService;
+use App\Services\ApiServices\HrmsSecretKeyService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -45,7 +45,6 @@ class ApiHrmsSyncJob implements ShouldQueue
             Log::info("ApiHrmsSyncJob successfully synced with [{$this->method}]");
         } catch (\Throwable $e) {
             Log::error("ApiHrmsSyncJob failed [{$this->method}]: " . $e->getMessage());
-            throw $e;
         }
     }
 }

@@ -7,13 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SetupEmployess extends Model
+class SetupEmployees extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use ModelHelpers;
-
-    protected $table = 'setup_employees';
 
     protected $fillable = [
         'first_name',
@@ -45,10 +43,10 @@ class SetupEmployess extends Model
     ];
 
     /**
-     * ==================================================
-     * MODEL ATTRIBUTES
-     * ==================================================
-     */
+    * ==================================================
+    * MODEL ATTRIBUTES
+    * ==================================================
+    */
     public function getAgeAttribute()
     {
         if (!$this->date_of_birth) {
@@ -64,7 +62,7 @@ class SetupEmployess extends Model
                 $this->first_name,
                 $this->middle_name,
                 $this->name_suffix
-            ]))
+                ]))
         );
     }
 

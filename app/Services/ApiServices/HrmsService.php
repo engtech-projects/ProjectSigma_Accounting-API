@@ -11,7 +11,7 @@ class HrmsService
 
     public function __construct($authToken)
     {
-        $this->apiUrl = config('services.url.hrms_api_url');
+        $this->apiUrl = config('services.url.hrms_api');
         $this->authToken = $authToken;
         if (empty($this->apiUrl)) {
             throw new \InvalidArgumentException('HRMS API URL is not configured');
@@ -25,8 +25,8 @@ class HrmsService
         }
         $response = Http::withToken(token: $token)
             ->acceptJson()
-            ->withBody($notificationData, 'application/json')
-            ->post(config('services.url.hrms_api_url') . "/api/notifications/services-notify/{$userid}");
+            ->withBody($notificationData)
+            ->post(config('services.url.hrms_api') . "/api/notifications/services-notify/{$userid}");
         if (!$response->successful()) {
             return false;
         }
@@ -38,7 +38,7 @@ class HrmsService
         $response = Http::withToken($token)
             ->acceptJson()
             ->withQueryParameters($approvals)
-            ->get(config('services.url.hrms_api_url') . "/api/services/format-approvals");
+            ->get(config('services.url.hrms_api') . "/api/services/format-approvals");
         if (!$response->successful()) {
             return $approvals;
         }
@@ -49,7 +49,7 @@ class HrmsService
     {
         $response = Http::withToken($token)
             ->acceptJson()
-            ->get(config('services.url.hrms_api_url') . '/api/services/user-employees', [
+            ->get(config('services.url.hrms_api') . '/api/services/user-employees', [
                 'user_ids' => $user_ids
             ]);
 
