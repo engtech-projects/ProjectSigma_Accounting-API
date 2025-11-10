@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\AvailabilityType;
+use App\Enums\DeliveryTermTypes;
+use App\Enums\PaymentTermTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PurchaseOrderRequest extends FormRequest
 {
@@ -30,9 +34,9 @@ class PurchaseOrderRequest extends FormRequest
             'approvals' => 'nullable',
             'request_status' => 'nullable',
             'total_vat_amount' => 'nullable',
-            'delivery_terms' => 'nullable',
-            'payment_terms' => 'nullable',
-            'availability' => 'nullable',
+            'delivery_terms' => ['nullable', Rule::enum(DeliveryTermTypes::class)],
+            'payment_terms' => ['nullable', Rule::enum(PaymentTermTypes::class)],
+            'availability' => ['nullable', Rule::enum(AvailabilityType::class)],
             'details' => 'required|array',
             'details.*.particulars' => 'nullable|string',
             'details.*.cost' => 'nullable|numeric',

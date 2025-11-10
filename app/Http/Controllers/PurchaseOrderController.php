@@ -26,13 +26,13 @@ class PurchaseOrderController extends Controller
     public function store(PurchaseOrderRequest $request)
     {
         $validatedData =  $request->validated();
-        DB::transaction(function () use ($validatedData) {
+        return DB::transaction(function () use ($validatedData) {
             $validatedData['type'] = PaymentRequestType::PO->value;
             $purchaseOrder = PaymentRequest::create($validatedData);
             $purchaseOrder->details()->createMany($validatedData['details']);
             return PaymentRequestCollection::collection($purchaseOrder)->additional([
                 'success' => true,
-                'message' => 'Purchase Orders Successfully Retrieved.',
+                'message' => 'Purchase Order Successfully Created.',
             ]);
         });
     }

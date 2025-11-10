@@ -112,7 +112,7 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
     });
-    Route::resource('purchaseOrder', PurchaseOrderController::class)->names('purchase-order');
+    Route::resource('purchase-order', PurchaseOrderController::class)->names('purchase-order');
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
