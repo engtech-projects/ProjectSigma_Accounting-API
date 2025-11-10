@@ -21,6 +21,7 @@ use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\PayrollRequestController;
 use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
@@ -111,6 +112,7 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
     });
+    Route::resource('purchase-order', PurchaseOrderController::class)->names('purchase-order');
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });

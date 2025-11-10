@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RequestApprovalStatus;
+use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowStatus;
 use App\Http\Requests\TransactionFlowRequest;
 use App\Models\PaymentRequest;
@@ -75,7 +75,7 @@ class TransactionFLowModelController extends Controller
                         $nextFlow->update(['status' => TransactionFlowStatus::PENDING->value]);
                         $paymentRequest = PaymentRequest::find($transactionFlow->payment_request_id);
                         $paymentRequest->update([
-                            'request_status' => RequestApprovalStatus::DENIED,
+                            'request_status' => RequestStatuses::DENIED->value,
                         ]);
                     }
                 }

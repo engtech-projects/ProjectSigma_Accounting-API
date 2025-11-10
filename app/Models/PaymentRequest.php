@@ -37,6 +37,9 @@ class PaymentRequest extends Model
         'request_status',
         'total_vat_amount',
         'attachment_url',
+        'delivery_terms',
+        'payment_terms',
+        'availability',
     ];
 
     protected $casts = [
@@ -161,7 +164,10 @@ class PaymentRequest extends Model
         return $query->where('request_status', RequestStatuses::DENIED->value)
             ->where('created_by', auth()->user()->id);
     }
-
+    public function scopePurchaseOrder($query)
+    {
+        return $query->where('type', PaymentRequestType::PO->value);
+    }
     public function getTaxableAmountAttribute()
     {
         return floatval($this->total) - floatval($this->total_vat_amount);

@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\JournalStatus;
-use App\Enums\RequestApprovalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
 use App\Enums\TransactionFlowStatus;
@@ -195,7 +194,7 @@ class Voucher extends Model
             // payment request
             $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(
@@ -207,12 +206,12 @@ class Voucher extends Model
             // disbursement voucher
             $disbursement = $this->disbursementVoucher;
             $disbursement->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // payment request
             $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(
