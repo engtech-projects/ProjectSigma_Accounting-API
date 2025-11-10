@@ -11,12 +11,15 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('payment_request', function (Blueprint $table) {
+            // Delivery terms: PICK_UP, DELIVER_ON_SITE, FOR_SHIPMENT
             $table->enum('delivery_terms', [
                     'PICK_UP',
                     'DELIVER_ON_SITE',
                     'FOR_SHIPMENT',
                 ])->after('with_holding_tax_id')
                 ->nullable();
+
+            // Payment terms: various payment/credit options
             $table->enum('payment_terms', [
                     'PRE_PAYMENT_IN_FULL',
                     'CREDIT_7_DAYS',
@@ -25,6 +28,8 @@ return new class () extends Migration {
                     'PROGRESS_BILLING',
                 ])->after('delivery_terms')
                 ->nullable();
+
+            // Availability: AVAILABLE, UNAVAILABLE, ORDER_BASIS variants
             $table->enum('availability', [
                     'AVAILABLE',
                     'UNAVAILABLE',
