@@ -7,7 +7,6 @@ use App\Enums\Traits\EnumHelper;
 enum AvailabilityType: string
 {
     use EnumHelper;
-
     case AVAILABLE = 'AVAILABLE';
     case UNAVAILABLE = 'UNAVAILABLE';
     case ORDER_BASIS_7_DAYS = 'ORDER_BASIS_7_DAYS';

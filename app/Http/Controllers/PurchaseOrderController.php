@@ -19,7 +19,6 @@ class PurchaseOrderController extends Controller
             ->withTransactionFlow()
             ->orderBy('created_at', 'desc')
             ->paginate(config('app.pagination.limit'));
-
         return PaymentRequestCollection::collection($purchaseOrders)->additional([
             'success' => true,
             'message' => 'Purchase Orders Successfully Retrieved.',
