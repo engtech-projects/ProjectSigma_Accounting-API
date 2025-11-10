@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\JournalStatus;
-use App\Enums\RequestApprovalStatus;
 use App\Enums\RequestStatuses;
 use App\Enums\TransactionFlowName;
 use App\Enums\TransactionFlowStatus;
@@ -48,12 +47,14 @@ class Voucher extends Model
         'received_date',
         'receipt_no',
         'attach_file',
+        'amount',
     ];
 
     protected $casts = [
         'date_encoded' => 'date:Y-m-d',
         'voucher_date' => 'date:Y-m-d',
         'approvals' => 'array',
+        'amount' => 'decimal:2',
     ];
 
     public function account(): BelongsTo
@@ -144,8 +145,11 @@ class Voucher extends Model
         $journalEntry = $this->journalEntry()->with('paymentRequest')->first();
         $paymentRequestId = $journalEntry->paymentRequest->id;
         if ($this->type === VoucherType::DISBURSEMENT->value) {
+            $currentTransactionFlow = TransactionFlow::where('payment_request_id', $journalEntry->paymentRequest->id)
+                ->where('unique_name', TransactionFlowName::DISBURSEMENT_VOUCHER_APPROVAL->value)
+                ->first();
             $previousFlows = TransactionFlow::where('payment_request_id', $paymentRequestId)
-                ->where('priority', '<', $this->priority)
+                ->where('priority', '<', $currentTransactionFlow->priority)
                 ->get();
             $pendingFlows = $previousFlows->filter(function ($flow) {
                 return $flow->status === TransactionFlowStatus::PENDING->value;
@@ -190,7 +194,7 @@ class Voucher extends Model
             // payment request
             $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(
@@ -202,12 +206,12 @@ class Voucher extends Model
             // disbursement voucher
             $disbursement = $this->disbursementVoucher;
             $disbursement->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // payment request
             $paymentRequest = $journalEntry->paymentRequest;
             $paymentRequest->update([
-                'request_status' => RequestApprovalStatus::DENIED,
+                'request_status' => RequestStatuses::DENIED->value,
             ]);
             // voucher request
             TransactionFlowService::updateTransactionFlow(

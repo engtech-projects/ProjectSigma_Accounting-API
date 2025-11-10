@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\SubGroup;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CashReceivedRequest extends FormRequest
+class SubGroupRequestFilter extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,10 @@ class CashReceivedRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'voucher_id' => 'required|numeric|exists:voucher,id',
-            'received_by' => 'required|string',
-            'received_date' => 'required|date|date_format:Y-m-d',
-            'receipt_no' => 'required|string',
-            'attach_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'amount' => 'required|numeric',
+            'key' => 'nullable|string|max:255',
+            'page' => 'nullable|integer|min:1',
+            'name' => 'nullable|string|max:255',
+            'description' => 'nullable|string|max:255',
         ];
     }
 }

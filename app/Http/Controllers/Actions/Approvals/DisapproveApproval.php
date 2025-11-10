@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Actions\Approvals;
 
 use App\Enums\ApprovalModels;
-use App\Enums\RequestApprovalStatus;
+use App\Enums\RequestStatuses;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DisapproveApprovalRequest;
 use App\Notifications\RequestPaymentForDeniedNotification;
@@ -30,7 +30,7 @@ class DisapproveApproval extends Controller
     {
         $attribute = $request->validated();
         $result = $model->updateApproval([
-            'status' => RequestApprovalStatus::DENIED,
+            'status' => RequestStatuses::DENIED->value,
             'remarks' => $attribute['remarks'],
             'date_denied' => Carbon::now(),
         ]);
