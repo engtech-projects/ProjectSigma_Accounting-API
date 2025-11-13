@@ -5,7 +5,8 @@ namespace App\Services\ApiServices;
 use App\Models\StakeHolder;
 use App\Models\Stakeholders\Supplier;
 use Illuminate\Support\Facades\DB;
-use Http;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class InventoryService
 {
@@ -13,10 +14,16 @@ class InventoryService
 
     protected $authToken;
 
-    public function __construct($authToken)
+     public function __construct()
     {
-        $this->authToken = $authToken;
         $this->apiUrl = config('services.url.inventory_api');
+        $this->authToken = config('services.sigma.secret_key');
+        if (empty($this->authToken)) {
+            throw new \InvalidArgumentException('SECRET KEY is not configured');
+        }
+        if (empty($this->apiUrl)) {
+            throw new \InvalidArgumentException('Inventory API URL is not configured');
+        }
     }
 
     public function syncAll()
@@ -24,7 +31,6 @@ class InventoryService
         $syncData = [
             'suppliers' => $this->syncSuppliers(),
         ];
-
         return $syncData;
     }
 
@@ -40,16 +46,18 @@ class InventoryService
         });
         $suppliers_stakeholder = collect($suppliers)->map(function ($supplier) {
             return [
+                'id' => $supplier['id'],
                 'stakeholdable_id' => $supplier['id'],
                 'stakeholdable_type' => Supplier::class,
                 'name' => $supplier['name'],
             ];
         });
         DB::transaction(function () use ($suppliers, $suppliers_stakeholder) {
-            Supplier::upsert($suppliers->toArray(), ['source_id'], ['name']);
+            Supplier::upsert($suppliers->toArray(), ['id','source_id'], ['name']);
             StakeHolder::upsert(
                 $suppliers_stakeholder->toArray(),
                 [
+                    'id',
                     'stakeholdable_id',
                     'stakeholdable_type',
                 ],
@@ -64,11 +72,14 @@ class InventoryService
     {
         $response = Http::withToken($this->authToken)
             ->acceptJson()
-            ->get($this->apiUrl.'/api/suppliers');
+            ->get($this->apiUrl.'/api/supplier');
         if (! $response->successful()) {
-            return false;
+            Log::channel("InventoryService")->error('Failed to fetch suppliers from inventory API', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+            return [];
         }
-
         return $response->json();
     }
 }
