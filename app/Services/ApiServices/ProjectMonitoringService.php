@@ -13,10 +13,16 @@ class ProjectMonitoringService
 
     protected $authToken;
 
-    public function __construct($authToken)
+    public function __construct()
     {
-        $this->authToken = $authToken;
         $this->apiUrl = config('services.url.project_api');
+        $this->authToken = config('services.sigma.secret_key');
+        if (empty($this->authToken)) {
+            throw new \InvalidArgumentException('SECRET KEY is not configured');
+        }
+        if (empty($this->apiUrl)) {
+            throw new \InvalidArgumentException('Project API URL is not configured');
+        }
     }
 
     public function syncAll()

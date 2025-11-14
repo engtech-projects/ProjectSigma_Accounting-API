@@ -2,181 +2,170 @@
 
 namespace App\Services\ApiServices;
 
-use App\Models\StakeHolder;
-use App\Models\Stakeholders\Department;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use App\Models\Stakeholders\Employee;
+use App\Models\Stakeholders\Department;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
-use Http;
 
 class HrmsService
 {
     protected $apiUrl;
-
     protected $authToken;
 
-    public function __construct($authToken)
+    public function __construct()
     {
-        $this->authToken = $authToken;
         $this->apiUrl = config('services.url.hrms_api');
+        $this->authToken = config('services.sigma.secret_key');
+        if (empty($this->authToken)) {
+            throw new \InvalidArgumentException('SECRET KEY is not configured');
+        }
+        if (empty($this->apiUrl)) {
+            throw new \InvalidArgumentException('Projects API URL is not configured');
+        }
     }
 
     public function syncAll()
     {
-        $syncData = [
-            'employees' => $this->syncEmployees(),
-            'departments' => $this->syncDepartments(),
-        ];
-
-        return $syncData;
+        $syncEmployees = $this->syncEmployees();
+        $syncDepartments = $this->syncDepartments();
+        $syncUsers = $this->syncUsers();
+        return $syncEmployees && $syncDepartments && $syncUsers;
     }
 
     public function syncEmployees()
     {
         $employees = $this->getAllEmployees();
-        $employees = collect(value: $employees)->map(function ($employee) {
+        $employees = collect($employees)->map(function ($employee) {
             return [
                 'id' => $employee['id'],
                 'source_id' => $employee['id'],
-                'name' => $employee['fullname_first'],
+                'name' => $employee['first_name'] . ', ' . $employee['middle_name'] . ', ' . $employee['family_name'],
             ];
         });
-        $employee_stakeholder = collect(value: $employees)->map(function ($employee) {
-            return [
-                'name' => $employee['name'],
-                'stakeholdable_id' => $employee['id'],
-                'stakeholdable_type' => Employee::class,
-            ];
-        });
-        DB::transaction(function () use ($employees, $employee_stakeholder) {
-            Employee::upsert(
-                $employees->toArray(),
-                ['source_id'],
-                ['name']
-            );
-            StakeHolder::upsert(
-                $employee_stakeholder->toArray(),
-                [
-                    'stakeholdable_type',
-                    'stakeholdable_id',
-                ],
-                ['name']
-            );
-        });
-
+        Employee::upsert(
+            $employees->toArray(),
+            ['source_id', 'id'],
+            ['name']
+        );
         return true;
     }
 
     public function syncDepartments()
     {
-        $departments = $this->getAllDepartment();
+        $departments = $this->getAllDepartments();
         $departments = collect($departments)->map(function ($department) {
             return [
                 'id' => $department['id'],
                 'source_id' => $department['id'],
                 'name' => $department['department_name'],
+                'code' => $department['code'],
             ];
         });
-        $department_stakeholder = collect($departments)->map(function ($department) {
-            return [
-                'stakeholdable_id' => $department['id'],
-                'stakeholdable_type' => Department::class,
-                'name' => $department['name'],
-            ];
-        });
-        DB::transaction(function () use ($departments, $department_stakeholder) {
-            Department::upsert($departments->toArray(), ['source_id'], ['name']);
-            StakeHolder::upsert(
-                $department_stakeholder->toArray(),
-                [
-                    'stakeholdable_id',
-                    'stakeholdable_type',
-                ],
-                ['name']
-            );
-        });
-
+        Department::upsert(
+            $departments->toArray(),
+            [
+                'source_id',
+                'id',
+            ],
+            [
+                'name',
+                'code',
+            ]
+        );
         return true;
     }
 
     public function syncUsers()
     {
         $users = $this->getAllUsers();
-        collect($users)->map(function ($user) {
+        $users = collect($users)->map(function ($user) {
             return [
                 'id' => $user['id'],
                 'source_id' => $user['id'],
-                'name' => $user['employee']['fullname_first'],
+                'name' => $user['name'],
                 'email' => $user['email'],
                 'email_verified_at' => $user['email_verified_at'],
-                'password' => '-',
-                'remember_token' => null,
+                'password' => $user['password'],
+                'remember_token' => $user['remember_token'],
             ];
         });
-        foreach ($users as $user) {
-            $user_model = User::updateOrCreate(
-                [
-                    'id' => $user['id'],
-                    'source_id' => $user['id'],
-                ],
-                [
-                    'name' => $user['employee']['fullname_first'],
-                    'email' => $user['email'],
-                    'email_verified_at' => $user['email_verified_at'],
-                    'password' => '-',
-                    'remember_token' => null,
-                ]
-            );
-        }
-
+        User::upsert(
+            $users->toArray(),
+            [
+                'id',
+                'source_id',
+            ],
+            [
+                'name',
+                'email',
+                'email_verified_at',
+                'password',
+                'remember_token',
+            ]
+        );
         return true;
     }
 
     public function getAllEmployees()
     {
         $response = Http::withToken($this->authToken)
+            ->withUrlParameters([
+                'paginate' => false,
+                'sort' => 'asc',
+            ])
             ->acceptJson()
-            ->get($this->apiUrl.'/api/employee/list');
-        if (! $response->successful()) {
+            ->get($this->apiUrl . '/api/sigma/sync-list/employee');
+        if (!$response->successful()) {
             return [];
         }
-
-        return $response->json()['data'];
+        return $response->json("data") ?: [];
     }
 
-    public function getAllUsers()
+    public function getAllDepartments()
     {
         $response = Http::withToken($this->authToken)
+            ->withUrlParameters([
+                "paginate" => false,
+                "sort" => "asc"
+            ])
             ->acceptJson()
-            ->get($this->apiUrl.'/api/employee/users-list');
-        if (! $response->successful()) {
+            ->get($this->apiUrl . '/api/sigma/sync-list/department');
+        if (!$response->successful()) {
+            Log::channel("HrmsService")->error('Failed to fetch departments from monitoring API', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
             return [];
         }
-
-        return $response->json()['data'];
+        $data = $response->json();
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            Log::channel("HrmsService")->warning('Unexpected response format from departments API', ['response' => $data]);
+            return [];
+        }
+        return $data['data'];
     }
-
-    public function getAllDepartment()
+       public function getAllUsers()
     {
         $response = Http::withToken($this->authToken)
+            ->withUrlParameters([
+                "paginate" => false,
+                "sort" => "asc"
+            ])
             ->acceptJson()
-            ->get($this->apiUrl.'/api/department/list/v2');
-        if (! $response->successful()) {
+            ->get($this->apiUrl . '/api/sigma/sync-list/user');
+        if (!$response->successful()) {
+            Log::channel("HrmsService")->error('Failed to fetch users from monitoring API', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
             return [];
         }
-
-        return $response->json()['data'];
-    }
-
-    public function getApprovalName($approvalName)
-    {
-        $response = Http::withToken($this->authToken)
-            ->acceptJson()
-            ->get($this->apiUrl.'/api/get-form-requests/'.$approvalName);
-        if (! $response->successful()) {
+        $data = $response->json();
+        if (!isset($data['data']) || !is_array($data['data'])) {
+            Log::channel("HrmsService")->warning('Unexpected response format from users API', ['response' => $data]);
             return [];
         }
-
-        return $response->json()['data'];
+        return $data['data'];
     }
 }
