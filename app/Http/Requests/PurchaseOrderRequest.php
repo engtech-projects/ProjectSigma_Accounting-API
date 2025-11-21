@@ -40,6 +40,7 @@ class PurchaseOrderRequest extends FormRequest
             'delivery_terms' => ['nullable', Rule::enum(DeliveryTermTypes::class)],
             'payment_terms' => ['nullable', Rule::enum(PaymentTermTypes::class)],
             'availability' => ['nullable', Rule::enum(AvailabilityType::class)],
+            'source_id' => 'required|numeric',
             'details' => 'required|array',
             'details.*.particulars' => 'nullable|string',
             'details.*.cost' => 'nullable|numeric',
