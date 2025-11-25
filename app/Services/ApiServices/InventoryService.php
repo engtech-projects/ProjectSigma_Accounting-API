@@ -14,7 +14,7 @@ class InventoryService
 
     protected $authToken;
 
-     public function __construct()
+    public function __construct()
     {
         $this->apiUrl = config('services.url.inventory_api');
         $this->authToken = config('services.sigma.secret_key');

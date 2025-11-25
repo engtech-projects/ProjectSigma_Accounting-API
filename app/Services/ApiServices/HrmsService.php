@@ -145,7 +145,7 @@ class HrmsService
         }
         return $data['data'];
     }
-       public function getAllUsers()
+    public function getAllUsers()
     {
         $response = Http::withToken($this->authToken)
             ->withUrlParameters([
