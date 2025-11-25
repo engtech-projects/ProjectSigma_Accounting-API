@@ -85,7 +85,7 @@ class PayrollRequestController extends Controller
                 'type' => TransactionLogStatus::REQUEST->value,
                 'transaction_code' => $paymentRequest->prf_no,
                 'description' => 'Payment Request Created',
-                'created_by' => auth()->user()->id,
+                'created_by' => $validatedData['requested_by'],
             ]);
         });
 
