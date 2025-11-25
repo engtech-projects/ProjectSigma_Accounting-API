@@ -1,0 +1,44 @@
+# Deploying to local staging server
+name: Deploy ProjectSigma_Accounting-API to FTP SERVER
+
+on:
+  workflow_run:
+    workflows: ProjectSigma_Accounting-API Build and Push to CI-Pipeline Branch
+    types:
+      - completed
+env:
+  APP_NAME: "ProjectSigma_Accounting-API"
+
+concurrency:
+  group: "deployftp ProjectSigma_Accounting-API"
+  cancel-in-progress: false
+
+jobs:
+  deploy-laravel-main:
+    if: ${{ github.event.workflow_run.conclusion == 'success'  &&  github.event.workflow_run.head_branch  == 'main' }}
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ci-pipe-main
+      - name: Upload ftp
+        uses : SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+  deploy-laravue-staging:
+    if: ${{ github.event.workflow_run.conclusion == 'success'  &&  github.event.workflow_run.head_branch  == 'staging' }}
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ci-pipe-staging
+      - name: Upload ftp
+        uses : SamKirkland/FTP-Deploy-Action@4.3.2
+        with:
+          server: ${{ vars.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME_STAGING }}
+          password: ${{ secrets.FTP_PASSWORD_STAGING }}
