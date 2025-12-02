@@ -108,7 +108,8 @@ Route::middleware('auth:api')->group(function () {
     });
     // PO PURCHASE ORDER ROUTES
     Route::prefix('po')->group(function () {
-        Route::resource('resource', PurchaseOrderController::class)->names('po.purchase-orders');
+        Route::resource('resource', PurchaseOrderController::class)->names('purchase-order');
+        Route::get('details/{id}', [PurchaseOrderController::class, 'purchaseOrderDetails']);
     });
     // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {

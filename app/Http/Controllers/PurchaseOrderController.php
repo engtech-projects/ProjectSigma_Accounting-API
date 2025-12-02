@@ -29,6 +29,15 @@ class PurchaseOrderController extends Controller
             'message' => 'Purchase Orders Successfully Retrieved.',
         ]);
     }
+    public function purchaseOrderDetails($id)
+    {
+        $purchaseOrder = PaymentRequest::purchaseOrder()->findOrFail($id);
+        $purchaseOrder->load('details', 'transactionFlow', 'stakeholder');
+        return (new PaymentRequestCollection($purchaseOrder))->additional([
+            'success' => true,
+            'message' => 'Purchase Order Successfully Retrieved.',
+        ]);
+    }
     public function store(PurchaseOrderRequest $request)
     {
         $validatedData = $request->validated();
