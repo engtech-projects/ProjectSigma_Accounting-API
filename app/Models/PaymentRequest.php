@@ -40,6 +40,7 @@ class PaymentRequest extends Model
         'delivery_terms',
         'payment_terms',
         'availability',
+        'source_id',
     ];
 
     protected $casts = [

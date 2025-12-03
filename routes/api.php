@@ -107,7 +107,11 @@ Route::middleware('auth:api')->group(function () {
         Route::get('generate-prf-no', [PaymentRequestController::class, 'generatePrfNo']);
         Route::post('upload-attachment', [PaymentRequestController::class, 'uploadAttachment']);
     });
-
+    // PO PURCHASE ORDER ROUTES
+    Route::prefix('po')->group(function () {
+        Route::resource('resource', PurchaseOrderController::class)->names('purchase-order');
+        Route::get('details/{id}', [PurchaseOrderController::class, 'purchaseOrderDetails']);
+    });
     // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
