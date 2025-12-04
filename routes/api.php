@@ -16,6 +16,7 @@ use App\Http\Controllers\APiSyncController;
 use App\Http\Controllers\AttachmentViewerController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\LiquidationController;
 use App\Http\Controllers\ParticularGroupController;
 use App\Http\Controllers\PaymentRequestController;
 use App\Http\Controllers\PayrollRequestController;
@@ -112,12 +113,14 @@ Route::middleware('auth:api')->group(function () {
         Route::resource('resource', PurchaseOrderController::class)->names('purchase-order');
         Route::get('details/{id}', [PurchaseOrderController::class, 'purchaseOrderDetails']);
     });
+    Route::prefix('liquidation')->group(function () {
+        Route::resource('resource', LiquidationController::class)->names('liquidation.payment-requests');
+    });
     // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
         Route::resource('resource', PayrollRequestController::class)->names('payroll.payment-requests');
         Route::post('create-request', [PayrollRequestController::class, 'createPayrollRequest']);
     });
-    Route::resource('purchase-order', PurchaseOrderController::class)->names('purchase-order');
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
