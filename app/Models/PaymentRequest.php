@@ -169,6 +169,10 @@ class PaymentRequest extends Model
     {
         return $query->where('type', PaymentRequestType::PO->value);
     }
+    public function scopeLiquidationRequest($query)
+    {
+        return $query->where('type', PaymentRequestType::LIQUIDATION->value);
+    }
     public function getTaxableAmountAttribute()
     {
         return floatval($this->total) - floatval($this->total_vat_amount);
