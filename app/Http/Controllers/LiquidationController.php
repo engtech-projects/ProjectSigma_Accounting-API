@@ -4,24 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Enums\PaymentRequestType;
 use App\Enums\RequestStatuses;
+use App\Http\Requests\LiquidationFilterRequest;
 use App\Http\Requests\LiquidationFormRequest;
+use App\Http\Resources\LiquidationRequestCollection;
 use App\Models\PaymentRequest;
 use App\Models\StakeHolder;
 use Illuminate\Http\Request;
 
 class LiquidationController extends Controller
 {
-    public function index(Request $request)
+    public function index(LiquidationFilterRequest $request)
     {
-        $data = PaymentRequest::liquidationRequest()
-            ->withStakeholder()
-            ->payment()
+        $validatedData = $request->validated();
+        $key = $validatedData['key'] ?? '';
+
+        $purchaseOrders = PaymentRequest::liquidationRequest()
+            ->where('prf_no', 'like', '%' . $key . '%')
+            ->withDetails()
             ->withTransactionFlow()
-            ->with('created_by_user')
-            ->paginate(config('services.pagination.limit'));
-        return response()->json([
-            'data' => $data
-        ], 200);
+            ->orderBy('created_at', 'desc')
+            ->paginate(config('app.pagination.limit'));
+
+        return (new LiquidationRequestCollection($purchaseOrders))->additional([
+            'success' => true,
+            'message' => 'Purchase Orders Successfully Retrieved.',
+        ]);
     }
 
     public function show($id)
