@@ -40,6 +40,7 @@ class PaymentRequest extends Model
         'delivery_terms',
         'payment_terms',
         'availability',
+        'source_id',
     ];
 
     protected $casts = [
@@ -167,6 +168,10 @@ class PaymentRequest extends Model
     public function scopePurchaseOrder($query)
     {
         return $query->where('type', PaymentRequestType::PO->value);
+    }
+    public function scopeLiquidationRequest($query)
+    {
+        return $query->where('type', PaymentRequestType::LIQUIDATION->value);
     }
     public function getTaxableAmountAttribute()
     {

@@ -11,4 +11,5 @@ enum PaymentRequestType: string
     case PRF = 'prf';
     case PAYROLL = 'payroll';
     case PO = 'po';
+    case LIQUIDATION = 'liquidation';
 }
