@@ -11,7 +11,9 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('projects', function (Blueprint $table) {
-            $table->integer('allocation')->after('name');
+            $table->integer('allocation')
+                ->default(0)
+                ->after('name');
         });
     }
 

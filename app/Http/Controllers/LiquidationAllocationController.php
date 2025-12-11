@@ -3,47 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LiquidationALlocationRequest;
+use App\Http\Resources\LiquidationAllocationCollection;
 use App\Models\LiquidationAllocation;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class LiquidationAllocationController extends Controller
 {
     public function index()
     {
-        $allocations = LiquidationAllocation::all();
-        return new JsonResponse([
+        $allocations = LiquidationAllocation::paginate(Config('services.pagination.limit'));
+        return LiquidationAllocationCollection::collection($allocations)->additional([
             'success' => true,
             'message' => 'Liquidation Allocation Successfully Retrieved.',
-            'data' => $allocations,
-        ], 200);
+        ]);
     }
     public function store(LiquidationALlocationRequest $request)
     {
         $validatedData = $request->validated();
         $allocation = LiquidationAllocation::create($validatedData);
-        return new JsonResponse([
+        return LiquidationAllocationCollection::collection($allocation)->additional([
             'success' => true,
             'message' => 'Liquidation Allocation Successfully Created.',
-            'data' => $allocation,
-        ], 201);
+        ]);
     }
-    public function update(Request $request, LiquidationAllocation $allocation)
+    public function update(LiquidationALlocationRequest $request, LiquidationAllocation $allocation)
     {
-        $validatedData = $request->all();
+        $validatedData = $request->validated();
         $allocation->update($validatedData);
-        return new JsonResponse([
+        return LiquidationAllocationCollection::collection($allocation)->additional([
             'success' => true,
             'message' => 'Liquidation Allocation Successfully Updated.',
-            'data' => $allocation,
-        ], 200);
+        ]);
     }
     public function delete(LiquidationAllocation $allocation)
     {
         $allocation->delete();
-        return new JsonResponse([
+        return LiquidationAllocationCollection::collection($allocation)->additional([
             'success' => true,
             'message' => 'Liquidation Allocation Successfully Deleted.',
-        ], 200);
+        ]);
     }
 }

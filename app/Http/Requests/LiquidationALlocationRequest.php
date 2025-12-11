@@ -22,8 +22,8 @@ class LiquidationALlocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'description' => 'required',
-            'allocation' => 'required',
+            'description' => 'required|string|max:255',
+            'allocation' => 'required|integer|min:0',
         ];
     }
 }
