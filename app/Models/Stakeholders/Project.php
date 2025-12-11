@@ -19,6 +19,7 @@ class Project extends Model
         'id',
         'source_id',
         'name',
+        'allocation',
     ];
 
     public function stakeholder()
