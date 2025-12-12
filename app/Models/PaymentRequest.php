@@ -169,7 +169,7 @@ class PaymentRequest extends Model
     {
         return $query->where('type', PaymentRequestType::PO->value);
     }
-    public function scopeLiquidationRequest($query)
+    public function scopeWithLiquidationRequest($query)
     {
         return $query->where('type', PaymentRequestType::LIQUIDATION->value);
     }
