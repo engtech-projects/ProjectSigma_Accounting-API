@@ -168,4 +168,15 @@ class HrmsService
         }
         return $data['data'];
     }
+    public static function formatApprovals($token, $approvals)
+    {
+        $response = Http::withToken($token)
+            ->acceptJson()
+            ->withQueryParameters(['approval_type' => $approvals])
+            ->get(config('services.url.hrms_api') . "/api/services/format-approvals");
+        if (!$response->successful()) {
+            return [];
+        }
+        return $response->json()["data"];
+    }
 }

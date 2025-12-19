@@ -21,6 +21,8 @@ use App\Services\TransactionFlowService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
+use App\Enums\TransactionFlowName;
+use App\Enums\TransactionFlowStatus;
 
 class PayrollRequestController extends Controller
 {
@@ -42,7 +44,7 @@ class PayrollRequestController extends Controller
         DB::transaction(function () use ($authToken, $request) {
             $validatedData = $request->validated();
             $hrmsService = new HrmsService($authToken);
-            $approvalList = $hrmsService->getApprovalName(ApprovalPayementRequestType::APPROVAL_PAYMENT_REQUEST_PAYROLL->value);
+            $approvalList = $hrmsService->formatApprovals($authToken, ApprovalPayementRequestType::APPROVAL_PAYMENT_REQUEST_PAYROLL->value);
             $details = collect($validatedData['details'])->map(function ($detail) {
                 $stakeholderId = StakeHolderService::findIdByNameOrNull($detail['stakeholder'] ?? '');
 
@@ -76,9 +78,12 @@ class PayrollRequestController extends Controller
             );
             if (! empty($transactionFlowData)) {
                 $paymentRequest->transactionFlow()->createMany($transactionFlowData);
-                $nextFlow = $paymentRequest->transactionFlow()->where('priority', 2)->first();
-                if ($nextFlow->user_id) {
-                    User::find($nextFlow->user_id)->notify(new RequestTransactionNotification(auth()->user()->token, $nextFlow));
+                $inProgressFlow = $paymentRequest->transactionFlow()
+                    ->where('status', TransactionFlowStatus::IN_PROGRESS->value)
+                    ->orderBy('priority')
+                    ->first();
+                if ($inProgressFlow && $inProgressFlow->user_id) {
+                    User::find($inProgressFlow->user_id)->notify(new RequestTransactionNotification($authToken, $inProgressFlow));
                 }
             }
             TransactionLog::query()->create([

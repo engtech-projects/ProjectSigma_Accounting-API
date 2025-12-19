@@ -84,7 +84,8 @@ class TransactionFlowService
             ->orderBy('id')
             ->get(['unique_name', 'name', 'user_id', 'user_name', 'category', 'description', 'priority', 'is_assignable', 'is_passable']);
 
-        return $templates->map(function ($template) use ($paymentRequestId) {
+        return $templates->values()->map(function ($template, $index) use ($paymentRequestId) {
+            $sequentialPriority = $index + 1;
             return [
                 'payment_request_id' => $paymentRequestId,
                 'unique_name' => $template->unique_name,
@@ -93,7 +94,7 @@ class TransactionFlowService
                 'user_name' => $template->user_name,
                 'category' => $template->category,
                 'description' => $template->description,
-                'status' => match ($template->priority) {
+                'status' => match ($sequentialPriority) {
                     1 => TransactionFlowStatus::DONE->value,
                     2 => TransactionFlowStatus::IN_PROGRESS->value,
                     default => TransactionFlowStatus::PENDING->value,
