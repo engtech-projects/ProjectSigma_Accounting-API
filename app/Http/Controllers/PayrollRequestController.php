@@ -21,7 +21,6 @@ use App\Services\TransactionFlowService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
-use App\Enums\TransactionFlowName;
 use App\Enums\TransactionFlowStatus;
 
 class PayrollRequestController extends Controller
@@ -83,7 +82,8 @@ class PayrollRequestController extends Controller
                     ->orderBy('priority')
                     ->first();
                 if ($inProgressFlow && $inProgressFlow->user_id) {
-                    User::find($inProgressFlow->user_id)->notify(new RequestTransactionNotification($authToken, $inProgressFlow));
+                    $user = User::find($inProgressFlow->user_id);
+                    $user?->notify(new RequestTransactionNotification($authToken, $inProgressFlow));
                 }
             }
             TransactionLog::query()->create([
