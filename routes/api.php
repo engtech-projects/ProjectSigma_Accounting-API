@@ -115,6 +115,7 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::prefix('liquidation')->group(function () {
         Route::resource('resource', LiquidationController::class)->names('liquidation.payment-requests');
+        Route::get('details/{id}', [LiquidationController::class, 'show']);
     });
     // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
