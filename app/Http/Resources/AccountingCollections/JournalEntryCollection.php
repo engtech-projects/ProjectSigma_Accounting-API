@@ -24,9 +24,9 @@ class JournalEntryCollection extends JsonResource
             'created_by_user' => $this->created_by_user_name,
             'voucher_status' => $this->status === JournalStatus::OPEN->value ? 'for disbursement' : ($this->status === JournalStatus::UNPOSTED->value ? 'FOR CASH' : ($this->status === JournalStatus::FOR_PAYMENT->value ? 'For Payment' : null)),
             'status' => ucfirst($this->status),
-            'balance' => $this->details->sum('debit'),
-            'net_amount' => $this->details->sum('debit'),
-            'total_amount_formatted' => number_format($this->details->sum('debit'), 2, '.', ','),
+            'balance' => $this->details->sum(function($detail) { return ($detail->debit ?? 0) - ($detail->credit ?? 0); }),
+            'net_amount' => $this->details->sum(function($detail) { return ($detail->debit ?? 0) - ($detail->credit ?? 0); }),
+            'total_amount_formatted' => number_format($this->details->sum(function($detail) { return ($detail->debit ?? 0) - ($detail->credit ?? 0); }), 2, '.', ','),
             'to_cash_details' => JournalEntryDetailsResource::collection($this->details->where('description', ParticularsType::ACCOUNTS_PAYABLE->value)),
             'details' => JournalEntryDetailsResource::collection($this->details),
         ];
