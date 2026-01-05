@@ -35,7 +35,7 @@ class LiquidationController extends Controller
         if (!$paymentRequest) {
             return response()->json(['message' => 'Payment request not found'], 404);
         }
-        $paymentRequest->load('details.stakeholder','stakeholder');
+        $paymentRequest->load('details.stakeholder', 'stakeholder');
         return LiquidationCollection::collection([$paymentRequest])->additional([
             'success' => true,
             'message' => 'Payment Request Successfully Retrieved.',
