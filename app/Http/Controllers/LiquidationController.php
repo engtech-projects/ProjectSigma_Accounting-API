@@ -20,6 +20,7 @@ class LiquidationController extends Controller
         $purchaseOrders = PaymentRequest::withLiquidationRequest()
             ->where('prf_no', 'like', "%{$key}%")
             ->withStakeholder()
+            ->withPaymentRequestDetails()
             ->orderBy('created_at', 'desc')
             ->paginate(config('app.pagination.limit'));
         return LiquidationCollection::collection($purchaseOrders)->additional([
@@ -30,9 +31,15 @@ class LiquidationController extends Controller
 
     public function show($id)
     {
-        return response()->json([
-            'data' => PaymentRequest::find($id)
-        ], 200);
+        $paymentRequest = PaymentRequest::where('id', $id)->first();
+        if (!$paymentRequest) {
+            return response()->json(['message' => 'Payment request not found'], 404);
+        }
+        $paymentRequest->load('details.stakeholder','stakeholder');
+        return LiquidationCollection::collection([$paymentRequest])->additional([
+            'success' => true,
+            'message' => 'Payment Request Successfully Retrieved.',
+        ]);
     }
 
     public function store(LiquidationFormRequest $request)
