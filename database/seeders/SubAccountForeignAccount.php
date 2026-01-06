@@ -316,6 +316,8 @@ class SubAccountForeignAccount extends Seeder
             "710000" => 9,
             "720000" => 9,
             "730000" => 22,
+            "670022" => 3,
+            "641008" => 9,
         ];
 
         foreach ($accountMappings as $accountNumber => $subGroupId) {
