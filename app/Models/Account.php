@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\BalanceSheet;
 
 class Account extends Model
 {
@@ -84,4 +85,34 @@ class Account extends Model
     {
         return $query->where('taxable', $state);
     }
+
+    public function scopeAssets($query)
+    {
+        return $query->whereHas('accountType', function ($q) {
+            $q->where('account_category', BalanceSheet::ASSET->value);
+        });
+    }
+
+    public function scopeLiabilitiesAndEquity($query)
+    {
+        return $query->whereHas('accountType', function ($q) {
+            $q->where('account_category', BalanceSheet::LIABILITIES->value)
+              ->orWhere('account_category', BalanceSheet::EQUITY->value);
+        });
+    }
+
+    public function scopeLiabilities($query)
+    {
+        return $query->whereHas('accountType', function ($q) {
+            $q->where('account_category', BalanceSheet::LIABILITIES->value);
+        });
+    }
+
+    public function scopeEquity($query)
+    {
+        return $query->whereHas('accountType', function ($q) {
+            $q->where('account_category', BalanceSheet::EQUITY->value);
+        });
+    }
+
 }
