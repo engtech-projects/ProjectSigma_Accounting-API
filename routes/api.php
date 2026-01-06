@@ -30,6 +30,7 @@ use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
+use App\Http\Controllers\ReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -125,7 +126,14 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
-
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::post('balance-sheet', [ReportController::class, 'balanceSheet'])
+            ->name('balance-sheet');
+        Route::get('balance-sheet/status', [ReportController::class, 'checkStatus'])
+            ->name('balance-sheet.status');
+        Route::post('balance-sheet/async', [ReportController::class, 'generateAsync'])
+            ->name('balance-sheet.async');
+    });
     // VOUCHERS ROUTES
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
