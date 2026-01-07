@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\Reports\BalanceSheet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Enums\BalanceSheet;
 
 class Account extends Model
 {
@@ -97,7 +97,7 @@ class Account extends Model
     {
         return $query->whereHas('accountType', function ($q) {
             $q->where('account_category', BalanceSheet::LIABILITIES->value)
-              ->orWhere('account_category', BalanceSheet::EQUITY->value);
+                ->orWhere('account_category', BalanceSheet::EQUITY->value);
         });
     }
 
@@ -114,5 +114,4 @@ class Account extends Model
             $q->where('account_category', BalanceSheet::EQUITY->value);
         });
     }
-
 }

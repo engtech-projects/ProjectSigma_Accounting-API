@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Services\Report;
+namespace App\Services\Reports;
 
-use App\Enums\BalanceSheet;
-use Carbon\Carbon;
 use App\Enums\JournalStatus;
 use App\Http\Resources\BalanceSheetResource;
 use App\Models\Account;
@@ -11,14 +9,11 @@ use App\Models\JournalDetails;
 
 class BalanceSheetService
 {
-    public static function balanceSheetReport($validate)
+    public static function balanceSheetReport($startDate, $endDate)
     {
-        $dateFrom = Carbon::parse($validate["date_from"])->startOfDay();
-        $dateTo = Carbon::parse($validate["date_to"])->endOfDay();
-
-        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($dateFrom, $dateTo) {
+        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
             $query->where('status', JournalStatus::POSTED->value)
-                ->whereBetween('created_at', [$dateFrom, $dateTo]);
+                ->whereBetween('created_at', [$startDate, $endDate]);
         })
         ->with([
             'account.accountType',
@@ -103,8 +98,8 @@ class BalanceSheetService
                 ],
             ],
             'date_range' => [
-                'from' => $dateFrom->format('Y-m-d'),
-                'to' => $dateTo->format('Y-m-d'),
+                'from' => $startDate->format('Y-m-d'),
+                'to' => $endDate->format('Y-m-d'),
             ],
         ];
     }
