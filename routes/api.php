@@ -32,6 +32,7 @@ use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Reports\Controllers\IncomeStatementReportController;
+use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -132,14 +133,19 @@ Route::middleware('auth:api')->group(function () {
         Route::post('balance-sheet/async', [BalanceSheetReportController::class, 'generateAsync'])
             ->name('balance-sheet.async');
         // Income Statement
-        Route::post('income-statement', [IncomeStatementReportController::class, 'incomeStatement'])
-            ->name('income-statement');
-        Route::get('income-statement/status', [IncomeStatementReportController::class, 'checkStatus'])
-            ->name('income-statement.status');
-        Route::post('income-statement/async', [IncomeStatementReportController::class, 'generateAsync'])
-            ->name('income-statement.async');
+        Route::post('income-statement-sheet', [IncomeStatementReportController::class, 'incomeStement'])
+            ->name('income-statement-sheet');
+        Route::get('income-statement-sheet/status', [IncomeStatementReportController::class, 'checkStatus'])
+            ->name('income-statement-sheet.status');
+        Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
+            ->name('income-statement-sheet.async');
+        // Book Balance
+        Route::post('book-balance', [BookBalanceReportController::class, 'bookBalance'])
+            ->name('book-balance');
+        Route::get('book-balance/status', [BookBalanceReportController::class, 'checkBalance'])
+            ->name('book-balance.status');
     });
-    // VOUCHERS ROUTES
+    // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');

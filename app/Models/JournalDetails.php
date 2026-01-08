@@ -43,4 +43,15 @@ class JournalDetails extends Model
     {
         return $this->belongsTo(StakeHolder::class);
     }
+
+    public static function getJournalDetailsByDate($startDate, $endDate)
+    {
+        return self::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+        ->with([
+            'account.accountType',
+        ])
+        ->get();
+    }
 }

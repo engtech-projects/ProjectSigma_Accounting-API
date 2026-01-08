@@ -24,6 +24,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Carbon;
 use App\Services\Reports\BalanceSheetService;
+use App\Services\Reports\BookBalanceService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -71,6 +72,7 @@ class GenerateReports implements ShouldQueue
                 ReportType::PROVISIONAL_RECEIPT->value =>  ProvisionalReceiptService::provisionalReceiptReport(self::$dateFrom, self::$dateTo),
                 ReportType::CASH_RETURN_SLIP->value =>  CashReturnSlipService::cashReturnSlipReport(self::$dateFrom, self::$dateTo),
                 ReportType::PAYROLL_LIQUIDATIONS->value =>  PayrollLiquidationService::payrollLiquidationReport(self::$dateFrom, self::$dateTo),
+                ReportType::BOOK_BALANCE->value =>  BookBalanceService::bookBalanceReport(self::$dateFrom, self::$dateTo),
             };
 
             // Add metadata
