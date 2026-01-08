@@ -124,7 +124,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
-    Route::prefix('reports')->name('reports.')->group(function () {
+    Route::prefix('reports')->group(function () {
         // Balance Statement
         Route::post('balance-sheet', [BalanceSheetReportController::class, 'balanceSheet'])
             ->name('balance-sheet');
