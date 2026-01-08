@@ -44,8 +44,8 @@ class BookBalanceReportController extends Controller
                     'estimated_completion' => 'Please check back in a few moments',
                 ], 202);
             }
-            Cache::put($jobStatusKey, true, now()->addMinutes(10));
-            GenerateReports::dispatch($dateFrom, $dateTo);
+            Cache::put($jobStatusKey, true, now()->addMinutes(30));
+            GenerateReports::dispatch(ReportType::BOOK_BALANCE->value, $dateFrom, $dateTo);
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Large report detected. Generation started in background.',
@@ -57,9 +57,11 @@ class BookBalanceReportController extends Controller
             ], 202);
         }
         try {
+            $startTime = microtime(true);
             $data = BookBalanceService::bookBalanceReport($dateFrom, $dateTo);
+            $generationTime = round(microtime(true) - $startTime, 2);
             $data['generated_at'] = now()->toISOString();
-            $data['generation_time_seconds'] = 0;
+            $data['generation_time_seconds'] = $generationTime;
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
             return new JsonResponse(array_merge($data, [
                 'from_cache' => false,
@@ -71,7 +73,6 @@ class BookBalanceReportController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
-
     }
 
     public function checkBalance(Request $request)
@@ -84,13 +85,11 @@ class BookBalanceReportController extends Controller
             ], 400);
         }
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'status' => 'completed',
-                    'message' => 'Report is ready',
-                ]
-            ));
+            return new JsonResponse([
+                'status' => 'completed',
+                'message' => 'Report is ready',
+                'data' => Cache::get($cacheKey),
+            ]);
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {

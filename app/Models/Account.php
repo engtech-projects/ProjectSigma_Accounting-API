@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Enums\ParticularsType;
-use Illuminate\Support\Str;
 
 class Account extends Model
 {
@@ -97,10 +96,10 @@ class Account extends Model
         return $query->where('taxable', $state);
     }
 
-    public function scopecashInBank($accountBalances)
+    public function scopeCashInBank($query)
     {
-        return $accountBalances->whereHas('accounts', function ($accountBalances) {
-            $accountBalances->where('account_type', ParticularsType::CASH_IN_BANK->value);
+        return $query->whereHas('accountType', function ($q) {
+            $q->where('account_type', ParticularsType::CASH_IN_BANK->value);
         });
     }
 
