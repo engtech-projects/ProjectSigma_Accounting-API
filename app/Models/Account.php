@@ -53,6 +53,10 @@ class Account extends Model
     {
         return $this->belongsTo(ReportGroup::class);
     }
+    public function subGroup(): BelongsTo
+    {
+        return $this->belongsTo(SubGroup::class);
+    }
 
     public function journalEntryDetails(): HasMany
     {
@@ -68,12 +72,17 @@ class Account extends Model
     {
         return $query->with('reportGroup');
     }
+    public function scopeWithSubGroup($query)
+    {
+        return $query->with('subGroup');
+    }
 
     public function getFullAccountAttribute(): string
     {
         $reportGroup = $this->reportGroup ? " - {$this->reportGroup->name}" : '';
+        $subGroup = $this->subGroup ? " - {$this->subGroup->name}" : '';
 
-        return "{$this->account_number} - {$this->account_name} $reportGroup";
+        return "{$this->account_number} - {$this->account_name} $reportGroup $subGroup";
     }
 
     public function scopeAccountName(Builder $query, string $accountName): Builder
@@ -86,32 +95,30 @@ class Account extends Model
         return $query->where('taxable', $state);
     }
 
-    public function scopeAssets($query)
+    public function scopecurrentAssets($query)
     {
-        return $query->whereHas('accountType', function ($q) {
-            $q->where('account_category', BalanceSheet::ASSET->value);
+        return $query->whereHas('subGroup', function ($q) {
+            $q->where('name', BalanceSheet::CURRENT_ASSET->value);
+        });
+    }
+    public function scopenonCurrentAssets($query)
+    {
+        return $query->whereHas('subGroup', function ($q) {
+            $q->where('name', BalanceSheet::NON_CURRENT_ASSET->value);
         });
     }
 
-    public function scopeLiabilitiesAndEquity($query)
+    public function scopecurrentLiabilities($query)
     {
-        return $query->whereHas('accountType', function ($q) {
-            $q->where('account_category', BalanceSheet::LIABILITIES->value)
-                ->orWhere('account_category', BalanceSheet::EQUITY->value);
-        });
-    }
-
-    public function scopeLiabilities($query)
-    {
-        return $query->whereHas('accountType', function ($q) {
-            $q->where('account_category', BalanceSheet::LIABILITIES->value);
+        return $query->whereHas('subGroup', function ($q) {
+            $q->where('name', BalanceSheet::CURRENT_LIABILITIES->value);
         });
     }
 
     public function scopeEquity($query)
     {
-        return $query->whereHas('accountType', function ($q) {
-            $q->where('account_category', BalanceSheet::EQUITY->value);
+        return $query->whereHas('subGroup', function ($q) {
+            $q->where('name', BalanceSheet::EQUITY->value);
         });
     }
 }
