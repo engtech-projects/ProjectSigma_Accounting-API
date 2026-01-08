@@ -32,6 +32,7 @@ use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Reports\Controllers\IncomeStatementReportController;
+use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -138,8 +139,13 @@ Route::middleware('auth:api')->group(function () {
             ->name('income-statement-sheet.status');
         Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
             ->name('income-statement-sheet.async');
+        // Book Balance
+        Route::post('book-balance', [BookBalanceReportController::class, 'bookBalance'])
+            ->name('book-balance');
+        Route::get('book-balance/status', [BookBalanceReportController::class, 'checkBalance'])
+            ->name('book-balance.status');
     });
-    // VOUCHERS ROUTES
+    // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');

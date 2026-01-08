@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\ParticularsType;
+use Illuminate\Support\Str;
 
 class Account extends Model
 {
@@ -93,6 +95,13 @@ class Account extends Model
     public function scopeTaxable(Builder $query, bool $state = true): Builder
     {
         return $query->where('taxable', $state);
+    }
+
+    public function scopecashInBank($accountBalances)
+    {
+        return $accountBalances->whereHas('accounts', function ($accountBalances) {
+            $accountBalances->where('account_type', ParticularsType::CASH_IN_BANK->value);
+        });
     }
 
     public function scopecurrentAssets($query)

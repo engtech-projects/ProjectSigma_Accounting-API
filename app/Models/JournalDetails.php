@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\JournalStatus;
 
 class JournalDetails extends Model
 {
@@ -42,5 +43,16 @@ class JournalDetails extends Model
     public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
+    }
+
+    public static function getJournalDetailsByDate($startDate, $endDate)
+    {
+        return self::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+        ->with([
+            'account.accountType',
+        ])
+        ->get();
     }
 }
