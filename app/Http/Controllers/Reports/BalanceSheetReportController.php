@@ -10,6 +10,7 @@ use App\Services\Reports\BalanceSheetService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BalanceSheetReportController extends Controller
 {
@@ -21,8 +22,6 @@ class BalanceSheetReportController extends Controller
         $generateReport = new GenerateReports(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
         $generateReport->handle();
         $cacheKey = GenerateReports::getCacheKey();
-
-        // Check cache first
         if (Cache::has($cacheKey)) {
             return response()->json(array_merge(
                 Cache::get($cacheKey),
@@ -31,18 +30,13 @@ class BalanceSheetReportController extends Controller
                 ]
             ));
         }
-
-        // Calculate date range
         $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
         $threshold = config('reports.large_report_threshold', 90);
         $isLargeReport = $daysDiff > $threshold || $forceAsync;
-
-        // For large reports, use async job
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
-
             if (Cache::has($jobStatusKey)) {
-                return response()->json([
+                return new JsonResponse([
                     'success' => true,
                     'message' => 'Report generation is in progress',
                     'status' => 'processing',
@@ -50,11 +44,9 @@ class BalanceSheetReportController extends Controller
                     'estimated_completion' => 'Please check back in a few moments',
                 ], 202);
             }
-
             Cache::put($jobStatusKey, true, now()->addMinutes(10));
             GenerateReports::dispatch($dateFrom, $dateTo);
-
-            return response()->json([
+            return new JsonResponse([
                 'success' => true,
                 'message' => 'Large report detected. Generation started in background.',
                 'status' => 'queued',
@@ -64,23 +56,16 @@ class BalanceSheetReportController extends Controller
                 'estimated_wait_seconds' => 30,
             ], 202);
         }
-
-        // Generate immediately for small reports
         try {
             $data = BalanceSheetService::balanceSheetReport($dateFrom, $dateTo);
-
-            // Add metadata
             $data['generated_at'] = now()->toISOString();
             $data['generation_time_seconds'] = 0;
-
-            // Cache the data
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
-
-            return response()->json(array_merge($data, [
+            return new JsonResponse(array_merge($data, [
                 'from_cache' => false,
             ]));
         } catch (\Exception $e) {
-            return response()->json([
+            return new JsonResponse([
                 'success' => false,
                 'message' => 'Failed to generate report',
                 'error' => $e->getMessage()
@@ -91,17 +76,14 @@ class BalanceSheetReportController extends Controller
     public function checkStatus(Request $request)
     {
         $cacheKey = $request->input('cache_key');
-
         if (!$cacheKey) {
-            return response()->json([
+            return new JsonResponse([
                 'success' => false,
                 'message' => 'Cache key is required'
             ], 400);
         }
-
-        // Check if report is ready
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
+            return new JsonResponse(array_merge(
                 Cache::get($cacheKey),
                 [
                     'status' => 'completed',
@@ -109,19 +91,15 @@ class BalanceSheetReportController extends Controller
                 ]
             ));
         }
-
-        // Check if still processing
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
-            return response()->json([
+            return new JsonResponse([
                 'success' => true,
                 'status' => 'processing',
                 'message' => 'Report generation is still in progress',
             ], 202);
         }
-
-        // Not found
-        return response()->json([
+        return new JsonResponse([
             'success' => false,
             'status' => 'not_found',
             'message' => 'Report not found. It may have expired or failed to generate.',
@@ -130,11 +108,12 @@ class BalanceSheetReportController extends Controller
 
     public function generateAsync(BalanceSheetRequestFilter $filter)
     {
+        $dateFrom = $filter->input('date_from');
+        $dateTo = $filter->input('date_to');
+        new GenerateReports(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
         $cacheKey = GenerateReports::getCacheKey();
-
-        // Check if already cached
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
+            return new JsonResponse(array_merge(
                 Cache::get($cacheKey),
                 [
                     'message' => 'Report already exists',
@@ -142,12 +121,9 @@ class BalanceSheetReportController extends Controller
                 ]
             ));
         }
-
-        // Dispatch job
-        GenerateReports::dispatch();
+        GenerateReports::dispatch(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
-
-        return response()->json([
+        return new JsonResponse([
             'success' => true,
             'message' => 'Report generation started',
             'status' => 'queued',

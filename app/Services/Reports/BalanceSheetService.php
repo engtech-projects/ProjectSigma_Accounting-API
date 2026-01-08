@@ -3,9 +3,9 @@
 namespace App\Services\Reports;
 
 use App\Enums\JournalStatus;
-use App\Http\Resources\BalanceSheetResource;
-use App\Models\Account;
+use App\Http\Resources\BalanceSheetCollection;
 use App\Models\JournalDetails;
+use App\Enums\Reports\BalanceSheet;
 
 class BalanceSheetService
 {
@@ -18,83 +18,74 @@ class BalanceSheetService
         ->with([
             'account.accountType',
             'account.reportGroup',
+            'account.subGroup',
         ])
         ->get();
 
         $accountBalances = $journalDetails->groupBy('account_id')->map(function ($transactions) {
             $firstTransaction = $transactions->first();
+
             $totalDebit = $transactions->sum(function ($t) {
                 return (float) ($t->debit ?? 0);
             });
             $totalCredit = $transactions->sum(function ($t) {
                 return (float) ($t->credit ?? 0);
             });
+
+            $accountCategory = $firstTransaction->account->accountType->account_category ?? null;
+            $balance = in_array($accountCategory, ['Asset', BalanceSheet::ASSET->value])
+                ? $totalDebit - $totalCredit
+                : $totalCredit - $totalDebit;
+
             return (object) [
                 'account_id' => $firstTransaction->account_id,
-                'account' => $firstTransaction->account,
-                'total_debit' => $totalDebit,
-                'total_credit' => $totalCredit,
-                'balance' => $totalDebit - $totalCredit,
+                'account_name' => $firstTransaction->account->account_name ?? null,
+                'account_type_id' => $firstTransaction->account->account_type_id ?? null,
+                'report_group_id' => $firstTransaction->account->report_group_id ?? null,
+                'report_group' => $firstTransaction->account->reportGroup ?? null,
+                'sub_group_id' => $firstTransaction->account->sub_group_id ?? null,
+                'sub_group' => $firstTransaction->account->subGroup ?? null,
+                'debit' => $totalDebit,
+                'credit' => $totalCredit,
+                'balance' => $balance,
             ];
-        });
-        $totalDebits = $journalDetails->sum(function ($detail) {
-            return (float) ($detail->debit ?? 0);
-        });
-        $totalCredits = $journalDetails->sum(function ($detail) {
-            return (float) ($detail->credit ?? 0);
-        });
-        $assetsTotal = Account::assets()->sum(function ($account) {
-            return $account->balance;
-        });
-        $liabilitiesTotal = Account::liabilities()->sum(function ($account) {
-            return -$account->balance;
-        });
-        $equityTotal = Account::equity()->sum(function ($account) {
-            return -$account->balance;
-        });
+        })->values();
+
+        $currentAssets = self::filterBySubGroup($accountBalances, BalanceSheet::CURRENT_ASSET->value);
+        $nonCurrentAssets = self::filterBySubGroup($accountBalances, BalanceSheet::NON_CURRENT_ASSET->value);
+        $liabilities = self::filterBySubGroup($accountBalances, BalanceSheet::CURRENT_LIABILITIES->value);
+        $equity = self::filterBySubGroup($accountBalances, BalanceSheet::EQUITY->value);
+
+        $currentAssetsTotal = $currentAssets->sum('balance');
+        $nonCurrentAssetsTotal = $nonCurrentAssets->sum('balance');
+        $totalAssets = $currentAssetsTotal + $nonCurrentAssetsTotal;
+        $liabilitiesTotal = $liabilities->sum('balance');
+        $equityTotal = $equity->sum('balance');
         $liabilitiesAndEquityTotal = $liabilitiesTotal + $equityTotal;
-        $assetsForDisplay = Account::assets()->get()->map(function ($account) {
-            return (object) [
-                'account_id' => $account->account_id,
-                'account' => $account->account,
-                'debit' => $account->total_debit,
-                'credit' => $account->total_credit,
-                'balance' => $account->balance,
-            ];
-        });
-        $liabilitiesForDisplay = Account::liabilities()->get()->map(function ($account) {
-            return (object) [
-                'account_id' => $account->account_id,
-                'account' => $account->account,
-                'debit' => $account->total_debit,
-                'credit' => $account->total_credit,
-                'balance' => $account->balance,
-            ];
-        });
-        $equityForDisplay = Account::equity()->get()->map(function ($account) {
-            return (object) [
-                'account_id' => $account->account_id,
-                'account' => $account->account,
-                'debit' => $account->total_debit,
-                'credit' => $account->total_credit,
-                'balance' => $account->balance,
-            ];
-        });
+
+        $currentAssetsForDisplay = $currentAssets->values();
+        $nonCurrentAssetsForDisplay = $nonCurrentAssets->values();
+        $liabilitiesForDisplay = $liabilities->values();
+        $equityForDisplay = $equity->values();
         $liabilitiesAndEquityForDisplay = $liabilitiesForDisplay->merge($equityForDisplay);
+
         return [
             'success' => true,
             'message' => 'Balance Sheet Report Successfully Retrieved.',
             'data' => [
-                'assets' => BalanceSheetResource::collection($assetsForDisplay)->resolve(),
-                'liabilities_and_equity' => BalanceSheetResource::collection($liabilitiesAndEquityForDisplay)->resolve(),
+                'current_assets' => BalanceSheetCollection::collection($currentAssetsForDisplay)->resolve(),
+                'non_current_assets' => BalanceSheetCollection::collection($nonCurrentAssetsForDisplay)->resolve(),
+                'liabilities' => BalanceSheetCollection::collection($liabilitiesForDisplay)->resolve(),
+                'equity' => BalanceSheetCollection::collection($equityForDisplay)->resolve(),
+                'liabilities_and_equity' => BalanceSheetCollection::collection($liabilitiesAndEquityForDisplay)->resolve(),
                 'totals' => [
-                    'total_debits' => (float) number_format($totalDebits, 2, '.', ''),
-                    'total_credits' => (float) number_format($totalCredits, 2, '.', ''),
-                    'assets_total' => (float) number_format($assetsTotal, 2, '.', ''),
+                    'current_assets_total' => (float) number_format($currentAssetsTotal, 2, '.', ''),
+                    'non_current_assets_total' => (float) number_format($nonCurrentAssetsTotal, 2, '.', ''),
+                    'total_assets' => (float) number_format($totalAssets, 2, '.', ''),
                     'liabilities_total' => (float) number_format($liabilitiesTotal, 2, '.', ''),
                     'equity_total' => (float) number_format($equityTotal, 2, '.', ''),
                     'liabilities_and_equity_total' => (float) number_format($liabilitiesAndEquityTotal, 2, '.', ''),
-                    'balance' => (float) number_format($assetsTotal - $liabilitiesAndEquityTotal, 2, '.', ''),
+                    'balance' => (float) number_format($totalAssets - $liabilitiesAndEquityTotal, 2, '.', ''),
                 ],
             ],
             'date_range' => [
@@ -102,5 +93,11 @@ class BalanceSheetService
                 'to' => $endDate->format('Y-m-d'),
             ],
         ];
+    }
+    private static function filterBySubGroup($accountBalances, string $subGroupName)
+    {
+        return $accountBalances->filter(function ($account) use ($subGroupName) {
+            return $account->sub_group && $account->sub_group->name === $subGroupName;
+        });
     }
 }

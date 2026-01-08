@@ -42,9 +42,9 @@ class GenerateReports implements ShouldQueue
 
     public function __construct(string $type, string $dateFrom, string $dateTo)
     {
-        $this->type = $type;
+        self::$type = $type;
         self::$dateFrom = Carbon::parse($dateFrom)->startOfDay();
-        self::$dateTo =  Carbon::parse($dateFrom)->startOfDay();
+        self::$dateTo =  Carbon::parse($dateTo)->startOfDay();
     }
 
     public function handle(): void
@@ -55,7 +55,7 @@ class GenerateReports implements ShouldQueue
 
         //match the current report type
         try {
-            $dataToCache = match ($this->type) {
+            $dataToCache = match (self::$type) {
                 ReportType::BALANCE_SHEET->value => BalanceSheetService::balanceSheetReport(self::$dateFrom, self::$dateTo),
                 ReportType::INCOME_STATEMENT->value => IncomeStatementService::incomeStatementReport(self::$dateFrom, self::$dateTo),
                 ReportType::STATEMENT_CASH_FLOW->value => StatementOfCashFlowService::statementOfCashFlowReport(self::$dateFrom, self::$dateTo),
@@ -78,16 +78,16 @@ class GenerateReports implements ShouldQueue
             $dataToCache['generation_time_seconds'] = now()->diffInSeconds($startTime);
             Cache::put($cacheKey, $dataToCache, now()->addMinutes(1440));
             Cache::forget($jobStatusKey);
-            Log::info("{$this->type} generated successfully", [
+            Log::info(self::$type . " generated successfully", [
                 'cache_key' => $cacheKey,
                 'duration_seconds' => now()->diffInSeconds($startTime),
             ]);
         } catch (\Exception $e) {
             Cache::forget($jobStatusKey);
-            Log::error("Failed to generate {$this->type}", [
+            Log::error("Failed to generate " . self::$type, [
                 'error' => $e->getMessage(),
-                'date_from' => $this->dateFrom,
-                'date_to' => $this->dateTo,
+                'date_from' => self::$dateFrom,
+                'date_to' => self::$dateTo,
             ]);
             throw $e;
         }
