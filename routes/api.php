@@ -123,7 +123,7 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
-    Route::prefix('reports')->name('reports.')->group(function () {
+    Route::prefix('reports')->group(function () {
         // Balance Statement
         Route::post('balance-sheet', [BalanceSheetReportController::class, 'balanceSheet'])
             ->name('balance-sheet');
@@ -132,12 +132,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('balance-sheet/async', [BalanceSheetReportController::class, 'generateAsync'])
             ->name('balance-sheet.async');
         // Income Statement
-        Route::post('income-statement-sheet', [IncomeStatementReportController::class, 'incomeStement'])
-            ->name('income-statement-sheet');
-        Route::get('income-statement-sheet/status', [IncomeStatementReportController::class, 'checkStatus'])
-            ->name('income-statement-sheet.status');
-        Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
-            ->name('income-statement-sheet.async');
+        Route::post('income-statement', [IncomeStatementReportController::class, 'incomeStatement'])
+            ->name('income-statement');
+        Route::get('income-statement/status', [IncomeStatementReportController::class, 'checkStatus'])
+            ->name('income-statement.status');
+        Route::post('income-statement/async', [IncomeStatementReportController::class, 'generateAsync'])
+            ->name('income-statement.async');
     });
     // VOUCHERS ROUTES
     Route::prefix('vouchers')->group(function () {
