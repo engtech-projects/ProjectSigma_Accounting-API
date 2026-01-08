@@ -97,4 +97,17 @@ class GenerateReports implements ShouldQueue
     {
         return strtoupper(self::$type) . '_' . self::$dateFrom->format('Y_m_d') . '_to_' . self::$dateTo->format('Y_m_d');
     }
+
+    public function getDateDiff()
+    {
+        return Carbon::parse($this::$dateFrom)->diffInDays(Carbon::parse($this::$dateTo));
+    }
+    public function getDateFrom()
+    {
+        return $this::$dateFrom;
+    }
+    public function getDateTo()
+    {
+        return $this::$dateTo;
+    }
 }
