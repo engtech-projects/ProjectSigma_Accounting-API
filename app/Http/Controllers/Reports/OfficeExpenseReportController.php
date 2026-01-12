@@ -6,9 +6,11 @@ use App\Enums\ReportType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reports\OfficeExpenseFilter;
 use App\Jobs\GenerateReports;
+use App\Services\Reports\OfficeExpenseService;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Illuminate\Http\Request;
 
 class OfficeExpenseReportController extends Controller
 {
@@ -56,9 +58,78 @@ class OfficeExpenseReportController extends Controller
             ], 202);
         }
         try {
-            $data = OfficeExpenseService::
+            $data = OfficeExpenseService::officeExpenseReport($dateFrom, $dateTo);
+            $data['generated_at'] = now()->toISOString();
+            $data['generation_time_seconds'] = 0;
+            Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
+            return new JsonResponse(array_merge($data, [
+                'from_cache' => false,
+            ]));
         } catch (\Exception $e) {
-
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Failed to generate report',
+                'error' => $e->getMessage()
+            ], 500);
         }
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $cacheKey = $request->input('cache_key');
+        if (!$cacheKey) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Cache key is required'
+            ], 400);
+        }
+        if (Cache::has($cacheKey)) {
+            return new JsonResponse(array_merge(
+                Cache::get($cacheKey),
+                [
+                    'status' => 'completed',
+                    'message' => 'Report is ready',
+                ]
+            ));
+        }
+        $jobStatusKey = "job_processing_{$cacheKey}";
+        if (Cache::has($jobStatusKey)) {
+            return new JsonResponse([
+                'success' => true,
+                'status' => 'processing',
+                'message' => 'Report generation is still in progress',
+            ], 202);
+        }
+        return new JsonResponse([
+            'success' => false,
+            'status' => 'not_found',
+            'message' => 'Report not found. It may have expired or failed to generate.',
+        ], 404);
+    }
+
+    public function generateAsync(OfficeExpenseFilter $filter)
+    {
+        $dateFrom = $filter->input('date_from');
+        $dateTo = $filter->input('date_to');
+        new GenerateReports(ReportType::OFFICE_CODE->value, $dateFrom, $dateTo);
+        $cacheKey = GenerateReports::getCacheKey();
+        if (Cache::has($cacheKey)) {
+            return new JsonResponse(array_merge(
+                Cache::get($cacheKey),
+                [
+                    'message' => 'Report already exists',
+                    'status' => 'completed',
+                ]
+            ));
+        }
+        GenerateReports::dispatch(ReportType::OFFICE_CODE->value, $dateFrom, $dateTo);
+        Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'Report generation started',
+            'status' => 'queued',
+            'cache_key' => $cacheKey,
+            'polling_endpoint' => route('reports.office-expense.status', ['cache_key' => $cacheKey]),
+        ], 202);
     }
 }
