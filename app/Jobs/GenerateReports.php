@@ -97,7 +97,15 @@ class GenerateReports implements ShouldQueue
 
     public static function getCacheKey(): string
     {
-        return strtoupper(self::$type) . '_' . self::$dateFrom->format('Y_m_d') . '_to_' . self::$dateTo->format('Y_m_d');
+        $dateFrom = self::$dateFrom
+            ? Carbon::parse(self::$dateFrom)->format('Y_m_d')
+            : 'null';
+
+        $dateTo = self::$dateTo
+            ? Carbon::parse(self::$dateTo)->format('Y_m_d')
+            : 'null';
+
+        return strtoupper(self::$type) . "_{$dateFrom}_to_{$dateTo}";
     }
 
     public function getDateDiff()
