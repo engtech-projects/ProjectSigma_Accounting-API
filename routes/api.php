@@ -36,6 +36,7 @@ use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Http\Controllers\Reports\OfficeExpenseReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {

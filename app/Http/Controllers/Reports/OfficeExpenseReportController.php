@@ -7,10 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Reports\OfficeExpenseFilter;
 use App\Jobs\GenerateReports;
 use App\Services\Reports\OfficeExpenseService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Illuminate\Http\Request;
 
 class OfficeExpenseReportController extends Controller
 {
@@ -19,60 +19,77 @@ class OfficeExpenseReportController extends Controller
         $dateFrom = $filter->input('date_from');
         $dateTo = $filter->input('date_to');
         $forceAsync = $filter->input('force_async', false);
-        $generateReport = new GenerateReports(ReportType::OFFICE_CODE->value, $dateFrom, $dateTo);
-        $generateReport->handle();
-        $cacheKey = GenerateReports::getCacheKey();
+        $cacheKey = GenerateReports::getCacheKey(
+            ReportType::OFFICE_CODE->value,
+            $dateFrom,
+            $dateTo
+        );
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
+            return new JsonResponse(array_merge(
                 Cache::get($cacheKey),
-                [
-                    'from_cache' => true,
-                ]
+                ['from_cache' => true]
             ));
         }
         $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
         $threshold = config('reports.large_report_threshold', 90);
         $isLargeReport = $daysDiff > $threshold || $forceAsync;
         if ($isLargeReport) {
-            $jobStatusKey = "job_processong_{$cacheKey}";
+            $jobStatusKey = "job_processing_{$cacheKey}";
+
             if (Cache::has($jobStatusKey)) {
                 return new JsonResponse([
                     'success' => true,
-                    'message' => 'Report generation is in progress',
                     'status' => 'processing',
+                    'message' => 'Report generation is in progress',
                     'cache_key' => $cacheKey,
-                    'estimated_completion' => 'Please check back in a few moments',
-                    'estimated_wait_seconds' => 30,
                 ], 202);
             }
             Cache::put($jobStatusKey, true, now()->addMinutes(10));
-            GenerateReports::dispatch($dateFrom, $dateTo);
+            GenerateReports::dispatch(
+                ReportType::OFFICE_CODE->value,
+                $dateFrom,
+                $dateTo
+            );
             return new JsonResponse([
                 'success' => true,
-                'message' => 'Large report detected. Generation started in background',
                 'status' => 'queued',
+                'message' => 'Large report queued for background generation',
                 'cache_key' => $cacheKey,
-                'date_range_days' => $daysDiff,
-                'polling_endpoint' => route('reports.office-expense.status', ['cache_key' => $cacheKey]),
-                'estimated_wait_seconds' => 30,
+                'polling_endpoint' => route(
+                    'reports.office-expense.status',
+                    ['cache_key' => $cacheKey]
+                ),
             ], 202);
         }
         try {
-            $data = OfficeExpenseService::officeExpenseReport($dateFrom, $dateTo);
-            $data['generated_at'] = now()->toISOString();
-            $data['generation_time_seconds'] = 0;
-            Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
-            return new JsonResponse(array_merge($data, [
+            $reportData = OfficeExpenseService::officeExpenseReport(
+                $dateFrom,
+                $dateTo
+            );
+            $payload = [
+                'success' => true,
+                'message' => 'Office Expense Report Successfully Retrieved.',
+                'data' => $reportData,
+                'generated_at' => now()->toISOString(),
+                'generation_time_seconds' => 0,
+            ];
+            Cache::put(
+                $cacheKey,
+                $payload,
+                now()->addMinutes(config('reports.cache_duration', 1440))
+            );
+            return new JsonResponse(array_merge($payload, [
                 'from_cache' => false,
             ]));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
                 'message' => 'Failed to generate report',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     public function checkStatus(Request $request)
     {
