@@ -90,7 +90,6 @@ class OfficeExpenseReportController extends Controller
         }
     }
 
-
     public function checkStatus(Request $request)
     {
         $cacheKey = $request->input('cache_key');

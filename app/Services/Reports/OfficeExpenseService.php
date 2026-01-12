@@ -2,9 +2,7 @@
 
 namespace App\Services\Reports;
 
-use App\Enums\Reports\OfficeExpense;
 use App\Models\ReportGroup;
-use App\Models\JournalDetails;
 use Illuminate\Support\Carbon;
 
 class OfficeExpenseService
