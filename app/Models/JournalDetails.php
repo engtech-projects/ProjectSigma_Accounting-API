@@ -25,6 +25,11 @@ class JournalDetails extends Model
         'credit',
     ];
 
+    protected $casts = [
+        'debit' => 'float',
+        'credit' => 'float',
+    ];
+
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
@@ -37,5 +42,16 @@ class JournalDetails extends Model
     public function stakeholder(): BelongsTo
     {
         return $this->belongsTo(StakeHolder::class);
+    }
+
+    public static function getJournalDetailsByDate($startDate, $endDate)
+    {
+        return self::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        })
+        ->with([
+            'account.accountType',
+        ])
+        ->get();
     }
 }

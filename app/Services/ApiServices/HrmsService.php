@@ -119,7 +119,8 @@ class HrmsService
         if (!$response->successful()) {
             return [];
         }
-        return $response->json("data") ?: [];
+        $data = $response->json();
+        return $data['data'] ?? [];
     }
 
     public function getAllDepartments()
@@ -143,7 +144,7 @@ class HrmsService
             Log::channel("HrmsService")->warning('Unexpected response format from departments API', ['response' => $data]);
             return [];
         }
-        return $data['data'];
+        return $data['data'] ?? [];
     }
     public function getAllUsers()
     {
@@ -166,6 +167,22 @@ class HrmsService
             Log::channel("HrmsService")->warning('Unexpected response format from users API', ['response' => $data]);
             return [];
         }
-        return $data['data'];
+        return $data['data'] ?? [];
+    }
+    public static function formatApprovals($token, $approvals)
+    {
+        $response = Http::withToken($token)
+            ->acceptJson()
+            ->withQueryParameters(['approval_type' => $approvals])
+            ->get(config('services.url.hrms_api') . "/api/services/format-approvals");
+        if (!$response->successful()) {
+            Log::channel("HrmsService")->error('Failed to format approvals from HRMS API', [
+                'status' => $response->status(),
+                'body'   => $response->body(),
+            ]);
+            return [];
+        }
+        $data = $response->json();
+        return $data['data'] ?? [];
     }
 }

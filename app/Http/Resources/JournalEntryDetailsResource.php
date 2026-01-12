@@ -25,7 +25,7 @@ class JournalEntryDetailsResource extends JsonResource
             'reference_series' => $this->journalEntry->voucher?->isEmpty() ? null : substr($this->journalEntry->voucher?->first()->voucher_no, strpos($this->journalEntry->voucher?->first()->voucher_no, '-') + 1),
             'voucher_date' => $this->journalEntry->voucher?->isEmpty() ? null : $this->journalEntry->voucher?->first()->date,
             'po_number' => '',
-            'net_amount' => $this->journalEntry->voucher?->isEmpty() ? null : $this->journalEntry->voucher?->first()->net_amount,
+            'net_amount' => ($this->debit ?? 0) - ($this->credit ?? 0),
             'terms' => '',
             'supplier' => '',
             'payees_name' => $this->JournalEntry->voucher?->isEmpty() ? null : $this->JournalEntry->voucher?->first()->stakeholder?->name,

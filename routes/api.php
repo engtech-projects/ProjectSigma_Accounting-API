@@ -24,14 +24,19 @@ use App\Http\Controllers\PostingPeriodController;
 use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReportGroupController;
+use App\Http\Controllers\Reports\BalanceSheetReportController;
 use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
+use App\Http\Reports\Controllers\IncomeStatementReportController;
+use App\Http\Controllers\Reports\BookBalanceReportController;
+use App\Http\Controllers\Reports\OfficeExpenseReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->group(function () {
@@ -58,7 +63,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('chart-of-accounts', [AccountsController::class, 'chartOfAccounts']);
     Route::resource('transaction-flow-model', TransactionFLowModelController::class);
     Route::post('update-transaction-flow', [TransactionFLowModelController::class, 'update']);
-
     // RESORCE ROUTES
     Route::resource('accounts', AccountsController::class);
     Route::get('account-type-list', [AccountTypeController::class, 'nopaginate']);
@@ -76,7 +80,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('paginated-sub-group', [SubGroupController::class, 'index']);
     Route::resource('sub-group', SubGroupController::class);
     Route::resource('withholding-tax', WithHoldingTaxController::class);
-
     // JOURNAL ENTRY ROUTES
     Route::prefix('journal-entry')->group(function () {
         Route::get('payment-request-entries', [PaymentRequestController::class, 'journalPaymentRequestEntries']);
@@ -88,7 +91,6 @@ Route::middleware('auth:api')->group(function () {
         Route::get('for-payment-entries', [JournalEntryController::class, 'forPaymentEntries']);
         Route::get('cash-entries', [JournalEntryController::class, 'cashEntries']);
         Route::get('get-accounts-vat-tax', [JournalEntryController::class, 'getAccountsVatTax']);
-
         Route::get('generate-journal-number', [JournalEntryController::class, 'generateJournalNumber']);
         Route::post('generate-journal-details', [JournalEntryController::class, 'generateJournalDetails']);
         Route::get('for-voucher-entries-disbursement', [JournalEntryController::class, 'forVoucherEntriesListDisbursement']);
@@ -98,7 +100,6 @@ Route::middleware('auth:api')->group(function () {
             return response()->json(['status' => JournalStatus::cases()], 200);
         });
     });
-
     // NON-PURCHASE ORDER ROUTES
     Route::prefix('npo')->group(function () {
         Route::resource('resource', PaymentRequestController::class)->names('npo.payment-requests');
@@ -115,6 +116,7 @@ Route::middleware('auth:api')->group(function () {
     });
     Route::prefix('liquidation')->group(function () {
         Route::resource('resource', LiquidationController::class)->names('liquidation.payment-requests');
+        Route::get('details/{id}', [LiquidationController::class, 'show']);
     });
     // PAYROLL ROUTES
     Route::prefix('payroll')->group(function () {
@@ -124,8 +126,35 @@ Route::middleware('auth:api')->group(function () {
     Route::prefix('attachments')->group(function () {
         Route::get('{type}/{id}/document-viewer', [AttachmentViewerController::class, 'showDocumentViewer']);
     });
-
-    // VOUCHERS ROUTES
+    Route::prefix('reports')->group(function () {
+        // Balance Statement
+        Route::post('balance-sheet', [BalanceSheetReportController::class, 'balanceSheet'])
+            ->name('balance-sheet');
+        Route::get('balance-sheet/status', [BalanceSheetReportController::class, 'checkStatus'])
+            ->name('balance-sheet.status');
+        Route::post('balance-sheet/async', [BalanceSheetReportController::class, 'generateAsync'])
+            ->name('balance-sheet.async');
+        // Income Statement
+        Route::post('income-statement-sheet', [IncomeStatementReportController::class, 'incomeStement'])
+            ->name('income-statement-sheet');
+        Route::get('income-statement-sheet/status', [IncomeStatementReportController::class, 'checkStatus'])
+            ->name('income-statement-sheet.status');
+        Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
+            ->name('income-statement-sheet.async');
+        // Book Balance
+        Route::post('book-balance', [BookBalanceReportController::class, 'bookBalance'])
+            ->name('book-balance');
+        Route::get('book-balance/status', [BookBalanceReportController::class, 'checkBalance'])
+            ->name('book-balance.status');
+        // Office Expense
+        Route::post('office-expense', [OfficeExpenseReportController::class, 'officeExpense'])
+            ->name('office-expense');
+        Route::get('office-expense/status', [OfficeExpenseReportController::class, 'checkStatus'])
+            ->name('office-expense.status');
+        Route::post('office-expense/async', [OfficeExpenseReportController::class, 'generateAsync'])
+            ->name('office-expense.async');
+    });
+    // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
         Route::prefix('disbursement')->group(function () {
             Route::resource('resource', VoucherController::class)->names('vouchers.disbursement');
