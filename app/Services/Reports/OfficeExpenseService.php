@@ -19,14 +19,15 @@ class OfficeExpenseService
                 'accounts' => function ($query) use ($startDate, $endDate) {
                     $query->where('account_name', 'like', '%(OFFICE)%')
                         ->with([
+                            'subGroup',
                             'journalEntryDetails' => function ($detailQuery) use ($startDate, $endDate) {
-                                $detailQuery->whereHas('journalEntryDetails', function ($entryQuery) use ($startDate, $endDate) {
+                                $detailQuery->whereHas('journalEntry', function ($entryQuery) use ($startDate, $endDate) {
                                     $entryQuery->whereBetween(
                                         'entry_date',
                                         [$startDate, $endDate]
                                     );
                                 })
-                                    ->with('journalEntryDetails');
+                                    ->with('journalEntry');
                             }
                         ]);
                 }
