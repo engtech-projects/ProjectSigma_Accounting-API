@@ -43,7 +43,7 @@ class OfficeExpenseService
                         : $account->journalEntryDetails->sum('credit');
 
                     $grandTotal += $totalAmount;
-                    
+
                     return [
                         'id' => $account->id,
                         'account_name' => $account->account_name,
