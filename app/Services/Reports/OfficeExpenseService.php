@@ -12,7 +12,9 @@ class OfficeExpenseService
         $startDate = Carbon::parse($dateFrom)->startOfDay();
         $endDate = Carbon::parse($dateTo)->endOfDay();
 
-        return ReportGroup::whereHas('accounts', function ($query) {
+        $grandTotal = 0;
+
+        $reportData = ReportGroup::whereHas('accounts', function ($query) {
             $query->where('account_name', 'like', '%(OFFICE)%');
         })
             ->with([
@@ -33,19 +35,34 @@ class OfficeExpenseService
                 }
             ])
             ->get()
-            ->map(function ($group) {
+            ->map(function ($group) use (&$grandTotal) {
+                $accounts = $group->accounts->map(function ($account) use (&$grandTotal) {
+                    $hasDebit = $account->journalEntryDetails->where('debit', '>', 0)->count() > 0;
+                    $totalAmount = $hasDebit
+                        ? $account->journalEntryDetails->sum('debit')
+                        : $account->journalEntryDetails->sum('credit');
+
+                    $grandTotal += $totalAmount;
+                    
+                    return [
+                        'id' => $account->id,
+                        'account_name' => $account->account_name,
+                        'journal_entry_details' => $account->journalEntryDetails,
+                        'total_amount' => number_format($totalAmount, 2, '.', ''),
+                    ];
+                })->values();
                 return [
                     'report_group' => $group->name,
-                    'accounts' => $group->accounts->map(function ($account) {
-                        return [
-                            'id' => $account->id,
-                            'account_name' => $account->account_name,
-                            'journal_entry_details' => $account->journalEntryDetails,
-                        ];
-                    })->values(),
+                    'accounts' => $accounts,
                 ];
             })
             ->values()
             ->toArray();
+
+        $reportData[] = [
+            'grand_total' => number_format($grandTotal, 2, '.', ''),
+        ];
+
+        return $reportData;
     }
 }
