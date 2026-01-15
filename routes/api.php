@@ -33,7 +33,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Reports\Controllers\IncomeStatementReportController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
-use App\Http\Controllers\Reports\OfficeExpenseReportController;
+use App\Http\Controllers\Reports\OfficeCodeReportController;
 use App\Http\Controllers\Reports\StatementOfCashFlowReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
@@ -148,12 +148,12 @@ Route::middleware('auth:api')->group(function () {
         Route::get('book-balance/status', [BookBalanceReportController::class, 'checkBalance'])
             ->name('book-balance.status');
         // Office Expense
-        Route::post('office-expense', [OfficeExpenseReportController::class, 'officeExpense'])
-            ->name('office-expense');
-        Route::get('office-expense/status', [OfficeExpenseReportController::class, 'checkStatus'])
-            ->name('office-expense.status');
-        Route::post('office-expense/async', [OfficeExpenseReportController::class, 'generateAsync'])
-            ->name('office-expense.async');
+        Route::post('office-code', [OfficeCodeReportController::class, 'officeCode'])
+            ->name('office-code');
+        Route::get('office-code/status', [OfficeCodeReportController::class, 'checkStatus'])
+            ->name('office-code.status');
+        Route::post('office-code/async', [OfficeCodeReportController::class, 'generateAsync'])
+            ->name('office-code.async');
         // Statement of Cash Flows
         Route::post('statement-of-cash-flows', [StatementOfCashFlowReportController::class, 'statementOfCashFlow'])
             ->name('statement-of-cash-flows');
