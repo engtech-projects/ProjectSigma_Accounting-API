@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Reports\Controllers;
+namespace App\Http\Controllers\Reports;
 
-use App\Http\Controllers\Controller;
-use App\Http\Reports\Requests\IncomeStatementFilterRequest;
-use App\Jobs\GenerateReports;
 use App\Enums\ReportType;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Reports\IncomeStatementFilterRequest;
+use App\Jobs\GenerateReports;
 use App\Services\Reports\IncomeStatementService;
-use Illuminate\Support\Facades\Cache;
+use Cache;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class IncomeStatementReportController extends Controller
 {

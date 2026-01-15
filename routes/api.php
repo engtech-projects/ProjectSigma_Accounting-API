@@ -25,13 +25,13 @@ use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\Reports\BalanceSheetReportController;
+use App\Http\Controllers\Reports\IncomeStatementReportController;
 use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
-use App\Http\Reports\Controllers\IncomeStatementReportController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Http\Controllers\Reports\OfficeCodeReportController;
 use App\Http\Controllers\Reports\StatementOfCashFlowReportController;
@@ -136,12 +136,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('balance-sheet/async', [BalanceSheetReportController::class, 'generateAsync'])
             ->name('balance-sheet.async');
         // Income Statement
-        Route::post('income-statement-sheet', [IncomeStatementReportController::class, 'incomeStement'])
-            ->name('income-statement-sheet');
-        Route::get('income-statement-sheet/status', [IncomeStatementReportController::class, 'checkStatus'])
-            ->name('income-statement-sheet.status');
-        Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
-            ->name('income-statement-sheet.async');
+        Route::post('income-statement', [IncomeStatementReportController::class, 'incomeStatement'])
+            ->name('income-statement');
+        Route::get('income-statement/status', [IncomeStatementReportController::class, 'checkStatus'])
+            ->name('income-statement.status');
+        Route::post('income-statement/async', [IncomeStatementReportController::class, 'generateAsync'])
+            ->name('income-statement.async');
         // Book Balance
         Route::post('book-balance', [BookBalanceReportController::class, 'bookBalance'])
             ->name('book-balance');
