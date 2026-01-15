@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class IncomeStatementReportController extends Controller
 {
-        public function incomeStatement(IncomeStatementFilterRequest $filter)
+    public function incomeStatement(IncomeStatementFilterRequest $filter)
     {
         $dateFrom = $filter->input('date_from');
         $dateTo = $filter->input('date_to');
