@@ -155,12 +155,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('office-code/async', [OfficeCodeReportController::class, 'generateAsync'])
             ->name('office-code.async');
         // Statement of Cash Flows
-        Route::post('statement-of-cash-flows', [StatementOfCashFlowReportController::class, 'statementOfCashFlow'])
-            ->name('statement-of-cash-flows');
-        Route::get('statement-of-cash-flows/status', [StatementOfCashFlowReportController::class, 'checkStatus'])
-            ->name('statement-of-cash-flows.status');
-        Route::post('statement-of-cash-flows/async', [StatementOfCashFlowReportController::class, 'generateAsync'])
-            ->name('statement-of-cash-flows.async');
+        Route::post('statement-of-cash-flow', [StatementOfCashFlowReportController::class, 'statementOfCashFlow'])
+            ->name('statement-of-cash-flow');
+        Route::get('statement-of-cash-flow/status', [StatementOfCashFlowReportController::class, 'checkStatus'])
+            ->name('statement-of-cash-flow.status');
+        Route::post('statement-of-cash-flow/async', [StatementOfCashFlowReportController::class, 'generateAsync'])
+            ->name('statement-of-cash-flow.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
