@@ -7,11 +7,11 @@ use App\Models\JournalDetails;
 
 class IncomeStatementService
 {
-    public static function incomeStatementReport($startDate, $endDate)
+    public static function incomeStatementReport($dateFrom, $dateTo)
     {
-        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
+        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($dateFrom, $dateTo) {
             $query->where('status', JournalStatus::POSTED->value)
-                ->whereBetween('created_at', [$startDate, $endDate]);
+                ->whereBetween('created_at', [$dateFrom, $dateTo]);
         })
         ->with([
             'account.accountType',
@@ -22,12 +22,12 @@ class IncomeStatementService
         $groupedData = self::groupByCategory($journalDetails);
         return [
             'success' => true,
-            'message' => 'Income-statement report successfully retrieved.',
+            'message' => 'Income Statement Report Successfully Retrieved.',
             'data' => $groupedData,
             'raw_data' => $journalDetails,
             'date_range' => [
-                'from' => $startDate->format('Y-m-d'),
-                'to' => $endDate->format('Y-m-d'),
+                'from' => $dateFrom->format('Y-m-d'),
+                'to' => $dateTo->format('Y-m-d'),
             ],
         ];
     }
