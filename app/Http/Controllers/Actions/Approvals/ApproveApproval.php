@@ -9,6 +9,8 @@ use App\Notifications\RequestPaymentForApprovalNotification;
 use App\Notifications\RequestPaymentForApprovedNotification;
 use App\Notifications\RequestVoucherForApprovalNotification;
 use App\Notifications\RequestVoucherForApprovedNotification;
+use App\Notifications\RequestBookBalanceReportForApprovalNotification;
+use App\Notifications\RequestBookBalanceReportForDeniedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,6 +42,7 @@ class ApproveApproval extends Controller
                 ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name => RequestPaymentForApprovalNotification::class,
                 ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestVoucherForApprovalNotification::class,
                 ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestVoucherForApprovalNotification::class,
+                ApprovalModels::ACCOUNTING_REPORT_BOOK_BALANCE->name => RequestBookBalanceReportForApprovalNotification::class,
             ];
             if (isset($notificationMap[$modelType])) {
                 $model->notifyNextApprover($notificationMap[$modelType]);
@@ -49,6 +52,7 @@ class ApproveApproval extends Controller
                 ApprovalModels::ACCOUNTING_PAYMENT_REQUEST->name => RequestPaymentForApprovedNotification::class,
                 ApprovalModels::ACCOUNTING_DISBURSEMENT_REQUEST->name => RequestVoucherForApprovedNotification::class,
                 ApprovalModels::ACCOUNTING_CASH_REQUEST->name => RequestVoucherForApprovedNotification::class,
+                ApprovalModels::ACCOUNTING_REPORT_BOOK_BALANCE->name => RequestBookBalanceReportForDeniedNotification::class,
             ];
             if (isset($notificationMap[$modelType])) {
                 $model->notifyCreator($notificationMap[$modelType]);

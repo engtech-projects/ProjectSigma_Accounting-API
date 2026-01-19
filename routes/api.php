@@ -25,15 +25,16 @@ use App\Http\Controllers\PostingPeriodDetailsController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\Reports\BalanceSheetReportController;
+use App\Http\Controllers\Reports\IncomeStatementReportController;
+use App\Http\Controllers\Reports\MonthlyProjectExpenseReportController;
 use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
 use App\Http\Controllers\TransactionFLowModelController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
-use App\Http\Reports\Controllers\IncomeStatementReportController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
-use App\Http\Controllers\Reports\OfficeExpenseReportController;
+use App\Http\Controllers\Reports\OfficeCodeReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -134,25 +135,32 @@ Route::middleware('auth:api')->group(function () {
             ->name('balance-sheet.status');
         Route::post('balance-sheet/async', [BalanceSheetReportController::class, 'generateAsync'])
             ->name('balance-sheet.async');
-        // Income Statement
-        Route::post('income-statement-sheet', [IncomeStatementReportController::class, 'incomeStement'])
-            ->name('income-statement-sheet');
-        Route::get('income-statement-sheet/status', [IncomeStatementReportController::class, 'checkStatus'])
-            ->name('income-statement-sheet.status');
-        Route::post('income-statement-sheet/async', [IncomeStatementReportController::class, 'generateAsync'])
-            ->name('income-statement-sheet.async');
         // Book Balance
         Route::post('book-balance', [BookBalanceReportController::class, 'bookBalance'])
             ->name('book-balance');
         Route::get('book-balance/status', [BookBalanceReportController::class, 'checkBalance'])
             ->name('book-balance.status');
+        // Income Statement
+        Route::post('income-statement', [IncomeStatementReportController::class, 'incomeStatement'])
+            ->name('income-statement');
+        Route::get('income-statement/status', [IncomeStatementReportController::class, 'checkStatus'])
+            ->name('income-statement.status');
+        Route::post('income-statement/async', [IncomeStatementReportController::class, 'generateAsync'])
+            ->name('income-statement.async');
         // Office Expense
-        Route::post('office-expense', [OfficeExpenseReportController::class, 'officeExpense'])
-            ->name('office-expense');
-        Route::get('office-expense/status', [OfficeExpenseReportController::class, 'checkStatus'])
-            ->name('office-expense.status');
-        Route::post('office-expense/async', [OfficeExpenseReportController::class, 'generateAsync'])
-            ->name('office-expense.async');
+        Route::post('office-code', [OfficeCodeReportController::class, 'officeCode'])
+            ->name('office-code');
+        Route::get('office-code/status', [OfficeCodeReportController::class, 'checkStatus'])
+            ->name('office-code.status');
+        Route::post('office-code/async', [OfficeCodeReportController::class, 'generateAsync'])
+            ->name('office-code.async');
+        // Monthly Project Expense
+        Route::post('monthly-project-expense', [MonthlyProjectExpenseReportController::class, 'monthlyProjectExpense'])
+            ->name('monthly-project-expense');
+        Route::get('monthly-project-expense/status', [MonthlyProjectExpenseReportController::class, 'checkStatus'])
+            ->name('monthly-project-expense.status');
+        Route::post('monthly-project-expense/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
+            ->name('monthly-project-expense.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
