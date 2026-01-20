@@ -14,25 +14,26 @@ use Illuminate\Http\Request;
 
 class BookBalanceReportController extends Controller
 {
-    public function bookBalance(BookBalanceFilterRequest $request)
+    public function bookBalance(BookBalanceFilterRequest $filter)
     {
-        $dateFrom = $request->input('date_from');
-        $dateTo = $request->input('date_to');
-        $forceAsync = $request->input('force_async', false);
-        $generateReport = new GenerateReports(ReportType::BOOK_BALANCE->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::BOOK_BALANCE->value, $params);
         $generateReport->handle();
         $cacheKey = GenerateReports::getCacheKey();
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'from_cache' => true,
-                ]
-            ));
+            return response()->json([
+                ...Cache::get($cacheKey),
+                'from_cache' => true,
+            ]);
         }
-        $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
+        $daysDiff = Carbon::parse($params['date_from'])->diffInDays(Carbon::parse($params['date_to']));
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
             if (Cache::has($jobStatusKey)) {
@@ -45,7 +46,7 @@ class BookBalanceReportController extends Controller
                 ], 202);
             }
             Cache::put($jobStatusKey, true, now()->addMinutes(30));
-            GenerateReports::dispatch(ReportType::BOOK_BALANCE->value, $dateFrom, $dateTo);
+            GenerateReports::dispatch(ReportType::BOOK_BALANCE->value, $params['date_from'], $params['date_to']);
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Large report detected. Generation started in background.',
@@ -58,14 +59,15 @@ class BookBalanceReportController extends Controller
         }
         try {
             $startTime = microtime(true);
-            $data = BookBalanceService::bookBalanceReport($dateFrom, $dateTo);
+            $data = BookBalanceService::bookBalanceReport($params['date_from'], $params['date_to']);
             $generationTime = round(microtime(true) - $startTime, 2);
             $data['generated_at'] = now()->toISOString();
             $data['generation_time_seconds'] = $generationTime;
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
-            return new JsonResponse(array_merge($data, [
+            return new JsonResponse([
+                ...$data,
                 'from_cache' => false,
-            ]));
+            ]);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,

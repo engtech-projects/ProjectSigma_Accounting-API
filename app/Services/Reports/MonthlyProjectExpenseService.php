@@ -7,11 +7,11 @@ use App\Enums\JournalStatus;
 
 class MonthlyProjectExpensesService
 {
-    public static function monthlyProjectExpenseReport($dateFrom, $dateTo)
+    public static function monthlyProjectExpenseReport($year)
     {
-        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($dateFrom, $dateTo) {
+        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($year) {
             $query->where('status', JournalStatus::POSTED->value)
-                ->whereBetween('created_at', [$dateFrom, $dateTo]);
+                ->whereYear('created_at', $year);
         })
         ->with([
             'stakeholder',
@@ -25,8 +25,7 @@ class MonthlyProjectExpensesService
             'message' => 'Monthly Project Expense Report Successfully Retrieved.',
             'data' => $journalDetails,
             'date_range' => [
-                'from' => $dateFrom->format('Y-m-d'),
-                'to' => $dateTo->format('Y-m-d'),
+                'year' => $year,
             ],
         ];
     }

@@ -15,22 +15,23 @@ class IncomeStatementReportController extends Controller
 {
     public function incomeStatement(IncomeStatementFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $forceAsync = $filter->input('force_async', false);
-        $generateReport = new GenerateReports(ReportType::INCOME_STATEMENT->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::INCOME_STATEMENT->value, $params);
         $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'from_cache' => true,
-                ]
-            ));
+            return response()->json([
+                ...Cache::get($cacheKey),
+                'from_cache' => true,
+            ]);
         }
         $daysDiff = $generateReport->getDateDiff();
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
             if (Cache::has($jobStatusKey)) {
@@ -59,9 +60,10 @@ class IncomeStatementReportController extends Controller
             $data['generated_at'] = now()->toISOString();
             $data['generation_time_seconds'] = 0;
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
-            return new JsonResponse(array_merge($data, [
+            return new JsonResponse([
+                ...$data,
                 'from_cache' => false,
-            ]));
+            ]);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
@@ -80,13 +82,11 @@ class IncomeStatementReportController extends Controller
             ], 400);
         }
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'status' => 'completed',
-                    'message' => 'Report is ready',
-                ]
-            ));
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
+                'status' => 'completed',
+                'message' => 'Report is ready',
+            ]);
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
@@ -104,18 +104,20 @@ class IncomeStatementReportController extends Controller
     }
     public function generateAsync(IncomeStatementFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $generateReport = new GenerateReports(ReportType::INCOME_STATEMENT->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::INCOME_STATEMENT->value, $params);
         $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'message' => 'Report already exists',
-                    'status' => 'completed',
-                ]
-            ));
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
+                'message' => 'Report already exists',
+                'status' => 'completed',
+            ]);
         }
         dispatch($generateReport);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
