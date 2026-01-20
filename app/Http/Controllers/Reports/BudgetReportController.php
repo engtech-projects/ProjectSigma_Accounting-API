@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use App\Services\Reports\BudgetReportService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Can;
 
 class BudgetReportController extends Controller
 {
@@ -98,7 +97,8 @@ class BudgetReportController extends Controller
                 [
                     'success' => true,
                     'message' => 'Report is ready',
-            ]));
+            ]
+            ));
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
@@ -132,12 +132,12 @@ class BudgetReportController extends Controller
         }
         GenerateReports::dispatch(ReportType::BUDGET_REPORT->value, $dateFrom, $dateTo);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
-    return new JsonResponse([
-            'success' => true,
-            'message' => 'Report generation started',
-            'status' => 'queued',
-            'cache_key' => $cacheKey,
-            'polling_endpoint' => route('reports.budget-report.status', ['cache_key' => $cacheKey]),
-        ], 202);
+        return new JsonResponse([
+                'success' => true,
+                'message' => 'Report generation started',
+                'status' => 'queued',
+                'cache_key' => $cacheKey,
+                'polling_endpoint' => route('reports.budget-report.status', ['cache_key' => $cacheKey]),
+            ], 202);
     }
 }
