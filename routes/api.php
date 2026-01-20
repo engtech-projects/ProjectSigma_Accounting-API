@@ -155,12 +155,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('office-code/async', [OfficeCodeReportController::class, 'generateAsync'])
             ->name('office-code.async');
         // Monthly Project Expense
-        Route::post('monthly-project-expense', [MonthlyProjectExpenseReportController::class, 'monthlyProjectExpense'])
-            ->name('monthly-project-expense');
-        Route::get('monthly-project-expense/status', [MonthlyProjectExpenseReportController::class, 'checkStatus'])
-            ->name('monthly-project-expense.status');
-        Route::post('monthly-project-expense/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
-            ->name('monthly-project-expense.async');
+        Route::post('monthly-project-expenses', [MonthlyProjectExpenseReportController::class, 'monthlyProjectExpense'])
+            ->name('monthly-project-expenses');
+        Route::get('monthly-project-expenses/status', [MonthlyProjectExpenseReportController::class, 'checkStatus'])
+            ->name('monthly-project-expenses.status');
+        Route::post('monthly-project-expenses/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
+            ->name('monthly-project-expenses.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {

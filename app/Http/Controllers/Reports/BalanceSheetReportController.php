@@ -16,23 +16,23 @@ class BalanceSheetReportController extends Controller
 {
     public function balanceSheet(BalanceSheetRequestFilter $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $forceAsync = $filter->input('force_async', false);
-        $generateReport = new GenerateReports(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::BALANCE_SHEET->value, $params);
         $generateReport->handle();
         $cacheKey = GenerateReports::getCacheKey();
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'from_cache' => true,
-                ]
-            ));
+            return response()->json([...Cache::get($cacheKey),
+                'from_cache' => true,
+            ]);
         }
-        $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
+        $daysDiff = Carbon::parse($params['date_from'])->diffInDays(Carbon::parse($params['date_to']));
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
             if (Cache::has($jobStatusKey)) {
@@ -45,7 +45,7 @@ class BalanceSheetReportController extends Controller
                 ], 202);
             }
             Cache::put($jobStatusKey, true, now()->addMinutes(10));
-            GenerateReports::dispatch($dateFrom, $dateTo);
+            GenerateReports::dispatch($params);
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Large report detected. Generation started in background.',
@@ -57,7 +57,7 @@ class BalanceSheetReportController extends Controller
             ], 202);
         }
         try {
-            $data = BalanceSheetService::balanceSheetReport($dateFrom, $dateTo);
+            $data = BalanceSheetService::balanceSheetReport($params['date_from'], $params['date_to']);
             $data['generated_at'] = now()->toISOString();
             $data['generation_time_seconds'] = 0;
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
@@ -108,9 +108,13 @@ class BalanceSheetReportController extends Controller
 
     public function generateAsync(BalanceSheetRequestFilter $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        new GenerateReports(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        new GenerateReports(ReportType::BALANCE_SHEET->value, $params);
         $cacheKey = GenerateReports::getCacheKey();
         if (Cache::has($cacheKey)) {
             return new JsonResponse(array_merge(
@@ -121,7 +125,7 @@ class BalanceSheetReportController extends Controller
                 ]
             ));
         }
-        GenerateReports::dispatch(ReportType::BALANCE_SHEET->value, $dateFrom, $dateTo);
+        GenerateReports::dispatch(ReportType::BALANCE_SHEET->value, $params);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
         return new JsonResponse([
             'success' => true,
