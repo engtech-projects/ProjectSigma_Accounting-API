@@ -35,6 +35,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Http\Controllers\Reports\OfficeCodeReportController;
+use App\Http\Controllers\Reports\BudgetReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -161,6 +162,13 @@ Route::middleware('auth:api')->group(function () {
             ->name('monthly-project-expense.status');
         Route::post('monthly-project-expense/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
             ->name('monthly-project-expense.async');
+        // Budget Report
+        Route::post('budget-report', [BudgetReportController::class, 'budgetReport'])
+            ->name('budget-report');
+        Route::get('budget-report/status', [BudgetReportController::class, 'checkStatus'])
+            ->name('budget-report.status');
+        Route::post('budget-report/async', [BudgetReportController::class, 'generateAsync'])
+            ->name('budget-report.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
