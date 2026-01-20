@@ -22,7 +22,9 @@ class BookBalanceReportCollection extends JsonResource
             'opening_balance' => $this->opening_balance,
             'debit' => $this->debit,
             'credit' => $this->credit,
-           'closing_balance' => $this->closing_balance,
+            'closing_balance' => $this->closing_balance,
+            'created_by' => $this->created_by,
+            'name' => $this->name,
         ];
     }
 }

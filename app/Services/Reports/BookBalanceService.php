@@ -4,6 +4,7 @@ namespace App\Services\Reports;
 
 use App\Models\Account;
 use App\Models\JournalDetails;
+use App\Models\User;
 
 class BookBalanceService
 {
@@ -24,6 +25,9 @@ class BookBalanceService
             $openingBalance = self::getOpeningBalance($account->id, $startDate);
             $openingBalance = $openingBalance ?? 0;
             $closingBalance = $openingBalance + $periodMovement;
+            $userId = auth()->user()->id;
+            $user = User::find($userId);
+
             return [
                 'account_id' => $account->id,
                 'account_name' => $account->account_name ?? 'Unknown',
@@ -33,6 +37,8 @@ class BookBalanceService
                 'debit' => round($totalDebit, 2),
                 'credit' => round($totalCredit, 2),
                 'closing_balance' => round($closingBalance, 2),
+                'created_by' => $userId,
+                'name' => $user ? $user->name : 'Unknown',
             ];
         });
         $cashInBankTotal = $cashInBankBalances->sum('closing_balance');
