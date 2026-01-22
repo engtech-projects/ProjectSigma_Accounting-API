@@ -4,7 +4,7 @@ namespace App\Services\Reports;
 
 class CashReturnSlipService
 {
-    public static function CashReturnSlipReport($startDate, $endDate)
+    public static function CashReturnSlipReport($dateFrom, $dateTo)
     {
         return null;
     }

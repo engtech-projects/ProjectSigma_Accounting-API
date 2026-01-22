@@ -9,11 +9,11 @@ use App\Enums\Reports\BalanceSheet;
 
 class BalanceSheetService
 {
-    public static function balanceSheetReport($startDate, $endDate)
+    public static function balanceSheetReport($dateFrom, $dateTo)
     {
-        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($startDate, $endDate) {
+        $journalDetails = JournalDetails::whereHas('journalEntry', function ($query) use ($dateFrom, $dateTo) {
             $query->where('status', JournalStatus::POSTED->value)
-                ->whereBetween('created_at', [$startDate, $endDate]);
+                ->whereBetween('created_at', [$dateFrom, $dateTo]);
         })
         ->with([
             'account.accountType',
@@ -89,8 +89,8 @@ class BalanceSheetService
                 ],
             ],
             'date_range' => [
-                'from' => $startDate->format('Y-m-d'),
-                'to' => $endDate->format('Y-m-d'),
+                'from' => $dateFrom->format('Y-m-d'),
+                'to' => $dateTo->format('Y-m-d'),
             ],
         ];
     }

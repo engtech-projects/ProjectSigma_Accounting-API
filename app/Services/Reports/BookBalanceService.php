@@ -8,12 +8,12 @@ use App\Models\User;
 
 class BookBalanceService
 {
-    public static function bookBalanceReport($startDate, $endDate)
+    public static function bookBalanceReport($dateFrom, $dateTo)
     {
         $cashInBankAccounts = Account::cashInBank()->with('accountType')->get();
-        $journalDetails = JournalDetails::getJournalDetailsByDate($startDate, $endDate);
+        $journalDetails = JournalDetails::getJournalDetailsByDate($dateFrom, $dateTo);
         $accountTransactions = $journalDetails->groupBy('account_id');
-        $cashInBankBalances = $cashInBankAccounts->map(function ($account) use ($accountTransactions, $startDate) {
+        $cashInBankBalances = $cashInBankAccounts->map(function ($account) use ($accountTransactions, $dateFrom) {
             $transactions = $accountTransactions->get($account->id, collect());
             $totalDebit = $transactions->sum(function ($t) {
                 return (float) ($t->debit ?? 0);
@@ -22,7 +22,7 @@ class BookBalanceService
                 return (float) ($t->credit ?? 0);
             });
             $periodMovement = $totalDebit - $totalCredit;
-            $openingBalance = self::getOpeningBalance($account->id, $startDate);
+            $openingBalance = self::getOpeningBalance($account->id, $dateFrom);
             $openingBalance = $openingBalance ?? 0;
             $closingBalance = $openingBalance + $periodMovement;
             $userId = auth()->user()->id;
@@ -46,19 +46,19 @@ class BookBalanceService
             'success' => true,
             'message' => 'Book Balance Report Successfully Retrieved.',
             'data' => [
-                'date_from' => $startDate,
-                'date_to' => $endDate,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
                 'cash_in_bank' => $cashInBankBalances->values(),
                 'cash_in_bank_total' => round($cashInBankTotal, 2),
             ],
         ];
     }
 
-    private static function getOpeningBalance($accountId, $startDate)
+    private static function getOpeningBalance($accountId, $dateFrom)
     {
         $openingBalances = JournalDetails::whereIn('account_id', [$accountId])
-            ->whereHas('journalEntry', function ($query) use ($startDate) {
-                $query->where('created_at', '<', $startDate);
+            ->whereHas('journalEntry', function ($query) use ($dateFrom) {
+                $query->where('created_at', '<', $dateFrom);
             })
             ->get()
             ->groupBy('account_id')
@@ -67,5 +67,6 @@ class BookBalanceService
                 $totalCredit = $transactions->sum(fn ($t) => (float) ($t->credit ?? 0));
                 return $totalDebit - $totalCredit;
             });
+        return $openingBalances;
     }
 }

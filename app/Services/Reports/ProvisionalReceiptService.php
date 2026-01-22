@@ -4,7 +4,7 @@ namespace App\Services\Reports;
 
 class ProvisionalReceiptService
 {
-    public static function provisionalReceiptReport($startDate, $endDate)
+    public static function provisionalReceiptReport($dateFrom, $dateTo)
     {
         return null;
     }

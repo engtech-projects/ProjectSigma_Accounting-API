@@ -27,6 +27,7 @@ use App\Http\Controllers\ReportGroupController;
 use App\Http\Controllers\Reports\BalanceSheetReportController;
 use App\Http\Controllers\Reports\IncomeStatementReportController;
 use App\Http\Controllers\Reports\MonthlyProjectExpenseReportController;
+use App\Http\Controllers\Reports\MonthlyUnliquidatedCashAdvanceReportController;
 use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\StakeHolderController;
 use App\Http\Controllers\TermController;
@@ -169,6 +170,13 @@ Route::middleware('auth:api')->group(function () {
             ->name('office-human-resource.status');
         Route::post('office-human-resource/async', [OfficeHumanResourceReportController::class, 'generateAsync'])
             ->name('office-human-resource.async');
+        //unliquidated Report
+        Route::post('unliquidated-cash-advance', [MonthlyUnliquidatedCashAdvanceReportController::class, 'unliquidatedReport'])
+            ->name('unliquidated-cash-advance');
+        Route::get('unliquidated-cash-advance/status', [MonthlyUnliquidatedCashAdvanceReportController::class, 'checkStatus'])
+            ->name('unliquidated-cash-advance.status');
+        Route::post('unliquidated-cash-advance/async', [MonthlyUnliquidatedCashAdvanceReportController::class, 'generateAsync'])
+            ->name('unliquidated-cash-advance.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
