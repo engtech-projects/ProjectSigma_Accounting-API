@@ -119,8 +119,8 @@ class OfficeHumanResourceReportController extends Controller
     {
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
-        new GenerateReports(ReportType::BUDGET_REPORT->value, $dateFrom, $dateTo);
-        $cacheKey = GenerateReports::getCacheKey();
+        $generateReport = new GenerateReports(ReportType::OFFICE_HUMAN_RESOURCE->value, $dateFrom, $dateTo);
+        $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
             return new JsonResponse(array_merge(
                 Cache::get($cacheKey),
@@ -130,14 +130,14 @@ class OfficeHumanResourceReportController extends Controller
                 ]
             ));
         }
-        GenerateReports::dispatch(ReportType::BUDGET_REPORT->value, $dateFrom, $dateTo);
+        GenerateReports::dispatch(ReportType::OFFICE_HUMAN_RESOURCE->value, $dateFrom, $dateTo);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
         return new JsonResponse([
                 'success' => true,
                 'message' => 'Report generation started',
                 'status' => 'queued',
                 'cache_key' => $cacheKey,
-                'polling_endpoint' => route('reports.budget-report.status', ['cache_key' => $cacheKey]),
+                'polling_endpoint' => route('reports.office-human-resource.status', ['cache_key' => $cacheKey]),
             ], 202);
     }
 }
