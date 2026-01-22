@@ -163,12 +163,12 @@ Route::middleware('auth:api')->group(function () {
         Route::post('monthly-project-expenses/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
             ->name('monthly-project-expenses.async');
         // Budget Report
-        Route::post('budget-report', [BudgetReportController::class, 'budgetReport'])
-            ->name('budget-report');
-        Route::get('budget-report/status', [BudgetReportController::class, 'checkStatus'])
-            ->name('budget-report.status');
-        Route::post('budget-report/async', [BudgetReportController::class, 'generateAsync'])
-            ->name('budget-report.async');
+        Route::post('office-human-resource', [BudgetReportController::class, 'officeHumanResource'])
+            ->name('office-human-resource');
+        Route::get('office-human-resource/status', [BudgetReportController::class, 'checkStatus'])
+            ->name('office-human-resource.status');
+        Route::post('office-human-resource/async', [BudgetReportController::class, 'generateAsync'])
+            ->name('office-human-resource.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
