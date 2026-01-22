@@ -35,7 +35,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Http\Controllers\Reports\OfficeCodeReportController;
-use App\Http\Controllers\Reports\BudgetReportController;
+use App\Http\Controllers\Reports\OfficeHumanResourceReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -163,11 +163,11 @@ Route::middleware('auth:api')->group(function () {
         Route::post('monthly-project-expenses/async', [MonthlyProjectExpenseReportController::class, 'generateAsync'])
             ->name('monthly-project-expenses.async');
         // Budget Report
-        Route::post('office-human-resource', [BudgetReportController::class, 'officeHumanResource'])
+        Route::post('office-human-resource', [OfficeHumanResourceReportController::class, 'officeHumanResource'])
             ->name('office-human-resource');
-        Route::get('office-human-resource/status', [BudgetReportController::class, 'checkStatus'])
+        Route::get('office-human-resource/status', [OfficeHumanResourceReportController::class, 'checkStatus'])
             ->name('office-human-resource.status');
-        Route::post('office-human-resource/async', [BudgetReportController::class, 'generateAsync'])
+        Route::post('office-human-resource/async', [OfficeHumanResourceReportController::class, 'generateAsync'])
             ->name('office-human-resource.async');
     });
     // VOUCHERS ook
