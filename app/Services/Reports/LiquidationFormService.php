@@ -4,7 +4,7 @@ namespace App\Services\Reports;
 
 class LiquidationFormService
 {
-    public static function liquidationFormReport($startDate, $endDate)
+    public static function liquidationFormReport($dateFrom, $dateTo)
     {
         return null;
     }
