@@ -37,6 +37,7 @@ use App\Http\Controllers\WithHoldingTaxController;
 use App\Http\Controllers\Reports\BookBalanceReportController;
 use App\Http\Controllers\Reports\OfficeCodeReportController;
 use App\Http\Controllers\Reports\OfficeHumanResourceReportController;
+use App\Http\Controllers\Reports\TransactionTallyReportController;
 use App\Models\WithHoldingTax;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -177,6 +178,13 @@ Route::middleware('auth:api')->group(function () {
             ->name('unliquidated-cash-advance.status');
         Route::post('unliquidated-cash-advance/async', [MonthlyUnliquidatedCashAdvanceReportController::class, 'generateAsync'])
             ->name('unliquidated-cash-advance.async');
+        // Transaction Tally Report
+        Route::post('transaction-tally', [TransactionTallyReportController::class, 'transactionTally'])
+            ->name('transaction-tally');
+        Route::get('transaction-tally/status', [TransactionTallyReportController::class, 'checkStatus'])
+            ->name('transaction-tally.status');
+        Route::post('transaction-tally/async', [TransactionTallyReportController::class, 'generateAsync'])
+            ->name('transaction-tally.async');
     });
     // VOUCHERS ook
     Route::prefix('vouchers')->group(function () {
