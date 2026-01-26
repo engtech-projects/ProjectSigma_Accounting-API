@@ -11,9 +11,7 @@ class OfficeCodeService
     {
         $startDate = Carbon::parse($dateFrom)->startOfDay();
         $endDate = Carbon::parse($dateTo)->endOfDay();
-
         $grandTotal = 0;
-
         $reportData = ReportGroup::whereHas('accounts', function ($query) {
             $query->where('account_name', 'like', '%(OFFICE)%');
         })
@@ -58,11 +56,9 @@ class OfficeCodeService
             })
             ->values()
             ->toArray();
-
         $reportData[] = [
             'grand_total' => number_format($grandTotal, 2, '.', ''),
         ];
-
         return $reportData;
     }
 }

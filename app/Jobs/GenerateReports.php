@@ -37,17 +37,22 @@ class GenerateReports implements ShouldQueue
 
     protected static $dateFrom;
     protected static $dateTo;
+    protected static $month;
+    protected static $year;
     protected static $type;
     public $timeout = 300;
     public $tries = 3;
 
-    public function __construct(string $type, string $dateFrom, string $dateTo)
+    public function __construct(string $type, $params)
     {
         self::$type = $type;
-        self::$dateFrom = Carbon::parse($dateFrom)->startOfDay();
-        self::$dateTo =  Carbon::parse($dateTo)->startOfDay();
+        if (isset($params['date_from']) && isset($params['date_to'])) {
+            self::$dateFrom = Carbon::parse($params['date_from'])->startOfDay();
+            self::$dateTo =  Carbon::parse($params['date_to'])->startOfDay();
+        }
+        self::$month = $params['month'] ?? null;
+        self::$year = $params['year'] ?? null;
     }
-
     public function handle(): void
     {
         $startTime = now();
@@ -62,7 +67,7 @@ class GenerateReports implements ShouldQueue
                 ReportType::STATEMENT_CASH_FLOW->value => StatementOfCashFlowService::statementOfCashFlowReport(self::$dateFrom, self::$dateTo),
                 ReportType::OFFICE_CODE->value =>  OfficeCodeService::officeCodeReport(self::$dateFrom, self::$dateTo),
                 ReportType::OFFICE_HUMAN_RESOURCE->value =>  OfficeHumanResourceService::officeHumanResourceReport(self::$dateFrom, self::$dateTo),
-                ReportType::MONTHLY_PROJECT_EXPENSES->value =>  MonthlyProjectExpensesService::monthlyProjectExpenseReport(self::$dateFrom, self::$dateTo),
+                ReportType::MONTHLY_PROJECT_EXPENSES->value =>  MonthlyProjectExpensesService::monthlyProjectExpenseReport(self::$year),
                 ReportType::MONTHLY_UNLIQUIDATED_CASH_ADVANCE->value =>  MonthlyUnliquidatedCashAdvanceService::monthlyUnliquidatedCashAdvanceReport(self::$dateFrom, self::$dateTo),
                 ReportType::EXPENSES_FOR_THE_MONTH->value =>  ExpensesForTheMonthService::expensesForTheMonthReport(self::$dateFrom, self::$dateTo),
                 ReportType::LIQUIDATION_FORM->value =>  LiquidationFormService::liquidationFormReport(self::$dateFrom, self::$dateTo),
@@ -100,11 +105,14 @@ class GenerateReports implements ShouldQueue
         $dateFrom = self::$dateFrom
             ? Carbon::parse(self::$dateFrom)->format('Y_m_d')
             : 'null';
-
         $dateTo = self::$dateTo
             ? Carbon::parse(self::$dateTo)->format('Y_m_d')
             : 'null';
-
+        $month = self::$month ?? 'null';
+        $year = self::$year ?? 'null';
+        if ($month !== 'null' && $year !== 'null') {
+            return strtoupper(self::$type) . "_{$dateFrom}_to_{$dateTo}_{$month}_{$year}";
+        }
         return strtoupper(self::$type) . "_{$dateFrom}_to_{$dateTo}";
     }
 

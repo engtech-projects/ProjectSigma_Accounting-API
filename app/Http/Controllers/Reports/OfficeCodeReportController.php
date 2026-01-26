@@ -9,30 +9,28 @@ use App\Jobs\GenerateReports;
 use App\Services\Reports\OfficeCodeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class OfficeCodeReportController extends Controller
 {
     public function officeCode(OfficeCodeFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $forceAsync = $filter->input('force_async', false);
-        $cacheKey = GenerateReports::getCacheKey(
-            ReportType::OFFICE_CODE->value,
-            $dateFrom,
-            $dateTo
-        );
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::OFFICE_CODE->value, $params);
+        $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                ['from_cache' => true]
-            ));
+            return response()->json([...Cache::get($cacheKey),
+                'from_cache' => true,
+            ]);
         }
-        $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
+        $daysDiff = $generateReport->getDateDiff();
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
 
@@ -45,11 +43,7 @@ class OfficeCodeReportController extends Controller
                 ], 202);
             }
             Cache::put($jobStatusKey, true, now()->addMinutes(10));
-            GenerateReports::dispatch(
-                ReportType::OFFICE_CODE->value,
-                $dateFrom,
-                $dateTo
-            );
+            $generateReport->dispatch();
             return new JsonResponse([
                 'success' => true,
                 'status' => 'queued',
@@ -63,8 +57,8 @@ class OfficeCodeReportController extends Controller
         }
         try {
             $reportData = OfficeCodeService::officeCodeReport(
-                $dateFrom,
-                $dateTo
+                $params['date_from'],
+                $params['date_to']
             );
             $payload = [
                 'success' => true,
@@ -78,9 +72,10 @@ class OfficeCodeReportController extends Controller
                 $payload,
                 now()->addMinutes(config('reports.cache_duration', 1440))
             );
-            return new JsonResponse(array_merge($payload, [
-                'from_cache' => false,
-            ]));
+            return new JsonResponse([
+                ...$payload,
+                'from_cache' => false
+            ]);
         } catch (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
@@ -100,13 +95,13 @@ class OfficeCodeReportController extends Controller
             ], 400);
         }
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
                 [
                     'status' => 'completed',
                     'message' => 'Report is ready',
                 ]
-            ));
+            ]);
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
@@ -125,20 +120,24 @@ class OfficeCodeReportController extends Controller
 
     public function generateAsync(OfficeCodeFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        new GenerateReports(ReportType::OFFICE_CODE->value, $dateFrom, $dateTo);
-        $cacheKey = GenerateReports::getCacheKey();
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::OFFICE_CODE->value, $params);
+        $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
                 [
                     'message' => 'Report already exists',
                     'status' => 'completed',
                 ]
-            ));
+            ]);
         }
-        GenerateReports::dispatch(ReportType::OFFICE_CODE->value, $dateFrom, $dateTo);
+        dispatch($generateReport);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));
         return new JsonResponse([
             'success' => true,

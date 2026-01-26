@@ -16,23 +16,22 @@ class StatementOfCashFlowReportController extends Controller
 {
     public function statementOfCashFlow(StatementOfCashFlowFilterRequest $request)
     {
-        $dateFrom = $request->input('date_from');
-        $dateTo = $request->input('date_to');
-        $forceAsync = $request->input('force_async', false);
-        $cacheKey = GenerateReports::getCacheKey(
-            ReportType::STATEMENT_CASH_FLOW->value,
-            $dateFrom,
-            $dateTo
-        );
+        $params = [
+            'date_from' => $request->input('date_from'),
+            'date_to' => $request->input('date_to'),
+            'force_async' => $request->input('force_async', false),
+        ];
+        $generateReport = new GenerateReports(ReportType::STATEMENT_CASH_FLOW->value, $params);
+        $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
             return new JsonResponse(array_merge(
                 Cache::get($cacheKey),
                 ['from_cache' => true]
             ));
         }
-        $daysDiff = Carbon::parse($dateFrom)->diffInDays(Carbon::parse($dateTo));
+        $daysDiff = Carbon::parse($params['date_from'])->diffInDays(Carbon::parse($params['date_to']));
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
             if (Cache::has($jobStatusKey)) {
@@ -44,11 +43,7 @@ class StatementOfCashFlowReportController extends Controller
                 ], 202);
             }
             Cache::put($jobStatusKey, true, now()->addMinutes(10));
-            GenerateReports::dispatch(
-                ReportType::STATEMENT_CASH_FLOW,
-                $dateFrom,
-                $dateTo
-            );
+            $generateReport->dispatch();
             return new JsonResponse([
                 'success' => true,
                 'status' => 'queued',
@@ -62,8 +57,8 @@ class StatementOfCashFlowReportController extends Controller
         }
         try {
             $reportData = StatementOfCashFlowService::statementOfCashFlowReport(
-                $dateFrom,
-                $dateTo
+                $params['date_from'],
+                $params['date_to']
             );
             $payload = [
                 'success' => true,
@@ -77,9 +72,10 @@ class StatementOfCashFlowReportController extends Controller
                 $payload,
                 now()->addMinutes(config('reports.cache_duration', 1440))
             );
-            return new JsonResponse(array_merge($payload, [
+            return new JsonResponse([
+                ...$payload,
                 'from_cache' => false
-            ]));
+            ]);
         } catch (\Throwable $e) {
             return new JsonResponse([
                 'success' => false,
@@ -99,13 +95,11 @@ class StatementOfCashFlowReportController extends Controller
             ], 400);
         }
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'status' => 'completed',
-                    'message' => 'Report is ready',
-                ]
-            ));
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
+                'status' => 'completed',
+                'message' => 'Report is ready',
+            ]);
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
@@ -124,20 +118,21 @@ class StatementOfCashFlowReportController extends Controller
 
     public function generateAsync(StatementOfCashFlowFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        new GenerateReports(ReportType::STATEMENT_CASH_FLOW->value, $dateFrom, $dateTo);
-        $cacheKey = GenerateReports::getCacheKey();
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+        ];
+        $generateReport = new GenerateReports(ReportType::STATEMENT_CASH_FLOW->value, $params);
+        $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'message' => 'Report already exists',
-                    'status' => 'completed',
-                ]
-            ));
+            return new JsonResponse([
+                ...Cache::get($cacheKey),
+                'message' => 'Report already exists',
+                'status' => 'completed',
+            ]);
         }
-        GenerateReports::dispatch(ReportType::STATEMENT_CASH_FLOW->value, $dateFrom, $dateTo);
+        dispatch($generateReport);
         return new JsonResponse([
             'success' => true,
             'status' => 'queued',

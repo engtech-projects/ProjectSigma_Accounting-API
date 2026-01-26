@@ -15,22 +15,22 @@ class MonthlyProjectExpenseReportController extends Controller
 {
     public function monthlyProjectExpense(MonthlyProjectExpenseFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $forceAsync = $filter->input('force_async', false);
-        $generateReport = new GenerateReports(ReportType::MONTHLY_PROJECT_EXPENSES->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::MONTHLY_PROJECT_EXPENSES->value, $params);
         $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return response()->json(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'from_cache' => true,
-                ]
-            ));
+            return response()->json([...Cache::get($cacheKey),
+                'from_cache' => true,
+            ]);
         }
         $daysDiff = $generateReport->getDateDiff();
         $threshold = config('reports.large_report_threshold', 90);
-        $isLargeReport = $daysDiff > $threshold || $forceAsync;
+        $isLargeReport = $daysDiff > $threshold || $params['force_async'];
         if ($isLargeReport) {
             $jobStatusKey = "job_processing_{$cacheKey}";
             if (Cache::has($jobStatusKey)) {
@@ -55,13 +55,13 @@ class MonthlyProjectExpenseReportController extends Controller
             ], 202);
         }
         try {
-            $data = MonthlyProjectExpensesService::monthlyProjectExpenseReport($generateReport->getDateFrom(), $generateReport->getDateTo());
+            $data = MonthlyProjectExpensesService::monthlyProjectExpenseReport($params['year']);
             $data['generated_at'] = now()->toISOString();
             $data['generation_time_seconds'] = 0;
             Cache::put($cacheKey, $data, now()->addMinutes(config('reports.cache_duration', 1440)));
-            return new JsonResponse(array_merge($data, [
+            return new JsonResponse([...$data,
                 'from_cache' => false,
-            ]));
+            ]);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'success' => false,
@@ -80,13 +80,13 @@ class MonthlyProjectExpenseReportController extends Controller
             ], 400);
         }
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
+            return new JsonResponse(
                 [
-                    'status' => 'completed',
-                    'message' => 'Report is ready',
-                ]
-            ));
+                ...Cache::get($cacheKey),
+                'status' => 'completed',
+                'message' => 'Report is ready',
+            ]
+            );
         }
         $jobStatusKey = "job_processing_{$cacheKey}";
         if (Cache::has($jobStatusKey)) {
@@ -104,18 +104,19 @@ class MonthlyProjectExpenseReportController extends Controller
     }
     public function generateAsync(MonthlyProjectExpenseFilterRequest $filter)
     {
-        $dateFrom = $filter->input('date_from');
-        $dateTo = $filter->input('date_to');
-        $generateReport = new GenerateReports(ReportType::MONTHLY_PROJECT_EXPENSES->value, $dateFrom, $dateTo);
+        $params = [
+            'date_from' => $filter->input('date_from'),
+            'date_to' => $filter->input('date_to'),
+            'force_async' => $filter->input('force_async', false),
+            'year' => $filter->input('year'),
+        ];
+        $generateReport = new GenerateReports(ReportType::MONTHLY_PROJECT_EXPENSES->value, $params);
         $cacheKey = $generateReport->getCacheKey();
         if (Cache::has($cacheKey)) {
-            return new JsonResponse(array_merge(
-                Cache::get($cacheKey),
-                [
-                    'message' => 'Report already exists',
-                    'status' => 'completed',
-                ]
-            ));
+            return new JsonResponse([...Cache::get($cacheKey),
+                'message' => 'Report already exists',
+                'status' => 'completed',
+            ]);
         }
         dispatch($generateReport);
         Cache::put("job_processing_{$cacheKey}", true, now()->addMinutes(10));

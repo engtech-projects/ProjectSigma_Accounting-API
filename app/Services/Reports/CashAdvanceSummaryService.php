@@ -4,7 +4,7 @@ namespace App\Services\Reports;
 
 class CashAdvanceSummaryService
 {
-    public static function cashAdvanceSummaryReport($startDate, $endDate)
+    public static function cashAdvanceSummaryReport($dateFrom, $dateTo)
     {
         return null;
     }
