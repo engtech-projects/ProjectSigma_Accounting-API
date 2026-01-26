@@ -1,0 +1,24 @@
+<?php
+
+use App\Http\Controllers\AttachmentViewerController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+Route::get('document-viewer/{cacheKey}', [AttachmentViewerController::class, 'showDocumentViewer'])->name('web.document.viewer');
+Route::get('/', function (Request $request) {
+    return response()->json(['version' => app()->version()]);
+});
+Route::get('artisan-clear-optimization', function () {
+    Artisan::call('optimize:clear');
+    return 'success';
+});
