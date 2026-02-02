@@ -32,9 +32,8 @@ class CreateFiscalYearCommand extends Command
             );
             Log::channel('fiscal-year')->info('Fiscal Year Created via Console', [
                 'fiscal_year_id' => $fiscalYear->id,
-                'period_start' => $fiscalYear->period_start->toDateString(),
-                'period_end' => $fiscalYear->period_end->toDateString(),
-                'executed_by' => 'console',
+                'period_start' => $fiscalYear->period_start,
+                'period_end' => $fiscalYear->period_end,
                 'timestamp' => now(),
             ]);
             return Command::SUCCESS;
@@ -44,7 +43,6 @@ class CreateFiscalYearCommand extends Command
             Log::channel('fiscal-year')->error('Fiscal Year Failed to Create via Console', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'executed_by' => 'console',
                 'timestamp' => now(),
             ]);
             return Command::FAILURE;
