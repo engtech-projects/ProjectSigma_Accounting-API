@@ -14,7 +14,7 @@ use Request;
 
 class MonthlyUnliquidatedCashAdvanceReportController extends Controller
 {
-    public function incomeStatement(MonthlyUnliquidatedCashAdvanceFilterRequest $filter)
+    public function unliquidatedReport(MonthlyUnliquidatedCashAdvanceFilterRequest $filter)
     {
         $params = [
             'date_from' => $filter->input('date_from'),

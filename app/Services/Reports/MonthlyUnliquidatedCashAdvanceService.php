@@ -9,9 +9,16 @@ class MonthlyUnliquidatedCashAdvanceService
     public static function unliquidatedCashAdvanceReport($dateFrom, $dateTo)
     {
         $journalDetails = JournalDetails::whereHas('journalEntry.paymentRequest', function ($query) use ($dateFrom, $dateTo) {
-            $query->unposted()
-                ->whereBetween('created_at', [$dateFrom, $dateTo]);
+            $query
+                ->whereYear('year', $dateFrom->year)
+                ->whereMonth('month', $dateFrom->month);
         })
+        ->with(
+            'journalEntry',
+            function ($query) {
+                $query->unposted();
+            }
+        )
         ->with([
             'account.accountType',
             'account.reportGroup',
