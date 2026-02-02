@@ -32,23 +32,41 @@ class FiscalYearService
                 $lastOpenFiscalYear->update(['status' => PostingPeriodStatusType::CLOSED]);
                 Log::channel('fiscal-year')->info('Auto-closed previous fiscal year', [
                     'closed_fiscal_year_id' => $lastOpenFiscalYear->id,
-                    'period_start' => $lastOpenFiscalYear->period_start->toDateString(),
-                    'period_end' => $lastOpenFiscalYear->period_end->toDateString(),
+                    'period_start' => $lastOpenFiscalYear->period_start,
+                    'period_end' => $lastOpenFiscalYear->period_end,
                     'reason' => 'Creating new fiscal year',
-                    'executed_by' => 'console',
                     'timestamp' => now(),
                 ]);
             }
             $fiscalYear = FiscalYear::create([
                 'period_start' => $nextYear->startOfYear(),
                 'period_end' => $nextYear->endOfYear(),
-                'status' => PostingPeriodStatusType::OPEN,
+                'status' => PostingPeriodStatusType::OPEN->value,
             ]);
             Log::channel('fiscal-year')->info('Fiscal Year Created', [
                 'fiscal_year_id' => $fiscalYear->id,
-                'period_start' => $fiscalYear->period_start->toDateString(),
-                'period_end' => $fiscalYear->period_end->toDateString(),
-                'executed_by' => 'console',
+                'period_start' => $fiscalYear->period_start,
+                'period_end' => $fiscalYear->period_end,
+                'timestamp' => now(),
+            ]);
+            return $fiscalYear;
+        });
+    }
+
+    /**
+     * Create a fiscal year with given data
+     */
+    public static function create(array $data): FiscalYear
+    {
+        return DB::transaction(function () use ($data) {
+            FiscalYear::where('status', PostingPeriodStatusType::OPEN->value)
+                ->update(['status' => PostingPeriodStatusType::CLOSED]);
+
+            $fiscalYear = FiscalYear::create($data);
+            Log::channel('fiscal-year')->info('Fiscal Year Created', [
+                'fiscal_year_id' => $fiscalYear->id,
+                'period_start' => $fiscalYear->period_start,
+                'period_end' => $fiscalYear->period_end,
                 'timestamp' => now(),
             ]);
             return $fiscalYear;
