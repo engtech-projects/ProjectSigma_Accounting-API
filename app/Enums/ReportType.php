@@ -25,4 +25,5 @@ enum ReportType: string
     case CASH_RETURN_SLIP = 'cash-return-slip';
     case PAYROLL_LIQUIDATIONS = 'payroll-liquidations';
     case BUDGET_REPORT = 'budget-report';
+    case TRANSACTION_TALLY = 'transaction-tally';
 }
