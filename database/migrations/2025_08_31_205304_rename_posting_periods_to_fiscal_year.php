@@ -1,0 +1,19 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
+
+return new class () extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::rename('posting_periods', 'fiscal_year');
+    }
+
+    public function down(): void
+    {
+        Schema::rename('fiscal_year', 'posting_periods');
+    }
+};

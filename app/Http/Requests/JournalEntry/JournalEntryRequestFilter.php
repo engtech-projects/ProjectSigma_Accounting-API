@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Requests\JournalEntry;
+
+use App\Enums\JournalStatus;
+use Illuminate\Foundation\Http\FormRequest;
+
+class JournalEntryRequestFilter extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'key' => 'nullable|string',
+            'status' => 'nullable|string|in:'.implode(',', array_column(JournalStatus::cases(), 'value')),
+        ];
+    }
+}
