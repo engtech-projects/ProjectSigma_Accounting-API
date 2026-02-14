@@ -22,8 +22,10 @@ class MonthlyUnliquidatedCashAdvanceFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date_from' => 'required|date',
-            'date_to' => 'required|date|after_or_equal:date_from',
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+            'year' => 'nullable|numeric',
+            'month' => 'nullable|numeric',
             'force_async' => 'nullable|boolean',
         ];
     }
